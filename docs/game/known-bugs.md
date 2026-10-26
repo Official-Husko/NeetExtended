@@ -15,6 +15,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Lasting effects are stronger at higher frame rates | `EffectStrength` |
 | Put-out fires and replaced fuses stay in the save | `GhostSaves` |
 | One object that can't be saved stops all saving | `SaveCrashes` |
+| Frame rate and vsync settings don't stick | `FrameRateSettings` |
 
 ## Saving fails with a dead house spider around
 
@@ -102,6 +103,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a transpiler routes each call through a wrapper that calls the delegate directly (no reflection) and, if it throws, leaves that object out of the save, logs a warning and adds it to the error report. The specific bugs above still have their own fixes, so the objects involved are saved properly; this one is the safety net for the ones nobody has found yet.
 
 **Reproduce:** with `SpiderSaves` off, kill a house spider and save.
+
+## Frame rate and vsync settings don't stick
+
+**What happens:** the settings menu's frame rate and vsync choices are saved and applied when the menu loads, but the game runs at 120 fps without vsync again as soon as the house loads, and again whenever a character appears.
+
+**Cause:** `CameraControl.Start` sets `QualitySettings.vSyncCount = 0` and `Application.targetFrameRate = 120` (`CameraControl.cs:102-103`). Every character rig has a `CameraControl`, and `BrainNeetAI` calls `Start` on its camera again (`BrainNeetAI.cs:239`). The menu (`Feedback_Sender`) saves the choices in PlayerPrefs as `VerticalSync` and `Framerate` (an index into its dropdown).
+
+**Fix:** a transpiler on `CameraControl.Start` keeps the game's values only for players who never picked anything: with a saved `VerticalSync` that value is used, and with a saved `Framerate` the frame rate the menu applied is left alone.
+
+**Reproduce:** turn vsync on in the settings, then check `QualitySettings.vSyncCount` after the house loads (`type.get`), or call `Start` on `Player/Main Camera`'s `CameraControl`.
 
 ## Not bugs
 

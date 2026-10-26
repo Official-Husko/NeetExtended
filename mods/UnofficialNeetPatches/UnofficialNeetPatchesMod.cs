@@ -24,6 +24,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new StatusTimersFix());
         ModFeatures.Register(this, new StuckSlowdownsFix());
         ModFeatures.Register(this, new EffectStrengthFix());
+        ModFeatures.Register(this, new FrameRateSettingsFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);
