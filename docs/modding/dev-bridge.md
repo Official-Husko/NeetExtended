@@ -137,6 +137,13 @@ The table lists all 53 built-in commands. Parameters marked `?` are optional. `h
 | `features.list` | none | Every feature of every loaded mod, with `mod`, `id`, `name` and `enabled`. |
 | `features.set` | `mod`, `id`, `enabled`: bool | Switch a feature on or off right away. The choice is saved. Returns the new state. |
 
+### Settings
+
+| Method | Parameters | Description and result |
+| ------ | ---------- | ---------------------- |
+| `settings.list` | none | Every section of the mod menu's Settings page, with `section` (its title) and `values`. |
+| `settings.set` | `section`: title, `name`: field name, `value` | Change one setting and save it, which applies it the same way the Settings page does. Names are case-insensitive. Returns the new value. |
+
 ### Objects
 
 Targets are described in [Target addressing](#target-addressing).
