@@ -2,7 +2,7 @@
   "releases": [
     {
       "version": "0.1.0",
-      "date": "2026-10-26",
+      "date": "2026-10-27",
       "released": false,
       "added": [
         {
@@ -248,6 +248,21 @@
         {
           "text": "Pumpkin TV, an example station on channel 7.",
           "area": "Custom TV Stations"
+        },
+        {
+          "text": "Performance Fixes (experimental): fixes for the game's hitches and slow spots, each one can be switched off.",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "A Shadows setting: only room lights cast shadows by default, or none at all, for a faster game (with Performance Fixes).",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "The installer can switch the game to 64-bit (downloaded from Unity) and turn on incremental garbage collection, which removes the short freezes when memory is cleaned up.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "Install scripts for Linux (install.sh) and Windows (install.bat) that set up the loader and all mods in one go, with the option to switch to 64-bit."
         }
       ],
       "changed": [
@@ -290,6 +305,26 @@
         {
           "text": "Story events that Unofficial NEET Patches stops or skips are listed in the error report, with where they happened.",
           "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Saving no longer freezes the game: only the paint that changed is saved, in the background (with Performance Fixes).",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "The front door's peephole camera only runs while you're near the door, which saves about a sixth of each frame elsewhere (with Performance Fixes).",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "The game no longer floods its log file with warnings while you're dead or hanging, or with a line each time you crouch (with Performance Fixes).",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "Paint surfaces no longer use time every frame while nothing lands on them (with Performance Fixes).",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "Characters walking around (trick-or-treaters, the cat, rats, the delivery guy) no longer plan their path again every frame (with Performance Fixes).",
+          "area": "Performance Fixes"
         }
       ],
       "fixed": [
@@ -324,6 +359,42 @@
         {
           "text": "Story events like the thief's arrival no longer break after Grandpa dies, and no longer repeat every frame after an error.",
           "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Status effects like diarrhea and hormone pills end on time instead of freezing while you crouch or are heavy.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Loading a save made while crouching no longer leaves you slowed down for good.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Lasting status effects are equally strong at any frame rate.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Fires you put out no longer start again (with the smoke alarms) when you load the game.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Saving could stop working after loading a game, so sleeping or dying didn't save either.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "If one thing in the house can't be saved, the rest of the game still saves. The problem shows up in the Errors tab.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "The game no longer uses more and more video memory each time the house loads (after dying or sleeping), with Performance Fixes.",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "The frame rate and vsync you pick in the settings now stick instead of going back to 120 fps without vsync.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Closing the game no longer ends in a crash (and a crash report) on the 32-bit game.",
+          "area": "Mod loader"
         }
       ],
       "removed": [
