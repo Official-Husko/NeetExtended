@@ -11,11 +11,21 @@ public static partial class Steam
 
     public static string? Root => new[]
     {
+        WindowsSteamPath(),
         Path.Combine(Home, ".local/share/Steam"),
         Path.Combine(Home, ".steam/steam"),
         Path.Combine(Home, ".var/app/com.valvesoftware.Steam/.local/share/Steam"),
         @"C:\Program Files (x86)\Steam",
-    }.FirstOrDefault(Directory.Exists);
+    }.FirstOrDefault(p => p != null && Directory.Exists(p));
+
+    // Steam writes where it's installed into the registry on Windows.
+    private static string? WindowsSteamPath()
+    {
+        if (!OperatingSystem.IsWindows())
+            return null;
+        using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
+        return (key?.GetValue("SteamPath") as string)?.Replace('/', '\\');
+    }
 
     /// <summary>Every steamapps folder Steam knows about (all library drives).</summary>
     public static IEnumerable<string> LibraryFolders()
