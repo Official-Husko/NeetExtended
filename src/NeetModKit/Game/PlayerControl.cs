@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using HarmonyLib;
 using UnityEngine;
 
 namespace NeetModKit.Game;
@@ -7,6 +8,9 @@ namespace NeetModKit.Game;
 /// <summary>Reading and changing the player's needs, position and survival.</summary>
 public static class PlayerControl
 {
+    private static readonly AccessTools.FieldRef<CameraControl, float> CameraPitch =
+        AccessTools.FieldRefAccess<CameraControl, float>("yRotate");
+
     /// <summary>When on, every death path is blocked and needs stop draining.</summary>
     public static bool GodMode { get; private set; }
 
@@ -69,6 +73,23 @@ public static class PlayerControl
         {
             if (held != null)
                 held.transform.position += delta;
+        }
+    }
+
+    /// <summary>Turns the player's body (yaw) and camera (pitch) to look along a direction.</summary>
+    public static void Look(Vector3 direction)
+    {
+        var player = GameRefs.Player ?? throw new InvalidOperationException("No player right now.");
+        var flat = Vector3.ProjectOnPlane(direction, Vector3.up);
+        if (flat.sqrMagnitude > 0.0001f)
+            player.transform.rotation = Quaternion.LookRotation(flat, Vector3.up);
+
+        var camera = player.GetComponentInChildren<CameraControl>();
+        if (camera != null)
+        {
+            // CameraControl pitches with positive values looking down.
+            float pitch = -Mathf.Atan2(direction.y, flat.magnitude) * Mathf.Rad2Deg;
+            CameraPitch(camera) = Mathf.Clamp(pitch, -89f, 89f);
         }
     }
 
