@@ -29,7 +29,7 @@ Expected errors (bad arguments, the game not found, the bridge not answering) pr
 ## install
 
 ```sh
-neet install [--game DIR]
+neet install [--game DIR] [--mods DIR] [--64bit | --32bit] [--incremental-gc | --no-incremental-gc]
 ```
 
 Copies these files from `payload/` into `NEET_Data/Managed/`: `NeetLoader.dll`, `NeetLoader.pdb` (optional), `0Harmony.dll`, `Mono.Cecil.dll`.
@@ -41,13 +41,30 @@ Then it edits two JSON files Unity reads at startup, both in `NEET_Data/`:
 
 Before the first edit, each file is copied to `<name>.neetbak`. Those backups are kept until uninstall. Running `install` again is safe: entries are not added twice and the backups are not overwritten. It also creates the `Mods/` folder. If the game is running, it prints a warning, and the changes apply on the next start.
 
+Options:
+
+- `--mods DIR` copies every folder in `DIR` that has a `mod.json` into `Mods/`, file by file over the installed copy. Files that only exist in the game, like a mod's `config.json`, stay. The release package's install scripts use this.
+- `--64bit` swaps the game's 32-bit Unity player for the 64-bit player of the same Unity version (2022.3.17f1, Mono). The game's data is the same for both, so only `NEET.exe`, `UnityPlayer.dll`, the crash handler (`UnityCrashHandler32.exe` becomes `UnityCrashHandler64.exe`) and the `MonoBleedingEdge/` folder change. The 32-bit files are copied to `NeetLoader/backup/player-x86/` first.
+- `--32bit` puts the backed-up 32-bit player back. Steam's "Verify integrity of game files" does the same.
+- `--incremental-gc` adds `gc-max-time-slice=3` to `NEET_Data/boot.config` (original kept as `boot.config.neetbak`). Unity writes that line for games built with incremental garbage collection; with it, Mono collects garbage in slices of at most 3 ms instead of stopping the game for each collection. `--no-incremental-gc` restores the original file.
+
+`--64bit`, `--32bit` and the GC options refuse to run while the game is open.
+
+### Where the 64-bit player comes from
+
+Unity's licence lets a game ship the player, not a mod, so `--64bit` downloads it from Unity when asked. The only standalone download with the Windows players is the "Windows Build Support (Mono)" module for the macOS editor:
+
+`https://download.unity3d.com/download_unity/4fc78088f837/MacEditorTargetInstaller/UnitySetup-Windows-Mono-Support-for-Editor-2022.3.17f1.pkg` (180,824,073 bytes)
+
+The download is checked against that size and a pinned SHA-256. The `.pkg` is a xar archive (read by `Archives/XarArchive.cs`); its `TargetSupport.pkg.tmp/Payload` is a gzipped cpio archive in the portable ASCII format (`Archives/CpioReader.cs`). Only `Variations/win64_player_nondevelopment_mono/` is unpacked, and of that only `WindowsPlayer.exe` (installed as `NEET.exe`), `UnityPlayer.dll`, `UnityCrashHandler64.exe` and `MonoBleedingEdge/`. Those stay in the tool's cache (`~/.cache/neet/` or `$XDG_CACHE_HOME/neet/` on Linux, `%LOCALAPPDATA%\neet\cache\` on Windows), and the package is deleted. Measurements of the 64-bit player are in [docs/research/performance.md](../research/performance.md#64-bit).
+
 ## uninstall
 
 ```sh
 neet uninstall [--game DIR] [--remove-mods]
 ```
 
-Restores both JSON files from their `.neetbak` backups and deletes the backups. If a backup is missing, it removes the loader's entries from the file instead. Then it deletes the four payload files from `NEET_Data/Managed/`.
+Puts the 32-bit player back if `install --64bit` swapped it (the backup is in the loader's folder, so this comes first) and restores `boot.config`. Then it restores both JSON files from their `.neetbak` backups and deletes the backups. If a backup is missing, it removes the loader's entries from the file instead. Then it deletes the four payload files from `NEET_Data/Managed/`. It refuses to run while the game is open.
 
 Mods stay in place unless `--remove-mods` is given. That option also deletes `Mods/` and `NeetLoader/` (loader data and logs), including each mod's config.
 
@@ -63,6 +80,8 @@ Example output:
 Game:        /home/you/.local/share/Steam/steamapps/common/NEET Demo
 Loader DLLs: present
 Registered:  yes
+Player:      64-bit (32-bit kept for switching back)
+Incremental GC: on
 Proton tool: GE-Proton10-34
 Save folder: /home/you/.local/share/Steam/steamapps/compatdata/2054460/pfx/drive_c/users/steamuser/AppData/LocalLow/NEET Games/NEET
 Mods:        DevBridge, OpenSaves
@@ -70,7 +89,7 @@ Running:     no
 Bridge:      down
 ```
 
-`Registered` is `yes` when both JSON files contain the loader's entries. `Bridge` is `up` when the bridge answers `ping`.
+`Registered` is `yes` when both JSON files contain the loader's entries. `Player` reads the machine type from `NEET.exe`'s header. `Bridge` is `up` when the bridge answers `ping`.
 
 ## launch
 
@@ -274,6 +293,20 @@ The other 23 tools forward to a DevBridge command. They need the game running wi
 `bridge_call` reaches any command, including ones not in the table. Use `bridge_help` to list them.
 
 If the bridge does not answer, a bridge tool returns an error result with the text `Can't reach the game. Is it running with the DevBridge mod installed?`.
+
+## Release packages
+
+`build/package.sh` builds a package for players: `dist/NEET-Mods-<version>.zip`, with `<version>` from `Directory.Build.props`.
+
+| In the zip | What it is |
+| --- | --- |
+| `Mods/` | Every mod folder from a Release build, except DevBridge (it opens a port and is only for development). |
+| `tool/linux-x64/neet`, `tool/win-x64/neet.exe` | The tool, self-contained (no .NET needed), with `payload/` next to it. |
+| `install.sh`, `install.bat` | Ask whether to switch to the 64-bit player (default no) and whether to turn on incremental GC (default yes), then run `neet install --mods Mods ...`. Extra arguments, like `--game DIR`, are passed on. |
+| `uninstall.sh`, `uninstall.bat` | Run `neet uninstall`, passing arguments on. |
+| `README.txt` | Install and uninstall steps for players. |
+
+The script builds with `NeetDeploy=false`, so packaging doesn't touch the game folder. The script sources are in `build/package/`; `.gitattributes` keeps the `.bat` files in CRLF.
 
 ## Common problems
 
