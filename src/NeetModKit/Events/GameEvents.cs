@@ -66,7 +66,7 @@ public static class GameEvents
         if (!GameRefs.InHouse)
             return;
         IsHouseReady = true;
-        PlayerControl.SetGodMode(PlayerControl.GodMode); // Re-apply to the new player object.
+        PlayerControl.ApplyFlags(); // Re-apply god mode, frozen needs and speed to the new player object.
         _log.Info("House ready");
         HouseReady.Raise(_log);
     }

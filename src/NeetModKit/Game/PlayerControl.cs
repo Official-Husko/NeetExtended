@@ -14,8 +14,16 @@ public static class PlayerControl
     /// <summary>How far above the floor the player's position sits when standing.</summary>
     public const float StandingHeight = 0.91f;
 
+    private static readonly AccessTools.FieldRef<Stat, float> BaseValue = AccessTools.FieldRefAccess<Stat, float>("initValue");
+
     /// <summary>When on, every death path is blocked and needs stop draining.</summary>
     public static bool GodMode { get; private set; }
+
+    /// <summary>Needs (hunger, bladder, hygiene, energy) stop draining. Also implied by god mode.</summary>
+    public static bool NeedsFrozen { get; private set; }
+
+    /// <summary>Walking speed multiplier (1 is normal).</summary>
+    public static float SpeedMultiplier { get; private set; } = 1f;
 
     public static PlayerStats Stats =>
         GameRefs.PlayerStats ?? throw new InvalidOperationException("No player right now (not in the house?).");
@@ -47,11 +55,35 @@ public static class PlayerControl
     public static void SetGodMode(bool enabled)
     {
         GodMode = enabled;
+        ApplyFlags();
+    }
+
+    public static void SetNeedsFrozen(bool frozen)
+    {
+        NeedsFrozen = frozen;
+        ApplyFlags();
+    }
+
+    /// <summary>
+    /// Speed is a "sticky" stat the game resets to its base value every frame, so the base value
+    /// is what has to change.
+    /// </summary>
+    public static void SetSpeedMultiplier(float multiplier)
+    {
+        SpeedMultiplier = Mathf.Clamp(multiplier, 0.1f, 10f);
+        ApplyFlags();
+    }
+
+    /// <summary>Applies the switches to the current player object (it's replaced on respawn and house load).</summary>
+    internal static void ApplyFlags()
+    {
         var stats = GameRefs.PlayerStats;
         if (stats == null)
             return;
-        stats.invincible = enabled;
-        stats.pausedNeeds = enabled;
+        stats.invincible = GodMode;
+        stats.pausedNeeds = GodMode || NeedsFrozen;
+        if (stats.speed != null)
+            BaseValue(stats.speed) = SpeedMultiplier;
     }
 
     /// <summary>Moves the player (and whatever they're holding) to a point, killing momentum.</summary>
