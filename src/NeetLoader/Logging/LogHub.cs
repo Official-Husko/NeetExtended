@@ -28,14 +28,20 @@ public static class LogHub
     internal static void Init(string logsDir)
     {
         _file = new LogFile(Path.Combine(logsDir, "latest.log"));
+        ErrorReport.Init(logsDir);
         Application.logMessageReceivedThreaded += OnUnityLog;
     }
 
-    internal static void Flush() => _file?.Flush();
+    internal static void Flush()
+    {
+        _file?.Flush();
+        ErrorReport.Flush();
+    }
 
     internal static void Shutdown()
     {
         Application.logMessageReceivedThreaded -= OnUnityLog;
+        ErrorReport.Flush();
         _file?.Dispose();
         _file = null;
     }
@@ -43,6 +49,8 @@ public static class LogHub
     internal static void Write(LogLevel level, string source, string message)
     {
         Buffer.Add(level, source, message);
+        if (level == LogLevel.Error)
+            ErrorReport.Capture(source, message);
         if (level >= MinFileLevel)
             _file?.Write(new LogEntry(Buffer.LastSequence, DateTime.Now, level, source, message));
 
@@ -78,6 +86,10 @@ public static class LogHub
         string message = level == LogLevel.Error && !string.IsNullOrEmpty(stackTrace)
             ? condition + "\n" + stackTrace.TrimEnd()
             : condition;
+
+        // Before the repeat filter, so the report counts every occurrence.
+        if (level == LogLevel.Error)
+            ErrorReport.Capture("Unity", message);
 
         if (IsRepeat(message, out int previousRepeats))
             return;
