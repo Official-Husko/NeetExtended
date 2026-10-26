@@ -22,6 +22,7 @@ public static class ChangelogBuilder
         ["pumpkin"] = "Pumpkin Smash",
         ["cheats"] = "Cheat Menu",
         ["openhouse"] = "Open House",
+        ["phone"] = "Phone Expansion",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
         ["ui"] = "Interface",
