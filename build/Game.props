@@ -23,6 +23,7 @@
     <NeetGameAssembly Include="UnityEngine.TextRenderingModule;UnityEngine.ImageConversionModule;UnityEngine.AudioModule;UnityEngine.AssetBundleModule" />
     <NeetGameAssembly Include="UnityEngine.UnityWebRequestModule;UnityEngine.UnityWebRequestAudioModule;UnityEngine.UnityWebRequestTextureModule" />
     <NeetGameAssembly Include="UnityEngine.ScreenCaptureModule;UnityEngine.PhysicsModule;UnityEngine.AIModule;UnityEngine.AnimationModule;UnityEngine.ParticleSystemModule;UnityEngine.JSONSerializeModule" />
+    <NeetGameAssembly Include="UnityEngine.VideoModule" />
     <Reference Include="@(NeetGameAssembly)" HintPath="$(NeetManagedDir)/%(Identity).dll" Private="false" />
   </ItemGroup>
 </Project>
