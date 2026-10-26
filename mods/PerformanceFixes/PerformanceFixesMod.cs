@@ -27,6 +27,7 @@ public sealed class PerformanceFixesMod : NeetMod
         ModFeatures.Register(this, new TextureLeaksFeature());
         ModFeatures.Register(this, new PeepholeFeature());
         ModFeatures.Register(this, new ShadowsFeature());
+        ModFeatures.Register(this, new LogSpamFeature());
     }
 
     // Paint pictures still being written must reach the disk before the process ends.
