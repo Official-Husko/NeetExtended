@@ -15,6 +15,7 @@ Not affiliated with the game's developer.
 | **No Feedback** (`mods/NoFeedback`) | Stops the pause menu sending feedback reports to the original developer. |
 | **Card Expansion** (`mods/CardExpansion`) | Twelve Halloween cards, summons, an auto-clicker, a better crystal exchange and a fix for promoted cards in the computer's card game. |
 | **Pumpkin Smash** (`mods/PumpkinSmash`) | A whack-a-pumpkin game on the in-game computer. |
+| **Cheat Menu** (`mods/CheatMenu`) | Press Insert: god mode, needs, speed, teleport, money, crystals, spawning items and people, fire, power, doors, game speed. |
 | **neet** (`tools/NeetTool`) | Command-line tool: install the loader, start and stop the game, read logs, talk to DevBridge, convert saves, build the changelog, and an MCP server. |
 
 ## Quick start

@@ -182,7 +182,7 @@ list.Slider("VOLUME", volume, 0f, 1f, v => volume = v);
 A full-screen window in the pause menu's style: a dimmed backdrop, a title with a `CLOSE` button, a toolbar and a content area.
 
 ```csharp
-public UiWindow(NeetMod owner, string title, Action onClose, float widthShare = 0.92f, float heightShare = 0.9f)
+public UiWindow(ITracker owner, string title, Action onClose, float widthShare = 0.92f, float heightShare = 0.9f, int sortingOrder = 1000)
 public void Show();
 public void Hide();
 public bool Visible { get; }
@@ -195,9 +195,41 @@ public Text TitleText { get; }
 - `widthShare` and `heightShare` are the fraction of the screen the frame takes, centred.
 - `CLOSE` calls `onClose`. The window does not hide itself; the callback should call `Hide()`, or whatever closes the window.
 - The constructor throws `InvalidOperationException` if the pause menu is not loaded yet. Create windows in response to the game being in a scene (for example, from a `GameEvents` handler or a click).
-- The canvas belongs to `owner` and is destroyed when the mod unloads.
+- The canvas belongs to `owner` and is destroyed when the mod unloads. Higher `sortingOrder` draws on top.
 
-The mod menu is a `UiWindow` with the tab bar in `Toolbar` and the selected page in `Content`.
+## `UiTabbedWindow` and `UiPage`
+
+A `UiWindow` with a tab per page. The mod menu and the Cheat Menu mod are both built on it.
+
+```csharp
+public UiTabbedWindow(ITracker owner, string title, Func<IReadOnlyList<UiPage>> pages, Action onClose,
+    float tabWidth = 150f, int sortingOrder = 1000)
+public void Open();            // shows the window and (re)builds the selected page
+public void Close();
+public void Tick();            // call every frame while open: tabs, rebuilds, Refresh 4x a second
+public void Select(string title);
+public void PagesChanged();    // call when the page list changes
+```
+
+`UiPage` is the page base class (`Title`, `Order`, `Build`, `Refresh`, `OnHide`, `Rebuild`); `MenuPage` below is just a `UiPage` meant for the mod menu.
+
+## `UiInputLock`
+
+`UiInputLock.Acquire(bool pause)` takes the game's controls away while a window is open: player input off, cursor free, and the game paused if asked. It returns an `IDisposable`; dispose it on close. Several windows can hold it at once (the mod menu and the cheat menu together, say) and everything comes back when the last one lets go, including the time scale from before the pause.
+
+## `Hotkey`
+
+`NeetModKit.Input.Hotkey` is a key picked by name in a settings file:
+
+```csharp
+private readonly Hotkey _key = new Hotkey("Insert", InputKey.Insert); // fallback if the name is unknown
+// in OnUpdate:
+if (_key.WasPressed) Toggle();
+// when the setting changes:
+_key.Name = config.Key;
+```
+
+The name is parsed once when set, so checking it every frame is cheap. `Hotkey.EscapePressed` is there for closing windows. (The game has its own global `Key` and `Keyboard` classes, so alias the Input System ones: `using InputKey = UnityEngine.InputSystem.Key;`.)
 
 ## `UiCanvas`
 
@@ -283,12 +315,15 @@ The built-in tabs and their `Order`:
 | What's New | 10 | Changelog |
 | PC Apps | 20 | Computer app URLs (see [computer-apps.md](computer-apps.md)) |
 | Settings | 30 | Every registered settings object |
-| Dev Tools | 40 | Testing controls |
+
+Cheats live in the separate Cheat Menu mod (Insert key), not in the mod menu.
 
 ### `MenuPage`
 
 ```csharp
-public abstract class MenuPage
+public abstract class MenuPage : UiPage { }
+
+public abstract class UiPage
 {
     public abstract string Title { get; }
     public virtual int Order => 500;

@@ -66,11 +66,13 @@ Null-safe access. Every property returns `null` outside the house.
 - `Stat FindStat(string name)`: case-insensitive; throws with the list of known names
 - `void SetStat(string name, float value)`: goes through the game's setter, so thresholds and UI react
 - `bool GodMode { get; }` and `void SetGodMode(bool enabled)`
+- `bool NeedsFrozen { get; }` and `void SetNeedsFrozen(bool frozen)`: needs stop draining without god mode
+- `float SpeedMultiplier { get; }` and `void SetSpeedMultiplier(float)`: walking speed (clamped 0.1-10). Speed is a "sticky" stat the game resets to its base value every frame, so this changes the base value
 - `void Teleport(Vector3 target)` and `void Teleport(Location room)`: moves the player and held pickups, zeroes velocity
 - `void Look(Vector3 direction)`: sets yaw and clamped camera pitch
 - `const float StandingHeight = 0.91f`
 
-God mode blocks `DieAccessor`, `Obliterate` and `SkeletonizeAccessor` on `Player_Abilities` (see Patches) and sets `invincible` and `pausedNeeds` on `PlayerStats`. It is re-applied on each `HouseReady` because the player object is new after a load, so `SetGodMode` before the house exists still takes effect.
+God mode blocks `DieAccessor`, `Obliterate` and `SkeletonizeAccessor` on `Player_Abilities` (see Patches) and sets `invincible` and `pausedNeeds` on `PlayerStats`. God mode, frozen needs and speed are re-applied on each `HouseReady` because the player object is new after a load, so setting them before the house exists still takes effect.
 
 ### Money
 
