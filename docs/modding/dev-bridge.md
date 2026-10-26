@@ -222,8 +222,13 @@ Release builds have no Unity profiler, so these measure the running game from th
 | `perf.gc` | `count` (default 3) | Runs full garbage collections and times each: how long one GC freezes the game. |
 | `perf.save` | none | Times one save. Writes a real save file. |
 | `perf.savebreakdown` | `top` | Saves once with timers on the save steps and every object's Save method. Writes a real save file. |
+| `textures.count` | `top?`: groups to list, default 25 | Every `Texture2D` and `RenderTexture` in memory, grouped by type, name and size, with a size estimate, how many render textures hold GPU memory (`IsCreated`) and render textures by format. Run `type.call` `UnityEngine.Resources.UnloadUnusedAssets` first to count only what's still referenced. |
+| `textures.users` | `name` | What uses a texture: renderer materials (with the property), raw images and cameras rendering into it. |
+| `leaks.find` | `depth?` (default 6), `type?`: type name to look for, `all?`: bool | Walks static fields, ScriptableObject assets and objects kept across scenes, and lists the ones that still lead to destroyed Unity objects, with a path to one of them. Slow on big object graphs. |
 
 Timers add a little overhead to every timed call, so compare methods with each other rather than with an untimed run. Back up the save folder before `perf.save` and `perf.savebreakdown`.
+
+To check for a texture leak: `textures.count` after an `UnloadUnusedAssets`, load the house again (`scene.load`), and count again. The counts should stay about the same.
 
 ## Target addressing
 
