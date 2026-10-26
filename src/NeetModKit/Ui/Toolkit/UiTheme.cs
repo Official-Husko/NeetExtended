@@ -30,6 +30,9 @@ public sealed class UiTheme
     /// <summary>Default sizes for controls built in this theme.</summary>
     public UiMetrics Metrics { get; set; } = UiMetrics.Menu;
 
+    /// <summary>How scrollbars look in this theme, or null to keep the template's own look.</summary>
+    public UiScrollbarStyle ScrollbarStyle { get; set; }
+
     /// <summary>The source object the templates were taken from (for its canvas settings).</summary>
     public Transform Source { get; private set; }
 

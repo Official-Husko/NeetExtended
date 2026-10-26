@@ -4,7 +4,7 @@ NeetModKit builds its UI from copies of the game's own uGUI elements. Nothing is
 
 Namespaces used below:
 
-- `NeetModKit.Ui.Toolkit`: `UiBuilder`, `UiTheme`, `UiThemes`, `UiTemplate`, `UiMetrics`, `UiWindow`, `UiCanvas`
+- `NeetModKit.Ui.Toolkit`: `UiBuilder`, `UiTheme`, `UiThemes`, `UiTemplate`, `UiMetrics`, `UiScrollbarStyle`, `UiWindow`, `UiCanvas`
 - `NeetModKit.Ui`: `UiCloning`
 - `NeetModKit.Menu`: `ModMenu`, `MenuPage`, `MenuPalette`
 - `NeetModKit.Settings`: `ModSettings`, `RangeAttribute`, `LabelAttribute`, `HiddenAttribute`
@@ -34,7 +34,9 @@ Source: the pause menu's settings canvas (`Feedback_Sender._`, `Canvas_Settings/
 | `Toggle` | `Bloom_Toggle` | Checkbox |
 | `Slider` | `Brightness_Slider` | Slider |
 | `Input` | `CommentInput` | Single-line text box |
-| `Scrollbar` | `Quality_Dropdown/Template/Scrollbar` | Scrollbar |
+| `Scrollbar` | `Quality_Dropdown/Template/Scrollbar` | Scrollbar, recoloured by the theme's `ScrollbarStyle` (below) |
+
+The dropdown's own scrollbar is white, so the menu theme sets `ScrollbarStyle = UiScrollbarStyle.Menu`: the track and the handle both use the game's rounded `UISprite`, the track dark and see-through, the handle orange like the sliders and the selected tab, lighter when hovered and violet while dragged. `UiScrollbarStyle` has `Track`, `Handle`, `HandleHover` and `HandlePressed` colours; a theme with no style keeps the template's look (the computer theme does).
 
 ### `UiThemes.Computer`
 
@@ -65,7 +67,7 @@ Default sizes, one set per theme. The computer screen is only about 174 units wi
 | `LabelWidth` | 190 | 50 | Caption column in `Slider` and `LabeledInput` |
 | `ReadoutWidth` | 60 | 18 | Value readout beside a slider |
 | `Spacing` | 6 | 2 | Gap used by sliders, inputs and app pages |
-| `ScrollbarWidth` | 8 | 3 | Width of scrollbars |
+| `ScrollbarWidth` | 10 | 3 | Width of scrollbars |
 
 A builder takes its sizes from `Theme.Metrics`. A theme's `Metrics` defaults to `UiMetrics.Menu`.
 

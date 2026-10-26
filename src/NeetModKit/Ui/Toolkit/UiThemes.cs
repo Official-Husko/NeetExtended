@@ -25,7 +25,10 @@ public static class UiThemes
             [UiTemplate.Slider] = Settings + "Brightness_Slider",
             [UiTemplate.Input] = Settings + "CommentInput",
             [UiTemplate.Scrollbar] = Settings + "Quality_Dropdown/Template/Scrollbar",
-        });
+        })
+    {
+        ScrollbarStyle = UiScrollbarStyle.Menu,
+    };
 
     /// <summary>The computer's websites: their fonts, page backgrounds and buttons. Controls fall back to the menu theme.</summary>
     public static readonly UiTheme Computer = new UiTheme("Computer", () => GameRefs.Computer != null ? GameRefs.Computer.transform : null,

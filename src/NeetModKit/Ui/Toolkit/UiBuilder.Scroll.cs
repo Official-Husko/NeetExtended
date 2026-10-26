@@ -7,7 +7,8 @@ public sealed partial class UiBuilder
 {
     /// <summary>
     /// A vertically scrolling area that takes the remaining height. Returns a builder for its
-    /// content. Uses the scrollbar from the game's dropdowns.
+    /// content. Uses the scrollbar from the game's dropdowns, coloured by the theme's
+    /// <see cref="UiTheme.ScrollbarStyle"/>.
     /// </summary>
     public UiBuilder Scroll(out ScrollRect scrollRect, float flexibleHeight = 1f, float spacing = 6f)
     {
@@ -43,6 +44,7 @@ public sealed partial class UiBuilder
         barRect.offsetMax = Vector2.zero;
         var scrollbar = bar.GetComponent<Scrollbar>();
         scrollbar.direction = Scrollbar.Direction.BottomToTop;
+        Theme.ScrollbarStyle?.Apply(scrollbar);
         scrollRect.verticalScrollbar = scrollbar;
         scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
 

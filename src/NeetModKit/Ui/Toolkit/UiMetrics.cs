@@ -9,7 +9,7 @@ public sealed class UiMetrics
     public float LabelWidth = 190f;
     public float ReadoutWidth = 60f;
     public float Spacing = 6f;
-    public float ScrollbarWidth = 8f;
+    public float ScrollbarWidth = 10f;
 
     public static readonly UiMetrics Menu = new UiMetrics();
 
