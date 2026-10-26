@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>NeetLoader</RootNamespace>
+    <Description>Mod loader for NEET Demo.</Description>
+  </PropertyGroup>
+
+  <!-- The loader and Harmony live in NEET_Data/Managed so Unity and Mono find them without help. -->
+  <Target Name="NeetDeployLoader" AfterTargets="Build" Condition="'$(NeetDeploy)' == 'true'">
+    <ItemGroup>
+      <_NeetLoaderFile Include="$(OutDir)NeetLoader.dll;$(OutDir)NeetLoader.pdb" />
+      <_NeetLoaderFile Include="$(NuGetPackageRoot)lib.harmony/$(HarmonyVersion)/lib/net472/0Harmony.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_NeetLoaderFile)" DestinationFolder="$(NeetManagedDir)" SkipUnchangedFiles="true" />
+    <Message Importance="high" Text="NeetLoader -> $(NeetManagedDir)" />
+  </Target>
+</Project>
