@@ -8,6 +8,11 @@
     <ProjectReference Include="../NeetLoader/NeetLoader.csproj" />
   </ItemGroup>
 
+  <!-- The pack changelog ships with the framework; the What's New page reads it from there. -->
+  <ItemGroup>
+    <None Include="$(RepoRoot)changelog.json" Link="changelog.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <!-- Ships as a regular mod folder: <game>/Mods/NeetModKit. -->
   <Import Project="$(RepoRoot)build/Mod.targets" />
 </Project>
