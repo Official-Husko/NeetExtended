@@ -13,26 +13,13 @@ namespace NeetModKit.Saves;
 /// </summary>
 public static class SaveStorage
 {
-    public static bool Compress => KitMod.Config?.Value.CompressSaves ?? true;
-
-    /// <summary>Replaces JToken.ToString in SaveAll: minified when compressing, the game's own indenting otherwise.</summary>
+    /// <summary>Replaces JToken.ToString in SaveAll while compressing: indentation is wasted space.</summary>
     public static string Serialize(JToken token, Formatting formatting, JsonConverter[] converters) =>
-        token.ToString(Compress ? Formatting.None : formatting, converters);
+        token.ToString(Formatting.None, converters);
 
-    /// <summary>Replaces File.WriteAllText in SaveAll.</summary>
-    public static void WriteGameSave(string path, string json)
-    {
-        if (Compress)
-        {
-            path = Path.ChangeExtension(path, SaveCodec.Extension);
-            File.WriteAllBytes(path, SaveCodec.Encode(json));
-        }
-        else
-        {
-            File.WriteAllText(path, json);
-        }
-        Prune(Path.GetDirectoryName(path));
-    }
+    /// <summary>Replaces File.WriteAllText in SaveAll while compressing. Keeps the game's "neetSave_" name.</summary>
+    public static void WriteGameSave(string path, string json) =>
+        File.WriteAllBytes(Path.ChangeExtension(path, SaveCodec.Extension), SaveCodec.Encode(json));
 
     /// <summary>Replaces File.ReadAllText in LoadAll. Reads both .nsav and plain JSON saves.</summary>
     public static string ReadGameSave(string path) => SaveCodec.Decode(File.ReadAllBytes(path));

@@ -1,4 +1,4 @@
-using NeetLoader;
+using NeetLoader.Runtime;
 using NeetModKit.Menu;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +15,7 @@ internal static class PauseMenuMods
     private const string ColumnName = "NeetModKit_Mods";
     private static readonly string[] FeedbackParts = { "ReportType", "CommentInput", "DataDisclaimer" };
 
-    public static void Apply(NeetMod owner)
+    public static void Apply(ITracker owner)
     {
         var menu = Feedback_Sender._;
         var canvas = menu != null ? menu.transform.Find("Canvas_Settings") : null;

@@ -7,6 +7,7 @@ namespace NeetModKit.Patches;
 /// the game is abandoned, and reports from changed code would only be misleading.
 /// </summary>
 [HarmonyPatch(typeof(Feedback_Sender), nameof(Feedback_Sender.SendFeedback))]
+[HarmonyPatchCategory(Features.Builtin.NoFeedbackFeature.FeatureId)]
 internal static class FeedbackPatches
 {
     private static bool Prefix()
