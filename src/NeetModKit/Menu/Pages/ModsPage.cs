@@ -78,19 +78,30 @@ internal sealed class ModsPage : MenuPage
         if (mod.Error != null)
             details.Text(mod.Error, MenuPalette.Bad);
 
+        var alwaysOn = ModRegistry.AlwaysOnBecause(mod);
         var actions = details.Row(8f, 26f);
         if (mod.State == ModState.Loaded)
         {
             if (mod.CanHotReload)
                 actions.Button("RELOAD", () => ModRegistry.Reload(mod.Id, Report("Reloaded.")));
-            actions.Button("UNLOAD", () => ModRegistry.Unload(mod.Id, Report("Unloaded.")));
+            if (alwaysOn == null)
+                actions.Button("UNLOAD", () => ModRegistry.Unload(mod.Id, Report("Unloaded.")));
         }
         else
         {
             actions.Button("LOAD NOW", () => ModRegistry.Load(mod.Id, Report("Loaded.")));
         }
         actions.Space(10f);
-        actions.Toggle("Load when the game starts", ModRegistry.IsEnabled(mod.Id), on => ModRegistry.SetEnabled(mod.Id, on));
+        if (alwaysOn == null)
+            actions.Toggle("Load when the game starts", ModRegistry.IsEnabled(mod.Id), on =>
+            {
+                string error = ModRegistry.SetEnabled(mod.Id, on);
+                if (error != null)
+                    Report(null)(error);
+            });
+        else
+            actions.Text(MenuPalette.Paint("ALWAYS ON", MenuPalette.Good) +
+                         (alwaysOn == mod ? "" : "  " + MenuPalette.Paint($"({alwaysOn.Manifest.DisplayName} needs it)", MenuPalette.Muted)));
         _result = details.Text("", MenuPalette.Muted);
 
         BuildFeatures(details, mod);
