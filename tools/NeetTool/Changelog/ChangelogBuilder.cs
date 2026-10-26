@@ -24,6 +24,7 @@ public static class ChangelogBuilder
         ["openhouse"] = "Open House",
         ["phone"] = "Phone Expansion",
         ["patches"] = "Unofficial NEET Patches",
+        ["tv"] = "Custom TV Stations",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
         ["ui"] = "Interface",
