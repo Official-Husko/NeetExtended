@@ -20,7 +20,7 @@ public static class UiCanvas
         canvas.sortingOrder = sortingOrder;
 
         var scaler = go.AddComponent<CanvasScaler>();
-        var source = UiTemplates.ScalerSource;
+        var source = UiThemes.MenuScaler;
         if (source != null)
         {
             scaler.uiScaleMode = source.uiScaleMode;

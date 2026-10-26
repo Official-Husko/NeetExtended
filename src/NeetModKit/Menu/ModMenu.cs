@@ -36,7 +36,7 @@ public static class ModMenu
         // The window is built from the pause menu's elements, which only exist once a scene is up.
         if (_window == null)
         {
-            if (!UiTemplates.Ensure())
+            if (!UiThemes.Menu.Ensure())
             {
                 KitMod.Instance?.Log.Warn("The mod menu can't open before the game's menus are loaded.");
                 return;
@@ -84,7 +84,7 @@ public static class ModMenu
             NeetLoader.Runtime.ReloadState.Put(ReopenKey, _window.SelectedTitle);
         Close();
         KitMod.Config.Changed -= ApplyConfig;
-        UiTemplates.Release();
+        UiThemes.ReleaseAll();
         _window = null;
     }
 

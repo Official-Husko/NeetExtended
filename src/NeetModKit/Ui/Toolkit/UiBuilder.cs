@@ -14,18 +14,22 @@ public sealed partial class UiBuilder
     /// <summary>True for rows (left to right), false for columns (top to bottom).</summary>
     public bool Horizontal { get; }
 
-    public UiBuilder(RectTransform root, bool horizontal = false)
+    /// <summary>Which game elements controls are copied from.</summary>
+    public UiTheme Theme { get; }
+
+    public UiBuilder(RectTransform root, UiTheme theme = null, bool horizontal = false)
     {
         Root = root;
+        Theme = theme ?? UiThemes.Menu;
         Horizontal = horizontal;
     }
 
     /// <summary>Makes a builder for <paramref name="root"/>, giving it a vertical layout if it has none.</summary>
-    public static UiBuilder Vertical(RectTransform root, float spacing = 6f, RectOffset padding = null)
+    public static UiBuilder Vertical(RectTransform root, float spacing = 6f, RectOffset padding = null, UiTheme theme = null)
     {
         if (root.GetComponent<HorizontalOrVerticalLayoutGroup>() == null)
             ConfigureLayout(root.gameObject.AddComponent<VerticalLayoutGroup>(), spacing, padding);
-        return new UiBuilder(root);
+        return new UiBuilder(root, theme);
     }
 
     /// <summary>A horizontal row; returns a builder that adds to it left to right.</summary>
@@ -37,7 +41,7 @@ public sealed partial class UiBuilder
         layout.childAlignment = TextAnchor.MiddleLeft;
         // A fixed-height row must not grow when the column has spare room.
         Size(rect, height: height, flexibleWidth: 1f, flexibleHeight: height >= 0f ? 0f : -1f);
-        return new UiBuilder(rect, horizontal: true);
+        return new UiBuilder(rect, Theme, horizontal: true);
     }
 
     /// <summary>A nested vertical group, optionally with a fixed width or taking the remaining width.</summary>
@@ -46,7 +50,7 @@ public sealed partial class UiBuilder
         var rect = NewChild("Column");
         ConfigureLayout(rect.gameObject.AddComponent<VerticalLayoutGroup>(), spacing, null);
         Size(rect, width: width, flexibleWidth: width < 0f && flexibleWidth == 0f ? 1f : flexibleWidth, flexibleHeight: flexibleHeight);
-        return new UiBuilder(rect);
+        return new UiBuilder(rect, Theme);
     }
 
     /// <summary>A tinted box with padding, for grouping things.</summary>
@@ -57,7 +61,7 @@ public sealed partial class UiBuilder
         image.color = tint ?? new Color(1f, 1f, 1f, 0.05f);
         ConfigureLayout(rect.gameObject.AddComponent<VerticalLayoutGroup>(), 6f, new RectOffset(padding, padding, padding, padding));
         Size(rect, flexibleWidth: 1f, flexibleHeight: flexibleHeight);
-        return new UiBuilder(rect);
+        return new UiBuilder(rect, Theme);
     }
 
     /// <summary>
@@ -72,7 +76,7 @@ public sealed partial class UiBuilder
         grid.constraint = GridLayoutGroup.Constraint.Flexible;
         grid.childAlignment = TextAnchor.UpperLeft;
         Size(rect, flexibleWidth: 1f);
-        return new UiBuilder(rect);
+        return new UiBuilder(rect, Theme);
     }
 
     /// <summary>Empty space; in a row it's horizontal, in a column vertical.</summary>
@@ -128,7 +132,7 @@ public sealed partial class UiBuilder
 
     internal GameObject Copy(UiTemplate template, string name)
     {
-        var go = Object.Instantiate(UiTemplates.Get(template), Root, false);
+        var go = Object.Instantiate(Theme.Get(template), Root, false);
         go.name = name;
         go.SetActive(true);
         return go;

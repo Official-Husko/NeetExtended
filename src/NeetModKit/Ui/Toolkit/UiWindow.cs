@@ -25,13 +25,13 @@ public sealed class UiWindow
 
     public UiWindow(NeetMod owner, string title, Action onClose, float widthShare = 0.92f, float heightShare = 0.9f)
     {
-        if (!UiTemplates.Ensure())
+        if (!UiThemes.Menu.Ensure())
             throw new InvalidOperationException("The game's menu isn't loaded yet, so there's nothing to build the window from.");
 
         var canvas = UiCanvas.Create(owner, "NeetModKit.Window." + title);
         _root = canvas.gameObject;
 
-        var backdrop = UnityEngine.Object.Instantiate(UiTemplates.Get(UiTemplate.Backdrop), canvas.transform, false);
+        var backdrop = UnityEngine.Object.Instantiate(UiThemes.Menu.Get(UiTemplate.Backdrop), canvas.transform, false);
         UiBuilder.Stretch((RectTransform)backdrop.transform);
 
         var frame = new UiBuilder((RectTransform)canvas.transform).NewChild("Frame");

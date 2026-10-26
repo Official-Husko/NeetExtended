@@ -16,12 +16,12 @@ public sealed partial class UiBuilder
         var area = NewChild("Scroll");
         Size(area, flexibleWidth: 1f, flexibleHeight: flexibleHeight);
 
-        var viewport = Stretch(new UiBuilder(area).NewChild("Viewport"), right: ScrollbarWidth + 4f);
+        var viewport = Stretch(new UiBuilder(area, Theme).NewChild("Viewport"), right: ScrollbarWidth + 4f);
         viewport.gameObject.AddComponent<RectMask2D>();
         // An invisible graphic so the mouse wheel works anywhere over the area, not only over text.
         viewport.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.001f);
 
-        var content = new UiBuilder(viewport).NewChild("Content");
+        var content = new UiBuilder(viewport, Theme).NewChild("Content");
         content.anchorMin = new Vector2(0f, 1f);
         content.anchorMax = new Vector2(1f, 1f);
         content.pivot = new Vector2(0.5f, 1f);
@@ -35,7 +35,7 @@ public sealed partial class UiBuilder
         scrollRect.movementType = ScrollRect.MovementType.Clamped;
         scrollRect.scrollSensitivity = 25f;
 
-        var bar = Object.Instantiate(UiTemplates.Get(UiTemplate.Scrollbar), area, false);
+        var bar = Object.Instantiate(Theme.Get(UiTemplate.Scrollbar), area, false);
         bar.name = "Scrollbar";
         var barRect = (RectTransform)bar.transform;
         barRect.anchorMin = new Vector2(1f, 0f);
@@ -48,7 +48,7 @@ public sealed partial class UiBuilder
         scrollRect.verticalScrollbar = scrollbar;
         scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
 
-        return Vertical(content, spacing);
+        return Vertical(content, spacing, theme: Theme);
     }
 
     /// <summary>Fills the parent, minus margins.</summary>
