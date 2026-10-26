@@ -64,6 +64,7 @@ public sealed class KitMod : NeetMod
         ModMenu.Update();
         Features.ModFeatures.Update();
         IO.FileWatch.TickAll();
+        IO.ModContent.TickAll();
     }
 
     public override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
