@@ -15,7 +15,8 @@ namespace CardExpansion.UI;
 /// </summary>
 internal sealed class CardSiteUi
 {
-    private const string SiteUrl = "anime";
+    // Looked up by app id, so it keeps working whatever URL the player gives the site.
+    private const string SiteApp = "AnimeClicker";
     private const float RowHeight = 15f;
     private const float RowY = -19.5f;
     private const float FirstX = -70f;
@@ -66,7 +67,7 @@ internal sealed class CardSiteUi
     /// <summary>Finds the site; a new house load means a new site, so start from scratch.</summary>
     private bool Locate()
     {
-        var site = ComputerControl.Site(SiteUrl);
+        var site = ComputerApps.Find(SiteApp)?.Panel;
         if (site == null)
             return false;
         if (site == _site)
