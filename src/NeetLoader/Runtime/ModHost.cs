@@ -95,6 +95,7 @@ internal sealed class ModHost : MonoBehaviour
     {
         _quit.Invoke(QuitCall, _log);
         _log.Info("Game closing");
+        CleanExit.Arm(_log);
         LogHub.Shutdown();
     }
 }
