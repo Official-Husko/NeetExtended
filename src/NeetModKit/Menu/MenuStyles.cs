@@ -15,6 +15,10 @@ internal static class MenuStyles
     public static readonly Color Muted = new Color(0.65f, 0.65f, 0.7f);
 
     public static GUIStyle Window, Title, Header, Text, TextLine, Small, Tab, TabActive, Button, ListItem, ListItemActive, Box;
+    public static GUIStyle Toggle, Input, Slider, SliderThumb, Scrollbar, ScrollbarThumb;
+
+    /// <summary>Themed copy of the default skin, set as GUI.skin while the menu draws.</summary>
+    public static GUISkin Skin;
 
     private static bool _built;
 
@@ -24,11 +28,11 @@ internal static class MenuStyles
             return;
         _built = true;
 
-        var dark = Solid(new Color(0.09f, 0.09f, 0.11f, 0.97f));
-        var panel = Solid(new Color(0.13f, 0.13f, 0.16f, 1f));
-        var button = Solid(new Color(0.21f, 0.21f, 0.26f, 1f));
-        var hover = Solid(new Color(0.28f, 0.28f, 0.34f, 1f));
-        var active = Solid(new Color(0.35f, 0.2f, 0.3f, 1f));
+        var dark = MenuTextures.Solid(new Color(0.09f, 0.09f, 0.11f, 0.97f));
+        var panel = MenuTextures.Solid(new Color(0.13f, 0.13f, 0.16f, 1f));
+        var button = MenuTextures.Solid(new Color(0.21f, 0.21f, 0.26f, 1f));
+        var hover = MenuTextures.Solid(new Color(0.28f, 0.28f, 0.34f, 1f));
+        var active = MenuTextures.Solid(new Color(0.35f, 0.2f, 0.3f, 1f));
 
         Window = new GUIStyle(GUI.skin.box) { padding = new RectOffset(14, 14, 12, 12) };
         Window.normal.background = dark;
@@ -55,9 +59,80 @@ internal static class MenuStyles
         TabActive.normal.background = TabActive.hover.background = active;
         TabActive.normal.textColor = TabActive.hover.textColor = Accent;
 
+        BuildControls();
+
         ListItem = new GUIStyle(Button) { alignment = TextAnchor.MiddleLeft };
         ListItemActive = new GUIStyle(ListItem);
         ListItemActive.normal.background = ListItemActive.hover.background = active;
+    }
+
+    private static readonly Color Field = new Color(0.07f, 0.07f, 0.09f, 1f);
+    private static readonly Color Edge = new Color(0.32f, 0.32f, 0.38f, 1f);
+
+    /// <summary>
+    /// Themes the controls on a copy of the default skin. Unity looks scrollbar parts up by
+    /// style name in the active skin, so the styles are edited in place rather than replaced.
+    /// The skin is only active while the menu draws, so mod pages get the theme for free.
+    /// </summary>
+    private static void BuildControls()
+    {
+        Skin = Object.Instantiate(GUI.skin);
+        Skin.hideFlags = HideFlags.HideAndDontSave;
+
+        var fieldTex = MenuTextures.Bordered(Field, Edge);
+        var fieldFocus = MenuTextures.Bordered(Field, Accent);
+        var one = new RectOffset(1, 1, 1, 1);
+
+        Toggle = Skin.toggle;
+        Toggle.fixedWidth = Toggle.fixedHeight = 18;
+        Toggle.margin = new RectOffset(0, 8, 3, 3);
+        Toggle.padding = new RectOffset(0, 0, 0, 0);
+        Toggle.overflow = new RectOffset(0, 0, 0, 0);
+        Toggle.border = one;
+        Toggle.normal.background = fieldTex;
+        Toggle.hover.background = Toggle.focused.background = fieldFocus;
+        Toggle.active.background = MenuTextures.Bordered(Field, Color.white);
+        Toggle.onNormal.background = Toggle.onHover.background = Toggle.onFocused.background = Toggle.onActive.background =
+            MenuTextures.Check(Accent, new Color(0.1f, 0.05f, 0.08f));
+
+        Input = Skin.textField;
+        Input.fontSize = 13;
+        Input.padding = new RectOffset(8, 8, 5, 5);
+        Input.border = one;
+        Input.normal.background = Input.hover.background = fieldTex;
+        Input.focused.background = Input.onFocused.background = fieldFocus;
+        Input.normal.textColor = Input.hover.textColor = Input.focused.textColor = Input.onFocused.textColor = Color.white;
+
+        Slider = Skin.horizontalSlider;
+        Slider.fixedHeight = 6;
+        Slider.margin = new RectOffset(4, 4, 10, 10);
+        Slider.padding = new RectOffset(0, 0, 0, 0);
+        Slider.border = one;
+        Slider.normal.background = fieldTex;
+
+        SliderThumb = Skin.horizontalSliderThumb;
+        SliderThumb.fixedWidth = 12;
+        SliderThumb.fixedHeight = 18;
+        SliderThumb.overflow = new RectOffset(0, 0, 6, 6);
+        SliderThumb.normal.background = MenuTextures.Solid(Accent);
+        SliderThumb.hover.background = SliderThumb.active.background = SliderThumb.focused.background =
+            MenuTextures.Solid(Color.Lerp(Accent, Color.white, 0.3f));
+
+        Scrollbar = Skin.verticalScrollbar;
+        Scrollbar.fixedWidth = 8;
+        Scrollbar.margin = new RectOffset(6, 0, 0, 0);
+        Scrollbar.border = new RectOffset(0, 0, 0, 0);
+        Scrollbar.normal.background = MenuTextures.Solid(Field);
+
+        ScrollbarThumb = Skin.verticalScrollbarThumb;
+        ScrollbarThumb.fixedWidth = 8;
+        ScrollbarThumb.border = new RectOffset(0, 0, 0, 0);
+        ScrollbarThumb.normal.background = MenuTextures.Solid(Edge);
+        ScrollbarThumb.hover.background = ScrollbarThumb.active.background = MenuTextures.Solid(Accent);
+
+        // No arrow buttons on the scrollbar.
+        Skin.verticalScrollbarUpButton.fixedHeight = Skin.verticalScrollbarDownButton.fixedHeight = 0;
+        Skin.verticalScrollbarUpButton.normal.background = Skin.verticalScrollbarDownButton.normal.background = null;
     }
 
     private static readonly System.Collections.Generic.Dictionary<(GUIStyle, Color), GUIStyle> ColoredCache =
@@ -81,11 +156,4 @@ internal static class MenuStyles
         return s;
     }
 
-    private static Texture2D Solid(Color color)
-    {
-        var tex = new Texture2D(1, 1) { hideFlags = HideFlags.HideAndDontSave };
-        tex.SetPixel(0, 0, color);
-        tex.Apply();
-        return tex;
-    }
 }

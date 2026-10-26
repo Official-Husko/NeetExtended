@@ -20,7 +20,7 @@ public static class Widgets
     public static bool Toggle(string label, bool value)
     {
         GUILayout.BeginHorizontal();
-        bool result = GUILayout.Toggle(value, "", GUILayout.Width(20));
+        bool result = GUILayout.Toggle(value, GUIContent.none, MenuStyles.Toggle);
         if (GUILayout.Button(label, MenuStyles.TextLine))
             result = !result;
         GUILayout.EndHorizontal();
@@ -31,7 +31,7 @@ public static class Widgets
     {
         GUILayout.BeginHorizontal();
         GUILayout.Label(label, MenuStyles.TextLine, GUILayout.Width(220));
-        float result = GUILayout.HorizontalSlider(value, min, max, GUILayout.ExpandWidth(true));
+        float result = GUILayout.HorizontalSlider(value, min, max, MenuStyles.Slider, MenuStyles.SliderThumb, GUILayout.ExpandWidth(true));
         GUILayout.Label(result.ToString(format), MenuStyles.Text, GUILayout.Width(60));
         GUILayout.EndHorizontal();
         return result;
@@ -41,7 +41,7 @@ public static class Widgets
     {
         GUILayout.BeginHorizontal();
         GUILayout.Label(label, MenuStyles.TextLine, GUILayout.Width(labelWidth));
-        string result = GUILayout.TextField(value ?? "", GUILayout.ExpandWidth(true));
+        string result = GUILayout.TextField(value ?? "", MenuStyles.Input, GUILayout.ExpandWidth(true));
         GUILayout.EndHorizontal();
         return result;
     }

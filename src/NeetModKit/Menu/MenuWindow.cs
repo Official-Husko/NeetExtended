@@ -39,6 +39,8 @@ internal sealed class MenuWindow
     public void Draw()
     {
         MenuStyles.Ensure();
+        var previousSkin = GUI.skin;
+        GUI.skin = MenuStyles.Skin;
 
         float scale = Mathf.Clamp(KitMod.Config.Value.MenuScale, 0.6f, 2f) * Screen.height / 1080f;
         var previousMatrix = GUI.matrix;
@@ -53,7 +55,7 @@ internal sealed class MenuWindow
         DrawTabs();
         Widgets.Space(6);
 
-        _scroll = GUILayout.BeginScrollView(_scroll);
+        _scroll = GUILayout.BeginScrollView(_scroll, false, false, GUIStyle.none, MenuStyles.Scrollbar, GUIStyle.none);
         if (_selected != null && Contains(_selected))
             _selected.Draw();
         else
@@ -62,6 +64,7 @@ internal sealed class MenuWindow
 
         GUILayout.EndArea();
         GUI.matrix = previousMatrix;
+        GUI.skin = previousSkin;
     }
 
     private void DrawTitleBar()
