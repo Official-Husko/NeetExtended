@@ -5,5 +5,6 @@
   "author": "pawbeans",
   "description": "Stops the pause menu from sending feedback to the original developer and hides the form. Reports from a modded game would describe code the developer never wrote.",
   "dependencies": { "NeetModKit": "0.1.0" },
-  "hotReload": true
+  "hotReload": true,
+  "essential": true
 }
