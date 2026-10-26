@@ -20,6 +20,7 @@ public static class ChangelogBuilder
         ["opensaves"] = "Open Saves",
         ["nofeedback"] = "No Feedback",
         ["pumpkin"] = "Pumpkin Smash",
+        ["cheats"] = "Cheat Menu",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
         ["ui"] = "Interface",
