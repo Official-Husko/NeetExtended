@@ -1,0 +1,9 @@
+{
+  "id": "OpenHouse",
+  "name": "Open House",
+  "version": "0.1.0",
+  "author": "pawbeans",
+  "description": "Removes the demo's invisible walls so you can walk into the pantry (and optionally the attic and roof), and can lift the demo's other limits.",
+  "dependencies": { "NeetModKit": "0.1.0" },
+  "hotReload": true
+}
