@@ -71,36 +71,6 @@ public static class UiCloning
             rect.sizeDelta = size.Value;
     }
 
-    // How many owners want each object hidden; it comes back only when none do.
-    private static readonly System.Collections.Generic.Dictionary<GameObject, int> HiddenBy =
-        new System.Collections.Generic.Dictionary<GameObject, int>();
-
-    /// <summary>
-    /// Hides a scene object until the owner cleans up. Several owners may hide the same object; it
-    /// only shows again once all of them are done.
-    /// </summary>
-    public static void Hide(ITracker owner, GameObject go)
-    {
-        if (go == null)
-            return;
-        HiddenBy.TryGetValue(go, out int count);
-        if (count == 0 && !go.activeSelf)
-            return; // Hidden by the game itself; leave it to the game.
-        HiddenBy[go] = count + 1;
-        go.SetActive(false);
-
-        owner.Track(Disposable.Create(() =>
-        {
-            if (!HiddenBy.TryGetValue(go, out int left))
-                return;
-            if (left > 1)
-            {
-                HiddenBy[go] = left - 1;
-                return;
-            }
-            HiddenBy.Remove(go);
-            if (go != null)
-                go.SetActive(true);
-        }));
-    }
+    /// <summary>Hides a scene object until the owner cleans up (see <see cref="Scenes.SceneEdits.Hide"/>).</summary>
+    public static void Hide(ITracker owner, GameObject go) => Scenes.SceneEdits.Hide(owner, go);
 }
