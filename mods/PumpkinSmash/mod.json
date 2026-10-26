@@ -1,0 +1,9 @@
+{
+  "id": "PumpkinSmash",
+  "name": "Pumpkin Smash",
+  "version": "0.1.0",
+  "author": "pawbeans",
+  "description": "A whack-a-pumpkin game on the in-game computer. Smash pumpkins for 30 seconds, beat your best score, earn a little cash.",
+  "dependencies": { "NeetModKit": "0.1.0" },
+  "hotReload": true
+}

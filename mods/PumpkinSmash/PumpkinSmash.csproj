@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>PumpkinSmash</RootNamespace>
+    <Description>A whack-a-pumpkin game for the in-game computer.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
+    <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
+  </ItemGroup>
+</Project>
