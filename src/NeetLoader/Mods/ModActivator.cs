@@ -54,13 +54,19 @@ internal static class ModActivator
         mod.State = ModState.Disabled;
     }
 
-    /// <summary>Patches class by class so a failure names the class that caused it.</summary>
+    /// <summary>
+    /// Patches class by class so a failure names the class that caused it. Classes with a
+    /// [HarmonyPatchCategory] are skipped: they belong to optional features that switch their own
+    /// patches on and off.
+    /// </summary>
     private static void ApplyPatches(ModInfo mod, Harmony harmony)
     {
         foreach (var assembly in mod.Assemblies)
         {
             foreach (var type in AccessTools.GetTypesFromAssembly(assembly))
             {
+                if (type.IsDefined(typeof(HarmonyPatchCategory), true))
+                    continue;
                 try
                 {
                     harmony.CreateClassProcessor(type).Patch();

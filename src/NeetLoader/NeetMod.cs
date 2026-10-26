@@ -17,7 +17,7 @@ namespace NeetLoader;
 /// tears the old instance down (<see cref="OnUnload"/>) and creates a new one.
 /// Override only the callbacks you need; the host skips the rest.
 /// </summary>
-public abstract class NeetMod
+public abstract class NeetMod : ITracker
 {
     private readonly List<IDisposable> _tracked = new List<IDisposable>();
     private Harmony _harmony;
