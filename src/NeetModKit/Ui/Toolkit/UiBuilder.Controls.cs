@@ -6,8 +6,7 @@ namespace NeetModKit.Ui.Toolkit;
 
 public sealed partial class UiBuilder
 {
-    private const float ButtonHeight = 26f;
-    private const float RowHeight = 22f;
+    private UiMetrics M => Theme.Metrics;
 
     /// <summary>Big orange header.</summary>
     public Text Header(string text) => Label(UiTemplate.Header, text, TextAnchor.MiddleLeft);
@@ -26,14 +25,17 @@ public sealed partial class UiBuilder
         return label;
     }
 
-    public Button Button(string label, Action onClick, float width = 140f, bool accent = false)
+    public Button Button(string label, Action onClick, float width = 0f, bool accent = false)
     {
         var go = Copy(accent ? UiTemplate.AccentButton : UiTemplate.Button, "Button " + label);
         UiCloning.SetText(go.transform, label);
         FitText(go.GetComponentInChildren<Text>());
         var button = go.GetComponent<Button>();
         button.onClick.AddListener(() => onClick());
-        Size(go.transform, width: width, height: ButtonHeight, flexibleWidth: width < 0f ? 1f : 0f);
+        // 0 = the theme's default width, negative = take the free width.
+        if (width == 0f)
+            width = M.ButtonWidth;
+        Size(go.transform, width: width, height: M.ButtonHeight, flexibleWidth: width < 0f ? 1f : 0f);
         return button;
     }
 
@@ -69,16 +71,16 @@ public sealed partial class UiBuilder
             labelWidth = text.preferredWidth;
         }
 
-        Size(go.transform, width: boxWidth + 8f + labelWidth + 4f, height: RowHeight, flexibleWidth: Horizontal ? 0f : 1f);
+        Size(go.transform, width: boxWidth + 8f + labelWidth + 4f, height: M.RowHeight, flexibleWidth: Horizontal ? 0f : 1f);
         return toggle;
     }
 
     /// <summary>A labelled slider with its value shown on the right.</summary>
     public Slider Slider(string label, float value, float min, float max, Action<float> onChange, bool wholeNumbers = false)
     {
-        var row = Row(10f, RowHeight);
+        var row = Row(M.Spacing * 1.5f, M.RowHeight);
         var caption = row.SubHeader(label);
-        Size(caption, width: 190f);
+        Size(caption, width: M.LabelWidth);
 
         var go = row.Copy(UiTemplate.Slider, "Slider " + label);
         var slider = go.GetComponent<Slider>();
@@ -86,10 +88,10 @@ public sealed partial class UiBuilder
         slider.maxValue = max;
         slider.wholeNumbers = wholeNumbers;
         slider.SetValueWithoutNotify(value);
-        Size(go.transform, height: 16f, flexibleWidth: 1f);
+        Size(go.transform, height: M.RowHeight * 0.7f, flexibleWidth: 1f);
 
         var readout = row.Text(Format(value, wholeNumbers));
-        Size(readout, width: 60f);
+        Size(readout, width: M.ReadoutWidth);
         slider.onValueChanged.AddListener(v =>
         {
             readout.text = Format(v, wholeNumbers);
@@ -108,15 +110,15 @@ public sealed partial class UiBuilder
         if (input.placeholder is Text hint)
             hint.text = placeholder ?? "";
         input.onValueChanged.AddListener(v => onChange(v));
-        Size(go.transform, width: width, height: RowHeight + 4f, flexibleWidth: width < 0f ? 1f : 0f);
+        Size(go.transform, width: width, height: M.RowHeight + 4f, flexibleWidth: width < 0f ? 1f : 0f);
         return input;
     }
 
     /// <summary>A label on the left and a text box on the right.</summary>
     public InputField LabeledInput(string label, string value, Action<string> onChange)
     {
-        var row = Row(10f, RowHeight + 4f);
-        Size(row.SubHeader(label), width: 190f);
+        var row = Row(M.Spacing * 1.5f, M.RowHeight + 4f);
+        Size(row.SubHeader(label), width: M.LabelWidth);
         return row.Input(value, onChange);
     }
 

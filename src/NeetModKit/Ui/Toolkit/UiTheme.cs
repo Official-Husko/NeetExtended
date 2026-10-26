@@ -27,6 +27,9 @@ public sealed class UiTheme
     /// <summary>Used for templates this theme doesn't define.</summary>
     public UiTheme Fallback { get; set; }
 
+    /// <summary>Default sizes for controls built in this theme.</summary>
+    public UiMetrics Metrics { get; set; } = UiMetrics.Menu;
+
     /// <summary>The source object the templates were taken from (for its canvas settings).</summary>
     public Transform Source { get; private set; }
 

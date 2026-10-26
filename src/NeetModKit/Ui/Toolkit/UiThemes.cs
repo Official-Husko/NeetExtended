@@ -40,6 +40,7 @@ public static class UiThemes
         })
     {
         Fallback = Menu,
+        Metrics = UiMetrics.Computer,
     };
 
     /// <summary>The pause menu's canvas scaler, so overlay windows come out the same size.</summary>

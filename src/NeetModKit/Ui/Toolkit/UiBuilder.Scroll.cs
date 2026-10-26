@@ -5,8 +5,6 @@ namespace NeetModKit.Ui.Toolkit;
 
 public sealed partial class UiBuilder
 {
-    private const float ScrollbarWidth = 8f;
-
     /// <summary>
     /// A vertically scrolling area that takes the remaining height. Returns a builder for its
     /// content. Uses the scrollbar from the game's dropdowns.
@@ -16,7 +14,7 @@ public sealed partial class UiBuilder
         var area = NewChild("Scroll");
         Size(area, flexibleWidth: 1f, flexibleHeight: flexibleHeight);
 
-        var viewport = Stretch(new UiBuilder(area, Theme).NewChild("Viewport"), right: ScrollbarWidth + 4f);
+        var viewport = Stretch(new UiBuilder(area, Theme).NewChild("Viewport"), right: Theme.Metrics.ScrollbarWidth + 4f);
         viewport.gameObject.AddComponent<RectMask2D>();
         // An invisible graphic so the mouse wheel works anywhere over the area, not only over text.
         viewport.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.001f);
@@ -41,7 +39,7 @@ public sealed partial class UiBuilder
         barRect.anchorMin = new Vector2(1f, 0f);
         barRect.anchorMax = new Vector2(1f, 1f);
         barRect.pivot = new Vector2(1f, 0.5f);
-        barRect.offsetMin = new Vector2(-ScrollbarWidth, 0f);
+        barRect.offsetMin = new Vector2(-Theme.Metrics.ScrollbarWidth, 0f);
         barRect.offsetMax = Vector2.zero;
         var scrollbar = bar.GetComponent<Scrollbar>();
         scrollbar.direction = Scrollbar.Direction.BottomToTop;
