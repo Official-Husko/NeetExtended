@@ -5,6 +5,7 @@ namespace CardExpansion.Patches;
 
 /// <summary>The Convert button pays the configured amount per 10K crystals instead of a flat $3.</summary>
 [HarmonyPatch(typeof(AnimeCardGenerator), nameof(AnimeCardGenerator.RedeemCrystals))]
+[HarmonyPatchCategory(Features.BetterExchangeFeature.FeatureId)]
 internal static class RedeemRatePatch
 {
     private const float CrystalsPerConversion = 10000f;

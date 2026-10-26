@@ -6,10 +6,6 @@ namespace CardExpansion;
 /// <summary>Stored in Mods/CardExpansion/config.json and shown in the mod menu.</summary>
 public sealed class CardExpansionConfig
 {
-    [Label("Spooky card set")]
-    [Description("Adds 12 Halloween cards after the normal ones. Takes effect the next time the house loads.")]
-    public bool SpookyCards = true;
-
     [Description("Crystals one summon costs.")]
     [Range(50, 5000)]
     public int SummonCost = 500;

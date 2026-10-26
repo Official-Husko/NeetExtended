@@ -1,6 +1,8 @@
 using System;
 using NeetLoader;
+using NeetLoader.Runtime;
 using NeetModKit.Desktop;
+using NeetModKit.Ui;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,58 +10,96 @@ using UnityEngine.UI;
 namespace CardExpansion.UI;
 
 /// <summary>
-/// A second row under the card site's header with the Summon and Auto-click buttons and a status
-/// line. The card grid is moved down to make room.
+/// A row under the card site's header for the features' buttons, plus a status line. The row (and
+/// the room made for it by moving the card grid down) exists while at least one button does.
 /// </summary>
 internal sealed class CardSiteUi
 {
     private const string SiteUrl = "anime";
     private const float RowHeight = 15f;
     private const float RowY = -19.5f;
+    private const float FirstX = -70f;
+    private const float SlotWidth = 32f;
+    private static readonly Vector2 ButtonSize = new Vector2(30f, 12f);
 
-    private Button _summon;
-    private Button _auto;
+    private readonly NeetMod _mod;
+    private GameObject _site;
+    private Transform _redeem, _meter;
+    private RectTransform _cards;
+    private IDisposable _rowSpace;
     private TMP_Text _status;
+    private int _buttons;
 
-    public bool Build(NeetMod owner, Action onSummon, Action onAuto)
+    public CardSiteUi(NeetMod mod)
     {
-        var site = ComputerControl.Site(SiteUrl);
-        var redeem = site != null ? site.transform.Find("RedeemButton") : null;
-        var meter = site != null ? site.transform.Find("CrystalMeter") : null;
-        var cards = site != null ? site.transform.Find("Cards") as RectTransform : null;
-        if (redeem == null || meter == null || cards == null)
-            return false;
-
-        ComputerUi.PushTopEdge(owner, cards, RowHeight);
-
-        var buttonSize = new Vector2(30f, 12f);
-        _summon = ComputerUi.CloneButton(owner, redeem, "CardExpansion_Summon", "", onSummon);
-        ComputerUi.Place(_summon, new Vector2(-70f, RowY), buttonSize);
-
-        _auto = ComputerUi.CloneButton(owner, redeem, "CardExpansion_Auto", "", onAuto);
-        ComputerUi.Place(_auto, new Vector2(-38f, RowY), buttonSize);
-
-        _status = ComputerUi.CloneLabel(owner, meter, "CardExpansion_Status", "");
-        _status.enableAutoSizing = false;
-        _status.fontSize = 6f;
-        _status.alignment = TextAlignmentOptions.Left;
-        var statusRect = (RectTransform)_status.transform;
-        statusRect.anchorMin = statusRect.anchorMax = statusRect.pivot = new Vector2(0.5f, 1f);
-        ComputerUi.Place(_status, new Vector2(28f, RowY + 1f), new Vector2(84f, 12f));
-        return true;
+        _mod = mod;
     }
 
-    public void SetLabels(string summon, string auto)
+    /// <summary>Adds a button in a fixed slot of the row, removed when <paramref name="owner"/> cleans up.</summary>
+    public Button AddButton(ITracker owner, int slot, string name, Action onClick)
     {
-        if (_summon != null)
-            ComputerUi.SetText(_summon.transform, summon);
-        if (_auto != null)
-            ComputerUi.SetText(_auto.transform, auto);
+        if (!Locate())
+        {
+            _mod.Log.Warn("Couldn't find the card site on the computer.");
+            return null;
+        }
+
+        if (_buttons++ == 0)
+            OpenRow();
+
+        var button = ComputerUi.CloneButton(owner, _redeem, "CardExpansion_" + name, "", onClick);
+        ComputerUi.Place(button, new Vector2(FirstX + slot * SlotWidth, RowY), ButtonSize);
+        owner.Track(Disposable.Create(() =>
+        {
+            if (--_buttons == 0)
+                CloseRow();
+        }));
+        return button;
     }
 
     public void SetStatus(string text)
     {
         if (_status != null)
             _status.text = text;
+    }
+
+    /// <summary>Finds the site; a new house load means a new site, so start from scratch.</summary>
+    private bool Locate()
+    {
+        var site = ComputerControl.Site(SiteUrl);
+        if (site == null)
+            return false;
+        if (site == _site)
+            return true;
+
+        _site = site;
+        _redeem = site.transform.Find("RedeemButton");
+        _meter = site.transform.Find("CrystalMeter");
+        _cards = site.transform.Find("Cards") as RectTransform;
+        _rowSpace = null;
+        _status = null;
+        _buttons = 0;
+        return _redeem != null && _meter != null && _cards != null;
+    }
+
+    private void OpenRow()
+    {
+        _rowSpace = ComputerUi.PushTopEdge(_cards, RowHeight);
+        _status = ComputerUi.CloneLabel(_mod, _meter, "CardExpansion_Status", "");
+        _status.enableAutoSizing = false;
+        _status.fontSize = 6f;
+        _status.alignment = TextAlignmentOptions.Left;
+        var rect = (RectTransform)_status.transform;
+        rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 1f);
+        ComputerUi.Place(_status, new Vector2(28f, RowY + 1f), new Vector2(84f, 12f));
+    }
+
+    private void CloseRow()
+    {
+        _rowSpace?.Dispose();
+        _rowSpace = null;
+        if (_status != null)
+            UiCloning.Remove(_status.gameObject);
+        _status = null;
     }
 }

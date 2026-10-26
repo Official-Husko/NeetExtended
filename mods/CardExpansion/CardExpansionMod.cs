@@ -1,78 +1,48 @@
-using CardExpansion.Cards;
 using CardExpansion.Features;
 using CardExpansion.UI;
 using NeetLoader;
 using NeetLoader.Config;
-using NeetModKit.Events;
+using NeetModKit.Features;
 using NeetModKit.Saves;
 using NeetModKit.Settings;
 
 namespace CardExpansion;
 
-/// <summary>Entry point: wires the card set, the features, the UI and the save data together.</summary>
+/// <summary>Entry point: settings, save data and the features (each can be switched on and off).</summary>
 public sealed class CardExpansionMod : NeetMod
 {
-    private readonly Summoner _summoner = new Summoner();
-    private readonly AutoClicker _autoClicker = new AutoClicker();
-    private CardSiteUi _ui;
+    private SummonFeature _summons;
+    private AutoClickerFeature _autoClicker;
+    private PromotionFixFeature _promotionFix;
 
     internal static CardExpansionMod Instance { get; private set; }
     internal ConfigFile<CardExpansionConfig> Config { get; private set; }
     internal CardState State { get; private set; } = new CardState();
+    internal CardSiteUi SiteUi { get; private set; }
 
     public override void OnLoad()
     {
         Instance = this;
+        SiteUi = new CardSiteUi(this);
         Config = LoadConfig<CardExpansionConfig>();
         Config.Save();
         Config.Changed += _ => RefreshLabels();
         ModSettings.Register(this, Config, "Card Expansion");
-
-        if (Config.Value.SpookyCards)
-            SpookyCollection.Register(this);
-
         ModSaveData.Register(this, SaveState, LoadState);
-        GameEvents.WhenHouseReady(this, OnHouseReady);
+
+        ModFeatures.Register(this, new SpookyCardsFeature());
+        ModFeatures.Register(this, _summons = new SummonFeature());
+        ModFeatures.Register(this, _autoClicker = new AutoClickerFeature());
+        ModFeatures.Register(this, new BetterExchangeFeature());
+        ModFeatures.Register(this, _promotionFix = new PromotionFixFeature());
     }
 
     public override void OnUnload() => Instance = null;
 
-    public override void OnUpdate()
-    {
-        if (GameEvents.IsHouseReady)
-            _autoClicker.Tick(Config.Value, State);
-    }
-
-    private void OnHouseReady()
-    {
-        _autoClicker.RefreshCards();
-        _ui = new CardSiteUi();
-        if (!_ui.Build(this, Summon, ToggleAuto))
-        {
-            Log.Warn("Couldn't find the card site on the computer; buttons not added.");
-            _ui = null;
-            return;
-        }
-        RefreshLabels();
-        _ui.SetStatus($"{State.Summons} summons, {State.Shinies} shiny");
-    }
-
-    private void Summon()
-    {
-        _ui?.SetStatus(_summoner.Summon(Config.Value, State));
-    }
-
-    private void ToggleAuto()
-    {
-        _ui?.SetStatus(_autoClicker.Buy(Config.Value, State));
-        RefreshLabels();
-    }
-
     private void RefreshLabels()
     {
-        var c = Config.Value;
-        string auto = !State.AutoClickerOwned ? $"Auto\n{c.AutoClickerCost}*" : State.AutoClickerOn ? "Auto\nON" : "Auto\nOFF";
-        _ui?.SetLabels($"Summon\n{c.SummonCost}*", auto);
+        _summons?.RefreshLabel();
+        _autoClicker?.RefreshLabel();
     }
 
     private CardState SaveState()
@@ -84,7 +54,8 @@ public sealed class CardExpansionMod : NeetMod
     private void LoadState(CardState state)
     {
         State = state;
-        CardBaseValues.Restore(state.CardBases);
+        if (_promotionFix == null || _promotionFix.Enabled)
+            CardBaseValues.Restore(state.CardBases);
         RefreshLabels();
     }
 }
