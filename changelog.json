@@ -180,6 +180,10 @@
         {
           "text": "Pumpkin Smash: a whack-a-pumpkin game on the in-game computer that pays a little cash.",
           "area": "Pumpkin Smash"
+        },
+        {
+          "text": "Cheat Menu mod: press Insert for god mode, needs, speed, teleport, money, crystals, spawning, fire, power, doors and game speed.",
+          "area": "Cheats"
         }
       ],
       "changed": [
@@ -206,6 +210,10 @@
         {
           "text": "Blocking feedback reports is now the No Feedback mod.",
           "area": "No Feedback"
+        },
+        {
+          "text": "Cheats moved out of the mod menu into the Cheat Menu mod, opened with Insert.",
+          "area": "Mod menu"
         }
       ],
       "fixed": [
