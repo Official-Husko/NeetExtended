@@ -1,5 +1,5 @@
 using System;
-using NeetLoader;
+using NeetLoader.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,12 +23,12 @@ public sealed class UiWindow
 
     public bool Visible => _root.activeSelf;
 
-    public UiWindow(NeetMod owner, string title, Action onClose, float widthShare = 0.92f, float heightShare = 0.9f)
+    public UiWindow(ITracker owner, string title, Action onClose, float widthShare = 0.92f, float heightShare = 0.9f, int sortingOrder = 1000)
     {
         if (!UiThemes.Menu.Ensure())
             throw new InvalidOperationException("The game's menu isn't loaded yet, so there's nothing to build the window from.");
 
-        var canvas = UiCanvas.Create(owner, "NeetModKit.Window." + title);
+        var canvas = UiCanvas.Create(owner, "NeetModKit.Window." + title, sortingOrder);
         _root = canvas.gameObject;
 
         var backdrop = UnityEngine.Object.Instantiate(UiThemes.Menu.Get(UiTemplate.Backdrop), canvas.transform, false);

@@ -1,11 +1,11 @@
 using HarmonyLib;
-using NeetModKit.Menu;
+using NeetModKit.Ui.Toolkit;
 
 namespace NeetModKit.Patches;
 
-/// <summary>The camera script locks the cursor every frame; this keeps it free while the mod menu is open.</summary>
+/// <summary>The camera script locks the cursor every frame; this keeps it free while a window holds the input lock.</summary>
 [HarmonyPatch(typeof(CameraControl), "Update")]
 internal static class MenuCursorPatch
 {
-    private static void Postfix() => MenuInput.ApplyCursor();
+    private static void Postfix() => UiInputLock.ApplyCursor();
 }

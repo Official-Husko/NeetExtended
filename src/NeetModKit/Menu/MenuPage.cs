@@ -2,27 +2,7 @@ using NeetModKit.Ui.Toolkit;
 
 namespace NeetModKit.Menu;
 
-/// <summary>
-/// One tab in the mod menu. <see cref="Build"/> lays the page out with the UI toolkit when it is
-/// shown; <see cref="Refresh"/> runs a few times a second while it's visible to update values.
-/// Call <see cref="Rebuild"/> when the layout itself has to change.
-/// </summary>
-public abstract class MenuPage
+/// <summary>A tab in the mod menu. See <see cref="UiPage"/> for the lifecycle.</summary>
+public abstract class MenuPage : UiPage
 {
-    public abstract string Title { get; }
-
-    /// <summary>Lower comes first. Built-in pages use 0-100.</summary>
-    public virtual int Order => 500;
-
-    public abstract void Build(UiBuilder ui);
-
-    public virtual void Refresh() { }
-
-    /// <summary>Called when the tab is left or the menu closes.</summary>
-    public virtual void OnHide() { }
-
-    /// <summary>Asks the menu to build this page again on the next frame.</summary>
-    public void Rebuild() => RebuildRequested = true;
-
-    internal bool RebuildRequested { get; set; }
 }

@@ -24,6 +24,7 @@ public sealed class KitMod : NeetMod
         Config.Save(); // Write defaults so the file exists for editing.
 
         GameEvents.Init(this);
+        GameEvents.SceneLoaded.Subscribe(this, _ => Ui.Toolkit.UiInputLock.OnSceneLoaded());
         Saves.ModSaveData.Init(Log);
         Items.ItemRegistry.Init(Log);
         GameEvents.ItemsRegistering.Subscribe(this, Items.ItemRegistry.RegisterAll);

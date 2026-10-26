@@ -9,7 +9,7 @@ namespace NeetModKit.Ui.Toolkit;
 public static class UiCanvas
 {
     /// <summary>Creates a persistent overlay canvas owned by a mod. Higher sorting orders draw on top.</summary>
-    public static Canvas Create(NeetMod owner, string name, int sortingOrder = 1000)
+    public static Canvas Create(ITracker owner, string name, int sortingOrder = 1000)
     {
         var go = new GameObject(name, typeof(RectTransform));
         Object.DontDestroyOnLoad(go);

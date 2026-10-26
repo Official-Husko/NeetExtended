@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using NeetLoader;
+using NeetModKit.Input;
 using NeetModKit.Registry;
 using NeetModKit.Ui.Toolkit;
-// The game has its own global Key and Keyboard classes, so the Input System ones need aliases.
 using InputKey = UnityEngine.InputSystem.Key;
-using InputKeyboard = UnityEngine.InputSystem.Keyboard;
 
 namespace NeetModKit.Menu;
 
@@ -17,13 +17,14 @@ public static class ModMenu
     private const string ReopenKey = "NeetModKit.MenuOpenOn";
 
     private static readonly OwnedList<MenuPage> PageList = new OwnedList<MenuPage>();
-    private static MenuWindow _window;
+    private static readonly Hotkey Key = new Hotkey("F1", InputKey.F1);
+    private static UiTabbedWindow _window;
+    private static IDisposable _inputLock;
     private static NeetMod _owner;
-    private static InputKey _toggleKey = InputKey.F1;
 
     public static bool IsOpen { get; private set; }
 
-    public static System.Collections.Generic.IReadOnlyList<MenuPage> Pages => PageList.Items;
+    public static IReadOnlyList<MenuPage> Pages => PageList.Items;
 
     public static void AddPage(NeetMod owner, MenuPage page)
     {
@@ -41,7 +42,7 @@ public static class ModMenu
                 KitMod.Instance?.Log.Warn("The mod menu can't open before the game's menus are loaded.");
                 return;
             }
-            _window = new MenuWindow(_owner, PageList);
+            _window = new UiTabbedWindow(_owner, "NEET MODS", () => PageList.Items, Close);
         }
 
         if (pageTitle != null)
@@ -50,7 +51,7 @@ public static class ModMenu
             return;
         IsOpen = true;
         _window.Open();
-        MenuInput.Capture(KitMod.Config.Value.PauseWhileOpen);
+        _inputLock = UiInputLock.Acquire(KitMod.Config.Value.PauseWhileOpen);
     }
 
     public static void Close()
@@ -59,7 +60,8 @@ public static class ModMenu
             return;
         IsOpen = false;
         _window.Close();
-        MenuInput.Release();
+        _inputLock?.Dispose();
+        _inputLock = null;
     }
 
     public static void Toggle()
@@ -73,6 +75,7 @@ public static class ModMenu
     internal static void Init(NeetMod owner)
     {
         _owner = owner;
+        PageList.Changed += () => _window?.PagesChanged();
         ApplyConfig(KitMod.Config.Value);
         KitMod.Config.Changed += ApplyConfig;
     }
@@ -84,6 +87,7 @@ public static class ModMenu
             NeetLoader.Runtime.ReloadState.Put(ReopenKey, _window.SelectedTitle);
         Close();
         KitMod.Config.Changed -= ApplyConfig;
+        UiInputLock.ReleaseAll();
         UiThemes.ReleaseAll();
         _window = null;
     }
@@ -97,15 +101,11 @@ public static class ModMenu
 
     internal static void Update()
     {
-        var keyboard = InputKeyboard.current;
-        if (keyboard != null && (keyboard[_toggleKey].wasPressedThisFrame || (IsOpen && keyboard.escapeKey.wasPressedThisFrame)))
+        if (Key.WasPressed || (IsOpen && Hotkey.EscapePressed))
             Toggle();
         if (IsOpen)
             _window.Tick();
     }
 
-    private static void ApplyConfig(Settings.KitConfig config)
-    {
-        _toggleKey = Enum.TryParse(config.MenuKey, true, out InputKey key) && key != InputKey.None ? key : InputKey.F1;
-    }
+    private static void ApplyConfig(Settings.KitConfig config) => Key.Name = config.MenuKey;
 }
