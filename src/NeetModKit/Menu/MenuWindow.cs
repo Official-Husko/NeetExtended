@@ -6,8 +6,11 @@ namespace NeetModKit.Menu;
 /// <summary>Draws the menu frame: title bar, tabs, the selected page and the footer.</summary>
 internal sealed class MenuWindow
 {
-    private const float BaseWidth = 980f;
-    private const float BaseHeight = 640f;
+    // Share of the game window the menu takes, and the smallest size it shrinks to.
+    private const float WidthShare = 0.9f;
+    private const float HeightShare = 0.88f;
+    private const float MinWidth = 760f;
+    private const float MinHeight = 480f;
 
     private readonly OwnedList<MenuPage> _pages;
     private MenuPage _selected;
@@ -46,21 +49,32 @@ internal sealed class MenuWindow
         var previousMatrix = GUI.matrix;
         GUI.matrix = Matrix4x4.Scale(new Vector3(scale, scale, 1f));
 
-        float w = Mathf.Min(BaseWidth, Screen.width / scale - 20f);
-        float h = Mathf.Min(BaseHeight, Screen.height / scale - 20f);
-        var area = new Rect((Screen.width / scale - w) / 2f, (Screen.height / scale - h) / 2f, w, h);
+        float screenW = Screen.width / scale, screenH = Screen.height / scale;
+        float w = Mathf.Min(screenW, Mathf.Max(MinWidth, screenW * WidthShare));
+        float h = Mathf.Min(screenH, Mathf.Max(MinHeight, screenH * HeightShare));
+        var area = new Rect((screenW - w) / 2f, (screenH - h) / 2f, w, h);
 
         GUILayout.BeginArea(area, MenuStyles.Window);
         DrawTitleBar();
         DrawTabs();
         Widgets.Space(6);
 
-        _scroll = GUILayout.BeginScrollView(_scroll, false, false, GUIStyle.none, MenuStyles.Scrollbar, GUIStyle.none);
-        if (_selected != null && Contains(_selected))
-            _selected.Draw();
-        else
+        if (_selected == null || !Contains(_selected))
+        {
             Widgets.Text("Nothing here yet.");
-        GUILayout.EndScrollView();
+        }
+        else if (_selected.FillsHeight)
+        {
+            GUILayout.BeginVertical(GUILayout.ExpandHeight(true));
+            _selected.Draw();
+            GUILayout.EndVertical();
+        }
+        else
+        {
+            _scroll = Widgets.BeginScroll(_scroll);
+            _selected.Draw();
+            GUILayout.EndScrollView();
+        }
 
         GUILayout.EndArea();
         GUI.matrix = previousMatrix;

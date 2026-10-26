@@ -57,6 +57,10 @@ public static class Widgets
         return result;
     }
 
+    /// <summary>Vertical-only scroll view in the menu's style. Close it with GUILayout.EndScrollView().</summary>
+    public static Vector2 BeginScroll(Vector2 position, params GUILayoutOption[] options) =>
+        GUILayout.BeginScrollView(position, false, false, GUIStyle.none, MenuStyles.Scrollbar, GUIStyle.none, options);
+
     /// <summary>Wraps a block in a panel.</summary>
     public static void Section(string title, Action body)
     {

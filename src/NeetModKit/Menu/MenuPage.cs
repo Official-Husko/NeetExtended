@@ -11,6 +11,12 @@ public abstract class MenuPage
     /// <summary>Lower comes first. Built-in pages use 0-100.</summary>
     public virtual int Order => 500;
 
+    /// <summary>
+    /// True if the page lays itself out to the full height (with its own scroll areas).
+    /// Otherwise the window wraps it in one scroll view.
+    /// </summary>
+    public virtual bool FillsHeight => false;
+
     /// <summary>Called when the tab becomes visible.</summary>
     public virtual void OnShow() { }
 
