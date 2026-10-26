@@ -43,6 +43,10 @@ With the game running, rebuild and the changed mods reload by themselves within 
 
 To remove everything again: `dotnet run --project tools/NeetTool -- uninstall` (add `--remove-mods` to delete the Mods folder too).
 
+## Features
+
+[FEATURES.md](FEATURES.md) lists everything the mods add, for players: what each mod does, its switches and settings.
+
 ## Docs
 
 - [docs/README.md](docs/README.md) — index

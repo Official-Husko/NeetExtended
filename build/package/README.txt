@@ -22,9 +22,14 @@ Run uninstall.sh or uninstall.bat. It removes the loader and puts back the origi
 32-bit player and boot settings. Your mods folder and saves stay; add --remove-mods to
 delete the mods too. Steam's "Verify integrity of game files" also restores the game.
 
+What it does
+------------
+FEATURES.md lists everything the mods add, with their switches and settings.
+
 What's in here
 --------------
 Mods/            the mods, one folder each
 tool/            the installer and modding tool (neet) for Linux and Windows
+FEATURES.md      what the mods add
 install.*        installs everything
 uninstall.*      takes it out again
