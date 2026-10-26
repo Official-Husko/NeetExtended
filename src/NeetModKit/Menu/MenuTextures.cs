@@ -5,6 +5,19 @@ namespace NeetModKit.Menu;
 /// <summary>Small generated textures for the menu skin, so it needs no image files.</summary>
 internal static class MenuTextures
 {
+    private static readonly System.Collections.Generic.List<Texture2D> Created = new System.Collections.Generic.List<Texture2D>();
+
+    /// <summary>Destroys every texture made here (on framework unload, so reloads don't leak GPU memory).</summary>
+    public static void ReleaseAll()
+    {
+        foreach (var tex in Created)
+        {
+            if (tex != null)
+                Object.Destroy(tex);
+        }
+        Created.Clear();
+    }
+
     public static Texture2D Solid(Color color) => Box(1, color, color, 0);
 
     /// <summary>A square with a 1px border, used with GUIStyle.border = 1 so it stretches cleanly.</summary>
@@ -29,6 +42,7 @@ internal static class MenuTextures
             filterMode = FilterMode.Point,
             wrapMode = TextureWrapMode.Clamp,
         };
+        Created.Add(tex);
         var pixels = new Color[size * size];
         for (int y = 0; y < size; y++)
         {

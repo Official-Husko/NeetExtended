@@ -55,6 +55,25 @@ public static class ModMenu
             Open();
     }
 
+    private const string ReopenKey = "NeetModKit.MenuOpenOn";
+
+    /// <summary>Closes the menu for a framework unload, remembering the page so a reload can reopen it.</summary>
+    internal static void Shutdown()
+    {
+        if (IsOpen)
+            NeetLoader.Runtime.ReloadState.Put(ReopenKey, _window.SelectedTitle);
+        Close();
+        KitMod.Config.Changed -= ApplyConfig;
+        MenuStyles.Release();
+    }
+
+    /// <summary>After a reload, reopen the menu where the player left it.</summary>
+    internal static void ReopenIfReloaded()
+    {
+        if (NeetLoader.Runtime.ReloadState.Take(ReopenKey, out string page))
+            Open(page);
+    }
+
     internal static void Init()
     {
         _window = new MenuWindow(PageList);

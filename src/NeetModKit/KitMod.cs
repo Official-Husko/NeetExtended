@@ -23,8 +23,10 @@ public sealed class KitMod : NeetMod
         Config = LoadConfig<KitConfig>();
         Config.Save(); // Write defaults so the file exists for editing.
 
-        GameEvents.Init(Log);
+        GameEvents.Init(this);
         Saves.ModSaveData.Init(Log);
+        Items.ItemRegistry.Init(Log);
+        GameEvents.ItemsRegistering.Subscribe(this, Items.ItemRegistry.RegisterAll);
         ModMenu.Init();
 
         ModMenu.AddPage(this, new ModsPage());
@@ -33,7 +35,19 @@ public sealed class KitMod : NeetMod
         ModMenu.AddPage(this, new DevToolsPage());
         ModSettings.Register(this, Config, "Mod menu");
 
+        Items.StoreListings.RestoreAfterReload();
+        ModMenu.ReopenIfReloaded();
+
         Log.Info($"Ready. Press {Config.Value.MenuKey} for the mod menu.");
+    }
+
+    /// <summary>The framework can be reloaded too; leave nothing behind for the next copy to trip over.</summary>
+    public override void OnUnload()
+    {
+        ModMenu.Shutdown();
+        Items.StoreListings.KeepForReload();
+        Items.PrefabStash.Release();
+        Instance = null;
     }
 
     public override void OnUpdate() => ModMenu.Update();

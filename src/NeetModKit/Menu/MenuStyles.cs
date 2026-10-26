@@ -23,6 +23,17 @@ internal static class MenuStyles
 
     private static bool _built;
 
+    /// <summary>Frees the generated textures and skin; styles are rebuilt on next use.</summary>
+    public static void Release()
+    {
+        MenuTextures.ReleaseAll();
+        if (Skin != null)
+            Object.Destroy(Skin);
+        Skin = null;
+        ColoredCache.Clear();
+        _built = false;
+    }
+
     public static void Ensure()
     {
         if (_built)

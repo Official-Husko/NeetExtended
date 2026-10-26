@@ -24,6 +24,10 @@ public static class ModSaveData
     }
 
     private static readonly Dictionary<string, Slot> Slots = new Dictionary<string, Slot>();
+
+    // Data handed from an unloading copy of a mod to its reloaded copy is parked in the loader's
+    // ReloadState as JSON text, so it even survives the framework itself being reloaded.
+    private static string HandoffKey(string key) => "NeetModKit.ModSaveData." + key;
     private static JObject _pending;
     private static ModLogger _log;
 
@@ -31,17 +35,31 @@ public static class ModSaveData
     /// Registers data under <paramref name="key"/> (default: the mod id). <paramref name="save"/> is called
     /// when the game saves; <paramref name="load"/> after a save is loaded, or with a new T when the save
     /// has nothing for this key (fresh game, or the mod was just installed).
+    /// On hot reload the current data is passed straight to the new copy of the mod, so nothing is lost.
     /// </summary>
     public static void Register<T>(NeetMod owner, Func<T> save, Action<T> load, string key = null) where T : class, new()
     {
         key ??= owner.Info.Id;
-        Slots[key] = new Slot
+        var slot = new Slot
         {
             Save = () => JToken.FromObject(save()),
             Load = token => load(token.ToObject<T>() ?? new T()),
             Reset = () => load(new T()),
         };
-        owner.Track(Disposable.Create(() => Slots.Remove(key)));
+        Slots[key] = slot;
+
+        owner.Track(Disposable.Create(() =>
+        {
+            try { ReloadState.Put(HandoffKey(key), slot.Save().ToString(Newtonsoft.Json.Formatting.None)); }
+            catch (Exception e) { _log.Error($"Couldn't keep data for '{key}' across the reload", e); }
+            Slots.Remove(key);
+        }));
+
+        if (ReloadState.Take(HandoffKey(key), out string carried))
+        {
+            try { slot.Load(JToken.Parse(carried)); }
+            catch (Exception e) { _log.Error($"Couldn't restore data for '{key}' after the reload", e); }
+        }
     }
 
     internal static void Init(ModLogger log) => _log = log;

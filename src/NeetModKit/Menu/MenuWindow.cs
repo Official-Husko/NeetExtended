@@ -21,6 +21,8 @@ internal sealed class MenuWindow
         _pages = pages;
     }
 
+    public string SelectedTitle => _selected?.Title;
+
     public void Select(string title)
     {
         foreach (var page in _pages.Items)

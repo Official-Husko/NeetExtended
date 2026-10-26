@@ -44,14 +44,20 @@ public static class GameEvents
             Run(action);
     }
 
-    internal static void Init(ModLogger log)
+    internal static void Init(NeetMod owner)
     {
-        _log = log;
-        SceneManager.sceneLoaded += (scene, _) =>
-        {
-            IsHouseReady = false;
-            SceneLoaded.Raise(scene.name, _log);
-        };
+        _log = owner.Log;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        owner.Track(NeetLoader.Runtime.Disposable.Create(() => SceneManager.sceneLoaded -= OnSceneLoaded));
+
+        // Reloaded mid-game: the house finished loading long ago, so start out ready.
+        IsHouseReady = GameRefs.InHouse && SaveLoadHandler._ != null;
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        IsHouseReady = false;
+        SceneLoaded.Raise(scene.name, _log);
     }
 
     internal static void RaiseHouseReady()

@@ -33,6 +33,10 @@ public static class TypeFinder
         Type shortMatch = null;
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().OrderBy(Priority))
         {
+            // Old copies left behind by hot reloads would shadow the running types.
+            if (NeetLoader.LoadedAssemblies.IsStale(assembly))
+                continue;
+
             Type[] types;
             try { types = assembly.GetTypes(); }
             catch (System.Reflection.ReflectionTypeLoadException e) { types = e.Types; }
