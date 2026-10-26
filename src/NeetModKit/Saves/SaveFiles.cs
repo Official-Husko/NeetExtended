@@ -23,6 +23,6 @@ internal static class SaveFiles
     public static JObject ReadNewest()
     {
         var file = Newest();
-        return file == null ? null : JObject.Parse(SaveStorage.ReadGameSave(file.FullName));
+        return file == null ? null : JObject.Parse(SaveFormats.ReadText(file.FullName));
     }
 }
