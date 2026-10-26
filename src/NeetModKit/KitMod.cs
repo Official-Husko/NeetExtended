@@ -33,7 +33,7 @@ public sealed class KitMod : NeetMod
         ModMenu.AddPage(this, new WhatsNewPage());
         ModMenu.AddPage(this, new SettingsPage());
         ModMenu.AddPage(this, new DevToolsPage());
-        ModSettings.Register(this, Config, "Mod menu");
+        ModSettings.Register(this, Config, "NEET Mods");
 
         // The pause menu exists in every scene; swap its feedback column for the MODS column.
         GameEvents.SceneLoaded.Subscribe(this, _ => Ui.PauseMenuMods.Apply(this));

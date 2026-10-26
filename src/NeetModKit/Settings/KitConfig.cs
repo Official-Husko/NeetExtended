@@ -19,6 +19,14 @@ public sealed class KitConfig
     [Description("Open What's New by itself after mods update.")]
     public bool ShowWhatsNewOnUpdate = true;
 
+    [Description("Write saves as compressed .nsav files (about 16x smaller). Off writes plain JSON like the original game. Both kinds always load.")]
+    public bool CompressSaves = true;
+
+    [Label("Saves to keep")]
+    [Description("The game writes a new save file every time it saves; older ones beyond this count are deleted.")]
+    [Range(3, 100)]
+    public int KeepSaves = 25;
+
     /// <summary>Newest changelog version the player has seen. Internal bookkeeping, not shown.</summary>
     [Hidden]
     public string LastSeenVersion = "";
