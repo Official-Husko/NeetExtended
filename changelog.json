@@ -224,6 +224,10 @@
         {
           "text": "Dial 555-0100 for a test line that shows what new calls can do.",
           "area": "Phone Expansion"
+        },
+        {
+          "text": "Unofficial NEET Patches mod: fixes for bugs in the game itself, each one switchable.",
+          "area": "Unofficial NEET Patches"
         }
       ],
       "changed": [
@@ -254,6 +258,14 @@
         {
           "text": "Cheats moved out of the mod menu into the Cheat Menu mod, opened with Insert.",
           "area": "Mod menu"
+        },
+        {
+          "text": "The framework and No Feedback are always on and can no longer be switched off or unloaded.",
+          "area": "No Feedback"
+        },
+        {
+          "text": "The fix for promoted cards losing their stats moved from Card Expansion to Unofficial NEET Patches.",
+          "area": "Unofficial NEET Patches"
         }
       ],
       "fixed": [
@@ -280,6 +292,14 @@
         {
           "text": "Modded anime cards keep their level and unlock state after loading a save.",
           "area": "Card game"
+        },
+        {
+          "text": "Saving works again with a dead house spider around, and dying no longer gets stuck because of it.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Story events like the thief's arrival no longer break after Grandpa dies, and no longer repeat every frame after an error.",
+          "area": "Unofficial NEET Patches"
         }
       ],
       "removed": [
