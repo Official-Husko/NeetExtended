@@ -1,0 +1,13 @@
+# Build output
+bin/
+obj/
+*.user
+.vs/
+.idea/
+.vscode/
+
+# Decompiled game code stays local
+decompiled/
+
+# Local overrides
+build/Local.props
