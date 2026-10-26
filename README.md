@@ -44,6 +44,10 @@ To remove everything again: `dotnet run --project tools/NeetTool -- uninstall` (
 - [Getting started](docs/modding/getting-started.md), including writing your first mod
 - [Notes on the game's code](docs/game/) — how NEET's systems work, from the decompiled source
 
+## Plans
+
+[TODO.md](TODO.md) lists the mods that are planned or being considered, and follow-ups for the existing ones.
+
 ## Changelog
 
 [changelog.json](changelog.json) is generated from the commit history (`neet changelog --write`) and shown in game on the What's New page.
