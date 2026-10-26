@@ -35,6 +35,10 @@ internal static class SaveGuardPatches
         if (resetOnly || !(jt?["subSaveData"] is JArray saved))
             return;
 
+        // Load runs before the card list is first collected, so add modded cards first or their
+        // saved progress would be counted as extra and dropped.
+        Cards.CardInjector.Inject(__instance);
+
         int cards = __instance.GetComponentsInChildren<AnimeCard>(true).Length;
         if (saved.Count <= cards)
             return;

@@ -12,13 +12,14 @@ internal static class CardInjector
 {
     private const string ModdedPrefix = "AnimeCard_Mod_";
 
+    /// <summary>Adds the extra cards once. Safe to call more than once (load and start both do).</summary>
     public static void Inject(AnimeCardGenerator generator)
     {
         if (CardGame.ExtraCards.Count == 0)
             return;
 
         var existing = generator.GetComponentsInChildren<AnimeCard>(true);
-        if (existing.Length == 0)
+        if (existing.Length == 0 || existing[existing.Length - 1].name.StartsWith(ModdedPrefix))
             return;
 
         // Cards live inside a layout group; clone the last built-in card next to it.
