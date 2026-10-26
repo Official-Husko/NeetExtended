@@ -15,6 +15,10 @@ public sealed class KitConfig
     [Range(0.6f, 2f)]
     public float MenuScale = 1f;
 
+    [Label("Show version in the corner")]
+    [Description("The pack's name, version and build in the bottom right corner, so screenshots and bug reports show which build they're from.")]
+    public bool ShowVersion = true;
+
     [Label("Show What's New after updates")]
     [Description("Open What's New by itself after mods update.")]
     public bool ShowWhatsNewOnUpdate = true;

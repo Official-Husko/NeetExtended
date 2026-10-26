@@ -8,8 +8,14 @@ namespace NeetModKit.Ui.Toolkit;
 /// <summary>Screen overlay canvases that scale like the game's own menus.</summary>
 public static class UiCanvas
 {
-    /// <summary>Creates a persistent overlay canvas owned by a mod. Higher sorting orders draw on top.</summary>
-    public static Canvas Create(ITracker owner, string name, int sortingOrder = 1000)
+    /// <summary>
+    /// Creates a persistent overlay canvas owned by a mod. Higher sorting orders draw on top.
+    /// <paramref name="interactive"/> false leaves out the raycaster, so the canvas never takes
+    /// clicks. A <paramref name="referenceResolution"/> scales it on its own instead of like the
+    /// game's menus.
+    /// </summary>
+    public static Canvas Create(ITracker owner, string name, int sortingOrder = 1000, bool interactive = true,
+        Vector2? referenceResolution = null)
     {
         var go = new GameObject(name, typeof(RectTransform));
         Object.DontDestroyOnLoad(go);
@@ -21,7 +27,13 @@ public static class UiCanvas
 
         var scaler = go.AddComponent<CanvasScaler>();
         var source = UiThemes.MenuScaler;
-        if (source != null)
+        if (referenceResolution.HasValue)
+        {
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = referenceResolution.Value;
+            scaler.matchWidthOrHeight = 0.5f;
+        }
+        else if (source != null)
         {
             scaler.uiScaleMode = source.uiScaleMode;
             scaler.referenceResolution = source.referenceResolution;
@@ -34,7 +46,8 @@ public static class UiCanvas
             scaler.referenceResolution = new Vector2(1148.7f, 436.8f);
         }
 
-        go.AddComponent<GraphicRaycaster>();
+        if (interactive)
+            go.AddComponent<GraphicRaycaster>();
         return canvas;
     }
 }

@@ -38,7 +38,9 @@ public sealed class KitMod : NeetMod
         ModMenu.AddPage(this, new PcAppsPage());
         ModMenu.AddPage(this, new SettingsPage());
         ModMenu.AddPage(this, new ErrorsPage());
-        ModSettings.Register(this, Config, "NEET Mods");
+        ModSettings.Register(this, Config, About.PackInfo.Name);
+        Ui.VersionTag.Create(this, Config.Value.ShowVersion);
+        Config.Changed += OnConfigChanged;
 
         Features.ModFeatures.Init(this);
         Desktop.ComputerApps.Init(this);
@@ -50,9 +52,12 @@ public sealed class KitMod : NeetMod
         Log.Info($"Ready. Press {Config.Value.MenuKey} for the mod menu.");
     }
 
+    private static void OnConfigChanged(KitConfig config) => Ui.VersionTag.SetVisible(config.ShowVersion);
+
     /// <summary>The framework can be reloaded too; leave nothing behind for the next copy to trip over.</summary>
     public override void OnUnload()
     {
+        Config.Changed -= OnConfigChanged;
         ModMenu.Shutdown();
         Items.StoreListings.KeepForReload();
         Items.PrefabStash.Release();

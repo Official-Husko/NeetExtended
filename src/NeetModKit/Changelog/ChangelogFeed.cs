@@ -19,7 +19,7 @@ public sealed class ChangelogSource
 public static class ChangelogFeed
 {
     public const string FileName = "changelog.json";
-    public const string PackTitle = "NEET Mods";
+    public const string PackTitle = About.PackInfo.Name;
 
     public static List<ChangelogSource> Load()
     {

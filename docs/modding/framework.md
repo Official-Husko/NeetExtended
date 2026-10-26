@@ -36,7 +36,7 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 
 ## KitMod
 
-`KitMod` is the framework's own mod. Its `OnLoad` sets up in this order: the config file (`Mods/NeetModKit/config.json`, type `KitConfig`), `GameEvents`, `ModSaveData`, `ItemRegistry`, the dialogue helpers (`GameStory`, `InkFunctions`, `InkScripts`), the mod menu, its pages, the settings section, `ModFeatures`, the computer apps, and the built-in "Mods" feature in the pause menu. It also restores store state after a reload.
+`KitMod` is the framework's own mod. Its `OnLoad` sets up in this order: the config file (`Mods/NeetModKit/config.json`, type `KitConfig`), `GameEvents`, `ModSaveData`, `ItemRegistry`, the dialogue helpers (`GameStory`, `InkFunctions`, `InkScripts`), the mod menu, its pages, the settings section, the version tag, `ModFeatures`, the computer apps, and the built-in "Mods" feature in the pause menu. It also restores store state after a reload.
 
 `KitConfig` fields (edited on the Settings page):
 
@@ -45,8 +45,15 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 | `MenuKey` | `"F1"` | Unity key name that opens the mod menu |
 | `PauseWhileOpen` | `true` | Pause the game while the menu is open |
 | `MenuScale` | `1` | Range 0.6 to 2 |
+| `ShowVersion` | `true` | Show the pack's name, version and build in the bottom right corner |
 | `ShowWhatsNewOnUpdate` | `true` | Open the What's New page after an update |
 | `LastSeenVersion` | `""` | Hidden bookkeeping |
+
+### Pack name and version
+
+`NeetModKit.About.PackInfo` holds the pack's name (`PackInfo.Name`, "NeetPlus"; change it there to rename the pack in game) and the build: `Version` ("0.1.0", from `<Version>` in `Directory.Build.props`), `Commit` (the short commit hash, with `-dirty` when built from uncommitted changes, or null) and `Label` ("NeetPlus v0.1.0 (1a2b3c4)"). `build/Revision.targets` puts the hash into every assembly's informational version ("0.1.0+1a2b3c4") by running `git describe` before the SDK writes the assembly attributes; outside a git checkout the version stays plain.
+
+The version tag (`Ui/VersionTag.cs`) shows `PackInfo.Label` in the bottom right corner of every scene: a canvas at sorting order 900 (under the mod menu's windows), without a raycaster, so it never takes clicks. The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
 
 ## Game
 
