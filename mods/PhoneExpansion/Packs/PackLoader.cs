@@ -44,9 +44,10 @@ internal static class PackLoader
     {
         _mod = mod;
         _watching = false;
+        // Only mods with a phone folder matter; at startup every mod reports in once.
         Action<ModInfo> changed = info =>
         {
-            if (info.Id != mod.Info.Id)
+            if (info.Id != mod.Info.Id && Directory.Exists(Path.Combine(info.Directory, FolderName)))
                 MarkDirty();
         };
         ModRegistry.ModLoaded += changed;
