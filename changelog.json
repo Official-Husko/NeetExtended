@@ -60,11 +60,186 @@
         {
           "text": "Editors and other tools that support MCP can launch, inspect and control the game for testing.",
           "area": "Command-line tool"
+        },
+        {
+          "text": "God mode: no dying and needs stay where they are.",
+          "area": "Framework"
+        },
+        {
+          "text": "Dev bridge mod: lets local tools read and change the running game for testing.",
+          "area": "Dev bridge"
+        },
+        {
+          "text": "Mods can be reloaded, loaded and unloaded through the dev bridge, so a rebuilt mod can be tested without restarting.",
+          "area": "Dev bridge"
+        },
+        {
+          "text": "Mod menu (F1) with a list of installed mods, their status and any errors.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "Load, unload, reload and switch mods on or off from the mod menu.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "Mod settings can be changed in the mod menu instead of editing files.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "What's New screen in the mod menu that lists every change by version.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "Dev Tools tab: god mode, refill needs, teleport, money, spawn any item, fire and power switches.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "The mod menu opens What's New by itself the first time the game starts after an update.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "The Mods page shows each mod's recent log lines, so problems are easy to spot without opening log files.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "The framework and mods that other mods rely on can be reloaded too; a rebuild updates everything in place without restarting the game.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "Mods can add new items that spawn, sell in the online stores and save like the game's own.",
+          "area": "Items"
+        },
+        {
+          "text": "Mods can add new cards to the computer's anime card game.",
+          "area": "Card game"
+        },
+        {
+          "text": "Mods keep their in-game data when they are reloaded.",
+          "area": "Framework"
+        },
+        {
+          "text": "Twelve new Halloween cards in the anime card game, with spooky recoloured art.",
+          "area": "Card Expansion"
+        },
+        {
+          "text": "Summon button on the card site: spend crystals for a random payout or a shiny card with free levels.",
+          "area": "Card Expansion"
+        },
+        {
+          "text": "Auto-clicker you can buy with crystals that clicks every unlocked card for you.",
+          "area": "Card Expansion"
+        },
+        {
+          "text": "Card Expansion settings in the mod menu: summon cost, shiny chance, auto-clicker price and speed, and the crystal exchange rate.",
+          "area": "Card Expansion"
+        },
+        {
+          "text": "The pause menu has a MODS section with buttons for the mod menu and What's New, in the game's own style.",
+          "area": "Interface"
+        },
+        {
+          "text": "Saves are written in a compressed, open format (.nsav) that's about 16 times smaller; older saves still load.",
+          "area": "Saves"
+        },
+        {
+          "text": "Old save files are cleaned up automatically, keeping the newest 25 (adjustable).",
+          "area": "Saves"
+        },
+        {
+          "text": "Option to keep writing plain JSON saves like the original game.",
+          "area": "Saves"
+        },
+        {
+          "text": "Command-line tools to list saves and convert them between the compressed format and readable JSON.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "Mods can build menus that use the game's own fonts, buttons and controls.",
+          "area": "Interface"
+        },
+        {
+          "text": "Mods can be split into features that switch on and off individually while the game runs.",
+          "area": "Framework"
+        },
+        {
+          "text": "The Mods page lists each mod's features with on/off switches.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "Every website on the in-game computer can be given a different address.",
+          "area": "Computer apps"
+        },
+        {
+          "text": "Mods can add their own apps and games to the in-game computer, with start menu entries.",
+          "area": "Computer apps"
+        },
+        {
+          "text": "PC Apps page in the mod menu to see and change every computer app's address.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "Pumpkin Smash: a whack-a-pumpkin game on the in-game computer that pays a little cash.",
+          "area": "Pumpkin Smash"
         }
       ],
-      "changed": [],
-      "fixed": [],
-      "removed": []
+      "changed": [
+        {
+          "text": "Converting 10K crystals pays $5 instead of $3, and the amount can be changed in the settings.",
+          "area": "Card Expansion"
+        },
+        {
+          "text": "Compressed saves, save cleanup, the feedback block and the pause menu MODS section are now separate features that can be switched off.",
+          "area": "Framework"
+        },
+        {
+          "text": "The mod menu now uses the game's own menu style.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "Card Expansion's parts (spooky cards, summons, auto-clicker, exchange rate, promotion fix) can be switched on and off one by one.",
+          "area": "Card Expansion"
+        },
+        {
+          "text": "Compressed saves and save cleanup are now the Open Saves mod, so they can be installed or removed on their own.",
+          "area": "Open Saves"
+        },
+        {
+          "text": "Blocking feedback reports is now the No Feedback mod.",
+          "area": "No Feedback"
+        }
+      ],
+      "fixed": [
+        {
+          "text": "The mod log no longer fills up with hundreds of copies of the same game warning.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "MCP tools that talk to the game no longer fail with an internal error.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "Removing a mod that added items or creatures no longer breaks loading the save.",
+          "area": "Framework"
+        },
+        {
+          "text": "A save with more anime cards than the game has loads instead of throwing an error.",
+          "area": "Framework"
+        },
+        {
+          "text": "Promoted anime cards keep their doubled earnings after loading a save.",
+          "area": "Card Expansion"
+        },
+        {
+          "text": "Modded anime cards keep their level and unlock state after loading a save.",
+          "area": "Card game"
+        }
+      ],
+      "removed": [
+        {
+          "text": "Sending feedback reports from the pause menu, since they would describe the modded game rather than the original.",
+          "area": "Framework"
+        }
+      ]
     }
   ]
 }
