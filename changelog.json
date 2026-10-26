@@ -263,6 +263,10 @@
         },
         {
           "text": "Install scripts for Linux (install.sh) and Windows (install.bat) that set up the loader and all mods in one go, with the option to switch to 64-bit."
+        },
+        {
+          "text": "The bottom right corner shows the mod pack's name, version and build. You can hide it in Settings.",
+          "area": "Framework"
         }
       ],
       "changed": [
