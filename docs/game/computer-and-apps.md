@@ -543,7 +543,32 @@ These are the non-computer devices in this area. None of them stores money or th
   - Any other number rings for 5 to 8 seconds, then plays a disconnect tone (`:154-158`).
 - `Phone_Dispatch` (`Phone_Dispatch.cs`) schedules prank calls with `SchedulePrankCall`. The first is after 275 to 700 seconds. The ring lasts 20 to 30 seconds. Each phone gets a `prankId` between 1 and 11 (`:79-83`) and plays the dialogue `Phone.pPrank<id>` if answered (`Phone_Interface.cs:212`). Prank calls are skipped if a call is in progress, and rescheduled.
 - `LineIsBusy` (`Phone_Dispatch.cs:16-33`) stops or restarts scheduling. `AnsweredPhone` stops all ringing and prank coroutines (`:35-53`).
-- Dialogue lines are in the Ink data, not in this code. Do not assume the `Phone.pPrank1` to `Phone.pPrank11` keys all exist.
+- Each handset rolls its own `prankId`, so which prank plays depends on which phone is picked up.
+- The phones are `Phone` (upstairs lobby) and `Phone (1)` (kitchen). The screen is a `Text` (`Phone_Canvas/Phone_GreyScreen/Phone_ScreenText`) whose idle text, `initText`, is "gud fone". Each handset has four `AudioSource`s: 0 voice, 1 button beep, 2 ringing, 3 busy tone.
+- `Call` dials whatever is on the screen if it isn't `initText`, so anything else shown on the screen while a call rings would be dialed by the call button.
+- The lines are in the Ink story (the `Phone` knot of the master story, one stitch per number), not in this code. All of `Phone.pPrank1` to `Phone.pPrank11` exist. Every call ends with the `EndPhoneCall` tag on an empty line after the last line, so the call hangs up when the player presses use on the last line.
+
+What each number is, from the compiled story:
+
+| Number | Knot | Who |
+| --- | --- | --- |
+| 411 | `p411` | Directory assistance, shut down for good. |
+| 911 | `p911` | The police, unhelpfully. |
+| 999 | `p999` | A British cop asking for a licence. |
+| 420-6969 | `p4206969` | A dealer. |
+| 111-1111 | `p1111111` | Someone tired of getting calls on that number. Hangs up. |
+| 666-6666 | `p6666666` | Satan, who hangs up quickly. |
+| 333-3333 | `p3333333` | God. |
+| 314-1592 | `p3141592` | The pie store; delivery in pi weeks. |
+| 555-2368 | `p5552368` | Spookbusters: "call later". |
+| 555-5555 | `p5555555` | The movie phone number registry. |
+| 555-1234 | `p5551234` | "The bird isn't here." |
+| 427-9683 | `p4279683` | A stranger who knew dad: "Don't use the machine." Runs `TriggerSequence("Enable", "EventConnector_NakedTrigger_DiningWindow")`. |
+| 982-9643 | `p9829643` | A scammer. Has choices; giving him a card number calls `SetMoney(0)`. |
+| 668-6262 | `p6686262` | Mom. Diverts to `mom_fake2` once `PoopmanNight1` was visited, or `mom_fake1` once `EmoNight1` was. |
+| 555-1337 | `p5551337` | Gamer tips hotline. |
+
+Of the 11 pranks only `pPrank3` has choices. The Phone Expansion mod adds numbers and calls on top of these (`docs/modding/phone.md`).
 
 **TV** (`TV.cs`, `TV_Remote.cs`, `ScreenModule.cs`)
 

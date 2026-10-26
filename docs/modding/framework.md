@@ -36,7 +36,7 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 
 ## KitMod
 
-`KitMod` is the framework's own mod. Its `OnLoad` sets up in this order: the config file (`Mods/NeetModKit/config.json`, type `KitConfig`), `GameEvents`, `ModSaveData`, `ItemRegistry`, the mod menu, its pages, the settings section, `ModFeatures`, the computer apps, and the built-in "Mods" feature in the pause menu. It also restores store state after a reload.
+`KitMod` is the framework's own mod. Its `OnLoad` sets up in this order: the config file (`Mods/NeetModKit/config.json`, type `KitConfig`), `GameEvents`, `ModSaveData`, `ItemRegistry`, the dialogue helpers (`GameStory`, `InkFunctions`, `InkScripts`), the mod menu, its pages, the settings section, `ModFeatures`, the computer apps, and the built-in "Mods" feature in the pause menu. It also restores store state after a reload.
 
 `KitConfig` fields (edited on the Settings page):
 
@@ -100,6 +100,22 @@ PumpkinSmash pays its round score with `Money.Add(cash)`, so that income is taxe
 
 - `bool IsOnFire(Location)`, `void StartFire(Location)` (throws if the room is not in the scene), `void StopFire(Location)`
 - `void SetPower(Location room, bool on)` and `void SetHousePower(bool on)`: forces power, ignoring fuses
+
+### Doors
+
+The house's doors (`HouseManager.doors`). Locked doors are matched by `doorId`: `BASEMENT` (the black door), `DADYARD`, `Attic`.
+
+- `IEnumerable<Door> All`, `IEnumerable<Door> WithIds(params string[] ids)` (ids are case-insensitive)
+- `int Unlock(string id)`, `int UnlockAll()`, `int SetLocked(IEnumerable<Door> doors, bool locked)`: go through the game's `Locked` setter so unlock listeners fire, and return how many doors changed
+
+### Deliveries
+
+Packages dropped at the front door the way the computer's stores deliver orders, but free.
+
+- `GameObject Drop(string itemOrNpc)`: a box holding one item (or NPC) prefab, by name
+- `GameObject Drop(GameObject prefab)`: same, for a prefab you already have
+
+The box falls in at `HouseManager.packageDropOffPoint` and is sized to its content like the game's own boxes.
 
 ### Spawning
 
@@ -190,6 +206,55 @@ ConsoleCommands.Add(this, "heal", "Refill health", () => PlayerControl.SetStat("
 ```
 
 Commands are removed by delegate, so a same-named command from another mod or the game is left alone. There is no overload with more than three parameters.
+
+## Dialogue
+
+Namespace `NeetModKit.Conversations`. The game keeps all its dialogue in one Ink story, `Dialogue._.masterStory`: NPC conversations, phone calls, everything the dialogue box shows. These helpers add to that story, so modded lines play in the game's own dialogue box with its choices, tags, voices and text effects.
+
+### GameStory
+
+- `Story Current`: the live story, or `null` in scenes without dialogue.
+- `GameEvent<Story> Created`: raised when the game builds a new story (every scene with dialogue gets one), before it runs and before a save is loaded into it.
+- `WhenCreated(owner, Action<Story>)`: subscribes and runs right away for the current story.
+
+### InkScripts
+
+```csharp
+var script = InkScripts.Add(this, "hello.ink", "=== MyMod_Hello ===\nHi there!\n* Hi.\n- Bye.\n-> DONE");
+Dialogue._.InitCharacterDialogue(speaker, "MyMod", "MyMod_Hello");
+```
+
+- `InkScript Add(owner, string name, string inkSource)`: compiles the source with the Ink compiler the game ships and adds its knots and functions to the story. They're removed when the owner cleans up, and added again to every new story.
+- `InkScript` has `Name`, `Source`, `Knots` (top-level names it added), `Problems` (compiler errors and warnings, with line numbers counted in your source) and `Failed`.
+- `bool IsModKnot(string knot)`, `bool IsModPath(string path)`: whether something came from a mod script.
+
+Scripts compile when the game first creates its story (right away if one exists), once per script. They can use the game's lists (`OfferingStates`, `PlayerStates`), global variables (`nightId`, `playerBody`, ...) and every function in `InkFunctions` without declaring them: a hidden header declares them for the compiler.
+
+Rules:
+
+- Knots go in at the top level of the story. A name that already exists (in the game or another script) fails the whole script with a problem saying so. Prefix knot names with your mod id.
+- `VAR` declarations in a mod script don't create variables in the game's story; keep state in your own save data and read it through a function.
+- Diverts into the game's own knots (`-> Phone.p411`) don't compile, because the compiler only sees your script.
+- `INCLUDE` isn't supported.
+
+### InkFunctions
+
+Functions dialogue can call, like the game's `GiveItem` or `KnockoutPlayer`:
+
+```csharp
+InkFunctions.Register(this, "MyMod_Cash", new[] { "amount" }, args => { Money.Add(InkValues.Num(args, 0)); return null; });
+// In Ink: ~ MyMod_Cash(20)
+```
+
+- `Register(owner, name, string[] parameters, Func<object[], object> body, bool lookaheadSafe = false)`. Return a value for functions used in expressions, `null` for statements. Leave `lookaheadSafe` off for anything with side effects: Ink may call lookahead-safe functions early, and more than once.
+- `InkValues.Str/Num/Int/Bool(args, index)` read arguments whatever type Ink passed.
+- `GameInkFunctions.All` lists the game's own 23 functions with their parameter names.
+
+A function whose mod unloads keeps answering with `0` (and doing nothing), so a script that still calls it can't stop a conversation.
+
+### Save safety
+
+Ink saves where each conversation ("flow") stopped. A save that points into a mod script can't be loaded once the script is gone: the game stops with "Failed to find content at path". Even a finished conversation keeps its last position. So right before the game saves, after the mods' `BeforeSave` handlers, the framework drops every conversation that stopped inside a mod script and closes the dialogue box if one is open in a mod script. Dropped conversations start from the top next time, as finished ones do anyway. Mods that need to end their conversations in a particular way (the phone hangs up properly, for example) do that in `BeforeSave`.
 
 ## Saves
 
@@ -506,9 +571,25 @@ public IReadOnlyList<T> Items { get; }
 public event Action Changed;             // after an add or remove
 ```
 
-## Reflection
+`Scope` is a throwaway owner for things registered together, so they can be removed together and registered again. Pass it as the owner, dispose it to clean up. A scope created with a parent cleans up with the parent too.
 
-`SceneEdits` (namespace `NeetModKit.Scenes`) makes reversible scene changes: `Hide(owner, gameObject)` deactivates an object until the owner (a mod or feature) cleans up, counting owners so an object only comes back when nobody wants it hidden; `RootsNamed(prefix)` finds scene root objects by name prefix. The Open House mod uses both to remove the demo's walls.
+```csharp
+_scope?.Dispose();
+_scope = new Scope(this);                 // also cleaned up when the mod unloads
+InkScripts.Add(_scope, "calls.ink", source);
+```
+
+## Files
+
+`FileWatch` (namespace `NeetModKit.IO`) calls back when files in a set of folders change:
+
+```csharp
+FileWatch.Start(this, () => new[] { PathTo("data") }, Reload, 1f, "*.json");
+```
+
+The folder list is asked for on every check, so it can change. It polls (once a second by default) and compares names, sizes and write times; file system events aren't reliable under Proton.
+
+## Reflection
 
 Namespace `NeetModKit.Reflection`. Used by the dev tools; available to any mod.
 
@@ -531,6 +612,8 @@ Namespace `NeetModKit.Reflection`. Used by the dev tools; available to any mod.
 - `List<GameObject> Roots()`: roots of every loaded scene plus `DontDestroyOnLoad`.
 - `string PathOf(GameObject go)`
 - `List<GameObject> Find(string name, Type component, bool includeInactive, int max)`: name substring and/or component type.
+
+`SceneEdits` (namespace `NeetModKit.Scenes`) makes reversible scene changes: `Hide(owner, gameObject)` deactivates an object until the owner (a mod or feature) cleans up, counting owners so an object only comes back when nobody wants it hidden; `RootsNamed(prefix)` finds scene root objects by name prefix. The Open House mod uses both to remove the demo's walls.
 
 ## Assets
 
@@ -561,7 +644,7 @@ The framework's patches live in `src/NeetModKit/Patches/`. Each one is an applie
 | Game method | Patch | Why |
 | --- | --- | --- |
 | `PickupBank.Init` (postfix) | `LifecyclePatches` | Raises `ItemsRegistering` |
-| `SaveLoadHandler.SaveAll` (pre/post) | `LifecyclePatches` | `BeforeSave`, `AfterSave` |
+| `SaveLoadHandler.SaveAll` (pre/post) | `LifecyclePatches` | `BeforeSave`, `AfterSave`; drops conversations that stopped in mod scripts (after `BeforeSave`) |
 | `SaveLoadHandler.LoadAll` (pre/post) | `LifecyclePatches` | `BeforeLoad`, `AfterLoad` |
 | `SaveLoadHandler.LoadAll` (pre) | `ItemPatches` | Registers modded items before the save is read |
 | `SaveLoadHandler.LoadAll` (transpiler) | `SaveReadPatch` | Reads any save format through `SaveFormats` |
@@ -576,12 +659,14 @@ The framework's patches live in `src/NeetModKit/Patches/`. Each one is an applie
 | `Player_Abilities.DieAccessor`, `Obliterate`, `SkeletonizeAccessor` (pre) | `GodModePatches` | Blocks death while god mode is on |
 | `CameraControl.Update` (post) | `MenuCursorPatch` | Keeps the cursor free while the mod menu is open |
 | `Computer_Browser_Addresser.AddressWrapper` (pre) | `BrowserPatches` | Lets the framework choose the page for a URL (see the desktop guide) |
+| `Dialogue.Awake` (post) | `DialoguePatches` | Raises `GameStory.Created`, so mod scripts and functions are in the story before a save loads into it |
 
 ### Reasons for the less obvious ones
 
 - `SaveLoadHandler.Start` raises `HouseReady` on the next update rather than immediately, so every other `Start` has finished when mods run.
 - The store patches run after the store's own `Start`, because the store wires its buttons by index and must not see the framework's buttons.
 - The card patches run before the game collects its cards, because the game collects them once.
+- Mod scripts go into the story in `Dialogue.Awake`, not `Start`: the save loads the story's state in `SaveLoadHandler.Start`, and a state that mentions a mod knot must find it there. The game binds its own functions in `Start`, so mod functions (which use other names) don't collide with them.
 
 ## Hot reload
 

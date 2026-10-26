@@ -137,18 +137,21 @@ Only `Dialogue.masterStory` state is saved this way. `ThoughtLoader`, `EmailHand
 - Callers: `VertexShakeA.cs:168` (when the text has faded out and the brain HUD is not active, with a 90% chance) and `VertexShakeA.cs:189` (`UpdateThought`). The `textId` field on `VertexShakeA` picks the need.
 - The thought text is shown by `VertexShakeA` on the stat objects (`Bladder.cs`, `Energy.cs`, `Soul.cs` construct it with `VertexShakeA`).
 
-### 1.9 How a mod could inject dialogue
+### 1.9 Injecting dialogue (tested)
 
-Possible approaches, from what the code allows. None of them has been tested.
+What works, tested in the game and built into the framework (`NeetModKit.Conversations`, see `docs/modding/framework.md`, "Dialogue"):
 
-1. **Add external functions:** Harmony postfix on `Dialogue.Start` to call `Dialogue._.masterStory.BindExternalFunction(...)` for new names. The bindings are not re-run, so this is the safe hook point. Ink calls them the same way (signatures in section 1.5).
-2. **Hook tag handling:** Harmony prefix or postfix on `Dialogue.AdvanceStory` that reads `masterStory.currentTags`. Custom tags can be recognized there and acted on. Existing tags (section 1.6) show the pattern.
-3. **Hook flow/knot entry:** Harmony postfix on `Dialogue.InitCharacterDialogue` (or the `ChoosePathString` calls). New conversations can be started by calling `InitCharacterDialogue` with a flow and knot that exist in the compiled story.
-4. **Use a different compiled story:** `Ink.Runtime.Story` takes JSON text. A mod could load its own compiled story JSON (from a file or an AssetBundle) and create a separate `Story` for mod dialogue. This keeps the base game story unchanged, but then the UI, tags, and save/load logic in `Dialogue` (which all operate on `masterStory`) would need to be duplicated. It is not wired in the existing code.
-5. **Compile Ink source at runtime:** `Ink.Compiler` is in the shipped `Ink-Libraries.dll` (`new Compiler(string inkSource, Options options)` and `Story Compile()`, confirmed with `monodis`). A mod could compile `.ink` source to a `Story` at runtime. Same caveat as option 4: the result is a separate story.
-6. **Swap the `masterScript` TextAsset:** `Dialogue.Awake` builds the story from `masterScript.text` once, so changing the field afterward has no effect unless `masterStory` is re-created and all bindings in section 1.5 are re-applied. This is more fragile than option 1.
+1. **Compile Ink at runtime and add it to `masterStory`.** `Ink.Compiler` from the shipped `Ink-Libraries.dll` (ink version 20) compiles `.ink` source inside the game. The compiled story's top-level knot containers can be moved into `masterStory.mainContentContainer` with `AddToNamedContentOnly`. Their paths stay valid as long as they go in at the same place (the top level), because Ink caches each object's path. Building a fresh copy from the compiled JSON (`new Story(json).mainContentContainer`) avoids carrying cached pointers over. The game's `InitCharacterDialogue` can then play the knots in the normal dialogue box, with choices, tags and text effects.
+2. **Declarations for the compiler.** A separate compile doesn't know the game's lists, globals or functions, so a header has to declare them: `LIST` per `masterStory.listDefinitions`, a `VAR` per global (only names and types matter; the declarations never run in the game's story) and an `EXTERNAL` per bound function. Diverts into the game's knots can't be compiled this way.
+3. **Add functions.** `BindExternalFunctionGeneral` works on the live story at any time. Binding a name twice throws, so check `Story._externals` first. The game binds its own in `Dialogue.Start`, `SequenceManager.Start` and `QueenOfDust`; mods add theirs in a postfix on `Dialogue.Awake`, which is also where scripts must go in (the save loads the story state in `SaveLoadHandler.Start`).
+4. **Tags** still work as before (section 1.6); custom tags can be read in a postfix on `AdvanceStory`.
 
-Save compatibility: `mainStory` in the save is the full Ink state JSON. Adding or changing knots or variables in a mod's story changes what `LoadJson` expects. Behavior when a loaded state references missing content has not been checked.
+Save compatibility, tested with the game's runtime outside Unity:
+
+- `state.LoadJson` throws "Failed to find content at path '...', and no approximation of it was possible" when a flow's position is inside a knot the story doesn't have. That aborts loading the save.
+- A flow keeps its last position after the conversation ends. The phone's flow, for example, still points at the end of the last call. So one played modded call is enough to make a save depend on the mod.
+- `RemoveFlow(name)` on a flow that isn't current fixes it. Visit counts and turn indices for missing knots are only strings and load fine.
+- The framework removes flows that stopped in mod content right before saving.
 
 ## 2. Paint / decal system
 
@@ -251,9 +254,9 @@ Three components modify TextMeshPro text vertex data. All are MonoBehaviours tha
 
 ## Modding notes
 
-- **Hook points for Dialogue:** `Dialogue.Start` (binding point for new external functions), `Dialogue.AdvanceStory` (tags), `Dialogue.InitCharacterDialogue` (conversation entry), `Dialogue.CloseDialogue`, `Dialogue.MakeChoice`. Harmony postfix on `Start` is the safest first step.
-- **Ink tooling is present:** `Ink-Libraries.dll` includes `Ink.Compiler`, so a mod can compile `.ink` source at runtime. Keep in mind that a separate `Story` does not share state or UI with `Dialogue`.
-- **Save data:** only `Dialogue.masterStory` state is in `mainStory` (`SaveLoadHandler.cs:101`, `:188`). Mod-owned Ink state needs its own save entry, which the save loader does not know about.
+- **Hook points for Dialogue:** `Dialogue.Awake` (the story exists; the place to add mod knots and functions), `Dialogue.AdvanceStory` (tags), `Dialogue.InitCharacterDialogue` (conversation entry; a prefix can change `charKnot`), `Dialogue.CloseDialogue`, `Dialogue.MakeChoice`, and the private `UpdateChoices` (runs when use is pressed with nothing left to continue).
+- **Ink tooling is present:** `Ink-Libraries.dll` includes `Ink.Compiler`, and compiled mod knots can join `masterStory` itself (section 1.9), sharing its UI and state. The framework's `InkScripts` does this.
+- **Save data:** only `Dialogue.masterStory` state is in `mainStory` (`SaveLoadHandler.cs:101`, `:188`). A state that points into mod knots can't be loaded without them (section 1.9). Mod data belongs in the framework's `ModSaveData`.
 - **Tag parsing is fragile:** the `Substring` offsets in `AdvanceStory` are hard-coded. Adding a tag with a prefix that collides with an existing one will match the existing branch first (for example `TextAnim:` and `TextAnimation...`). Test new tags in the same form as existing ones.
 - **Paint injection:** call `PaintTarget.PaintRaycast(ray, brush)` or `PaintTarget.PaintObject(target, point, normal, brush)` (both static) to paint from a mod. `PaintTarget.saveId` must be set for splats to be saved and loaded (`SaveLoadHandler.cs:370` loads by `saveId`-keyed maps).
 - **Text effects:** `VertexShakeA` and `TextAnimations` are safe to reuse on new `TextMeshProUGUI` objects. Adding a new `TextAnimationType` value requires changing the enum (`Dialogue.cs:14`) and the tag parser.
@@ -268,4 +271,4 @@ Three components modify TextMeshPro text vertex data. All are MonoBehaviours tha
 5. Is `Fog` (Kino) or `DynamicBone` placed in any scene? Only the scripts are present in the code.
 6. `FadingTransition.Awake` sets `HouseManager.fadingTransitionInstance` only if it is null. Confirm which object is the first instance in a scene and whether its `Start` depends on `HouseManager._` being ready.
 7. The order of `Dialogue.Start` relative to `SequenceManager.Start` and `QueenOfDust` start code is not guaranteed by Unity. Their bindings depend on `Dialogue._.masterStory` existing.
-8. What the 23 Ink external functions do in the story itself, and which knots and flows exist in the compiled `Master` story. This needs the compiled JSON, not the C# code.
+8. What the 23 Ink external functions do in the story itself. The compiled story (166 KB of JSON in `sharedassets0.assets`, the one the live `Dialogue.masterStory` uses) has 58 top-level knots: an ink fallback for each external function, the NPC knots (`PoopmanNight1`, `GhostboyNight1`, `Grandpa`, `QueenOfDust`, ...), and `Phone` with 29 stitches (the 15 numbers, `pPrank1` to `pPrank11`, `mom_fake1`, `mom_fake2`). Its lists are `OfferingStates` and `PlayerStates`; its globals are `tempCurrOffering`, `playerHeld`, `playerBody` (lists), `offeringValue`, `currCharacter`, `nightId` and `deathRespawns`. The other, small story in the same file holds the need thoughts (`Hunger_Low`, ...).
