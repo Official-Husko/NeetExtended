@@ -14,7 +14,11 @@ internal static class LifecyclePatches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SaveLoadHandler), nameof(SaveLoadHandler.SaveAll))]
-    private static void BeforeSave() => GameEvents.Raise(GameEvents.BeforeSave);
+    private static void BeforeSave()
+    {
+        GameEvents.Raise(GameEvents.BeforeSave);
+        Conversations.SaveGuard.BeforeSave();
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SaveLoadHandler), nameof(SaveLoadHandler.SaveAll))]

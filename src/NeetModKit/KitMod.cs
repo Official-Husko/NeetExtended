@@ -27,6 +27,9 @@ public sealed class KitMod : NeetMod
         GameEvents.SceneLoaded.Subscribe(this, _ => Ui.Toolkit.UiInputLock.OnSceneLoaded());
         Saves.ModSaveData.Init(Log);
         Items.ItemRegistry.Init(Log);
+        Conversations.GameStory.Init(Log);
+        Conversations.InkFunctions.Init(this);
+        Conversations.InkScripts.Init(this);
         GameEvents.ItemsRegistering.Subscribe(this, Items.ItemRegistry.RegisterAll);
         ModMenu.Init(this);
 
