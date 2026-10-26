@@ -129,7 +129,7 @@ Failures during the startup batch are logged at error level as `<mod>: <error>`.
 | `OnLateUpdate()` | Every frame, from `LateUpdate`. | |
 | `OnFixedUpdate()` | Every physics step, from `FixedUpdate`. | |
 | `OnGUI()` | Every IMGUI pass. | |
-| `OnQuit()` | Application quit. | |
+| `OnQuit()` | Application quit. | Last chance to write files; see [Quitting](#quitting). |
 | `OnUnload()` | Before the mod is unloaded or reloaded. Only if `OnLoad` completed. | Undo anything you didn't `Track`. |
 
 Callback exceptions are caught. An exception in an update callback is logged once per mod per callback. Later ones are hidden, so one bad mod can't flood the log every frame.
@@ -154,6 +154,12 @@ Unloading one mod:
 7. The mod's state becomes `Disabled`.
 
 Reloading (see [Hot reload](#hot-reload)) runs the same steps for the whole set, then loads them all again.
+
+### Quitting
+
+When the game quits, every mod's `OnQuit` runs, the loader logs "Game closing" and closes its log files. Mods aren't unloaded.
+
+On the 32-bit player, the process then ends early: the 32-bit Mono runtime crashes in its own shutdown once Harmony has patched anything (even after every patch is removed again), which left a crash report in `Temp/NEET Games/NEET/Crashes` on every exit. The loader saves `PlayerPrefs` (Unity would do that in the part that's skipped) and ends the process from `AppDomain.ProcessExit`, which Mono raises right before that point (`Runtime/CleanExit.cs`). Anything a mod writes has to be on disk by the end of `OnQuit`: finish background writes there, like Performance Fixes does with paint pictures. The 64-bit player shuts down normally.
 
 ### Mod state
 
