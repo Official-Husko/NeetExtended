@@ -21,6 +21,7 @@ public static class ChangelogBuilder
         ["nofeedback"] = "No Feedback",
         ["pumpkin"] = "Pumpkin Smash",
         ["cheats"] = "Cheat Menu",
+        ["openhouse"] = "Open House",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
         ["ui"] = "Interface",
