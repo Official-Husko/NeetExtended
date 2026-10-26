@@ -14,6 +14,11 @@ public static class LogHub
 
     private static LogFile _file;
 
+    // Unity repeats some warnings hundreds of times in a row; only the first copy is kept.
+    private static readonly object RepeatLock = new object();
+    private static string _lastUnityMessage;
+    private static int _repeats;
+
     /// <summary>Recent lines from mods, the loader and Unity itself.</summary>
     public static LogBuffer Buffer { get; } = new LogBuffer(4096);
 
@@ -74,8 +79,30 @@ public static class LogHub
             ? condition + "\n" + stackTrace.TrimEnd()
             : condition;
 
+        if (IsRepeat(message, out int previousRepeats))
+            return;
+        if (previousRepeats > 0)
+            Buffer.Add(LogLevel.Debug, "Unity", $"(previous message repeated {previousRepeats} more times)");
+
         Buffer.Add(level, "Unity", message);
         if (level >= LogLevel.Warning)
             _file?.Write(new LogEntry(Buffer.LastSequence, DateTime.Now, level, "Unity", message));
+    }
+
+    private static bool IsRepeat(string message, out int previousRepeats)
+    {
+        lock (RepeatLock)
+        {
+            if (message == _lastUnityMessage)
+            {
+                _repeats++;
+                previousRepeats = 0;
+                return true;
+            }
+            previousRepeats = _repeats;
+            _repeats = 0;
+            _lastUnityMessage = message;
+            return false;
+        }
     }
 }
