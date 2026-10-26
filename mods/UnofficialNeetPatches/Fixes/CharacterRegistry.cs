@@ -74,7 +74,7 @@ internal static class CharacterRegistry
     /// True if a story event can use <paramref name="name"/> right now. Otherwise the event is skipped
     /// (with one warning per character) instead of throwing.
     /// </summary>
-    public static bool IsThere(string name, bool needsBrain)
+    public static bool IsThere(string name, string call, bool needsBrain)
     {
         var map = Map;
         if (map != null && map.TryGetValue(name, out var stories) && stories != null &&
@@ -82,7 +82,8 @@ internal static class CharacterRegistry
             return true;
 
         if (Warned.Add(name))
-            UnofficialNeetPatchesMod.Instance?.Log.Warn($"Skipped a story event for {name}: that character isn't in the house.");
+            UnofficialNeetPatchesMod.Instance?.Log.Warn($"Skipped a story event for {name}: that character isn't in the house (details in errors.log).");
+        PatchReports.CharacterMissing(name, call);
         return false;
     }
 }

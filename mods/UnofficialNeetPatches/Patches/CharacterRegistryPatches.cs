@@ -16,11 +16,11 @@ internal static class CharacterRegistryPatches
     // Both read the map without checking; SwitchSegmentLine also uses the brain before its null check.
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Dialogue), nameof(Dialogue.SwitchSegmentLine), typeof(string), typeof(string))]
-    private static bool BeforeSwitchSegmentLine(string characterName) =>
-        CharacterRegistry.IsThere(characterName, needsBrain: true);
+    private static bool BeforeSwitchSegmentLine(string characterName, string segmentLineName) =>
+        CharacterRegistry.IsThere(characterName, $"SwitchSegmentLine({characterName}, {segmentLineName})", needsBrain: true);
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Dialogue), nameof(Dialogue.SetOverrideKnot))]
-    private static bool BeforeSetOverrideKnot(string characterName) =>
-        CharacterRegistry.IsThere(characterName, needsBrain: false);
+    private static bool BeforeSetOverrideKnot(string characterName, string newKnotName) =>
+        CharacterRegistry.IsThere(characterName, $"SetOverrideKnot({characterName}, {newKnotName})", needsBrain: false);
 }
