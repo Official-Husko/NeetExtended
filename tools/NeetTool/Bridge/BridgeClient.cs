@@ -43,7 +43,7 @@ public sealed class BridgeClient
         {
             ["id"] = Interlocked.Increment(ref _nextId),
             ["method"] = method,
-            ["params"] = parameters ?? new JsonObject(),
+            ["params"] = parameters?.DeepClone() ?? new JsonObject(),
         };
         byte[] payload = Encoding.UTF8.GetBytes(request.ToJsonString() + "\n");
         await stream.WriteAsync(payload, cts.Token);
