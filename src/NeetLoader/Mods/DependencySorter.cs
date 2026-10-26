@@ -77,10 +77,17 @@ internal static class DependencySorter
             return;
         }
 
-        foreach (string before in mod.Manifest.Dependencies.Keys.Concat(mod.Manifest.LoadAfter))
+        foreach (string id in mod.Manifest.Dependencies.Keys)
         {
-            if (byId.TryGetValue(before, out var dep))
+            if (byId.TryGetValue(id, out var dep))
                 Visit(dep, byId, visiting, done, ordered);
+        }
+
+        // loadAfter is only a hint: if following it would close a loop, skip it instead of failing.
+        foreach (string id in mod.Manifest.LoadAfter)
+        {
+            if (byId.TryGetValue(id, out var hint) && !visiting.Contains(hint.Id))
+                Visit(hint, byId, visiting, done, ordered);
         }
 
         visiting.Remove(mod.Id);
