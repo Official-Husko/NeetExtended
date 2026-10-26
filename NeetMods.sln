@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenHouse", "mods\OpenHouse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneExpansion", "mods\PhoneExpansion\PhoneExpansion.csproj", "{E7A3EF19-5D9F-4DA9-9585-7381ADA053AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnofficialNeetPatches", "mods\UnofficialNeetPatches\UnofficialNeetPatches.csproj", "{686A0E3F-FA85-42A8-9588-2DD5815F672C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +175,18 @@ Global
 		{E7A3EF19-5D9F-4DA9-9585-7381ADA053AE}.Release|x64.Build.0 = Release|Any CPU
 		{E7A3EF19-5D9F-4DA9-9585-7381ADA053AE}.Release|x86.ActiveCfg = Release|Any CPU
 		{E7A3EF19-5D9F-4DA9-9585-7381ADA053AE}.Release|x86.Build.0 = Release|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Debug|x64.Build.0 = Debug|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Debug|x86.Build.0 = Debug|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Release|x64.ActiveCfg = Release|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Release|x64.Build.0 = Release|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Release|x86.ActiveCfg = Release|Any CPU
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,5 +203,6 @@ Global
 		{F1A38AFD-CE3A-4D68-B848-15E367923ABC} = {ED7DE66D-1FF1-BCCD-393E-2D4AFCA661A0}
 		{86AA6F8D-90B5-4AA2-BCE7-7407499B9322} = {ED7DE66D-1FF1-BCCD-393E-2D4AFCA661A0}
 		{E7A3EF19-5D9F-4DA9-9585-7381ADA053AE} = {ED7DE66D-1FF1-BCCD-393E-2D4AFCA661A0}
+		{686A0E3F-FA85-42A8-9588-2DD5815F672C} = {ED7DE66D-1FF1-BCCD-393E-2D4AFCA661A0}
 	EndGlobalSection
 EndGlobal

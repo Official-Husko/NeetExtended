@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NeetModKit.Cards;
 
-namespace CardExpansion.Features;
+namespace UnofficialNeetPatches.Fixes;
 
 /// <summary>
 /// Fixes promoted cards falling back to their starting stats after loading a save: the game

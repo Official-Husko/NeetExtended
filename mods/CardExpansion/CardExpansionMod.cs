@@ -13,7 +13,6 @@ public sealed class CardExpansionMod : NeetMod
 {
     private SummonFeature _summons;
     private AutoClickerFeature _autoClicker;
-    private PromotionFixFeature _promotionFix;
 
     internal static CardExpansionMod Instance { get; private set; }
     internal ConfigFile<CardExpansionConfig> Config { get; private set; }
@@ -28,13 +27,12 @@ public sealed class CardExpansionMod : NeetMod
         Config.Save();
         Config.Changed += _ => RefreshLabels();
         ModSettings.Register(this, Config, "Card Expansion");
-        ModSaveData.Register(this, SaveState, LoadState);
+        ModSaveData.Register(this, () => State, LoadState);
 
         ModFeatures.Register(this, new SpookyCardsFeature());
         ModFeatures.Register(this, _summons = new SummonFeature());
         ModFeatures.Register(this, _autoClicker = new AutoClickerFeature());
         ModFeatures.Register(this, new BetterExchangeFeature());
-        ModFeatures.Register(this, _promotionFix = new PromotionFixFeature());
     }
 
     public override void OnUnload() => Instance = null;
@@ -45,17 +43,9 @@ public sealed class CardExpansionMod : NeetMod
         _autoClicker?.RefreshLabel();
     }
 
-    private CardState SaveState()
-    {
-        State.CardBases = CardBaseValues.Capture();
-        return State;
-    }
-
     private void LoadState(CardState state)
     {
         State = state;
-        if (_promotionFix == null || _promotionFix.Enabled)
-            CardBaseValues.Restore(state.CardBases);
         RefreshLabels();
     }
 }
