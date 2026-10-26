@@ -33,6 +33,9 @@ public abstract class NeetMod
 
     internal bool HasHarmony => _harmony != null;
 
+    /// <summary>Set once OnLoad finished, so a failed load doesn't run OnUnload.</summary>
+    internal bool Started { get; set; }
+
     /// <summary>Path inside the mod folder.</summary>
     public string PathTo(string relative) => Path.Combine(Info.Directory, relative);
 

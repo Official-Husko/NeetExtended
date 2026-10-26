@@ -102,17 +102,40 @@ public static class ModRegistry
 
     public static void Load(string id, Action<string> done = null) => Queue(id, done, ModLifecycle.Load);
 
-    /// <summary>Reloads every loaded hot-reload mod that doesn't have dependents.</summary>
+    /// <summary>Reloads several mods (plus everything built on them) as one batch.</summary>
+    internal static void ReloadSet(IReadOnlyList<ModInfo> mods, Action<string> done = null)
+    {
+        MainThread.Post(() =>
+        {
+            string error;
+            try { error = ModLifecycle.ReloadSet(mods); }
+            catch (Exception e)
+            {
+                error = e.Message;
+                _log.Error("Reload failed", e);
+            }
+            if (error != null)
+                _log.Warn(error);
+            done?.Invoke(error);
+        });
+    }
+
+    /// <summary>Reloads every loaded hot-reload mod as one batch.</summary>
     public static void ReloadAll(Action<string> done = null)
     {
         MainThread.Post(() =>
         {
-            var errors = All.Where(m => m.State == ModState.Loaded && m.CanHotReload)
-                .ToList()
-                .Select(ModLifecycle.Reload)
-                .Where(e => e != null)
-                .ToList();
-            done?.Invoke(errors.Count == 0 ? null : string.Join("\n", errors));
+            string error;
+            try
+            {
+                error = ModLifecycle.ReloadSet(All.Where(m => m.State == ModState.Loaded && m.CanHotReload).ToList());
+            }
+            catch (Exception e)
+            {
+                error = e.Message;
+                _log.Error("Reload all failed", e);
+            }
+            done?.Invoke(error);
         });
     }
 

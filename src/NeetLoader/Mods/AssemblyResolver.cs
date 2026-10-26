@@ -6,9 +6,9 @@ using System.Reflection;
 namespace NeetLoader.Mods;
 
 /// <summary>
-/// Lets mods reference each other's DLLs. Mono only searches NEET_Data/Managed on its own,
-/// so anything living in a mod folder is resolved here by simple name. After a hot reload the
-/// newest copy of an assembly wins.
+/// Lets mods reference each other's DLLs. Mono only searches NEET_Data/Managed on its own, so
+/// anything in a mod folder is resolved here by simple name, always to the newest loaded copy
+/// (under its original name and its reload name).
 /// </summary>
 internal static class AssemblyResolver
 {
@@ -25,7 +25,11 @@ internal static class AssemblyResolver
         _hooked = true;
     }
 
-    public static void SetCurrent(Assembly assembly) => Current[assembly.GetName().Name] = assembly;
+    public static void SetCurrent(Assembly assembly, string originalName)
+    {
+        Current[originalName] = assembly;
+        Current[assembly.GetName().Name] = assembly;
+    }
 
     private static Assembly OnResolve(object sender, ResolveEventArgs args)
     {

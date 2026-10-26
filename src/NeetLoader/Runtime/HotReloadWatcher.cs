@@ -14,6 +14,7 @@ internal sealed class HotReloadWatcher
     private const float PollInterval = 1f;
 
     private readonly Dictionary<ModInfo, System.DateTime> _seenChange = new Dictionary<ModInfo, System.DateTime>();
+    private readonly List<ModInfo> _ready = new List<ModInfo>();
     private float _nextPoll;
 
     public bool Enabled { get; set; } = true;
@@ -24,6 +25,7 @@ internal sealed class HotReloadWatcher
             return;
         _nextPoll = Time.unscaledTime + PollInterval;
 
+        _ready.Clear();
         var mods = ModRegistry.Mods;
         for (int i = 0; i < mods.Count; i++)
         {
@@ -49,7 +51,11 @@ internal sealed class HotReloadWatcher
             }
 
             _seenChange.Remove(mod);
-            ModRegistry.Reload(mod.Id);
+            _ready.Add(mod);
         }
+
+        // One batch: a solution build usually changes the framework and several mods at once.
+        if (_ready.Count > 0)
+            ModRegistry.ReloadSet(_ready.ToArray());
     }
 }

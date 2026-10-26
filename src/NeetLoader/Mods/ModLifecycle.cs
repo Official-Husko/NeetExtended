@@ -66,28 +66,54 @@ internal static class ModLifecycle
         return null;
     }
 
-    public static string Reload(ModInfo mod)
+    /// <summary>
+    /// Reloads a mod and, in a cascade, every loaded mod built on it. All of them must support hot
+    /// reload. Dependents unload first (newest first) and everything loads back in dependency order.
+    /// </summary>
+    public static string Reload(ModInfo mod) => ReloadSet(new[] { mod });
+
+    /// <summary>Reloads several mods (and their dependents) as one batch.</summary>
+    public static string ReloadSet(IEnumerable<ModInfo> roots)
     {
-        if (!mod.CanHotReload)
-            return $"{mod.Id} doesn't support hot reload (set \"hotReload\": true in its mod.json). Restart the game to update it.";
-
-        var dependents = LoadedDependents(mod).ToList();
-        if (dependents.Count > 0)
-            return $"{mod.Id} is used by {string.Join(", ", dependents.Select(d => d.Id))}. Restart the game to update it.";
-
-        var timer = Stopwatch.StartNew();
-        if (mod.State == ModState.Loaded)
+        var set = new List<ModInfo>();
+        foreach (var root in roots)
         {
-            Unloading?.Invoke(mod);
-            ModActivator.Deactivate(mod, _host, _log);
+            if (!set.Contains(root))
+                set.Add(root);
+            foreach (var dependent in LoadedDependentsDeep(root))
+            {
+                if (!set.Contains(dependent))
+                    set.Add(dependent);
+            }
         }
 
-        RefreshManifest(mod);
-        LoadBatch(new[] { mod }, atRuntime: true);
+        var blocked = set.Where(m => !m.CanHotReload).Select(m => m.Id).ToList();
+        if (blocked.Count > 0)
+            return $"Can't reload without a restart: {string.Join(", ", blocked)} doesn't support hot reload.";
 
-        if (mod.State != ModState.Loaded)
-            return $"{mod.Id} failed to load: {mod.Error}";
-        _log.Info($"Reloaded {mod} in {timer.ElapsedMilliseconds} ms");
+        var timer = Stopwatch.StartNew();
+        var order = DependencySorter.Sort(set.Where(m => m.State != ModState.Failed).ToList());
+        for (int i = order.Count - 1; i >= 0; i--)
+        {
+            if (order[i].State != ModState.Loaded)
+                continue;
+            Unloading?.Invoke(order[i]);
+            ModActivator.Deactivate(order[i], _host, _log);
+        }
+
+        foreach (var mod in set)
+        {
+            RefreshManifest(mod);
+            mod.State = ModState.Pending;
+            mod.Error = null;
+        }
+        LoadBatch(set, atRuntime: true);
+
+        var failed = set.Where(m => m.State != ModState.Loaded).ToList();
+        if (failed.Count > 0)
+            return string.Join("\n", failed.Select(m => $"{m.Id} failed to load: {m.Error}"));
+
+        _log.Info($"Reloaded {string.Join(", ", set.Select(m => m.Id))} in {timer.ElapsedMilliseconds} ms");
         return null;
     }
 
@@ -132,6 +158,25 @@ internal static class ModLifecycle
 
     private static IEnumerable<ModInfo> LoadedDependents(ModInfo mod) =>
         ModRegistry.Mods.Where(m => m.State == ModState.Loaded && m.Manifest.Dependencies.ContainsKey(mod.Id));
+
+    /// <summary>Dependents, their dependents, and so on.</summary>
+    private static List<ModInfo> LoadedDependentsDeep(ModInfo mod)
+    {
+        var found = new List<ModInfo>();
+        var queue = new Queue<ModInfo>();
+        queue.Enqueue(mod);
+        while (queue.Count > 0)
+        {
+            foreach (var dependent in LoadedDependents(queue.Dequeue()))
+            {
+                if (found.Contains(dependent))
+                    continue;
+                found.Add(dependent);
+                queue.Enqueue(dependent);
+            }
+        }
+        return found;
+    }
 
     private static void ReplayScene(List<ModInfo> mods)
     {
