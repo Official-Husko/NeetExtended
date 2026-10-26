@@ -17,11 +17,11 @@ internal static class ScriptProfiler
     private static readonly string[] GameAssemblies = { "Assembly-CSharp", "Assembly-CSharp-firstpass" };
 
     [BridgeCommand("perf.scripts", "Time every game script's Update/LateUpdate/FixedUpdate/OnGUI/Stay callbacks for a few seconds.",
-        Params = new[] { "seconds?: default 5, at most 10", "top?: default 30" })]
+        Params = new[] { "seconds?: default 5, at most 10", "top?: default 30", "allocations?: rank by how much each allocates instead" })]
     private static object Scripts(JObject p)
     {
         var result = new Deferred();
-        var timer = MethodTimer.Start(GameMethods(Messages));
+        var timer = MethodTimer.Start(GameMethods(Messages), p.Bool("allocations", false));
         DevBridgeMod.Instance.StartCoroutine(RunFor(timer, Mathf.Clamp(p.Float("seconds", 5f), 1f, 10f), p.Int("top", 30), result));
         return result;
     }

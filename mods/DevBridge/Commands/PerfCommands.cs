@@ -178,6 +178,9 @@ internal static class PerfCommands
         var counterSamples = new int[recorders.Count];
         int gc0 = GC.CollectionCount(0);
         long monoBefore = Profiler.GetMonoUsedSizeLong();
+        // Growth of the Mono heap between frames, ignoring the drops when a collection runs: roughly
+        // what the game allocates, which decides how often the (non-incremental) GC freezes it.
+        long allocated = 0, lastUsed = monoBefore;
         float end = Time.realtimeSinceStartup + seconds;
 
         yield return null; // Skip the frame the request arrived in.
@@ -185,6 +188,10 @@ internal static class PerfCommands
         {
             yield return null;
             frames.Add(Time.unscaledDeltaTime * 1000f);
+            long used = Profiler.GetMonoUsedSizeLong();
+            if (used > lastUsed)
+                allocated += used - lastUsed;
+            lastUsed = used;
             for (int i = 0; i < recorders.Count; i++)
             {
                 var recorder = recorders[i].Recorder;
@@ -234,6 +241,11 @@ internal static class PerfCommands
                 ["over50ms"] = frames.Count(f => f > 50f),
             },
             ["gcCollections"] = GC.CollectionCount(0) - gc0,
+            ["allocated"] = new JObject
+            {
+                ["kbPerFrame"] = frames.Count > 0 ? Math.Round(allocated / 1024.0 / frames.Count, 1) : 0,
+                ["mbPerSecond"] = Math.Round(allocated / 1048576.0 / Math.Max(0.001, total / 1000f), 2),
+            },
             ["memoryMB"] = new JObject
             {
                 ["monoUsed"] = Mb(Profiler.GetMonoUsedSizeLong()),
