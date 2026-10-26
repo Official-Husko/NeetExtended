@@ -6,9 +6,8 @@ using UnityEngine.UI;
 namespace NeetModKit.Ui;
 
 /// <summary>
-/// Replaces the pause menu's feedback column with a native-looking MODS column. The feedback form
-/// posts to the developer's form, which makes no sense for a modded game, so it's hidden and the
-/// space is used for the mod menu buttons instead. Built by copying the CONTROLS column.
+/// Puts a native-looking MODS column where the pause menu's feedback form is (hiding the form, which
+/// the NoFeedback mod also does). Built by copying the CONTROLS column.
 /// </summary>
 internal static class PauseMenuMods
 {

@@ -36,9 +36,6 @@ public sealed class KitMod : NeetMod
         ModSettings.Register(this, Config, "NEET Mods");
 
         Features.ModFeatures.Init(this);
-        Features.ModFeatures.Register(this, new Features.Builtin.CompressedSavesFeature());
-        Features.ModFeatures.Register(this, new Features.Builtin.SaveCleanupFeature());
-        Features.ModFeatures.Register(this, new Features.Builtin.NoFeedbackFeature());
         Features.ModFeatures.Register(this, new Features.Builtin.PauseMenuModsFeature());
 
         Items.StoreListings.RestoreAfterReload();
