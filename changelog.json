@@ -1,0 +1,70 @@
+{
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-10-26",
+      "released": false,
+      "added": [
+        {
+          "text": "The mod loader keeps a log in NeetLoader/logs/latest.log, and the previous session's log as previous.log.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "Install a mod by dropping its folder into the game's Mods folder.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "Mods that need other mods load after them, and are skipped with a clear message if something they need is missing.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "A mod that crashes is logged and doesn't stop the other mods from running.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "Mods can be switched off without deleting them.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "Mods can be loaded, unloaded and reloaded while the game is running.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "Mods that support it update by themselves when their files change, no restart needed.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "The mod loader starts with the game by itself. No launcher, proxy DLL or Proton launch options needed.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "One command installs the mod loader into the game, and one removes it again and restores the original files.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "Check the install, the installed mods and whether the game is running with a single status command.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "Send commands to the running game from a terminal or a script.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "Start the game in a window and close it again from the command line.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "Read the mod loader log and the game's own log from the command line, even while the game runs.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "Editors and other tools that support MCP can launch, inspect and control the game for testing.",
+          "area": "Command-line tool"
+        }
+      ],
+      "changed": [],
+      "fixed": [],
+      "removed": []
+    }
+  ]
+}
