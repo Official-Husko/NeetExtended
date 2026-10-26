@@ -97,7 +97,7 @@ internal static class MenuStyles
             MenuTextures.Check(Accent, new Color(0.12f, 0.05f, 0.02f));
 
         Input = Skin.textField;
-        Input.fontSize = 13;
+        Input.fontSize = 14;
         Input.padding = new RectOffset(8, 8, 5, 5);
         Input.border = one;
         Input.normal.background = Input.hover.background = fieldTex;

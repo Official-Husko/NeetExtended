@@ -24,6 +24,7 @@ public sealed class KitMod : NeetMod
         Config.Save(); // Write defaults so the file exists for editing.
 
         GameEvents.Init(Log);
+        Saves.ModSaveData.Init(Log);
         ModMenu.Init();
 
         ModMenu.AddPage(this, new ModsPage());
