@@ -1,11 +1,11 @@
 @echo off
-rem Installs NEET Mods into NEET Demo (Steam, Windows).
+rem Installs NeetExtended into NEET Demo (Steam, Windows).
 rem Run it from the unpacked folder. Extra arguments go to the installer, e.g. --game "D:\Games\NEET Demo".
 setlocal
 set "HERE=%~dp0"
 set "NEET=%HERE%tool\win-x64\neet.exe"
 
-echo NEET Mods installer
+echo NeetExtended installer
 echo.
 echo This adds the mod loader and the mods to NEET Demo. Close the game first.
 echo.

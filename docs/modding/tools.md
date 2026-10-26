@@ -241,7 +241,7 @@ Any client that speaks MCP over stdio can use it. Add a server entry whose comma
 {
   "mcpServers": {
     "neet": {
-      "command": "/path/to/neet-mods/tools/NeetTool/bin/Release/net10.0/neet",
+      "command": "/path/to/NeetExtended/tools/NeetTool/bin/Release/net10.0/neet",
       "args": ["mcp"]
     }
   }
@@ -296,7 +296,7 @@ If the bridge does not answer, a bridge tool returns an error result with the te
 
 ## Release packages
 
-`build/package.sh` builds a package for players: `dist/NEET-Mods-<version>.zip`, with `<version>` from `Directory.Build.props`.
+`build/package.sh` builds a package for players: `dist/NeetExtended-<version>.zip`, with `<version>` from `Directory.Build.props`.
 
 | In the zip | What it is |
 | --- | --- |

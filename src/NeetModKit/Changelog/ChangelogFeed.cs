@@ -14,7 +14,7 @@ public sealed class ChangelogSource
 
 /// <summary>
 /// Collects changelog.json files from every loaded mod folder. NeetModKit's own file covers the
-/// whole NEET Mods pack (loader, framework, tool and bundled mods) and is listed first.
+/// whole pack (loader, framework, tool and bundled mods) and is listed first.
 /// </summary>
 public static class ChangelogFeed
 {

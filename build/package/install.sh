@@ -1,12 +1,12 @@
 #!/bin/sh
-# Installs NEET Mods into NEET Demo (Steam, Linux with Proton).
+# Installs NeetExtended into NEET Demo (Steam, Linux with Proton).
 # Run it from the unpacked folder. Extra arguments go to the installer, e.g. --game "/path/to/NEET Demo".
 set -e
 here=$(cd "$(dirname "$0")" && pwd)
 neet="$here/tool/linux-x64/neet"
 chmod +x "$neet" 2>/dev/null || true
 
-echo "NEET Mods installer"
+echo "NeetExtended installer"
 echo
 echo "This adds the mod loader and the mods to NEET Demo. Close the game first."
 echo

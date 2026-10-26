@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Builds a release package: dist/NEET-Mods-<version>.zip with the mods, the neet tool for Linux and
+# Builds a release package: dist/NeetExtended-<version>.zip with the mods, the neet tool for Linux and
 # Windows, and the install scripts from build/package. The dev bridge stays out (it opens a port
 # and is only for development).
 set -euo pipefail
 
 repo=$(cd "$(dirname "$0")/.." && pwd)
 version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' "$repo/Directory.Build.props" | head -n 1)
-name="NEET-Mods-$version"
+name="NeetExtended-$version"
 out="$repo/dist/$name"
 excluded=(DevBridge)
 

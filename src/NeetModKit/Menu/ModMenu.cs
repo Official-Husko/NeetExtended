@@ -42,7 +42,7 @@ public static class ModMenu
                 KitMod.Instance?.Log.Warn("The mod menu can't open before the game's menus are loaded.");
                 return;
             }
-            _window = new UiTabbedWindow(_owner, "NEET MODS", () => PageList.Items, Close);
+            _window = new UiTabbedWindow(_owner, About.PackInfo.Title, () => PageList.Items, Close);
         }
 
         if (pageTitle != null)

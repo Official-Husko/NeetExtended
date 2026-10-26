@@ -1,6 +1,6 @@
-# NeetPlus features
+# NeetExtended features
 
-Everything NeetPlus adds to NEET Demo, for players. Each mod can be switched on and off on the **Mods** page of the mod menu, and most mods have smaller switches (features) and settings of their own. What changed in each version is on the **What's New** page in game.
+Everything NeetExtended adds to NEET Demo, for players. Each mod can be switched on and off on the **Mods** page of the mod menu, and most mods have smaller switches (features) and settings of their own. What changed in each version is on the **What's New** page in game.
 
 ## Getting started
 
@@ -8,7 +8,7 @@ Everything NeetPlus adds to NEET Demo, for players. Each mod can be switched on 
   - **Switch to 64-bit?** Downloads Unity's 64-bit version of the game's engine from Unity (about 180 MB) and swaps it in. The game runs a little faster and can use more memory. You can switch back at any time.
   - **Incremental garbage collection?** The game cleans up memory in small steps instead of freezing for a moment every so often. Recommended.
 - **Uninstalling**: run `uninstall.sh` or `uninstall.bat`. It puts the original game files back. Your saves and mod settings stay.
-- **Version in the corner**: the bottom left corner shows the pack's name, version and build (for example `NeetPlus v0.1.0 (1a2b3c4)`), so you can see the mods are running and screenshots show which build you have. Hide it in Settings.
+- **Version in the corner**: the bottom left corner shows the pack's name, version and build (for example `NeetExtended v0.1.0 (1a2b3c4)`), so you can see the mods are running and screenshots show which build you have. Hide it in Settings.
 
 ## Mod menu
 
@@ -16,7 +16,7 @@ Press **F1**, or pick **MODS** in the pause menu (where the feedback form used t
 
 | Page | What's on it |
 | --- | --- |
-| **Mods** | Every installed mod: switch it on or off, load or unload it while playing, and switch its features. NeetPlus's framework and No Feedback are always on. |
+| **Mods** | Every installed mod: switch it on or off, load or unload it while playing, and switch its features. The Framework and No Feedback are always on. |
 | **What's New** | The changes in each version. Opens by itself after an update (you can turn that off). |
 | **PC Apps** | The addresses of the apps on the in-game computer; change them to whatever you like. |
 | **Settings** | Every mod's settings in one place. |

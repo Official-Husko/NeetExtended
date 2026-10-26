@@ -182,7 +182,7 @@ public static class ErrorReport
     private static string Render()
     {
         var sb = new StringBuilder();
-        sb.Append("NEET mods error report\n");
+        sb.Append("NeetExtended error report\n");
         sb.Append("Written ").Append(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")).Append('\n');
         sb.Append("Game ").Append(Application.productName).Append(' ').Append(Application.version)
           .Append(", Unity ").Append(Application.unityVersion)

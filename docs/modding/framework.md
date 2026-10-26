@@ -51,7 +51,7 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 
 ### Pack name and version
 
-`NeetModKit.About.PackInfo` holds the pack's name (`PackInfo.Name`, "NeetPlus"; change it there to rename the pack in game) and the build: `Version` ("0.1.0", from `<Version>` in `Directory.Build.props`), `Commit` (the short commit hash, with `-dirty` when built from uncommitted changes, or null) and `Label` ("NeetPlus v0.1.0 (1a2b3c4)"). `build/Revision.targets` puts the hash into every assembly's informational version ("0.1.0+1a2b3c4") by running `git describe` before the SDK writes the assembly attributes; outside a git checkout the version stays plain.
+`NeetModKit.About.PackInfo` holds the pack's name (`PackInfo.Name`, "NeetExtended"; change it there to rename the pack in game) and the build: `Version` ("0.1.0", from `<Version>` in `Directory.Build.props`), `Commit` (the short commit hash, with `-dirty` when built from uncommitted changes, or null) and `Label` ("NeetExtended v0.1.0 (1a2b3c4)"). `Title` is the name with spaces between its words ("Neet Extended"), for the all-caps headers like the mod menu's. `build/Revision.targets` puts the hash into every assembly's informational version ("0.1.0+1a2b3c4") by running `git describe` before the SDK writes the assembly attributes; outside a git checkout the version stays plain.
 
 The version tag (`Ui/VersionTag.cs`) shows `PackInfo.Label` in the bottom left corner of every scene: a canvas at sorting order 900 (under the mod menu's windows), without a raycaster, so it never takes clicks. The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
 

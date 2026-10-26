@@ -1,5 +1,5 @@
-NEET Mods
-=========
+NeetExtended
+============
 
 Mods for NEET Demo, with their own loader.
 
