@@ -1,0 +1,18 @@
+// Optional: names, volume and placement for the videos in this folder.
+// Every video in the folder (MP4, WebM, MOV, ...) is a station even without this file. It's added
+// after the game's channels and named after the file. Comments like these are fine.
+{
+  "stations": [
+    {
+      "file": "pumpkin-tv.webm",
+      "name": "Pumpkin TV",
+      // 0 to 1, on top of the TV's own volume.
+      "volume": 1
+      // To put it on one of the remote's six buttons, show it in place of a game channel, by name
+      // (Static, Bingo, Snail, Church, Sports, Rap) or by number (1 to 6):
+      // "replace": "Sports"
+    }
+  ],
+  // Game channels to take off the TV, by name or number, for example [ "Rap", "6" ].
+  "hide": []
+}
