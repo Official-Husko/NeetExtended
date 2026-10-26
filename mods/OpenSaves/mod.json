@@ -1,0 +1,9 @@
+{
+  "id": "OpenSaves",
+  "name": "Open Saves",
+  "version": "0.1.0",
+  "author": "pawbeans",
+  "description": "Saves in an open, compressed format (.nsav, about 16x smaller) and keeps the save folder tidy. Old JSON saves still load.",
+  "dependencies": { "NeetModKit": "0.1.0" },
+  "hotReload": true
+}

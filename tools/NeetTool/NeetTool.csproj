@@ -11,9 +11,9 @@
     <NoWarn>$(NoWarn);NU1702</NoWarn>
   </PropertyGroup>
 
-  <!-- One implementation of the save format, shared with the game-side framework. -->
+  <!-- One implementation of the save format, shared with the OpenSaves mod. -->
   <ItemGroup>
-    <Compile Include="../../src/NeetModKit/Saves/SaveCodec.cs" Link="Saves/SaveCodec.cs" />
+    <Compile Include="../../mods/OpenSaves/Format/NsavCodec.cs" Link="Saves/NsavCodec.cs" />
   </ItemGroup>
 
   <!-- The installer ships the loader and Harmony next to itself in payload/. -->

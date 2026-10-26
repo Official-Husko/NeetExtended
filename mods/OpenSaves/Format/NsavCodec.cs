@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace NeetModKit.Saves;
+namespace OpenSaves.Format;
 
 /// <summary>
 /// The NEET save container (.nsav). Open and simple: a 20-byte header followed by the save's JSON,
@@ -19,9 +19,9 @@ namespace NeetModKit.Saves;
 ///  16  4 bytes  CRC-32 (IEEE) of the uncompressed JSON bytes
 ///  20  ...      payload
 ///
-/// This file is shared between the game-side framework and the neet command-line tool.
+/// This file is shared between the OpenSaves mod and the neet command-line tool.
 /// </summary>
-public static class SaveCodec
+public static class NsavCodec
 {
     public const string Extension = ".nsav";
     public const byte FormatVersion = 1;

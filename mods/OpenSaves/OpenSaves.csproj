@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>OpenSaves</RootNamespace>
+    <Description>Compressed, open .nsav save files and automatic cleanup of old saves.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
+    <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
+  </ItemGroup>
+</Project>
