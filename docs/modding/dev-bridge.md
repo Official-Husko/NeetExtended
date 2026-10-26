@@ -207,6 +207,21 @@ These work on any loaded type, not only on scene objects. Type names follow the 
 | `cards.get` | `all?`: bool, default true | Anime card game state: `crystals`, `maxUnlocked`, `extraCards` and `cards`. Each card has `id`, `name`, `object`, `locked`, `level`, `medal`, `income`, `price`, `exp` and `expToLevel`. `all: false` leaves out locked cards. |
 | `cards.crystals` | `value` | Set the crystal count. Returns the new count. |
 
+### Performance
+
+Release builds have no Unity profiler, so these measure the running game from the inside. Findings and numbers are in [docs/research/performance.md](../research/performance.md).
+
+| Method | Parameters | Description and result |
+| ------ | ---------- | ---------------------- |
+| `perf.frames` | `seconds` (default 5, at most 12), `uncapped`: bool | Frame time average and percentiles, frames over 33/50 ms, GC count, memory (Mono and Unity), and Unity's render counters (draw calls, batches, SetPass calls, triangles, shadow casters). `uncapped` lifts the game's 120 fps cap and vsync while sampling, to see the real headroom. |
+| `perf.scene` | none | What's alive that costs time: cameras rendering (and into which texture), lights by type and which cast shadows, mesh and skinned renderers (visible), particle systems, rigidbodies (awake, kinematic), colliders, playing audio, enabled scripts by type, and the quality settings. |
+| `perf.scripts` | `seconds` (default 5), `top` (default 30) | Patches every game script's Update, LateUpdate, FixedUpdate, OnGUI and Stay callbacks with a timer for a few seconds, then removes them. Returns script time per frame and the slowest methods. |
+| `perf.gc` | `count` (default 3) | Runs full garbage collections and times each: how long one GC freezes the game. |
+| `perf.save` | none | Times one save. Writes a real save file. |
+| `perf.savebreakdown` | `top` | Saves once with timers on the save steps and every object's Save method. Writes a real save file. |
+
+Timers add a little overhead to every timed call, so compare methods with each other rather than with an untimed run. Back up the save folder before `perf.save` and `perf.savebreakdown`.
+
 ## Target addressing
 
 Commands that take a `target` accept one of two forms:

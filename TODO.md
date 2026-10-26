@@ -7,7 +7,17 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 - [ ] **Co-op**: 2 to 4 players in one house. Research done, see [docs/research/coop.md](docs/research/coop.md) (LiteNetLib over UDP, host-authoritative, remote players as player rigs driven by intents).
 - [ ] **Twitch Integration**: chat commands and channel point rewards that act in the game. Can reuse Phone Expansion's actions and conditions as the command set ("chat rings the phone", "chat pops the fuses").
 - [ ] **Randomizer**: shuffle night visitors, store prices, dream layouts and the like.
-- [ ] **Performance Fixes** (experimental): first target is the "Setting linear velocity of a kinematic body is not supported." warning the game logs every frame.
+- [ ] **Performance Fixes** (experimental): measured in [docs/research/performance.md](docs/research/performance.md). In order of gain:
+  - [ ] Peephole camera renders only while someone looks through it (about 17% of the frame in the living room).
+  - [ ] Fewer shadowed point lights, with presets (shadows are about 1,600 of 2,500 draw calls).
+  - [ ] Save only the paint that changed (saves freeze the game for 150 to 400 ms, 90% of it paint PNGs).
+  - [ ] Stop the log spam: kinematic velocity writes, `print("restinput")`, stack traces for warnings.
+  - [ ] Fewer garbage collections (each freezes the game 9 to 17 ms): cut per-frame allocations, collect at natural pauses.
+  - [ ] Fix the leaks: peephole render textures, paint textures, fire save subscriptions.
+  - [ ] Let the player choose the frame cap and vsync (the game forces 120 fps on every camera start).
+  - [ ] Skip `PaintTarget.Update` on surfaces with nothing to do (1,236 calls a frame).
+  - [ ] Quit without the shutdown crash on 32-bit.
+  - [ ] Optional 64-bit mode in the tool: download Unity's 2022.3.17f1 Windows player and swap it in (works, about 5% faster, no exit crash).
 
 ## New content
 
@@ -33,6 +43,7 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 
 ## Follow-ups for existing mods
 
+- [ ] **Unofficial NEET Patches**: amplifier status effects stay subscribed to their stat after they end (`StatusHandler.AddEffect` / `RemoveEffect`), so they keep amplifying and their cost grows every time one is applied.
 - [ ] **Phone Expansion**: voicemail (missed calls leave a message to play back).
 - [ ] **Phone Expansion**: a phone book app on the computer listing the numbers you've found.
 - [ ] **Framework**: adding items to store pages needs a look at the scene hierarchy first (the store builds its buttons in the scene and wires them by index).

@@ -36,3 +36,4 @@ Notes on how NEET Demo works, written from its decompiled code. Paths like `deco
 ## Research
 
 - [Co-op](research/coop.md) — what a 2-4 player co-op mod would take
+- [Performance](research/performance.md) — why the game feels laggy (measured), what a Performance Fixes mod should do, and running it as 64-bit
