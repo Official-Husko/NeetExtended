@@ -1,5 +1,6 @@
 using System;
 using NeetLoader;
+using NeetLoader.Runtime;
 using NeetLoader.Logging;
 
 namespace NeetModKit.Events;
@@ -18,7 +19,7 @@ public sealed class GameEvent
 
     public IDisposable Subscribe(Action handler) => _handlers.Add(handler);
 
-    public void Subscribe(NeetMod owner, Action handler) => _handlers.Add(owner, handler);
+    public void Subscribe(ITracker owner, Action handler) => _handlers.Add(owner, handler);
 
     internal void Raise(ModLogger log) => _handlers.ForEach(Call, log, _name);
 }
@@ -36,7 +37,7 @@ public sealed class GameEvent<T>
 
     public IDisposable Subscribe(Action<T> handler) => _handlers.Add(handler);
 
-    public void Subscribe(NeetMod owner, Action<T> handler) => _handlers.Add(owner, handler);
+    public void Subscribe(ITracker owner, Action<T> handler) => _handlers.Add(owner, handler);
 
     internal void Raise(T value, ModLogger log) => _handlers.ForEach(h => h(value), log, _name);
 }

@@ -15,7 +15,7 @@ namespace NeetModKit.Ui;
 public static class UiCloning
 {
     /// <summary>Copies an element next to the original (or under <paramref name="parent"/>).</summary>
-    public static GameObject Clone(NeetMod owner, Transform template, string name, Transform parent = null)
+    public static GameObject Clone(ITracker owner, Transform template, string name, Transform parent = null)
     {
         var go = Object.Instantiate(template.gameObject, parent != null ? parent : template.parent);
         go.name = name;
@@ -72,7 +72,7 @@ public static class UiCloning
     }
 
     /// <summary>Hides a scene object and shows it again when the owner unloads.</summary>
-    public static void Hide(NeetMod owner, GameObject go)
+    public static void Hide(ITracker owner, GameObject go)
     {
         if (go == null || !go.activeSelf)
             return;

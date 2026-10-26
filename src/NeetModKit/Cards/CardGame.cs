@@ -38,7 +38,7 @@ public static class CardGame
     public static int MaxUnlocked => Generator != null ? Generator.maxCardUnlocked : 0;
 
     /// <summary>Adds a card after the game's own. Takes effect the next time the house loads.</summary>
-    public static void AddCard(NeetMod owner, CardDefinition card)
+    public static void AddCard(ITracker owner, CardDefinition card)
     {
         if (string.IsNullOrEmpty(card.Name))
             throw new ArgumentException("A card needs a name.");

@@ -27,7 +27,7 @@ public sealed class HandlerList<THandler> where THandler : Delegate
     }
 
     /// <summary>Subscribes and ties the subscription to <paramref name="owner"/>'s lifetime.</summary>
-    public void Add(NeetMod owner, THandler handler) => owner.Track(Add(handler));
+    public void Add(ITracker owner, THandler handler) => owner.Track(Add(handler));
 
     public void Remove(THandler handler)
     {

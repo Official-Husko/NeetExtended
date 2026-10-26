@@ -15,7 +15,7 @@ namespace NeetModKit.Desktop;
 public static class ComputerUi
 {
     /// <summary>Copies a button, sets its label and click action, and gives it the computer's click sound.</summary>
-    public static Button CloneButton(NeetMod owner, Transform template, string name, string label, Action onClick)
+    public static Button CloneButton(ITracker owner, Transform template, string name, string label, Action onClick)
     {
         var go = UiCloning.Clone(owner, template, name);
         var button = go.GetComponent<Button>() ?? throw new ArgumentException($"{template.name} isn't a button.");
@@ -26,7 +26,7 @@ public static class ComputerUi
     }
 
     /// <summary>Copies a TextMeshPro label.</summary>
-    public static TMP_Text CloneLabel(NeetMod owner, Transform template, string name, string text)
+    public static TMP_Text CloneLabel(ITracker owner, Transform template, string name, string text)
     {
         var go = UiCloning.Clone(owner, template, name);
         var label = go.GetComponentInChildren<TMP_Text>(true) ?? throw new ArgumentException($"{template.name} has no TextMeshPro text.");
@@ -40,13 +40,17 @@ public static class ComputerUi
         UiCloning.Place(element, anchoredPosition, size);
 
     /// <summary>Moves the top edge of a stretched element down (positive) or up, undone on unload.</summary>
-    public static void PushTopEdge(NeetMod owner, RectTransform rect, float pixels)
+    public static void PushTopEdge(ITracker owner, RectTransform rect, float pixels) =>
+        owner.Track(PushTopEdge(rect, pixels));
+
+    /// <summary>Moves the top edge of a stretched element; dispose the result to move it back.</summary>
+    public static IDisposable PushTopEdge(RectTransform rect, float pixels)
     {
         rect.offsetMax -= new Vector2(0f, pixels);
-        owner.Track(Disposable.Create(() =>
+        return Disposable.Create(() =>
         {
             if (rect != null)
                 rect.offsetMax += new Vector2(0f, pixels);
-        }));
+        });
     }
 }

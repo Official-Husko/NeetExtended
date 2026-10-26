@@ -1,5 +1,6 @@
 using System;
 using NeetLoader;
+using NeetLoader.Runtime;
 using NeetLoader.Logging;
 using NeetModKit.Game;
 using UnityEngine.SceneManagement;
@@ -37,7 +38,7 @@ public static class GameEvents
     /// Runs <paramref name="action"/> every time the house becomes ready, and right away if it
     /// already is. Use this instead of HouseReady when a mod can be (re)loaded mid-game.
     /// </summary>
-    public static void WhenHouseReady(NeetMod owner, Action action)
+    public static void WhenHouseReady(ITracker owner, Action action)
     {
         HouseReady.Subscribe(owner, action);
         if (IsHouseReady)
