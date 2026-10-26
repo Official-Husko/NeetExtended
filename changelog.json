@@ -188,6 +188,42 @@
         {
           "text": "Open House mod: walk into the pantry and through the black basement door and dad's yard door, with optional switches for the attic, the roof and the demo's store limits.",
           "area": "Open House"
+        },
+        {
+          "text": "Mods can add their own lines, choices and conversations to the game's dialogue.",
+          "area": "Framework"
+        },
+        {
+          "text": "Phone Expansion mod: new numbers to call and new calls that ring in, with choices that can deliver food, cut the lights, open doors and more.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "Caller ID on the house phones shows who's calling while the phone rings.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "Phone tab in the mod menu to see every new call and ring any of them.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "New calls can be added with simple text files, no programming needed, and update as soon as the file is saved.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "New numbers to call: Pumpkin Pizza (555-7492) delivers food, and the Scream Line (555-3666) has spooky facts and candy.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "Spookbusters (555-2368) and Satan (666-6666) pick up properly when you call them a second time, and they have offers.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "New calls ring in: a caller you shouldn't answer, mom when you're starving, and package tracking after store orders.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "Dial 555-0100 for a test line that shows what new calls can do.",
+          "area": "Phone Expansion"
         }
       ],
       "changed": [
