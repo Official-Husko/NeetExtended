@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using HarmonyLib;
+using PerformanceFixes.Common;
 
 namespace PerformanceFixes.Painting;
 
@@ -14,7 +14,7 @@ internal static class PaintTracker
     private static readonly AccessTools.FieldRef<PaintTarget, List<Paint>> Splats =
         AccessTools.FieldRefAccess<PaintTarget, List<Paint>>("m_Splats");
 
-    private static readonly HashSet<PaintTarget> Saved = new HashSet<PaintTarget>(ByReference.Instance);
+    private static readonly HashSet<PaintTarget> Saved = new HashSet<PaintTarget>(ByReference<PaintTarget>.Instance);
 
     /// <summary>True while the game loads paint from disk (SaveLoadHandler.LoadPaintTargets).</summary>
     public static bool Loading { get; set; }
@@ -29,14 +29,4 @@ internal static class PaintTracker
 
     /// <summary>Splats queued on the surface but not drawn into its texture yet.</summary>
     public static int Pending(PaintTarget target) => Splats(target)?.Count ?? 0;
-
-    // UnityEngine.Object's == treats every destroyed object as equal, so compare references.
-    private sealed class ByReference : IEqualityComparer<PaintTarget>
-    {
-        public static readonly ByReference Instance = new ByReference();
-
-        public bool Equals(PaintTarget x, PaintTarget y) => ReferenceEquals(x, y);
-
-        public int GetHashCode(PaintTarget obj) => RuntimeHelpers.GetHashCode(obj);
-    }
 }

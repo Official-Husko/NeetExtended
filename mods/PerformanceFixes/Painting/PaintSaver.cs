@@ -30,7 +30,6 @@ internal static class PaintSaver
     {
         _writer?.Dispose();
         _writer = null;
-        PaintReadback.Release();
         PixelBuffers.Clear();
         PaintTracker.Forget();
     }
