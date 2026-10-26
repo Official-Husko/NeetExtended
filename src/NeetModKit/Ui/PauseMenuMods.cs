@@ -26,8 +26,11 @@ internal static class PauseMenuMods
         if (controls == null || feedbackHeader == null)
             return;
 
-        // Put the copied column's header exactly where the FEEDBACK header was.
+        // Put the copied column's header exactly where the FEEDBACK header was. Later children draw on
+        // top, so it goes right after CONTROLS: the rebinding screen and the quit and resolution
+        // prompts come later in the canvas and have to cover it.
         var column = UiCloning.Clone(owner, controls, ColumnName);
+        column.transform.SetSiblingIndex(controls.GetSiblingIndex() + 1);
         var header = column.transform.Find("Display_Text (1)");
         var firstButton = column.transform.Find("ChangeControlsButton");
         if (header == null || firstButton == null)
