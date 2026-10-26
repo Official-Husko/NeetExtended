@@ -11,3 +11,6 @@ decompiled/
 
 # Local overrides
 build/Local.props
+
+# Release packages (build/package.sh)
+dist/
