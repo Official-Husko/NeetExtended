@@ -16,6 +16,11 @@ public static class ChangelogBuilder
         ["mcp"] = "Command-line tool",
         ["cards"] = "Card game",
         ["items"] = "Items",
+        ["cardexp"] = "Card Expansion",
+        ["saves"] = "Saves",
+        ["apps"] = "Computer apps",
+        ["ui"] = "Interface",
+        ["fixes"] = "Game fixes",
     };
 
     private static readonly ChangeKind[] Sections = Enum.GetValues<ChangeKind>();
