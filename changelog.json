@@ -228,6 +228,26 @@
         {
           "text": "Unofficial NEET Patches mod: fixes for bugs in the game itself, each one switchable.",
           "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Problems during play are collected in NeetLoader/logs/errors.log, with versions and mod list, ready to attach to a bug report.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "Errors tab in the mod menu: what went wrong this session, colour-coded, with details and a button to copy the report.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "Custom TV Stations mod: your own MP4 or WebM videos as stations on the living room TV, added after the game's channels or in place of them.",
+          "area": "Custom TV Stations"
+        },
+        {
+          "text": "TV tab in the mod menu with every channel and a button to watch it.",
+          "area": "Custom TV Stations"
+        },
+        {
+          "text": "Pumpkin TV, an example station on channel 7.",
+          "area": "Custom TV Stations"
         }
       ],
       "changed": [
@@ -265,6 +285,10 @@
         },
         {
           "text": "The fix for promoted cards losing their stats moved from Card Expansion to Unofficial NEET Patches.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Story events that Unofficial NEET Patches stops or skips are listed in the error report, with where they happened.",
           "area": "Unofficial NEET Patches"
         }
       ],
