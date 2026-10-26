@@ -25,7 +25,7 @@ internal sealed class WorldPage : CheatPage
         var power = house.Row(8f, 26f);
         power.Button("POWER ON", () => Run(() => HouseSystems.SetHousePower(true), "Power on everywhere."), 160f);
         power.Button("POWER OFF", () => Run(() => HouseSystems.SetHousePower(false), "Power off everywhere."), 160f);
-        power.Button("UNLOCK ALL DOORS", () => Run(UnlockDoors, "Every door is unlocked."), 200f);
+        power.Button("UNLOCK ALL DOORS", () => Run(() => Doors.UnlockAll(), "Every door is unlocked."), 200f);
 
         var time = ui.Panel();
         time.Header("TIME");
@@ -40,13 +40,4 @@ internal sealed class WorldPage : CheatPage
     }
 
     private static Location CurrentRoom() => Rooms.At(GameRefs.Player.transform.position);
-
-    private static void UnlockDoors()
-    {
-        foreach (var door in GameRefs.House.doors)
-        {
-            if (door != null && door.Locked)
-                door.Locked = false;
-        }
-    }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using NeetLoader.Runtime;
 using NeetModKit.Events;
 using NeetModKit.Features;
@@ -42,7 +41,7 @@ internal sealed class OpenAreaFeature : ModFeature
                 Owner.Log.Warn($"No {BlockerPrefix} objects found in this house.");
         }
 
-        foreach (var door in DoorsWithIds())
+        foreach (var door in Doors.WithIds(DoorIds))
         {
             if (!door.Locked)
                 continue;
@@ -53,18 +52,6 @@ internal sealed class OpenAreaFeature : ModFeature
                 if (unlocked != null)
                     unlocked.Locked = true;
             }));
-        }
-    }
-
-    private IEnumerable<Door> DoorsWithIds()
-    {
-        var house = GameRefs.House;
-        if (house == null || DoorIds.Length == 0)
-            yield break;
-        foreach (var door in house.doors)
-        {
-            if (door != null && System.Array.IndexOf(DoorIds, door.doorId) >= 0)
-                yield return door;
         }
     }
 }
