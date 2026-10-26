@@ -45,7 +45,7 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 | `MenuKey` | `"F1"` | Unity key name that opens the mod menu |
 | `PauseWhileOpen` | `true` | Pause the game while the menu is open |
 | `MenuScale` | `1` | Range 0.6 to 2 |
-| `ShowVersion` | `true` | Show the pack's name, version and build in the bottom right corner |
+| `ShowVersion` | `true` | Show the pack's name, version and build in the bottom left corner |
 | `ShowWhatsNewOnUpdate` | `true` | Open the What's New page after an update |
 | `LastSeenVersion` | `""` | Hidden bookkeeping |
 
@@ -53,7 +53,7 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 
 `NeetModKit.About.PackInfo` holds the pack's name (`PackInfo.Name`, "NeetPlus"; change it there to rename the pack in game) and the build: `Version` ("0.1.0", from `<Version>` in `Directory.Build.props`), `Commit` (the short commit hash, with `-dirty` when built from uncommitted changes, or null) and `Label` ("NeetPlus v0.1.0 (1a2b3c4)"). `build/Revision.targets` puts the hash into every assembly's informational version ("0.1.0+1a2b3c4") by running `git describe` before the SDK writes the assembly attributes; outside a git checkout the version stays plain.
 
-The version tag (`Ui/VersionTag.cs`) shows `PackInfo.Label` in the bottom right corner of every scene: a canvas at sorting order 900 (under the mod menu's windows), without a raycaster, so it never takes clicks. The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
+The version tag (`Ui/VersionTag.cs`) shows `PackInfo.Label` in the bottom left corner of every scene: a canvas at sorting order 900 (under the mod menu's windows), without a raycaster, so it never takes clicks. The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
 
 ## Game
 

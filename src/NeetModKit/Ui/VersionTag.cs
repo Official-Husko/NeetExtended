@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace NeetModKit.Ui;
 
 /// <summary>
-/// The pack's name, version and commit in the bottom right corner of every screen, so players can
+/// The pack's name, version and commit in the bottom left corner of every screen, so players can
 /// see the mods are running and screenshots show which build they came from. Doesn't take clicks.
 /// </summary>
 internal static class VersionTag
@@ -31,13 +31,13 @@ internal static class VersionTag
         label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         label.fontSize = FontSize;
         label.color = Colour;
-        label.alignment = TextAnchor.LowerRight;
+        label.alignment = TextAnchor.LowerLeft;
         label.horizontalOverflow = HorizontalWrapMode.Overflow;
         label.raycastTarget = false;
 
         var rect = label.rectTransform;
-        rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(1f, 0f);
-        rect.anchoredPosition = new Vector2(-Margin.x, Margin.y);
+        rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.zero;
+        rect.anchoredPosition = Margin;
         rect.sizeDelta = new Vector2(600f, FontSize * 2f);
 
         SetVisible(visible);

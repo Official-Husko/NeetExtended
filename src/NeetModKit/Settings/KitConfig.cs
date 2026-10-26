@@ -16,7 +16,7 @@ public sealed class KitConfig
     public float MenuScale = 1f;
 
     [Label("Show version in the corner")]
-    [Description("The pack's name, version and build in the bottom right corner, so screenshots and bug reports show which build they're from.")]
+    [Description("The pack's name, version and build in the bottom left corner, so screenshots and bug reports show which build they're from.")]
     public bool ShowVersion = true;
 
     [Label("Show What's New after updates")]

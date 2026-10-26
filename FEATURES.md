@@ -8,7 +8,7 @@ Everything NeetPlus adds to NEET Demo, for players. Each mod can be switched on 
   - **Switch to 64-bit?** Downloads Unity's 64-bit version of the game's engine from Unity (about 180 MB) and swaps it in. The game runs a little faster and can use more memory. You can switch back at any time.
   - **Incremental garbage collection?** The game cleans up memory in small steps instead of freezing for a moment every so often. Recommended.
 - **Uninstalling**: run `uninstall.sh` or `uninstall.bat`. It puts the original game files back. Your saves and mod settings stay.
-- **Version in the corner**: the bottom right corner shows the pack's name, version and build (for example `NeetPlus v0.1.0 (1a2b3c4)`), so you can see the mods are running and screenshots show which build you have. Hide it in Settings.
+- **Version in the corner**: the bottom left corner shows the pack's name, version and build (for example `NeetPlus v0.1.0 (1a2b3c4)`), so you can see the mods are running and screenshots show which build you have. Hide it in Settings.
 
 ## Mod menu
 
