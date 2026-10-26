@@ -18,6 +18,7 @@ Not affiliated with the game's developer.
 | **Pumpkin Smash** (`mods/PumpkinSmash`) | A whack-a-pumpkin game on the in-game computer. |
 | **Open House** (`mods/OpenHouse`) | Opens what the demo closes off: the pantry, the black basement door, dad's yard door, and optionally the attic, the roof and the demo's other limits. |
 | **Phone Expansion** (`mods/PhoneExpansion`) | New numbers to dial and new calls that ring in, with choices and consequences: pizza delivery, Spookbusters, a deal with Satan, a call you shouldn't answer. Calls are JSON or Ink files any mod can ship. |
+| **Custom TV Stations** (`mods/TvStations`) | Your own videos (MP4 or WebM) on the living room TV, next to or in place of the game's channels. |
 | **Cheat Menu** (`mods/CheatMenu`) | Press Insert: god mode, needs, speed, teleport, money, crystals, spawning items and people, fire, power, doors, game speed. |
 | **neet** (`tools/NeetTool`) | Command-line tool: install the loader, start and stop the game, read logs, talk to DevBridge, convert saves, build the changelog, and an MCP server. |
 

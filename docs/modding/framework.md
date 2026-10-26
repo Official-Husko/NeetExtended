@@ -589,6 +589,22 @@ FileWatch.Start(this, () => new[] { PathTo("data") }, Reload, 1f, "*.json");
 
 The folder list is asked for on every check, so it can change. It polls (once a second by default) and compares names, sizes and write times; file system events aren't reliable under Proton.
 
+`ModContent` is for a folder any mod can ship for another mod to read, like `phone` (Phone Expansion's call files) or `tv` (Custom TV Stations' videos): `Mods/<any mod>/<name>/`.
+
+```csharp
+_videos = ModContent.Watch(this, "tv", LoadVideos, "*");   // in OnLoad
+public override void OnAllLoaded() => _videos.Load();     // every mod's folder is there now
+
+void LoadVideos()
+{
+    foreach (var folder in _videos.Folders())                // loaded mods that have the folder
+        foreach (string file in Directory.GetFiles(folder.Path))
+            Log.Info(folder.Display(file));                  // "SomeMod/tv/clip.mp4"
+}
+```
+
+The load callback runs again on the next frame when a file in any of the folders changes, or a mod that has the folder loads or unloads, so a burst of changes loads once. `MarkDirty()` asks for that too. Watching starts after the first `Load()`.
+
 ## Reflection
 
 Namespace `NeetModKit.Reflection`. Used by the dev tools; available to any mod.

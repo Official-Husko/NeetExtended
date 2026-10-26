@@ -583,6 +583,8 @@ Of the 11 pranks only `pPrank3` has choices. The Phone Expansion mod adds number
 - `ScreenModule` (`ScreenModule.cs:4-31`): base class for channels. `InitScreen` starts a loop that plays a random `randomClips` sound every 3 to 19 seconds (`Random.Range(3, 20)` on ints).
 - `TV_Bingo` (`TV_Bingo.cs`): shows a random number from 0 to 100 once per second, in red or blue.
 - `TV_Snail` (`TV_Snail.cs`): an animated snail screen. After `Random.Range(4, 4)` (always 4) seconds it plays a clip, speeds up the grass and the snail animation for 3 seconds and turns the snails red, then repeats the cycle (`TV_Snail.cs:31-43`).
+- In the house the TV is `HOUSE/FlatScreen/FlatScreen/Canvas`: a world-space canvas (facing -Z) with the `TV`, an `AudioSource` and six channel children, `Channel1_Static`, `Channel2_Bingo`, `Channel3_Snail`, `Channel4_Church`, `Channel5_Sports` and `Channel6_Rap`. Each is a full-screen UI `Image` with a `ScreenModule`; the channel list is private (`TV.channels`) and filled once in `Awake` with `GetComponentsInChildren<ScreenModule>()`.
+- The remote has `Remote_Btn_Power` and `Remote_Btn_Channel (1)` to `(6)`, which pick channels 0 to 5 of the list. Channels after the sixth are only reached by hitting the remote (next channel). The Custom TV Stations mod adds video channels to the list (`docs/modding/tv-stations.md`).
 - `Screensaver` (`Screensaver.cs`): the computer's screensaver. `Update` applies a texture offset or scale animation. `currAnim = (ScreenAnim)Random.Range(2, 3)` always yields `Zoom` (`:53`), because the int range upper bound is exclusive. Its timer is `Random.Range(3f, 3f)` (always 3 seconds). So the screensaver is always the zoom effect.
 
 **Radio** (`Radio.cs`)
