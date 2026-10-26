@@ -4,11 +4,17 @@
     <Description>Mod loader for NEET Demo.</Description>
   </PropertyGroup>
 
+  <!-- Cecil rewrites assembly names so mods (the framework included) can be reloaded while running. -->
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="$(CecilVersion)" />
+  </ItemGroup>
+
   <!-- The loader and Harmony live in NEET_Data/Managed so Unity and Mono find them without help. -->
   <Target Name="NeetDeployLoader" AfterTargets="Build" Condition="'$(NeetDeploy)' == 'true'">
     <ItemGroup>
       <_NeetLoaderFile Include="$(OutDir)NeetLoader.dll;$(OutDir)NeetLoader.pdb" />
       <_NeetLoaderFile Include="$(NuGetPackageRoot)lib.harmony/$(HarmonyVersion)/lib/net472/0Harmony.dll" />
+      <_NeetLoaderFile Include="$(NuGetPackageRoot)mono.cecil/$(CecilVersion)/lib/net40/Mono.Cecil.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(_NeetLoaderFile)" DestinationFolder="$(NeetManagedDir)" SkipUnchangedFiles="true" />
     <Message Importance="high" Text="NeetLoader -> $(NeetManagedDir)" />

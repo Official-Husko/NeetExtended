@@ -3,7 +3,7 @@ namespace NeetTool.Game;
 /// <summary>Puts the loader into a game install and takes it out again.</summary>
 public sealed class LoaderInstaller
 {
-    private static readonly string[] PayloadFiles = { "NeetLoader.dll", "NeetLoader.pdb", "0Harmony.dll" };
+    private static readonly string[] PayloadFiles = { "NeetLoader.dll", "NeetLoader.pdb", "0Harmony.dll", "Mono.Cecil.dll" };
 
     private readonly GameInstall _game;
     private readonly UnityManifests _manifests;

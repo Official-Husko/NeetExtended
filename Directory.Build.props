@@ -23,5 +23,6 @@
     <!-- Copy builds into the game folder automatically when it exists. -->
     <NeetDeploy Condition="'$(NeetDeploy)' == '' and Exists('$(NeetManagedDir)')">true</NeetDeploy>
     <HarmonyVersion>2.3.6</HarmonyVersion>
+    <CecilVersion>0.11.4</CecilVersion>
   </PropertyGroup>
 </Project>

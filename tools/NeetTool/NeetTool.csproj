@@ -17,5 +17,6 @@
     <None Include="../../src/NeetLoader/bin/$(Configuration)/NeetLoader.dll" Link="payload/NeetLoader.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     <None Include="../../src/NeetLoader/bin/$(Configuration)/NeetLoader.pdb" Link="payload/NeetLoader.pdb" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     <None Include="$(NuGetPackageRoot)lib.harmony/$(HarmonyVersion)/lib/net472/0Harmony.dll" Link="payload/0Harmony.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(NuGetPackageRoot)mono.cecil/$(CecilVersion)/lib/net40/Mono.Cecil.dll" Link="payload/Mono.Cecil.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 </Project>
