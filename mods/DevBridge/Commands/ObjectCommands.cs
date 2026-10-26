@@ -102,10 +102,21 @@ internal static class ObjectCommands
         return JsonValues.ToJson(position);
     }
 
+    /// <summary>
+    /// Finds a component by type name. Names are matched against the components the object really
+    /// has first, because short names are ambiguous (UnityEngine.UI.Image vs UIElements.Image).
+    /// </summary>
     internal static Component GetComponent(GameObject go, string typeName)
     {
-        var type = TypeFinder.Require(typeName);
-        return go.GetComponent(type) ?? throw new ArgumentException($"{go.name} has no {type.Name}.");
+        foreach (var c in go.GetComponents<Component>())
+        {
+            if (c != null && (c.GetType().Name == typeName || c.GetType().FullName == typeName))
+                return c;
+        }
+
+        var type = TypeFinder.Find(typeName);
+        var found = type != null ? go.GetComponent(type) : null;
+        return found ?? throw new ArgumentException($"{go.name} has no {typeName}.");
     }
 
     private static JObject Describe(GameObject go, bool components)
