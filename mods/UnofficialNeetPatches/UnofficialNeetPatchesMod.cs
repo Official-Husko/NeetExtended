@@ -19,6 +19,9 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new SpiderSavesFix());
         ModFeatures.Register(this, new LostCharactersFix());
         ModFeatures.Register(this, new StuckSequencesFix());
+        ModFeatures.Register(this, new StatusTimersFix());
+        ModFeatures.Register(this, new StuckSlowdownsFix());
+        ModFeatures.Register(this, new EffectStrengthFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);
