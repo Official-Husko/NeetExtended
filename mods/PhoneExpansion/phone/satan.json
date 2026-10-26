@@ -1,0 +1,50 @@
+// Satan (666-6666) hangs up on you in the game. Call twice and he makes you an offer.
+{
+  "id": "satan",
+  "number": "666-6666",
+  "name": "Satan",
+  "callerId": "666",
+  "when": { "dialed": ">= 1" },
+  "say": [
+    "<color=\"red\">Oh. It's you again.",
+    "<color=\"red\">Nobody calls this number twice. I respect that. Let's make a deal.",
+    { "label": "offer" },
+    { "choices": [
+      {
+        "text": "I want money.",
+        "say": [
+          { "if": { "stat": "Soul < 20" },
+            "then": [ "<color=\"red\">With that soul? There's barely anything left to buy.", { "goto": "offer" } ] },
+          "<color=\"red\">Six hundred and sixty-six dollars. For a little piece of your soul.",
+          { "choices": [
+            {
+              "text": "Deal.",
+              "say": [
+                { "do": "stat", "name": "Soul", "add": -20 },
+                { "do": "money", "amount": 666 },
+                "<color=\"red\">Pleasure doing business. Don't spend it all on snacks."
+              ]
+            },
+            { "text": "No.", "say": [ "<color=\"red\">Suit yourself." ] }
+          ] }
+        ]
+      },
+      {
+        "text": "I want a friend.",
+        "say": [
+          { "if": { "stat": "Soul < 21" },
+            "then": [ "<color=\"red\">Friends cost soul, and you're out.", { "goto": "offer" } ] },
+          "<color=\"red\">A friend. Someone exactly like you. Look next to your phone.",
+          // One of the game's own dialogue functions: a copy of you appears next to the speaker.
+          { "ink": "~ TradeSoulForClone()" },
+          "<color=\"red\">No refunds."
+        ]
+      },
+      {
+        "text": "What are you doing for Halloween?",
+        "say": [ "<color=\"red\">Same as every year. Watching people dress up as me. It's flattering, honestly.", { "goto": "offer" } ]
+      },
+      { "text": "Nothing, bye.", "say": [ "<color=\"red\">cya later ha ha" ] }
+    ] }
+  ]
+}

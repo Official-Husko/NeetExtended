@@ -1,0 +1,7 @@
+// Gives the hand-written Ink call in scream-line.ink a number.
+{
+  "id": "scream-line",
+  "number": "555-3666",
+  "name": "The Scream Line",
+  "ink": "PhoneExpansion_ScreamLine"
+}

@@ -1,0 +1,21 @@
+// A late call nobody should answer. Rings once per save, in place of one of the game's prank calls,
+// after you've played for a while.
+{
+  "id": "night-caller",
+  "name": "Private number",
+  "callerId": "PRIVATE",
+  "incoming": { "weight": 2, "once": true, "when": { "minutes": ">= 15" } },
+  "say": [
+    "...",
+    "I can see you, you know.",
+    "Nice pajamas.",
+    { "choices": [
+      { "text": "Who is this?", "say": [ "Look out the window. No, the other one." ] },
+      { "text": "I'm calling the cops.", "say": [ "Go ahead. It's 911. I hear they're great." ] },
+      { "text": "Wrong number, creep.", "say": [ "Is it?" ] }
+    ] },
+    "Lights out.",
+    { "do": "fuses" },
+    "*click*"
+  ]
+}

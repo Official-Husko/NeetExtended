@@ -1,0 +1,79 @@
+// Pumpkin Pizza: order food over the phone, delivered to the front door.
+{
+  "calls": [
+    {
+      "id": "pizza",
+      "number": "555-7492",
+      "name": "Pumpkin Pizza",
+      "callerId": "PIZZA",
+      // Prank them once and you're on the list until you apologize.
+      "when": { "not": { "flag": "pizza_list" } },
+      "say": [
+        { "random": [
+          "Pumpkin Pizza, you scream, we deliver. What can I get you?",
+          "Pumpkin Pizza. Busy night, make it quick.",
+          "Pumpkin Pizza, home of the extra cheesy jack-o-lantern. What'll it be?"
+        ] },
+        { "choices": [
+          {
+            "text": "One large pizza, please.",
+            "if": { "money": 15 },
+            "say": [
+              "Fifteen bucks. Driver leaves it at your front door, he doesn't do stairs.",
+              { "do": "money", "amount": -15 },
+              { "do": "deliver", "item": "Pizza", "after": 40 },
+              { "do": "ring", "call": "pizza-driver", "after": 45 },
+              "Should be there in under a minute. We're fast. Suspiciously fast."
+            ]
+          },
+          {
+            "text": "Do you deliver candy?",
+            "once": true,
+            "say": [
+              "It's a pizza place, buddy.",
+              "...",
+              "Fine. One bag, on the house. Don't tell my manager.",
+              { "do": "deliver", "item": "Candy_Bag_S", "after": 30 }
+            ]
+          },
+          {
+            "text": "Is your pizza made of real pumpkins?",
+            "say": [ "Our pizza is made of what the customer deserves." ]
+          },
+          {
+            "text": "Can I get it for free?",
+            "say": [
+              "...",
+              "You know what we do to people who prank call a pizza place on Halloween?",
+              "We put them on the list.",
+              { "do": "flag", "name": "pizza_list" }
+            ]
+          },
+          { "text": "Never mind.", "say": [ "Then why'd you call?" ] }
+        ] }
+      ],
+      "otherwise": [
+        "Pumpkin Pizza.",
+        "...Oh. It's you. You're on the list.",
+        { "choices": [
+          {
+            "text": "I'm sorry about before.",
+            "say": [ "Hm.", "Apology accepted. Call back when you're hungry.", { "do": "flag", "name": "pizza_list", "set": 0 } ]
+          },
+          { "text": "Whatever.", "say": [ "*click*" ] }
+        ] }
+      ]
+    },
+    {
+      "id": "pizza-driver",
+      "name": "Pumpkin Pizza driver",
+      "callerId": "PIZZA",
+      "incoming": { "trigger": "manual" },
+      "say": [
+        "Yo, it's the driver. Pizza's at your front door.",
+        "I knocked. Nobody came. Your house gives me the creeps, man.",
+        "Enjoy."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+// Mom checks in when you're starving. At most every half hour of play.
+{
+  "id": "mom-food",
+  "name": "Mom",
+  "callerId": "MOM",
+  "incoming": { "weight": 3, "cooldown": 30, "when": { "stat": "Hunger < 25" } },
+  "say": [
+    "Sweetie? It's mom.",
+    "I just had this feeling you haven't eaten anything today.",
+    { "choices": [
+      {
+        "text": "I'm fine, mom.",
+        "say": [ "You always say that.", "I ordered you something anyway. It's at the front door. Eat it. Please.", { "do": "deliver", "item": "Pizza", "after": 20 } ]
+      },
+      {
+        "text": "I'm starving.",
+        "say": [ "I KNEW it.", "Food's on the way. And there's chicken in the basement freezer, remember?", { "do": "deliver", "item": "Chicken_Nugget_Box", "after": 20 } ]
+      }
+    ] },
+    "Love you. Don't stay up all night."
+  ]
+}

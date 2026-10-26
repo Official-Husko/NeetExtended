@@ -1,0 +1,50 @@
+// Spookbusters (555-2368) tell you to call later. Now later actually works: the first call is still
+// the game's own message, after that they pick up.
+{
+  "id": "spookbusters",
+  "number": "555-2368",
+  "name": "Spookbusters",
+  "callerId": "SPOOKBUST",
+  "when": { "dialed": ">= 1" },
+  "say": [
+    "Spookbusters! We're back in business. What's haunting you?",
+    { "choices": [
+      {
+        "text": "There's a black door in the basement I can't open.",
+        "say": [
+          "The black door. Yeah. We know that house.",
+          "We can open it from here. Don't ask how. Thirty bucks.",
+          { "choices": [
+            {
+              "text": "Do it.",
+              "if": { "money": 30 },
+              "say": [
+                { "do": "money", "amount": -30 },
+                { "do": "unlock", "door": "BASEMENT" },
+                "Done. If something comes out of there, that's a separate call."
+              ]
+            },
+            { "text": "Thirty bucks? No way.", "say": [ "Then enjoy your door." ] }
+          ] }
+        ]
+      },
+      {
+        "text": "My house is on fire!",
+        "say": [
+          "That's not really a ghost thing.",
+          "...Fine, we'll make an exception. Hang on.",
+          { "do": "fireout" },
+          "Fire's out. You're welcome. Buy an extinguisher."
+        ]
+      },
+      {
+        "text": "The lights keep going out.",
+        "say": [
+          "Check your fuse box. Basement.",
+          "If the fuses are lying on the floor, that's not a ghost either. That's just your house."
+        ]
+      },
+      { "text": "Who you gonna call?", "say": [ "Not us, apparently. You already did.", "*click*" ] }
+    ] }
+  ]
+}

@@ -1,0 +1,87 @@
+// An example call file, and a working test line: dial 555-0100 on either phone.
+//
+// Every .json and .ink file in a mod's "phone" folder is loaded, and loaded again as soon as it's
+// saved. Comments like these are fine. A file holds one call, a list of calls, or { "calls": [...] }.
+// The full reference is in docs/modding/phone.md.
+{
+  "calls": [
+    {
+      // Unique within this mod. Other calls and conditions can refer to it as "test-line".
+      "id": "test-line",
+      // What to dial. 3 to 7 digits; the dash is optional.
+      "number": "555-0100",
+      "name": "Phone Company Test Line",
+      // What the phone's screen shows while this call rings (10 characters fit).
+      "callerId": "TEST",
+
+      // What's said, top to bottom. Plain text is the caller talking; the game's rich text works.
+      "say": [
+        "This is the phone company test line. If you can hear this, your phone works.",
+
+        // A line said by the player instead.
+        { "player": "Uh, hello?" },
+
+        // Branches on a condition. "then" and "else" take a line or a list of steps.
+        {
+          "if": { "called": "test-line-callback" },
+          "then": "Oh, it's you again. We called you back, remember? Works great.",
+          "else": "Would you like to test something?"
+        },
+
+        // A place to jump back to with "goto".
+        { "label": "menu" },
+
+        // Choices. The chosen text is said by the player, like in the game's own calls.
+        {
+          "choices": [
+            {
+              "text": "Test the ringer.",
+              "say": [
+                "Hang up and we'll call you back in ten seconds.",
+                // Actions make things happen. This one rings the call below.
+                { "do": "ring", "call": "test-line-callback", "after": 10 },
+                // Ends the call right here.
+                { "end": true }
+              ]
+            },
+            {
+              "text": "Test the lights.",
+              "say": [
+                "Lights off for five seconds. Don't panic.",
+                { "do": "power", "on": false, "for": 5 }
+              ]
+            },
+            {
+              "text": "What's a flag?",
+              // Gone once it's been picked.
+              "once": true,
+              "say": [
+                "Something a call remembers, even after saving. This one now remembers that you asked.",
+                { "do": "flag", "name": "asked_about_flags" },
+                { "goto": "menu" }
+              ]
+            },
+            {
+              "text": "Got any candy?",
+              // Only offered while this holds.
+              "if": { "flag": "asked_about_flags" },
+              "say": [ "For asking good questions. Check next to the phone.", { "do": "give", "item": "Candy_Bar" } ]
+            },
+            { "text": "Bye." }
+          ]
+        },
+
+        // One of these, picked at random each time.
+        { "random": [ "Thank you for testing with us.", "Your phone is in excellent condition. Unlike your house." ] }
+      ]
+    },
+    {
+      "id": "test-line-callback",
+      "name": "Phone Company",
+      "callerId": "TEST",
+      // No number: this call only rings in. "manual" means only when something rings it.
+      "incoming": { "trigger": "manual" },
+      "say": [ "Ring ring. This is your callback. Your ringer works.", "Have a spooky night." ]
+    }
+  ]
+}

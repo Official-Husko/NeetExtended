@@ -1,0 +1,20 @@
+// An automated call after you order from a computer store. Not after every order: at most every 20 minutes.
+{
+  "id": "tracking",
+  "name": "FedUp Tracking",
+  "callerId": "FEDUP",
+  "incoming": { "trigger": "order", "delay": 25, "cooldown": 20 },
+  "say": [
+    "Hello! This is FedUp automated package tracking.",
+    "Your package has been delivered. From a great height.",
+    { "random": [
+      "If it's broken, that's how it shipped.",
+      "Please do not stand under your order while it's being delivered.",
+      "Thank you for choosing FedUp. We drop everything for you."
+    ] },
+    { "choices": [
+      { "text": "Talk to a human.", "say": [ "All of our humans are busy.", "Your call is important to us.", "Goodbye." ] },
+      { "text": "Hang up.", "say": { "end": true } }
+    ] }
+  ]
+}
