@@ -50,11 +50,7 @@ public sealed class PhoneExpansionMod : NeetMod
     // After every mod has loaded, so their phone folders are there too.
     public override void OnAllLoaded() => PackLoader.Reload();
 
-    public override void OnUpdate()
-    {
-        PackLoader.Tick();
-        IncomingCalls.Tick();
-    }
+    public override void OnUpdate() => IncomingCalls.Tick();
 
     public override void OnUnload()
     {
