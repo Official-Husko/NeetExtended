@@ -107,12 +107,16 @@ public static class JsonValues
     private static JObject Fields(object value, int depth)
     {
         var obj = new JObject { ["$type"] = value.GetType().Name };
-        foreach (var field in value.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+        // Walk the base classes too: private fields of a base type aren't returned for the derived type.
+        for (var type = value.GetType(); type != null && type != typeof(object); type = type.BaseType)
         {
-            if (field.Name.Contains("<"))
-                continue;
-            try { obj[field.Name] = ToJson(field.GetValue(value), depth - 1); }
-            catch (Exception e) { obj[field.Name] = "<" + e.GetType().Name + ">"; }
+            foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+            {
+                if (field.Name.Contains("<") || obj.ContainsKey(field.Name))
+                    continue;
+                try { obj[field.Name] = ToJson(field.GetValue(value), depth - 1); }
+                catch (Exception e) { obj[field.Name] = "<" + e.GetType().Name + ">"; }
+            }
         }
         return obj;
     }
