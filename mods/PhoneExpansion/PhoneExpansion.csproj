@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>PhoneExpansion</RootNamespace>
+    <Description>New phone numbers and calls for the house phone, loaded from JSON or Ink files.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
+    <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
+  </ItemGroup>
+
+  <!-- Call packs ship in the mod folder so they can be edited in place. -->
+  <ItemGroup>
+    <None Include="phone/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
