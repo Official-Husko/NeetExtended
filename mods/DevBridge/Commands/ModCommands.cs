@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using DevBridge.Server;
@@ -93,7 +94,9 @@ internal static class ModCommands
     [BridgeCommand("mods.enable", "Switch a mod on or off for the next launch.", Params = new[] { "id", "enabled: bool" })]
     private static object Enable(JObject p)
     {
-        ModRegistry.SetEnabled(p.Str("id"), p.Bool("enabled"));
+        string error = ModRegistry.SetEnabled(p.Str("id"), p.Bool("enabled"));
+        if (error != null)
+            throw new ArgumentException(error);
         return new JObject { ["restartNeeded"] = ModRegistry.RestartNeeded };
     }
 
