@@ -13,6 +13,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Status effects freeze while a newer one runs | `StatusTimers` |
 | Crouch and weight slowdowns get stuck after a load | `StuckSlowdowns` |
 | Lasting effects are stronger at higher frame rates | `EffectStrength` |
+| Put-out fires and replaced fuses stay in the save | `GhostSaves` |
 
 ## Saving fails with a dead house spider around
 
@@ -77,6 +78,19 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Cause:** persistent effects with the `linearDelta` operation apply their full size on every frame (`StatusEffect.OnTick`, `StatusEffect.cs:75`, `:97`), without `Time.deltaTime`.
 
 **Fix:** a prefix on `OnTick` applies those effects per second, scaled so they match what they did at 120 fps, the rate the game caps itself at. Measured: 25 a second at both 120 and 30 fps, against 13 and 6 before.
+
+## Put-out fires and replaced fuses stay in the save
+
+**What happens:** a room fire you put out comes back as a fire entry in every later save. Each load starts it again for a moment, with the smoke alarms. Separately, a save can fail with `NullReferenceException` in `Usable.Save` for the rest of the session after a load, so nothing gets saved (dying and sleeping save too).
+
+**Cause:** everything saveable subscribes to `SaveLoadHandler.OnSave`, and nothing checks whether a subscriber still exists.
+
+- `FireSpreader` subscribes in `Start` (`FireSpreader.cs:100-105`) and never unsubscribes. `Clear` (`:240-252`) destroys the spreader, but its `Save` keeps writing the room with no flames. On load, `LoadFireSpreaders` (`SaveLoadHandler.cs:468-481`) calls `Locator.StartRoomFire` for that entry, which makes a new spreader, starts a fire (it ignores its `noStarterSphere` parameter) and raises the room's `OnFireStart`, which rings the smoke alarms (`SmokeDetector.cs:122-124`). The empty fire then goes out, is cleared, and the cycle repeats.
+- `Usable` unsubscribes in `OnDestroy` (`Usable.cs:249-253`), which Unity only calls on objects that were active at some point. `SmokeDetector.Start` calls `Start` on the fuse inside it (`SmokeDetector.cs:132-135`), which subscribes that fuse while it sits inactive in the detector. When a save loads, `LoadUsables` destroys the house's own items to put the saved ones in their place; the fuse's `OnDestroy` never runs, and its `Save` throws from then on (`name` of a destroyed object).
+
+**Fix:** a prefix on `AllSaveDataToJSon` unsubscribes every subscriber whose object is destroyed before the game calls them, and notes what it left out in the error report. A postfix on `FireSpreader.Clear` unsubscribes the spreader right away.
+
+**Reproduce:** `fire.start` a room, put it out (or call `KillAllParticles` on its `FireSpreaderSphere`s until the spreader clears), save: the save has a `FireSpreader` entry with no `subSaveData`. `save.check` on the bridge lists destroyed subscribers; a destroyed `Usable Fuse` shows up right after loading.
 
 ## Not bugs
 

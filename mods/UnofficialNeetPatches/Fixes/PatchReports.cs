@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using NeetLoader.Logging;
 using NeetModKit.Game;
@@ -19,6 +20,23 @@ internal static class PatchReports
     /// <summary><paramref name="call"/> is the game call that was skipped, like SwitchSegmentLine(Grandpa_NPC, Thief_Intro).</summary>
     public static void CharacterMissing(string character, string call) =>
         ErrorReport.Add(Source, $"Story event skipped: {character} isn't in the house", $"{call}\n{Where()}\nCalled from:\n{Caller()}");
+
+    public static void GhostsDropped(List<string> things)
+    {
+        string list = string.Join(", ", things);
+        UnofficialNeetPatchesMod.Instance?.Log.Info($"Left {things.Count} thing(s) that no longer exist out of the save: {list}");
+        ErrorReport.Add(Source, $"Left things that no longer exist out of the save: {list}", Where());
+    }
+
+    /// <summary>"Usable Fuse" or "FireSpreader": the type, plus the item or object name when there is one.</summary>
+    public static string Describe(object owner)
+    {
+        if (owner is Usable usable && !string.IsNullOrEmpty(usable.prefabName))
+            return $"{owner.GetType().Name} {usable.prefabName}";
+        if (owner is UnityEngine.Object unityObject && unityObject != null)
+            return $"{owner.GetType().Name} {unityObject.name}";
+        return owner?.GetType().Name ?? "a static save handler";
+    }
 
     private static string Where()
     {
