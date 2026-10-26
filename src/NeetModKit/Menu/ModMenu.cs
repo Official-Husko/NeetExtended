@@ -93,10 +93,12 @@ public static class ModMenu
     }
 
     /// <summary>After a reload, reopen the menu where the player left it.</summary>
+    // On the next frame: during OnLoad the framework doesn't count as loaded yet (so What's New
+    // found no changelog), and the mods that add their own tabs haven't loaded again.
     internal static void ReopenIfReloaded()
     {
         if (NeetLoader.Runtime.ReloadState.Take(ReopenKey, out string page))
-            Open(page);
+            NeetLoader.Runtime.MainThread.Post(() => Open(page));
     }
 
     internal static void Update()
