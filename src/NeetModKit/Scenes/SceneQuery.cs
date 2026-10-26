@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-namespace NeetModKit.Scene;
+namespace NeetModKit.Scenes;
 
 /// <summary>
 /// Addressing GameObjects from text, used by tools and the dev bridge.

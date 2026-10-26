@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NeetModKit.Reflection;
-using NeetModKit.Scene;
+using NeetModKit.Scenes;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
