@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 namespace PerformanceFixes.Painting;
 
@@ -24,15 +25,20 @@ internal static class PaintSaver
     {
         PaintTracker.Forget();
         _writer ??= new PaintWriter();
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
     public static void Stop()
     {
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
         _writer?.Dispose();
         _writer = null;
         PixelBuffers.Clear();
         PaintTracker.Forget();
     }
+
+    // The tracker holds the surfaces themselves; let go of them with their scene so Unity can free them.
+    private static void OnSceneUnloaded(Scene scene) => PaintTracker.Forget();
 
     /// <summary>Waits for pictures still being written (before the game reads them back, and on quit).</summary>
     public static void Flush()
