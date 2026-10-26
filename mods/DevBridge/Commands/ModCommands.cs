@@ -29,8 +29,9 @@ internal static class ModCommands
     {
         string id = p.Str("id", null);
 
-        // Reloading the bridge closes this very connection, so answer first and reload a moment later.
-        if (id == null || string.Equals(id, DevBridgeMod.Instance.Info.Id, System.StringComparison.OrdinalIgnoreCase))
+        // Reloading the bridge (directly or because it builds on the target) closes this very
+        // connection, so answer first and reload a moment later.
+        if (id == null || ReloadsBridge(id))
         {
             DevBridgeMod.Instance.StartCoroutine(ReloadSoon(id));
             return "reloading";
@@ -39,6 +40,26 @@ internal static class ModCommands
         var result = new Deferred();
         ModRegistry.Reload(id, error => Finish(result, error, "reloaded"));
         return result;
+    }
+
+    private static bool ReloadsBridge(string id)
+    {
+        var bridge = DevBridgeMod.Instance.Info;
+        if (string.Equals(id, bridge.Id, System.StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        var pending = new System.Collections.Generic.Stack<string>(bridge.Manifest.Dependencies.Keys);
+        while (pending.Count > 0)
+        {
+            string dep = pending.Pop();
+            if (string.Equals(dep, id, System.StringComparison.OrdinalIgnoreCase))
+                return true;
+            var info = ModRegistry.Find(dep);
+            if (info != null)
+                foreach (string next in info.Manifest.Dependencies.Keys)
+                    pending.Push(next);
+        }
+        return false;
     }
 
     private static IEnumerator ReloadSoon(string id)
