@@ -18,6 +18,10 @@ public sealed class StatusCommand : ICommand
         Out.Info($"Game:        {game.Dir}");
         Out.Info($"Loader DLLs: {(installer.FilesPresent ? "present" : "missing")}");
         Out.Info($"Registered:  {(installer.ManifestsPatched ? "yes" : "no")}");
+        var player = new PlayerSwap(game);
+        string arch = player.Current switch { PlayerArch.X64 => "64-bit", PlayerArch.X86 => "32-bit", _ => "unknown" };
+        Out.Info($"Player:      {arch}{(player.HasBackup ? " (32-bit kept for switching back)" : "")}");
+        Out.Info($"Incremental GC: {(new BootConfig(game).IncrementalGc ? "on" : "off")}");
         Out.Info($"Proton tool: {Steam.CompatToolName() ?? "(Steam default)"}");
         Out.Info($"Save folder: {game.PersistentDataDir() ?? "(unknown)"}");
 
