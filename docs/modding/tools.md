@@ -102,9 +102,10 @@ Under Wine the tool finds the game by scanning `/proc` for a command line that s
 ```sh
 neet logs [--lines N]
 neet logs --player [--lines N]
+neet logs --errors
 ```
 
-Prints the last 60 lines (default) of the loader log, `NeetLoader/logs/latest.log` in the game folder. With `--player` it prints Unity's `Player.log` from the save folder. The file is opened with shared access, so it can be read while the game runs.
+Prints the last 60 lines (default) of the loader log, `NeetLoader/logs/latest.log` in the game folder. With `--player` it prints Unity's `Player.log` from the save folder. With `--errors` it prints the whole error report, `NeetLoader/logs/errors.log` (see the loader guide), or says there is none. The file is opened with shared access, so it can be read while the game runs.
 
 ## call
 

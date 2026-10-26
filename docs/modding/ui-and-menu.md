@@ -315,6 +315,18 @@ The built-in tabs and their `Order`:
 | What's New | 10 | Changelog |
 | PC Apps | 20 | Computer app URLs (see [computer-apps.md](computer-apps.md)) |
 | Settings | 30 | Every registered settings object |
+| Errors | 40 | The error report (below) |
+
+Phone Expansion adds a Phone tab (30).
+
+### Errors tab
+
+Shows the loader's error report (`ErrorReport`, see [loader.md](loader.md#error-report)) newest first, and updates while it's open: new problems appear, counts go up. Each problem is a tinted panel:
+
+- **ERROR** (red): something was logged as an error, by the game, Unity or a mod. Uncaught exceptions land here.
+- **CAUGHT** (amber): a mod noticed a problem and handled it, then reported it with `ErrorReport.Add`. Unofficial NEET Patches does this for story events it stops or skips.
+
+Under the title: the source, how often and when, and the scene. SHOW DETAILS expands the details (`StackText` drops Mono's offsets and hashes, names Harmony's patched copies "(patched)", and dims Unity and .NET frames so the game's and mods' frames stand out). COPY REPORT puts the whole report on the clipboard as plain text; CLEAR empties it. The Mods page shows how many problems there are, with a button to this tab.
 
 Cheats live in the separate Cheat Menu mod (Insert key), not in the mod menu.
 

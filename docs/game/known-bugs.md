@@ -2,7 +2,7 @@
 
 Bugs in NEET Demo itself, found while modding, with their cause and the fix. Fixes live in the Unofficial NEET Patches mod (`mods/UnofficialNeetPatches`), one switchable feature per bug, so each can be turned off on the Mods page to check the game's own behaviour. Paths refer to the local decompile (`decompiled/Assembly-CSharp/`).
 
-New bugs go here first, then into the patches mod as a new feature.
+New bugs go here first, then into the patches mod as a new feature. When a fix catches a problem in play (a story event it stops or skips), it adds it to the error report (`NeetLoader/logs/errors.log`, the mod menu's Errors tab) with where it happened, so it can be reported.
 
 | Bug | Fix (feature id) |
 | --- | --- |
@@ -37,7 +37,7 @@ New bugs go here first, then into the patches mod as a new feature.
 
 **Cause:** `TimerSequence.Update` (`TimerSequence.cs:47-57`) calls `RunSequence()` and only then sets `active = false`.
 
-**Fix:** a finalizer on `TimerSequence.Update` clears `active` when the sequence threw, and lets the error through so it's logged once.
+**Fix:** a finalizer on `TimerSequence.Update` clears `active` when the sequence threw, and puts the error in the error report with the night and the player's room instead of letting it through.
 
 ## Promoted cards lose their doubled stats after a load
 

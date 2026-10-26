@@ -290,6 +290,26 @@ private void DumpWarnings()
 
 `latest.log` is recreated at each start. The previous session's file is renamed to `previous.log`, replacing the one before it. `neet logs` prints the end of `latest.log`, and `neet logs --player` prints Unity's `Player.log`.
 
+### Error report
+
+`errors.log` (next to `latest.log`) is a short report of what went wrong this session, meant to be attached to a bug report. It starts with the game, Unity and loader versions, the OS and every mod with its version, then lists each problem once:
+
+```
+[21:00:05] CAUGHT Unofficial NEET Patches: Story event SpawnThiefIntro failed and was stopped instead of repeating
+  3 times, last at 21:00:09, in NEET_House.
+  Night 1, player in Bedroom_Neet.
+  System.NullReferenceException
+    at ...
+```
+
+- Every line logged as an error, by a mod or by Unity (exceptions included), is added automatically. It's counted before the log's repeat filter, so the counts are exact.
+- Mods add problems they caught themselves with `ErrorReport.Add(source, title, details)` or `Add(source, title, exception, details)`. These show as CAUGHT; logged errors show as ERROR.
+- The same source, title and first lines of details count as the same problem. At most 200 problems are listed; the rest are counted.
+- The file is rewritten about once a second when something changed, and when the game closes. With no problems there is no file. The previous session's report is kept as `errors-previous.log`.
+- `ErrorReport.Snapshot()` returns the problems (the mod menu's Errors tab shows them), `Count` and `Version` tell what changed, `Text()` is the report as text, and `Clear()` empties it.
+
+`neet logs --errors` prints the whole report.
+
 ## Runtime control
 
 `ModRegistry` is the static API for everything the Mods page does.
