@@ -1,0 +1,9 @@
+{
+  "id": "PerformanceFixes",
+  "name": "Performance Fixes",
+  "version": "0.1.0",
+  "author": "pawbeans",
+  "description": "Experimental. Makes saving fast and stops other hitches and slow spots in the game. Every fix can be switched off on its own.",
+  "dependencies": { "NeetModKit": "0.1.0" },
+  "hotReload": true
+}
