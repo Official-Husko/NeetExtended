@@ -14,6 +14,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Crouch and weight slowdowns get stuck after a load | `StuckSlowdowns` |
 | Lasting effects are stronger at higher frame rates | `EffectStrength` |
 | Put-out fires and replaced fuses stay in the save | `GhostSaves` |
+| One object that can't be saved stops all saving | `SaveCrashes` |
 
 ## Saving fails with a dead house spider around
 
@@ -91,6 +92,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a prefix on `AllSaveDataToJSon` unsubscribes every subscriber whose object is destroyed before the game calls them, and notes what it left out in the error report. A postfix on `FireSpreader.Clear` unsubscribes the spreader right away.
 
 **Reproduce:** `fire.start` a room, put it out (or call `KillAllParticles` on its `FireSpreaderSphere`s until the spreader clears), save: the save has a `FireSpreader` entry with no `subSaveData`. `save.check` on the bridge lists destroyed subscribers; a destroyed `Usable Fuse` shows up right after loading.
+
+## One object that can't be saved stops all saving
+
+**What happens:** if any one saveable object throws in its `Save`, the whole save fails, and since the object stays around, every save after it fails too until the game restarts.
+
+**Cause:** `AllSaveDataToJSon` calls every subscriber through `Delegate.DynamicInvoke` (`SaveLoadHandler.cs:90-97`) with nothing around it.
+
+**Fix:** a transpiler routes each call through a wrapper that calls the delegate directly (no reflection) and, if it throws, leaves that object out of the save, logs a warning and adds it to the error report. The specific bugs above still have their own fixes, so the objects involved are saved properly; this one is the safety net for the ones nobody has found yet.
+
+**Reproduce:** with `SpiderSaves` off, kill a house spider and save.
 
 ## Not bugs
 

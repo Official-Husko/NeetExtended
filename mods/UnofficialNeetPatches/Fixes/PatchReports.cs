@@ -21,6 +21,13 @@ internal static class PatchReports
     public static void CharacterMissing(string character, string call) =>
         ErrorReport.Add(Source, $"Story event skipped: {character} isn't in the house", $"{call}\n{Where()}\nCalled from:\n{Caller()}");
 
+    public static void SaveSkipped(object owner, Exception error)
+    {
+        string what = Describe(owner);
+        UnofficialNeetPatchesMod.Instance?.Log.Warn($"Couldn't save {what}, so it was left out of this save (details in errors.log).");
+        ErrorReport.Add(Source, $"Couldn't save {what}; left it out of the save", error, Where());
+    }
+
     public static void GhostsDropped(List<string> things)
     {
         string list = string.Join(", ", things);

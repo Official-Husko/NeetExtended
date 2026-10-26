@@ -18,6 +18,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         Instance = this;
         ModFeatures.Register(this, new SpiderSavesFix());
         ModFeatures.Register(this, new GhostSavesFix());
+        ModFeatures.Register(this, new SaveCrashesFix());
         ModFeatures.Register(this, new LostCharactersFix());
         ModFeatures.Register(this, new StuckSequencesFix());
         ModFeatures.Register(this, new StatusTimersFix());
