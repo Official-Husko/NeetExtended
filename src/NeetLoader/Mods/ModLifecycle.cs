@@ -55,6 +55,9 @@ internal static class ModLifecycle
     {
         if (mod.State != ModState.Loaded)
             return $"{mod.Id} isn't loaded.";
+        string alwaysOn = ModRegistry.AlwaysOnReason(mod);
+        if (alwaysOn != null)
+            return $"Can't unload {mod.Manifest.DisplayName}: {alwaysOn}.";
 
         // Take down anything built on top of this mod first.
         foreach (var dependent in LoadedDependents(mod))

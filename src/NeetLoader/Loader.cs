@@ -26,8 +26,10 @@ public static class Loader
 
         var found = ModDiscovery.Scan(LoaderPaths.ModsDir, Log);
         foreach (var mod in found)
-        {
             ModRegistry.Add(mod);
+        // Only once every mod is known: a mod an essential mod needs stays on even if switched off.
+        foreach (var mod in found)
+        {
             if (!ModRegistry.IsEnabled(mod.Id))
                 mod.State = ModState.Disabled;
         }

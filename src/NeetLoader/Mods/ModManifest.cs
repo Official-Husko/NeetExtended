@@ -30,5 +30,12 @@ public sealed class ModManifest
     /// </summary>
     [JsonProperty("hotReload")] public bool HotReload;
 
+    /// <summary>
+    /// Always on: the player can't switch it off or unload it (reloading still works). For the
+    /// framework everything else needs, and for mods that protect something, like No Feedback.
+    /// Mods it depends on are kept on too.
+    /// </summary>
+    [JsonProperty("essential")] public bool Essential;
+
     public string DisplayName => string.IsNullOrEmpty(Name) ? Id : Name;
 }
