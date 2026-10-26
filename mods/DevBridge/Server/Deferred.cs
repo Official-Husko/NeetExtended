@@ -11,6 +11,9 @@ public sealed class Deferred
     public object Result { get; private set; }
     public string Error { get; private set; }
 
+    /// <summary>The exception behind <see cref="Error"/>, if it came from one.</summary>
+    public Exception Exception { get; private set; }
+
     public void Complete(object result)
     {
         Result = result;
@@ -23,7 +26,11 @@ public sealed class Deferred
         _done.Set();
     }
 
-    public void Fail(Exception e) => Fail(e.GetBaseException().Message);
+    public void Fail(Exception e)
+    {
+        Exception = e.GetBaseException();
+        Fail(string.IsNullOrEmpty(Exception.Message) ? Exception.GetType().FullName : Exception.Message);
+    }
 
     internal bool Wait(int timeoutMs) => _done.Wait(timeoutMs);
 }

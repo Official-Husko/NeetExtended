@@ -43,6 +43,8 @@ Each reply is one line:
 
 A connection can carry many requests. Lines are answered in order. Blank lines are ignored. A line that is not valid JSON gets `"id":null` and an `ok:false` reply with the parser's message.
 
+When the error comes from game code (or anything below the command itself), the reply also has a `stack` with the exception's stack trace, and `error` names the exception type when its message is empty. `neet call` prints both.
+
 Raw example using bash's `/dev/tcp`:
 
 ```sh

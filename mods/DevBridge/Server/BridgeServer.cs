@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.ExceptionServices;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -129,9 +130,17 @@ public sealed class BridgeServer : IDisposable
         catch (Exception e)
         {
             var root = e.GetBaseException();
-            return new JObject { ["id"] = id, ["ok"] = false, ["error"] = root.Message };
+            var error = new JObject { ["id"] = id, ["ok"] = false, ["error"] = Describe(root) };
+            // Errors the commands throw on purpose explain themselves; anything from deeper down gets its stack.
+            if (root.StackTrace != null && root.TargetSite?.DeclaringType?.Assembly != typeof(BridgeServer).Assembly)
+                error["stack"] = root.StackTrace;
+            return error;
         }
     }
+
+    // Some game exceptions have no message, so name the type then.
+    private static string Describe(Exception e) =>
+        string.IsNullOrEmpty(e.Message) ? e.GetType().FullName : e.Message;
 
     private object RunOnMainThread(string method, JObject parameters)
     {
@@ -154,6 +163,8 @@ public sealed class BridgeServer : IDisposable
 
         if (!call.Wait(_config.TimeoutMs))
             throw new TimeoutException($"'{method}' didn't finish within {_config.TimeoutMs} ms.");
+        if (call.Exception != null)
+            ExceptionDispatchInfo.Capture(call.Exception).Throw();
         if (call.Error != null)
             throw new InvalidOperationException(call.Error);
         return call.Result;
@@ -166,6 +177,8 @@ public sealed class BridgeServer : IDisposable
         {
             if (!inner.Wait(_config.TimeoutMs))
                 outer.Fail("Timed out.");
+            else if (inner.Exception != null)
+                outer.Fail(inner.Exception);
             else if (inner.Error != null)
                 outer.Fail(inner.Error);
             else

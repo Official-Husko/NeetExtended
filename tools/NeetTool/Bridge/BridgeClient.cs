@@ -54,7 +54,11 @@ public sealed class BridgeClient
 
         var response = JsonNode.Parse(line)!.AsObject();
         if (response["ok"]?.GetValue<bool>() != true)
-            throw new BridgeException(response["error"]?.GetValue<string>() ?? "Unknown error");
+        {
+            string error = response["error"]?.GetValue<string>() ?? "Unknown error";
+            string? stack = response["stack"]?.GetValue<string>();
+            throw new BridgeException(stack == null ? error : error + "\n" + stack);
+        }
         return response["result"];
     }
 
