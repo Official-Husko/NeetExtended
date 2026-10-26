@@ -23,7 +23,7 @@ public static class Rooms
         Exists(location) ? Locator.GetRoomCenter(location) : (Vector3?)null;
 
     /// <summary>A point on the floor near the room centre, nudged up so things don't spawn inside the floor.</summary>
-    public static Vector3? FloorPoint(Location location, float lift = 0.9f)
+    public static Vector3? FloorPoint(Location location, float lift = PlayerControl.StandingHeight)
     {
         var center = Center(location);
         if (center == null)

@@ -24,7 +24,17 @@ public static class ComputerControl
     public static Computer_Browser_Addresser Browser =>
         Screen != null ? Screen.GetComponentInChildren<Computer_Browser_Addresser>(true) : null;
 
-    public static IReadOnlyList<string> SiteUrls => Browser != null ? Browser.urls : (IReadOnlyList<string>)Array.Empty<string>();
+    /// <summary>Current URL of every app.</summary>
+    public static List<string> SiteUrls
+    {
+        get
+        {
+            var urls = new List<string>();
+            foreach (var app in ComputerApps.All)
+                urls.Add(app.Url);
+            return urls;
+        }
+    }
 
     /// <summary>Turns the computer on, skipping the boot animation.</summary>
     public static void PowerOn()
@@ -46,29 +56,27 @@ public static class ComputerControl
             computer.screenSaver.SetActive(false);
     }
 
-    /// <summary>Opens the browser on a site by its URL name, e.g. "anime".</summary>
-    public static void OpenSite(string url)
+    /// <summary>Opens the browser on an app by URL (current or original) or id, e.g. "anime".</summary>
+    public static void OpenSite(string urlOrId)
     {
-        var browser = Browser ?? throw new InvalidOperationException("The computer isn't loaded.");
-        if (!browser.urls.Contains(url))
-            throw new ArgumentException($"No site '{url}'. Sites: {string.Join(", ", browser.urls)}");
-
-        // The browser window is the panel holding the address bar; make sure it's showing.
-        for (var t = browser.transform; t != null && t != Screen; t = t.parent)
-            t.gameObject.SetActive(true);
-        browser.LoadWebsite(url);
+        string key = ComputerApps.Normalize(urlOrId);
+        ComputerApp app = null;
+        foreach (var candidate in ComputerApps.All)
+        {
+            if (candidate.Url == key || candidate.DefaultUrl == key || string.Equals(candidate.Id, urlOrId, StringComparison.OrdinalIgnoreCase))
+            {
+                app = candidate;
+                break;
+            }
+        }
+        if (app == null)
+            throw new ArgumentException($"No app '{urlOrId}'. Apps: {string.Join(", ", SiteUrls)}");
+        ComputerApps.Open(app);
         WakeScreen();
     }
 
-    /// <summary>The site panel for a URL, e.g. to add buttons to it.</summary>
-    public static GameObject Site(string url)
-    {
-        var browser = Browser;
-        if (browser == null)
-            return null;
-        int index = browser.urls.IndexOf(url);
-        return index >= 0 && index < browser.websites.Length ? browser.websites[index] : null;
-    }
+    /// <summary>The page of an app by id; null outside the house.</summary>
+    public static GameObject Site(string id) => ComputerApps.Find(id)?.Panel;
 
     /// <summary>Puts the player in front of the monitor, looking at the screen. Handy for testing.</summary>
     public static void StandInFront(float distance = 0.7f)
@@ -76,10 +84,12 @@ public static class ComputerControl
         var screen = Screen ?? throw new InvalidOperationException("The computer isn't loaded.");
         var player = GameRefs.Player ?? throw new InvalidOperationException("No player right now.");
 
-        // The canvas is seen from behind its forward axis; keep the player's current floor height.
+        // The canvas is seen from behind its forward axis. Stand on the floor of the computer's room,
+        // wherever in the house the player is now.
         Vector3 facing = Vector3.ProjectOnPlane(screen.forward, Vector3.up).normalized;
         Vector3 spot = screen.position - facing * distance;
-        spot.y = player.transform.position.y;
+        var room = Rooms.At(screen.position);
+        spot.y = Rooms.Exists(room) ? Locator.GetFlooredPositionInRoom(room, spot).y + PlayerControl.StandingHeight : player.transform.position.y;
         PlayerControl.Teleport(spot);
 
         var eye = Camera.main != null ? Camera.main.transform.position : spot + Vector3.up * 0.53f;

@@ -11,6 +11,9 @@ public static class PlayerControl
     private static readonly AccessTools.FieldRef<CameraControl, float> CameraPitch =
         AccessTools.FieldRefAccess<CameraControl, float>("yRotate");
 
+    /// <summary>How far above the floor the player's position sits when standing.</summary>
+    public const float StandingHeight = 0.91f;
+
     /// <summary>When on, every death path is blocked and needs stop draining.</summary>
     public static bool GodMode { get; private set; }
 
