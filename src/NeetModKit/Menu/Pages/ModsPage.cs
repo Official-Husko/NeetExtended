@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using NeetLoader.Logging;
 using NeetLoader.Mods;
 using NeetModKit.Features;
 using NeetModKit.Ui.Toolkit;
@@ -17,7 +18,7 @@ internal sealed class ModsPage : MenuPage
     private ModInfo _selected;
     private string _lastResult;
 
-    private Text _status, _result, _logText, _restartNote;
+    private Text _status, _result, _logText, _restartNote, _problems;
 
     public override string Title => "Mods";
     public override int Order => 0;
@@ -31,6 +32,7 @@ internal sealed class ModsPage : MenuPage
         UiBuilder.Size(body.Root, flexibleHeight: 1f);
         BuildList(body.Column(ListWidth, flexibleHeight: 1f));
         BuildDetails(body.Column(flexibleWidth: 1f, flexibleHeight: 1f));
+        BuildProblems(ui.Row(8f, 26f));
         BuildFooter(ui.Row(8f, 26f));
     }
 
@@ -44,6 +46,10 @@ internal sealed class ModsPage : MenuPage
         if (_log.TryGet(_selected.Id, out string log))
             _logText.text = log;
         _restartNote.text = ModRegistry.RestartNeeded ? MenuPalette.Paint("Restart the game to apply on/off changes", MenuPalette.Warn) : "";
+        int problems = ErrorReport.Count;
+        _problems.text = problems == 0
+            ? MenuPalette.Paint("No problems this session.", MenuPalette.Muted)
+            : MenuPalette.Paint($"{problems} problem{(problems == 1 ? "" : "s")} this session. The Errors tab has the details and a report to copy.", MenuPalette.Warn);
     }
 
     private void BuildList(UiBuilder column)
@@ -143,6 +149,12 @@ internal sealed class ModsPage : MenuPage
         Line(panel, "Files", files);
         Line(panel, "Needs", needs);
         Line(panel, "Hot reload", mod.CanHotReload ? "yes, updates without a restart" : "no, changes need a restart");
+    }
+
+    private void BuildProblems(UiBuilder row)
+    {
+        row.Button("SHOW ERRORS", () => ModMenu.Open(ErrorsPage.PageTitle), 170f);
+        _problems = row.Text("");
     }
 
     private void BuildFooter(UiBuilder footer)

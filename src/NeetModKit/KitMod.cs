@@ -37,6 +37,7 @@ public sealed class KitMod : NeetMod
         ModMenu.AddPage(this, new WhatsNewPage());
         ModMenu.AddPage(this, new PcAppsPage());
         ModMenu.AddPage(this, new SettingsPage());
+        ModMenu.AddPage(this, new ErrorsPage());
         ModSettings.Register(this, Config, "NEET Mods");
 
         Features.ModFeatures.Init(this);
