@@ -25,6 +25,7 @@ public static class ChangelogBuilder
         ["phone"] = "Phone Expansion",
         ["patches"] = "Unofficial NEET Patches",
         ["tv"] = "Custom TV Stations",
+        ["perf"] = "Performance Fixes",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
         ["ui"] = "Interface",
