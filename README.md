@@ -13,16 +13,21 @@ Not affiliated with the game's developer.
 | **DevBridge** (`mods/DevBridge`) | A local socket for tools: read and change game state, spawn things, click UI, take screenshots, reload mods. |
 | **Open Saves** (`mods/OpenSaves`) | Compressed, documented `.nsav` saves (about 16x smaller) and cleanup of old save files. |
 | **No Feedback** (`mods/NoFeedback`) | Stops the pause menu sending feedback reports to the original developer. Always on, like the framework. |
-| **Unofficial NEET Patches** (`mods/UnofficialNeetPatches`) | Fixes for bugs in the game itself: saves failing with a dead house spider around, story events breaking after Grandpa dies, story events repeating every frame after an error, promoted cards losing their stats. Each fix can be switched off. |
+| **Unofficial NEET Patches** (`mods/UnofficialNeetPatches`) | Fixes for bugs in the game itself: saves failing (dead house spiders, a leftover fuse, any one broken object), put-out fires coming back after loading, story events breaking after Grandpa dies or repeating every frame after an error, status effects that freeze, stick or depend on the frame rate, frame rate and vsync settings that don't stick, promoted cards losing their stats. Each fix can be switched off. |
+| **Performance Fixes** (`mods/PerformanceFixes`) | Experimental. Saves without freezing (only changed paint, written in the background), frees the video memory the game leaks on every load, runs the front door's peephole camera only nearby, fewer shadowed lights, less log spam, idle paint surfaces and characters that don't redo work every frame. Each fix can be switched off. |
 | **Card Expansion** (`mods/CardExpansion`) | Twelve Halloween cards, summons, an auto-clicker and a better crystal exchange for the computer's card game. |
 | **Pumpkin Smash** (`mods/PumpkinSmash`) | A whack-a-pumpkin game on the in-game computer. |
 | **Open House** (`mods/OpenHouse`) | Opens what the demo closes off: the pantry, the black basement door, dad's yard door, and optionally the attic, the roof and the demo's other limits. |
 | **Phone Expansion** (`mods/PhoneExpansion`) | New numbers to dial and new calls that ring in, with choices and consequences: pizza delivery, Spookbusters, a deal with Satan, a call you shouldn't answer. Calls are JSON or Ink files any mod can ship. |
 | **Custom TV Stations** (`mods/TvStations`) | Your own videos (MP4 or WebM) on the living room TV, next to or in place of the game's channels. |
 | **Cheat Menu** (`mods/CheatMenu`) | Press Insert: god mode, needs, speed, teleport, money, crystals, spawning items and people, fire, power, doors, game speed. |
-| **neet** (`tools/NeetTool`) | Command-line tool: install the loader, start and stop the game, read logs, talk to DevBridge, convert saves, build the changelog, and an MCP server. |
+| **neet** (`tools/NeetTool`) | Command-line tool: install the loader and mods (optionally with a 64-bit player and incremental garbage collection), start and stop the game, read logs, talk to DevBridge, convert saves, build the changelog, and an MCP server. |
 
-## Quick start
+## Installing (players)
+
+Get a release package (`NEET-Mods-<version>.zip`), unpack it, close the game and run `install.sh` (Linux) or `install.bat` (Windows). The installer asks whether to switch the game to 64-bit (it downloads Unity's player from Unity) and whether to turn on incremental garbage collection. `uninstall.sh` / `uninstall.bat` put the game back. The package is built with `build/package.sh`.
+
+## Quick start (development)
 
 Needs the .NET 10 SDK and the game installed through Steam.
 

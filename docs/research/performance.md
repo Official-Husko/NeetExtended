@@ -7,8 +7,10 @@ Why NEET Demo feels laggy, measured in the running game, and what a Performance 
 - **The steady frame rate is not the problem on a fast PC.** In the living room the game runs at 125 to 155 fps uncapped (6.4 to 8 ms per frame) on an i9-9900K with an RX 7900 XT under GE-Proton. The game caps itself at 120 fps.
 - **The lag is hitches.** Every save freezes the game for 150 to 400 ms, and longer the longer you play. Every garbage collection freezes it for 9 to 17 ms, about every 8 seconds even when idle. Broken game states throw an exception every frame and log it with a stack trace (85,000 times in one session).
 - **The frame's biggest costs are rendering.** Shadows from point lights account for about 1,600 of the 2,500 draw calls, and the front door's peephole camera renders the whole house again every frame. Script code is only about 1.2 ms per frame.
-- **Some costs grow with play time.** Status effects leak per-frame handlers, paint saves get slower, render textures leak.
-- **32-bit is not the bottleneck.** The game uses about half a gigabyte of the 4 GB it can address. A 64-bit build works, with all mods, and is about 5% faster, sees all the VRAM and doesn't crash on exit. It doesn't fix the hitches.
+- **Some costs grow with play time.** Paint saves get slower as the house gets messier, and every load of the house (each death, each night) leaves the previous house's paint textures in video memory, about 1.5 GB per load in a messy house.
+- **32-bit is not the bottleneck.** The game uses about half a gigabyte of the 4 GB it can address. A 64-bit build works, with all mods, and is about 5% faster and sees all the VRAM. It doesn't fix the hitches.
+
+What has been fixed since, and how much it helped, is in [What's fixed](#whats-fixed).
 
 ## How it was measured
 
@@ -56,7 +58,7 @@ Every save deletes every paint PNG and writes all of them again (`SaveLoadHandle
 
 ### Garbage collection: 9 to 17 ms
 
-The game was built without incremental GC (`GarbageCollector.isIncremental` is false, and it can't be switched on at runtime), so each collection stops the game in one go: 9 ms with a 44 MB Mono heap, 12 to 17 ms with 60 MB. At 120 fps that's one or two dropped frames, about every 8 seconds when idle and more often when much is going on. Less garbage per frame means fewer collections.
+The game was built without incremental GC (`GarbageCollector.isIncremental` is false, and it can't be switched on from code), so each collection stops the game in one go: 9 ms with a 44 MB Mono heap, 12 to 17 ms with 60 MB. At 120 fps that's one or two dropped frames, about every 8 seconds when idle and more often when much is going on. Less garbage per frame means fewer collections.
 
 ### Errors and log spam
 
@@ -69,18 +71,17 @@ Unity writes every log line, and for errors and exceptions a stack trace, to `Pl
 
 ## Things that grow over play time
 
-From the code; the first is confirmed by reading it, the rest are worth confirming with the tools before fixing.
+- **Paint textures from every load of the house stay in memory.** A painted surface (`PaintTarget`) creates four render textures (two colour textures, two float position textures: about 2.5 MB of video memory), two materials and copies of its renderer's materials, and nothing ever destroys them. Measured with `textures.count` after `Resources.UnloadUnusedAssets`: about 2,480 more render textures after every load of the house; after six loads in one session, 12,400 render textures, about 7 GB. `leaks.find` found no managed reference to the old surfaces, so Unity's asset cleanup should have freed them but doesn't.
+- **Paint saves** get slower as more surfaces are painted (above), and every save made a `Texture2D` per surface that's never destroyed (`PaintTarget.cs:89-103`). `PaintTarget.ClearWaterChannel` makes one per wet surface every 120 seconds (`HouseManager.cs:407-411`), and loading makes one per saved picture (`SaveLoadHandler.cs:443-466`). These are freed on the next load.
+- **Door peephole render textures**: `Door.OnTriggerEnter` creates a new 256x256 `RenderTexture` every time the player walks up to a door (`Door.cs:413-414`).
+- **Room fires stay subscribed to saving** after they're put out (`FireSpreader.cs:104`, no unsubscribe in `Clear`). That turned out to be a gameplay bug too: the empty fire is saved and starts burning again on load. Fixed in Unofficial NEET Patches (`GhostSaves`, see [known-bugs.md](../game/known-bugs.md)).
+- Not confirmed yet: `Spawner.concurrentSpawnIds` only grows and is written into every save (`Spawner.cs:236-241`, `:112`); `Locator.sitRestEnablers` only grows (`Locator.cs:52-53`).
 
-- **Status effect handlers leak** (confirmed in code). `StatusHandler.AddEffect` subscribes every amplifier effect's `OnTick` to the stat's `OnChanged` (`StatusHandler.cs:249-255`), and `RemoveEffect` never unsubscribes it (`:292-296`). `StatusHandler.Update` calls `SetVal` on sticky stats every frame, which fires `OnChanged`, so every amplifier effect ever applied keeps running every frame, and keeps amplifying after it ended. A gameplay bug as well as a cost.
-- **Paint saves** get slower and leak a `Texture2D` per painted surface per save (above), and `PaintTarget.ClearWaterChannel` leaks one per wet surface every 120 seconds (`HouseManager.cs:407-411`).
-- **Door peephole render textures**: `Door.OnTriggerEnter` creates a new 256x256 `RenderTexture` each time the player walks into the trigger and never releases it (`Door.cs:413-414`).
-- **Room fires stay subscribed to saving** after they're put out (`FireSpreader.cs:104`, no unsubscribe in `Clear`).
-- **`Spawner.concurrentSpawnIds`** only grows and is written into every save (`Spawner.cs:236-241`, `:112`).
-- **`Locator.sitRestEnablers`** only grows (`Locator.cs:52-53`); memory only.
+Earlier versions of this page said status effects leak handlers. They don't (no status effect in the game uses the amplifier type that would), but reading that code found three gameplay bugs instead: effects freeze while a newer one runs, slowdowns get stuck after a load, and lasting effects depend on the frame rate. All fixed in Unofficial NEET Patches.
 
 ## Crash on quitting
 
-Every session of the 32-bit game ends in a crash report: the game crashes inside the Mono runtime (`mono-2.0-bdwgc.dll`) while shutting down, right after the mods' quit handlers ran. Saves are written before that, so nothing is lost, but each exit leaves a crash dump in `AppData/Local/Temp/NEET Games/NEET/Crashes`. The 64-bit build quit without a crash.
+Every exit of the 32-bit game crashed inside the Mono runtime (`mono-2.0-bdwgc.dll`) right after the mods' quit handlers ran, leaving a crash report in `AppData/Local/Temp/NEET Games/NEET/Crashes`. Narrowed down on a copy of the game: the unmodded game and the loader without mods exit cleanly; a single Harmony patch, on a method that never runs, is enough to crash, and removing every patch before quitting doesn't help. So it's the 32-bit Mono runtime's shutdown after Harmony was used, not the game. The 64-bit player isn't affected. The loader now ends the 32-bit process from `AppDomain.ProcessExit`, which Mono raises just before the crash (see [loader.md](../modding/loader.md#quitting)).
 
 ## 64-bit
 
@@ -106,27 +107,42 @@ It started, loaded the save and all 11 mods (Harmony patches included), and ran 
 | Scripts per frame | 1.16 ms | 1.14 ms |
 | Memory | about 0.5 GB reserved | about 0.5 GB |
 | VRAM the game sees | 3 GB | 20 GB |
-| Crash on quitting | yes | no |
+| Crash on quitting | yes (fixed in the loader since) | no |
 
 About 5% faster, the same hitches. The 32-bit game is far from its 4 GB limit (its exe is already Large Address Aware), so 64-bit only becomes important if a mod loads a lot more content.
 
-### If we offer it
+### Incremental garbage collection
 
-Unity's player binaries can't be shipped with a mod (Unity's licence covers shipping them with your own game), so the tool would download Unity's module from Unity at the player's request and build the swap in place, keeping the 32-bit files to switch back. Steam's "verify files" restores the 32-bit files. Worth it mainly for the clean exit and the extra VRAM; an opt-in `neet install --64bit` at most.
+Whether the player collects garbage incrementally is a build setting, written into `NEET_Data/boot.config` as `gc-max-time-slice=3`. NEET's `boot.config` doesn't have the line; adding it makes both the 32-bit and the 64-bit player report `GarbageCollector.isIncremental = true`. Measured in the house (32-bit, 7 windows of 12 s, same save): without it, one or two full collections per window and 5 frames over 33 ms, the slowest 29 to 35 ms; with it, 4 to 8 slices per window and no frame over 33 ms outside the loading window, the slowest 22 to 28 ms.
 
-## What the Performance Fixes mod should do
+### In the installer
 
-Ranked by how much it helps, with what was measured.
+Unity's player binaries can't be shipped with a mod (Unity's licence covers shipping them with your own game), so `neet install --64bit` downloads Unity's module from Unity at the player's request and does the swap in place, keeping the 32-bit files to switch back (`--32bit`, or Steam's "verify files"). `--incremental-gc` adds the `boot.config` line. The release package's install scripts ask about both. Details in [tools.md](../modding/tools.md#install).
 
-1. **Peephole camera only while looking through it.** Turn the camera off unless the player is at the door's peephole, or render it a few times a second. About 1.1 ms a frame (17%) and 500 draw calls here, on every frame of the game.
-2. **Fewer shadowed lights.** Drop shadows from small point lights (fridge lights, microwave, desk lamp, corpse lights), or offer presets (all shadows, main lights only, none). Shadows are 1.25 ms and 1,600 draw calls here; more in rooms with more of them.
-3. **Save only the paint that changed.** Track which surfaces were painted since the last save, keep the other PNGs, reuse one `Texture2D`. Takes most saves from 150 to 400 ms down to the 20 ms of the game data.
-4. **Stop the log spam.** Skip velocity writes to kinematic bodies (prefix on `Rigidbody.set_velocity` and `set_angularVelocity`), drop `print("restinput")`, and optionally turn off stack traces for warnings and logs (`Application.SetStackTraceLogType`).
-5. **Fewer garbage collections.** Cut per-frame allocations (`CameraControl.Update`'s two `GetComponentsInChildren` calls, `PaintTarget.PaintSplats`' arrays, LINQ in NPC brains), and collect at natural pauses (sleeping, loading) so the collections fall there.
-6. **Fix the leaks**: status effect handlers (in Unofficial NEET Patches, since it's also a gameplay bug), peephole render textures, paint textures, fire save subscriptions.
-7. **Frame rate settings**: respect a frame cap and vsync of the player's choice instead of the 120 fps the game forces on every camera start.
-8. **Cheaper idle work**: `PaintTarget.Update` on 1,236 surfaces that have nothing to do.
-9. **Quit cleanly** on 32-bit: end the process after the game and mods are done saving, so exits stop crashing.
-10. **64-bit mode** in the tool, as above, opt-in.
+## What's fixed
 
-Measure each with `perf.frames`, `perf.save` and `perf.gc` before and after.
+What the Performance Fixes mod (each fix a feature that can be switched off), Unofficial NEET Patches, the loader and the installer do now, with what was measured. Numbers from the living room unless noted; the house in the later measurements was much busier (more lights on, a dozen characters) than in the first ones.
+
+| Fix | Where | Measured |
+| --- | --- | --- |
+| Save only the paint that changed, encode and write it on a background thread | Performance Fixes: `FastPaintSaves` | 619 painted surfaces: 2,500 ms per save before; 276 ms for the first save with the mod (everything once, 3 s in the background), 52 to 65 ms after that. Pictures pixel-identical to the game's own. |
+| Free the paint textures of old houses, reuse the door and copy textures | Performance Fixes: `TextureLeaks` | Render textures stay flat over house loads instead of +2,480 per load. |
+| Peephole camera only near the front door | Performance Fixes: `Peephole` | About 500 draw calls and 0.8 to 1.1 ms a frame. |
+| Shadow presets | Performance Fixes: `Shadows` | Five ceiling lights on: 31.0 ms and 15,300 draw calls as shipped, 25.6 ms and 9,400 with room lights (default), 21.0 ms and 5,200 with none. |
+| No velocity writes to kinematic bodies, no "restinput", no stack traces for logs and warnings | Performance Fixes: `LogSpam` | 233 warnings in 4 s while kinematic before, none after. |
+| Idle paint surfaces skip their update | Performance Fixes: `IdlePaint` | `PaintTarget.Update` (0.31 ms, 1,238 calls a frame) gone. |
+| Characters plan their path only when the target moves | Performance Fixes: `PathRequests` | `BrainTrickOrTreater.Update` 172 to 2.4 us a call (0.69 ms a frame with four at the door). |
+| Incremental garbage collection | Installer: `--incremental-gc` | Collection spikes gone (see above). |
+| The player's frame rate and vsync settings | Unofficial NEET Patches: `FrameRateSettings` | The game forced 120 fps without vsync over the settings menu's choice whenever a camera started. |
+| Clean exit on 32-bit | Loader | No crash report on exit. |
+| 64-bit player | Installer: `--64bit` | About 5% faster. |
+
+Saving also no longer fails for good when one object can't be saved (`SaveCrashes`) or a destroyed one is still subscribed (`GhostSaves`), both in Unofficial NEET Patches.
+
+### Still open
+
+- **Allocations**: about 11 KB a frame in a busy house (`perf.frames`), mostly from the character rigs' `Player_Movement.Update` (3.1 KB), `Player_Abilities.Update` (2.2 KB) and `BrainNeetAI.Update` (1.5 KB) by `perf.scripts allocations`, with no single allocation in those methods themselves; it comes from what they call. `CameraControl.Update`'s `GetComponentsInChildren` calls are only 0.14 KB, not worth a patch. With incremental GC on, this matters much less.
+- **Collecting at natural pauses** (sleeping, loading, the pause menu) would only move collections around; not done.
+- **"Coroutine continue failure"** shows up once per session in the house; the cause isn't known yet.
+
+Measure with `perf.frames`, `perf.save`, `perf.gc`, `perf.scripts` and `textures.count` before and after.
