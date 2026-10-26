@@ -26,6 +26,9 @@ internal sealed class ModHost : MonoBehaviour
     private ModLogger _log;
     private float _nextFlush;
 
+    /// <summary>The single host instance. Also runs coroutines on behalf of mods.</summary>
+    internal static ModHost Instance { get; private set; }
+
     public static ModHost Create(ModLogger log)
     {
         var go = new GameObject("NeetLoader");
@@ -33,6 +36,7 @@ internal sealed class ModHost : MonoBehaviour
         DontDestroyOnLoad(go);
         var host = go.AddComponent<ModHost>();
         host._log = log;
+        Instance = host;
         SceneManager.sceneLoaded += host.OnSceneLoaded;
         return host;
     }

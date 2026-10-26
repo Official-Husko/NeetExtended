@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using HarmonyLib;
@@ -59,6 +60,19 @@ public abstract class NeetMod
         UnityEngine.Object.DontDestroyOnLoad(go);
         Track(Disposable.Destroying(go));
         return go;
+    }
+
+    /// <summary>Runs a coroutine on the loader's host object. It is stopped when the mod unloads.</summary>
+    public Coroutine StartCoroutine(IEnumerator routine)
+    {
+        var host = ModHost.Instance;
+        var coroutine = host.StartCoroutine(routine);
+        Track(Disposable.Create(() =>
+        {
+            if (host != null && coroutine != null)
+                host.StopCoroutine(coroutine);
+        }));
+        return coroutine;
     }
 
     /// <summary>Called once per load, right after the assemblies are loaded. On first launch no scene exists yet.</summary>
