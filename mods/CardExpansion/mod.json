@@ -1,0 +1,9 @@
+{
+  "id": "CardExpansion",
+  "name": "Card Expansion",
+  "version": "0.1.0",
+  "author": "pawbeans",
+  "description": "A spooky card set, summons, an auto-clicker and a better crystal exchange for the computer's anime card game.",
+  "dependencies": { "NeetModKit": "0.1.0" },
+  "hotReload": true
+}
