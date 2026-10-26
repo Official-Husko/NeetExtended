@@ -349,3 +349,32 @@ These are the public entry points. Check each for `null` before calling, since m
 - **MirrorCameraScript.** Not read in full.
 - **Who listens to `NoiseGenerator`.** No caller found. It may be used by shaders or assets. Unverified.
 - **Initial power state.** Neither `FuseBox_Slot.Start` nor `FuseBox_Manager.Start` calls `ValidatePowerState`; they only subscribe (`FuseBox_Slot.cs:35-40`, `FuseBox_Manager.cs:189-196`). Power is pushed on insert, button toggle, fuse colour change, or save load. A room with no fuse inserted at load keeps each device's own default `IsPowered` (for example, `LightSwitch` defaults to true). Confirm in-game.
+
+## Demo restrictions
+
+The demo closes parts of the house in two ways. Both are scene data, not code (found by inspecting the running game).
+
+**Demo walls.** Root objects named `DEMO_BLOCKER_*`: a mesh with a scrolling "demo" texture (`TextureScroll`) and a solid `BoxCollider` across a doorway.
+
+| Object | Where | Collider |
+|---|---|---|
+| `DEMO_BLOCKER_PANTRY` | Pantry doorway by the kitchen, around (8.5, 1.2, -4.3) | yes |
+| `DEMO_BLOCKER_PANTRY (1)` | Outside, around (-12.2, 0.1, 0.2) | no (visual only) |
+| `DEMO_BLOCKER_ATTIC` | Top of the attic stairs, around (9.8, 8.5, -6.7) | yes |
+| `DEMO_BLOCKER_ROOF` | Roof access, around (2.8, 11.5, -4.1) | yes |
+
+The pantry behind its wall is fully stocked with normal items (cans, cheese, candy, flour, candles, knives including `Knife_Jaunter`, mouse traps, knockout pills, a flashlight, a fire extinguisher...).
+
+**Locked doors.** `Door.Locked` with a `doorId`; a `Key` whose `doorId` matches unlocks it when the player holds the key in one hand and the door in the other and uses it (`Key.cs`).
+
+| doorId | Door | Key in the demo |
+|---|---|---|
+| `BASEMENT` | `HOUSE/Door_single (23)`, the black door behind boxes in the basement, also `unbreakable` | none |
+| `DADYARD` | `HOUSE/Door_single (16)`, dad's yard door in the living room | `Key_DadYard`, in the living room |
+| `Attic` | `HOUSE/Door_single (17)`, on the attic stairs | `Key_Of_Anger`, in the shed |
+
+Behind the `BASEMENT` door is the `Basement_Backroom` location: a hanged corpse (`Player_NPC_Corpse_Hanged`), `Player_Original`, a `DemonCoreCrystal`, `Knife_Sacrifice Skull`, bones and a `Cardboard_Box_Parasite`. Story material the demo never lets the player reach.
+
+`HouseManager.demoMode` is the only demo flag in code: it blocks black/occult market orders (`Computer.OrderItem`) and keeps wandering NPCs out of the pantry (`HouseManager.cs:484`).
+
+**Main menu.** The main menu scene (`level0`) has three doors (`Door_single`, `(1)`, `(2)`) but only two scene switches (`SceneSwitcherHouse`, `SceneSwitcherTutorial`) and two doormat labels (PLAY, TUTORIAL), and no teleporter. The third door leads nowhere in the demo. (From the scene file; not yet checked in the running main menu.)

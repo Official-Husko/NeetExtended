@@ -508,6 +508,8 @@ public event Action Changed;             // after an add or remove
 
 ## Reflection
 
+`SceneEdits` (namespace `NeetModKit.Scenes`) makes reversible scene changes: `Hide(owner, gameObject)` deactivates an object until the owner (a mod or feature) cleans up, counting owners so an object only comes back when nobody wants it hidden; `RootsNamed(prefix)` finds scene root objects by name prefix. The Open House mod uses both to remove the demo's walls.
+
 Namespace `NeetModKit.Reflection`. Used by the dev tools; available to any mod.
 
 - `TypeFinder.Find(string name)` and `Require(string name)`: finds a type by full or short name across all loaded assemblies. Game types win. Assemblies from old reloaded copies are skipped.
