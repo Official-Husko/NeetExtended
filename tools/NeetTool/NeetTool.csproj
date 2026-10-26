@@ -11,6 +11,11 @@
     <NoWarn>$(NoWarn);NU1702</NoWarn>
   </PropertyGroup>
 
+  <!-- One implementation of the save format, shared with the game-side framework. -->
+  <ItemGroup>
+    <Compile Include="../../src/NeetModKit/Saves/SaveCodec.cs" Link="Saves/SaveCodec.cs" />
+  </ItemGroup>
+
   <!-- The installer ships the loader and Harmony next to itself in payload/. -->
   <ItemGroup>
     <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" ReferenceOutputAssembly="false" Private="false" />
