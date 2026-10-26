@@ -31,11 +31,13 @@ public sealed class KitMod : NeetMod
 
         ModMenu.AddPage(this, new ModsPage());
         ModMenu.AddPage(this, new WhatsNewPage());
+        ModMenu.AddPage(this, new PcAppsPage());
         ModMenu.AddPage(this, new SettingsPage());
         ModMenu.AddPage(this, new DevToolsPage());
         ModSettings.Register(this, Config, "NEET Mods");
 
         Features.ModFeatures.Init(this);
+        Desktop.ComputerApps.Init(this);
         Features.ModFeatures.Register(this, new Features.Builtin.PauseMenuModsFeature());
 
         Items.StoreListings.RestoreAfterReload();
