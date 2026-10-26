@@ -1,8 +1,11 @@
+using NeetModKit.Ui.Toolkit;
+
 namespace NeetModKit.Menu;
 
 /// <summary>
-/// One tab in the mod menu. Draw with GUILayout (the <see cref="Widgets"/> helpers cover most
-/// needs). Pages are drawn only while the menu is open and the tab is selected.
+/// One tab in the mod menu. <see cref="Build"/> lays the page out with the UI toolkit when it is
+/// shown; <see cref="Refresh"/> runs a few times a second while it's visible to update values.
+/// Call <see cref="Rebuild"/> when the layout itself has to change.
 /// </summary>
 public abstract class MenuPage
 {
@@ -11,17 +14,15 @@ public abstract class MenuPage
     /// <summary>Lower comes first. Built-in pages use 0-100.</summary>
     public virtual int Order => 500;
 
-    /// <summary>
-    /// True if the page lays itself out to the full height (with its own scroll areas).
-    /// Otherwise the window wraps it in one scroll view.
-    /// </summary>
-    public virtual bool FillsHeight => false;
+    public abstract void Build(UiBuilder ui);
 
-    /// <summary>Called when the tab becomes visible.</summary>
-    public virtual void OnShow() { }
+    public virtual void Refresh() { }
 
     /// <summary>Called when the tab is left or the menu closes.</summary>
     public virtual void OnHide() { }
 
-    public abstract void Draw();
+    /// <summary>Asks the menu to build this page again on the next frame.</summary>
+    public void Rebuild() => RebuildRequested = true;
+
+    internal bool RebuildRequested { get; set; }
 }

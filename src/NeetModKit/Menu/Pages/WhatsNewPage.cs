@@ -1,102 +1,72 @@
 using System.Collections.Generic;
 using NeetModKit.Changelog;
+using NeetModKit.Ui.Toolkit;
 using UnityEngine;
 
 namespace NeetModKit.Menu.Pages;
 
-/// <summary>Release notes from changelog.json, newest first.</summary>
+/// <summary>Release notes from changelog.json, newest first. Mods that ship their own changelog get a tab.</summary>
 internal sealed class WhatsNewPage : MenuPage
 {
     public const string PageTitle = "What's New";
 
-    /// <summary>A release turned into ready-to-draw rich-text strings.</summary>
-    private sealed class PreparedRelease
-    {
-        public string Heading;
-        public readonly List<(string Title, Color Color, string[] Lines)> Sections = new List<(string, Color, string[])>();
-    }
-
     private List<ChangelogSource> _sources = new List<ChangelogSource>();
-    private string[] _titles = new string[0];
-    private List<PreparedRelease> _releases = new List<PreparedRelease>();
-    private int _source = -1;
+    private int _source;
 
     public override string Title => PageTitle;
     public override int Order => 10;
 
-    // Re-read on every visit so a rebuilt changelog shows up without restarting.
-    public override void OnShow()
+    public override void Build(UiBuilder ui)
     {
+        // Re-read each time so a rebuilt changelog shows up without restarting.
         _sources = ChangelogFeed.Load();
-        _titles = new string[_sources.Count];
-        for (int i = 0; i < _titles.Length; i++)
-            _titles[i] = _sources[i].Title;
-        Select(Mathf.Clamp(_source, 0, Mathf.Max(0, _sources.Count - 1)));
-    }
-
-    public override void Draw()
-    {
         if (_sources.Count == 0)
         {
-            Widgets.Text("No changelog found.");
+            ui.Text("No changelog found.");
             return;
         }
+        _source = Mathf.Clamp(_source, 0, _sources.Count - 1);
 
-        if (_titles.Length > 1)
+        if (_sources.Count > 1)
         {
-            int picked = Widgets.Choice(null, _source, _titles);
-            if (picked != _source)
-                Select(picked);
-            Widgets.Space();
-        }
-
-        foreach (var release in _releases)
-        {
-            GUILayout.BeginVertical(MenuStyles.Box);
-            Widgets.Header(release.Heading);
-            foreach (var (title, color, lines) in release.Sections)
+            var tabs = ui.Row(6f, 26f);
+            for (int i = 0; i < _sources.Count; i++)
             {
-                Widgets.Space(4);
-                GUILayout.Label(title, MenuStyles.Colored(MenuStyles.Header, color));
-                for (int i = 0; i < lines.Length; i++)
-                    GUILayout.Label(lines[i], MenuStyles.Text);
+                int index = i;
+                tabs.Button(_sources[i].Title.ToUpperInvariant(), () =>
+                {
+                    _source = index;
+                    Rebuild();
+                }, 180f, accent: i == _source);
             }
-            GUILayout.EndVertical();
         }
+
+        var list = ui.Scroll(out _);
+        foreach (var release in _sources[_source].Document.Releases)
+            BuildRelease(list, release);
     }
 
-    private void Select(int index)
+    private static void BuildRelease(UiBuilder list, ChangelogRelease release)
     {
-        _source = index;
-        _releases = new List<PreparedRelease>();
-        if (index < 0 || index >= _sources.Count)
-            return;
-
-        foreach (var release in _sources[index].Document.Releases)
-        {
-            var prepared = new PreparedRelease
-            {
-                Heading = $"Version {release.Version}  <size=12>{MenuPalette.Paint(release.Date, MenuPalette.Muted)}</size>" +
-                          (release.Released ? "" : "  <size=11>" + MenuPalette.Paint("in progress", MenuPalette.Warn) + "</size>"),
-            };
-            AddSection(prepared, "Added", MenuPalette.Good, release.Added);
-            AddSection(prepared, "Changed", MenuPalette.Accent, release.Changed);
-            AddSection(prepared, "Fixed", MenuPalette.Warn, release.Fixed);
-            AddSection(prepared, "Removed", MenuPalette.Bad, release.Removed);
-            _releases.Add(prepared);
-        }
+        var panel = list.Panel();
+        panel.Header("VERSION " + release.Version);
+        panel.Text(MenuPalette.Paint(release.Date, MenuPalette.Muted) +
+                   (release.Released ? "" : "  " + MenuPalette.Paint("in progress", MenuPalette.Warn)));
+        Section(panel, "ADDED", MenuPalette.Good, release.Added);
+        Section(panel, "CHANGED", MenuPalette.Accent, release.Changed);
+        Section(panel, "FIXED", MenuPalette.Warn, release.Fixed);
+        Section(panel, "REMOVED", MenuPalette.Bad, release.Removed);
     }
 
-    private static void AddSection(PreparedRelease release, string title, Color color, List<ChangelogItem> items)
+    private static void Section(UiBuilder panel, string title, Color color, List<ChangelogItem> items)
     {
         if (items == null || items.Count == 0)
             return;
-        var lines = new string[items.Count];
-        for (int i = 0; i < lines.Length; i++)
+        panel.SubHeader(title).color = color;
+        foreach (var item in items)
         {
-            string area = string.IsNullOrEmpty(items[i].Area) ? "" : MenuPalette.Paint(items[i].Area + ":", MenuPalette.Muted) + " ";
-            lines[i] = "•  " + area + items[i].Text;
+            string area = string.IsNullOrEmpty(item.Area) ? "" : MenuPalette.Paint(item.Area + ":", MenuPalette.Muted) + " ";
+            panel.Text("•  " + area + item.Text);
         }
-        release.Sections.Add((title, color, lines));
     }
 }

@@ -1,56 +1,50 @@
 using System.Collections.Generic;
+using System.Text;
 using NeetLoader.Logging;
-using UnityEngine;
 
 namespace NeetModKit.Menu.Pages;
 
 /// <summary>
-/// The last few log lines of one mod, refreshed at most twice a second and only when something
-/// new was logged, so drawing it every frame costs nothing.
+/// The last few log lines of one mod as rich text. Rebuilt only when something new was logged,
+/// so calling it from Refresh costs next to nothing.
 /// </summary>
 internal sealed class ModLogView
 {
     private const int Lines = 14;
     private const int ScanBack = 1500;
-    private const float RefreshInterval = 0.5f;
 
+    private readonly StringBuilder _text = new StringBuilder();
     private readonly List<string> _lines = new List<string>(Lines);
     private string _source;
-    private long _seenSequence = -1;
-    private float _nextRefresh;
+    private long _seen = -1;
 
-    public IReadOnlyList<string> Get(string source)
+    public bool TryGet(string source, out string text)
     {
-        if (source != _source)
-        {
-            _source = source;
-            _seenSequence = -1;
-            _nextRefresh = 0f;
-        }
-
         long last = LogHub.Buffer.LastSequence;
-        if (last != _seenSequence && Time.unscaledTime >= _nextRefresh)
+        if (source == _source && last == _seen)
         {
-            _seenSequence = last;
-            _nextRefresh = Time.unscaledTime + RefreshInterval;
-            Rebuild(last);
+            text = null;
+            return false;
         }
-        return _lines;
-    }
+        _source = source;
+        _seen = last;
 
-    private void Rebuild(long last)
-    {
         _lines.Clear();
         var recent = LogHub.Buffer.Read(last - ScanBack, ScanBack);
         for (int i = recent.Count - 1; i >= 0 && _lines.Count < Lines; i--)
         {
             var e = recent[i];
-            if (e.Source != _source)
+            if (e.Source != source)
                 continue;
             var color = e.Level >= LogLevel.Error ? MenuPalette.Bad : e.Level == LogLevel.Warning ? MenuPalette.Warn : MenuPalette.Muted;
-            _lines.Add(MenuPalette.Paint($"{e.Time:HH:mm:ss}", MenuPalette.Edge) + "  " + MenuPalette.Paint(FirstLine(e.Message), color));
+            _lines.Add(MenuPalette.Paint($"{e.Time:HH:mm:ss}", MenuPalette.Muted) + "  " + MenuPalette.Paint(FirstLine(e.Message), color));
         }
-        _lines.Reverse();
+
+        _text.Clear();
+        for (int i = _lines.Count - 1; i >= 0; i--)
+            _text.AppendLine(_lines[i]);
+        text = _lines.Count == 0 ? MenuPalette.Paint("Nothing logged yet.", MenuPalette.Muted) : _text.ToString();
+        return true;
     }
 
     private static string FirstLine(string message)

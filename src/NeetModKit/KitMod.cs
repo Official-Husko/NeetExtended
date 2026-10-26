@@ -27,7 +27,7 @@ public sealed class KitMod : NeetMod
         Saves.ModSaveData.Init(Log);
         Items.ItemRegistry.Init(Log);
         GameEvents.ItemsRegistering.Subscribe(this, Items.ItemRegistry.RegisterAll);
-        ModMenu.Init();
+        ModMenu.Init(this);
 
         ModMenu.AddPage(this, new ModsPage());
         ModMenu.AddPage(this, new WhatsNewPage());
@@ -35,9 +35,11 @@ public sealed class KitMod : NeetMod
         ModMenu.AddPage(this, new DevToolsPage());
         ModSettings.Register(this, Config, "NEET Mods");
 
-        // The pause menu exists in every scene; swap its feedback column for the MODS column.
-        GameEvents.SceneLoaded.Subscribe(this, _ => Ui.PauseMenuMods.Apply(this));
-        Ui.PauseMenuMods.Apply(this);
+        Features.ModFeatures.Init(this);
+        Features.ModFeatures.Register(this, new Features.Builtin.CompressedSavesFeature());
+        Features.ModFeatures.Register(this, new Features.Builtin.SaveCleanupFeature());
+        Features.ModFeatures.Register(this, new Features.Builtin.NoFeedbackFeature());
+        Features.ModFeatures.Register(this, new Features.Builtin.PauseMenuModsFeature());
 
         Items.StoreListings.RestoreAfterReload();
         ModMenu.ReopenIfReloaded();
@@ -54,9 +56,11 @@ public sealed class KitMod : NeetMod
         Instance = null;
     }
 
-    public override void OnUpdate() => ModMenu.Update();
-
-    public override void OnGUI() => ModMenu.OnGUI();
+    public override void OnUpdate()
+    {
+        ModMenu.Update();
+        Features.ModFeatures.Update();
+    }
 
     public override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {

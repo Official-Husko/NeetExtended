@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using NeetModKit.Events;
 using NeetModKit.Game;
-using UnityEngine;
+using NeetModKit.Ui.Toolkit;
+using UnityEngine.UI;
 
 namespace NeetModKit.Menu.Pages;
 
@@ -13,128 +13,118 @@ internal sealed class DevToolsPage : MenuPage
     private const int MaxSpawnResults = 24;
     private static readonly string[] Needs = { "Health", "Hunger", "Bladder", "Hygiene", "Energy" };
 
-    private string[] _rooms = new string[0];
+    private Text _money, _status, _room;
+    private UiBuilder _results;
     private string _search = "";
-    private string _searchedFor;
-    private List<string> _matches = new List<string>();
-    private string _status;
 
     public override string Title => "Dev Tools";
     public override int Order => 40;
 
-    public override void OnShow()
+    public override void Build(UiBuilder ui)
     {
-        _rooms = Rooms.All.Where(Rooms.Exists).Select(r => r.ToString()).ToArray();
-        _searchedFor = null;
-    }
-
-    public override void Draw()
-    {
+        var page = ui.Scroll(out _);
         if (!GameEvents.IsHouseReady)
         {
-            Widgets.Text("These tools work once you're in the house.");
+            page.Text("These tools work once you're in the house.");
             return;
         }
 
-        Widgets.Section("Player", DrawPlayer);
-        Widgets.Section("Money", DrawMoney);
-        Widgets.Section("Spawn an item", DrawSpawn);
-        Widgets.Section("House", DrawHouse);
-
-        if (_status != null)
-            Widgets.Small(_status);
+        _status = page.Text("", MenuPalette.Muted);
+        BuildPlayer(page.Panel());
+        BuildMoney(page.Panel());
+        BuildSpawn(page.Panel());
+        BuildHouse(page.Panel());
     }
 
-    private void DrawPlayer()
+    public override void Refresh()
     {
-        bool god = PlayerControl.GodMode;
-        if (Widgets.Toggle("God mode (no dying, needs frozen)", god) != god)
-            PlayerControl.SetGodMode(!god);
+        if (_money == null || !GameEvents.IsHouseReady)
+            return;
+        _money.text = $"${Money.Get():0}";
+        if (GameRefs.Player != null)
+            _room.text = "YOU'RE IN: " + Rooms.At(GameRefs.Player.transform.position).ToString().ToUpperInvariant();
+    }
 
-        if (Widgets.Button("Fill all needs", 160))
+    private void BuildPlayer(UiBuilder panel)
+    {
+        panel.Header("PLAYER");
+        var row = panel.Row(8f, 26f);
+        row.Toggle("God mode (no dying, needs frozen)", PlayerControl.GodMode, PlayerControl.SetGodMode);
+        row.Button("FILL NEEDS", () => Try(() => { foreach (string n in Needs) PlayerControl.SetStat(n, 100f); }, "Needs filled."), 160f);
+
+        panel.SubHeader("TELEPORT");
+        var grid = panel.Grid(150f, 26f);
+        foreach (var room in Rooms.All.Where(Rooms.Exists))
         {
-            foreach (string need in Needs)
-                Try(() => PlayerControl.SetStat(need, 100f));
-            _status = "Needs filled.";
+            var target = room;
+            grid.Button(room.ToString().ToUpperInvariant(), () => Try(() => PlayerControl.Teleport(target), $"Teleported to {target}."), -1f);
         }
-
-        Widgets.Space(4);
-        Widgets.Small("Teleport to a room:");
-        int picked = GUILayout.SelectionGrid(-1, _rooms, 5, MenuStyles.Button);
-        if (picked >= 0)
-            Try(() => PlayerControl.Teleport(Rooms.Parse(_rooms[picked])), $"Teleported to {_rooms[picked]}.");
     }
 
-    private void DrawMoney()
+    private void BuildMoney(UiBuilder panel)
     {
-        GUILayout.BeginHorizontal();
-        GUILayout.Label($"${Money.Get():0}", MenuStyles.Header, GUILayout.Width(120));
+        panel.Header("MONEY");
+        var row = panel.Row(8f, 26f);
+        _money = row.SubHeader("");
+        UiBuilder.Size(_money, width: 120f);
         foreach (int amount in new[] { 100, 1000, 10000 })
-        {
-            if (Widgets.Button("+" + amount, 90))
-                Try(() => Money.Add(amount, taxed: false));
-        }
-        if (Widgets.Button("Clear taxes", 120))
-            Try(() => GameRefs.Computer.Taxes = 0f, "Taxes cleared.");
-        GUILayout.EndHorizontal();
+            row.Button("+" + amount, () => Try(() => Money.Add(amount, taxed: false)), 100f);
+        row.Button("CLEAR TAXES", () => Try(() => GameRefs.Computer.Taxes = 0f, "Taxes cleared."), 160f);
     }
 
-    private void DrawSpawn()
+    private void BuildSpawn(UiBuilder panel)
     {
-        _search = Widgets.TextField("Search", _search, 80);
-        if (_search != _searchedFor)
+        panel.Header("SPAWN AN ITEM");
+        panel.Input(_search, text =>
         {
-            _searchedFor = _search;
-            _matches = Spawning.ItemNames
-                .Where(n => _search.Length == 0 || n.IndexOf(_search, StringComparison.OrdinalIgnoreCase) >= 0)
-                .Take(MaxSpawnResults)
-                .ToList();
-        }
-
-        int columns = 4;
-        for (int i = 0; i < _matches.Count; i += columns)
-        {
-            GUILayout.BeginHorizontal();
-            for (int j = i; j < Math.Min(i + columns, _matches.Count); j++)
-            {
-                string name = _matches[j];
-                if (GUILayout.Button(name, MenuStyles.Button, GUILayout.Width(210)))
-                    Try(() => Spawning.ItemNearPlayer(name), $"Spawned {name}.");
-            }
-            GUILayout.EndHorizontal();
-        }
+            _search = text;
+            FillResults();
+        }, "Search items...");
+        _results = panel.Grid(200f, 26f);
+        FillResults();
     }
 
-    private void DrawHouse()
+    private void BuildHouse(UiBuilder panel)
     {
-        var here = GameRefs.Player != null ? Rooms.At(GameRefs.Player.transform.position) : Location.Other;
-        GUILayout.BeginHorizontal();
-        GUILayout.Label($"You're in: {here}", MenuStyles.Text, GUILayout.Width(220));
-        if (Widgets.Button("Start fire here", 150))
-            Try(() => HouseSystems.StartFire(here), "Fire started. Good luck.");
-        if (Widgets.Button("Put fire out", 130))
-            Try(() => HouseSystems.StopFire(here), "Fire's out.");
-        GUILayout.EndHorizontal();
+        panel.Header("HOUSE");
+        var row = panel.Row(8f, 26f);
+        _room = row.SubHeader("");
+        UiBuilder.Size(_room, width: 260f);
+        row.Button("START FIRE HERE", () => Try(() => HouseSystems.StartFire(CurrentRoom()), "Fire started. Good luck."), 180f, accent: true);
+        row.Button("PUT FIRE OUT", () => Try(() => HouseSystems.StopFire(CurrentRoom()), "Fire's out."), 160f);
 
-        GUILayout.BeginHorizontal();
-        if (Widgets.Button("Power on", 130))
-            Try(() => HouseSystems.SetHousePower(true), "Power on everywhere.");
-        if (Widgets.Button("Power off", 130))
-            Try(() => HouseSystems.SetHousePower(false), "Power off everywhere.");
-        GUILayout.EndHorizontal();
+        var power = panel.Row(8f, 26f);
+        power.Button("POWER ON", () => Try(() => HouseSystems.SetHousePower(true), "Power on everywhere."));
+        power.Button("POWER OFF", () => Try(() => HouseSystems.SetHousePower(false), "Power off everywhere."));
     }
+
+    private void FillResults()
+    {
+        _results.Clear();
+        var matches = Spawning.ItemNames
+            .Where(n => _search.Length == 0 || n.IndexOf(_search, StringComparison.OrdinalIgnoreCase) >= 0)
+            .Take(MaxSpawnResults);
+        foreach (string name in matches)
+        {
+            string item = name;
+            _results.Button(item, () => Try(() => Spawning.ItemNearPlayer(item), $"Spawned {item}."), -1f);
+        }
+    }
+
+    private static Location CurrentRoom() => Rooms.At(GameRefs.Player.transform.position);
 
     private void Try(Action action, string success = null)
     {
         try
         {
             action();
-            if (success != null)
-                _status = success;
+            if (success != null && _status != null)
+                _status.text = success;
         }
         catch (Exception e)
         {
-            _status = "Didn't work: " + e.GetBaseException().Message;
+            if (_status != null)
+                _status.text = MenuPalette.Paint("Didn't work: " + e.GetBaseException().Message, MenuPalette.Bad);
         }
     }
 }

@@ -1,183 +1,188 @@
 using System.IO;
 using System.Linq;
 using NeetLoader.Mods;
+using NeetModKit.Features;
+using NeetModKit.Ui.Toolkit;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace NeetModKit.Menu.Pages;
 
-/// <summary>Installed mods: list, details, recent log and the load/unload/reload/on-off controls.</summary>
+/// <summary>Installed mods: list, details, features, recent log and the load/unload/reload controls.</summary>
 internal sealed class ModsPage : MenuPage
 {
-    private const float ListWidth = 280f;
+    private const float ListWidth = 250f;
 
     private readonly ModLogView _log = new ModLogView();
     private ModInfo _selected;
-    private (string Files, string Needs, string Heading) _cached;
-    private ModInfo _cachedFor;
     private string _lastResult;
-    private Vector2 _listScroll, _detailScroll;
+
+    private Text _status, _result, _logText, _restartNote;
 
     public override string Title => "Mods";
     public override int Order => 0;
-    public override bool FillsHeight => true;
 
-    // Folder contents can change between visits (new builds, new mods).
-    public override void OnShow() => _cachedFor = null;
-
-    public override void Draw()
+    public override void Build(UiBuilder ui)
     {
-        GUILayout.BeginHorizontal(GUILayout.ExpandHeight(true));
+        if (_selected == null || !ModRegistry.Mods.Contains(_selected))
+            _selected = ModRegistry.Mods.FirstOrDefault();
 
-        GUILayout.BeginVertical(MenuStyles.Box, GUILayout.Width(ListWidth), GUILayout.ExpandHeight(true));
-        Widgets.Header($"Installed ({ModRegistry.Mods.Count})");
-        _listScroll = Widgets.BeginScroll(_listScroll);
-        DrawList();
-        GUILayout.EndScrollView();
-        GUILayout.EndVertical();
-
-        GUILayout.BeginVertical(MenuStyles.Box, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-        _detailScroll = Widgets.BeginScroll(_detailScroll);
-        if (_selected != null)
-            DrawDetails(_selected);
-        else
-            Widgets.Text("No mods installed. Drop a mod folder into the game's Mods folder and press Find new mods.");
-        GUILayout.EndScrollView();
-        GUILayout.EndVertical();
-
-        GUILayout.EndHorizontal();
-        DrawFooter();
+        var body = ui.Row(12f);
+        UiBuilder.Size(body.Root, flexibleHeight: 1f);
+        BuildList(body.Column(ListWidth, flexibleHeight: 1f));
+        BuildDetails(body.Column(flexibleWidth: 1f, flexibleHeight: 1f));
+        BuildFooter(ui.Row(8f, 26f));
     }
 
-    private void DrawList()
+    public override void Refresh()
     {
+        if (_selected == null)
+            return;
+        _status.text = "STATUS: " + StateText(_selected);
+        _status.color = StateColor(_selected);
+        _result.text = _lastResult ?? "";
+        if (_log.TryGet(_selected.Id, out string log))
+            _logText.text = log;
+        _restartNote.text = ModRegistry.RestartNeeded ? MenuPalette.Paint("Restart the game to apply on/off changes", MenuPalette.Warn) : "";
+    }
+
+    private void BuildList(UiBuilder column)
+    {
+        column.SubHeader($"INSTALLED ({ModRegistry.Mods.Count})");
+        var list = column.Scroll(out _);
         foreach (var mod in ModRegistry.Mods)
         {
-            _selected ??= mod;
-            string label = MenuPalette.Paint("●", StateColor(mod)) + "  " + mod.Manifest.DisplayName;
-            if (GUILayout.Button(label, mod == _selected ? MenuStyles.ListItemActive : MenuStyles.ListItem))
-            {
-                _selected = mod;
-                _detailScroll = Vector2.zero;
-            }
+            var target = mod;
+            var button = list.Button(mod.Manifest.DisplayName, () => Select(target), -1f, accent: mod == _selected);
+            ColorLabel(button, mod == _selected ? Color.white : StateColor(mod));
         }
     }
 
-    private void DrawDetails(ModInfo mod)
+    private void BuildDetails(UiBuilder column)
     {
+        var details = column.Scroll(out _);
+        if (_selected == null)
+        {
+            details.Text("No mods installed. Drop a mod folder into the game's Mods folder and press FIND NEW MODS.");
+            return;
+        }
+
+        var mod = _selected;
         var m = mod.Manifest;
-        if (_cachedFor != mod)
-            Cache(mod);
-        Widgets.Header(_cached.Heading);
+        details.Header(m.DisplayName.ToUpperInvariant());
+        details.Text(MenuPalette.Paint($"v{m.Version}{(m.Author != null ? "  by " + m.Author : "")}", MenuPalette.Muted));
         if (!string.IsNullOrEmpty(m.Description))
-            Widgets.Text(m.Description);
-        Widgets.Space();
+            details.Text(m.Description);
 
-        GUILayout.Label("Status: " + StateText(mod), MenuStyles.Colored(MenuStyles.Text, StateColor(mod)));
+        _status = details.SubHeader("");
         if (mod.Error != null)
-            GUILayout.Label(mod.Error, MenuStyles.Colored(MenuStyles.Text, MenuStyles.Bad));
-        Widgets.Space();
+            details.Text(mod.Error, MenuPalette.Bad);
 
-        DrawActions(mod);
-        Widgets.Space();
-
-        Widgets.Section("Details", () =>
+        var actions = details.Row(8f, 26f);
+        if (mod.State == ModState.Loaded)
         {
-            Row("Id", mod.Id);
-            Row("Folder", mod.Directory);
-            Row("Files", _cached.Files);
-            Row("Needs", _cached.Needs);
-            Row("Hot reload", mod.CanHotReload ? "yes, updates without a restart" : "no, changes need a restart");
-        });
-
-        Widgets.Section("Recent log", () =>
+            if (mod.CanHotReload)
+                actions.Button("RELOAD", () => ModRegistry.Reload(mod.Id, Report("Reloaded.")));
+            actions.Button("UNLOAD", () => ModRegistry.Unload(mod.Id, Report("Unloaded.")));
+        }
+        else
         {
-            var lines = _log.Get(mod.Id);
-            if (lines.Count == 0)
-                Widgets.Small("Nothing logged yet.");
-            for (int i = 0; i < lines.Count; i++)
-                GUILayout.Label(lines[i], MenuStyles.Small);
-        });
+            actions.Button("LOAD NOW", () => ModRegistry.Load(mod.Id, Report("Loaded.")));
+        }
+        actions.Space(10f);
+        actions.Toggle("Load when the game starts", ModRegistry.IsEnabled(mod.Id), on => ModRegistry.SetEnabled(mod.Id, on));
+        _result = details.Text("", MenuPalette.Muted);
+
+        BuildFeatures(details, mod);
+        BuildInfo(details, mod);
+
+        details.SubHeader("RECENT LOG");
+        _logText = details.Text("");
     }
 
-    /// <summary>Builds the strings that need disk access or joins once per selection.</summary>
-    private void Cache(ModInfo mod)
+    private void BuildFeatures(UiBuilder details, ModInfo mod)
     {
-        var m = mod.Manifest;
-        string by = m.Author != null ? " by " + m.Author : "";
+        var features = ModFeatures.Of(mod);
+        if (features.Count == 0)
+            return;
+
+        details.SubHeader("FEATURES");
+        var panel = details.Panel();
+        foreach (var feature in features)
+        {
+            var target = feature;
+            panel.Toggle(feature.Name, ModFeatures.IsWanted(feature), on => ModFeatures.SetEnabled(target, on));
+            string note = feature.AppliesWhen != null ? "  " + MenuPalette.Paint("(" + feature.AppliesWhen + ")", MenuPalette.Warn) : "";
+            panel.Text(MenuPalette.Paint(feature.Description, MenuPalette.Muted) + note);
+        }
+    }
+
+    private static void BuildInfo(UiBuilder details, ModInfo mod)
+    {
+        details.SubHeader("DETAILS");
+        var panel = details.Panel();
         string files = Directory.Exists(mod.Directory)
             ? string.Join(", ", Directory.GetFiles(mod.Directory, "*.dll").Select(Path.GetFileName))
             : "(folder missing)";
-        string needs = m.Dependencies.Count > 0 ? string.Join(", ", m.Dependencies.Select(d => $"{d.Key} {d.Value}")) : "nothing";
-        _cached = (files, needs, $"{m.DisplayName}  <size=12>{MenuPalette.Paint($"v{m.Version}{by}", MenuPalette.Muted)}</size>");
-        _cachedFor = mod;
+        string needs = mod.Manifest.Dependencies.Count > 0
+            ? string.Join(", ", mod.Manifest.Dependencies.Select(d => $"{d.Key} {d.Value}"))
+            : "nothing";
+        Line(panel, "Id", mod.Id);
+        Line(panel, "Folder", mod.Directory);
+        Line(panel, "Files", files);
+        Line(panel, "Needs", needs);
+        Line(panel, "Hot reload", mod.CanHotReload ? "yes, updates without a restart" : "no, changes need a restart");
     }
 
-    private void DrawActions(ModInfo mod)
+    private void BuildFooter(UiBuilder footer)
     {
-        GUILayout.BeginHorizontal();
-        if (mod.State == ModState.Loaded)
+        footer.Button("RELOAD ALL", () => ModRegistry.ReloadAll(Report("Reloaded every hot-reload mod.")));
+        footer.Button("FIND NEW MODS", () =>
         {
-            if (mod.CanHotReload && Widgets.Button("Reload", 110))
-                ModRegistry.Reload(mod.Id, Report("Reloaded."));
-            if (Widgets.Button("Unload", 110))
-                ModRegistry.Unload(mod.Id, Report("Unloaded."));
-        }
-        else if (Widgets.Button("Load now", 110))
-        {
-            ModRegistry.Load(mod.Id, Report("Loaded."));
-        }
-
-        Widgets.Space(16);
-        bool enabled = ModRegistry.IsEnabled(mod.Id);
-        if (Widgets.Toggle("Load when the game starts", enabled) != enabled)
-            ModRegistry.SetEnabled(mod.Id, !enabled);
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-
-        if (_lastResult != null)
-            Widgets.Small(_lastResult);
-    }
-
-    private void DrawFooter()
-    {
-        GUILayout.BeginHorizontal();
-        if (Widgets.Button("Reload all", 120))
-            ModRegistry.ReloadAll(Report("Reloaded every hot-reload mod."));
-        if (Widgets.Button("Find new mods", 140))
             _lastResult = $"Found {ModRegistry.Rescan().Count} new mod(s).";
-        Widgets.Space(16);
-        bool auto = ModRegistry.AutoReload;
-        if (Widgets.Toggle("Reload mods when their files change", auto) != auto)
-            ModRegistry.AutoReload = !auto;
-        GUILayout.FlexibleSpace();
-        if (ModRegistry.RestartNeeded)
-            GUILayout.Label("Restart the game to apply on/off changes", MenuStyles.Colored(MenuStyles.TextLine, MenuStyles.Warn));
-        GUILayout.EndHorizontal();
+            Rebuild();
+        }, 160f);
+        footer.Space(10f);
+        footer.Toggle("Reload mods when their files change", ModRegistry.AutoReload, on => ModRegistry.AutoReload = on);
+        _restartNote = footer.Text("");
     }
 
-    private static void Row(string label, string value)
+    private void Select(ModInfo mod)
     {
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(label, MenuStyles.Colored(MenuStyles.TextLine, MenuStyles.Muted), GUILayout.Width(110));
-        GUILayout.Label(value, MenuStyles.Text);
-        GUILayout.EndHorizontal();
+        _selected = mod;
+        _lastResult = null;
+        Rebuild();
     }
 
-    private System.Action<string> Report(string success) => error => _lastResult = error ?? success;
+    private System.Action<string> Report(string success) => error =>
+    {
+        _lastResult = error ?? success;
+        Rebuild(); // State and buttons may have changed.
+    };
+
+    private static void Line(UiBuilder panel, string label, string value) =>
+        panel.Text(MenuPalette.Paint(label + ":", MenuPalette.Muted) + "  " + value);
+
+    private static void ColorLabel(Button button, Color color)
+    {
+        var text = button.GetComponentInChildren<Text>();
+        if (text != null)
+            text.color = color;
+    }
 
     private static string StateText(ModInfo mod) => mod.State switch
     {
-        ModState.Loaded => mod.LoadCount > 1 ? $"Running (reloaded {mod.LoadCount - 1}x)" : "Running",
-        ModState.Disabled => "Not loaded",
-        ModState.Failed => "Failed",
-        _ => "Waiting",
+        ModState.Loaded => mod.LoadCount > 1 ? $"RUNNING (RELOADED {mod.LoadCount - 1}X)" : "RUNNING",
+        ModState.Disabled => "NOT LOADED",
+        ModState.Failed => "FAILED",
+        _ => "WAITING",
     };
 
     private static Color StateColor(ModInfo mod) => mod.State switch
     {
-        ModState.Loaded => MenuStyles.Good,
-        ModState.Failed => MenuStyles.Bad,
-        ModState.Disabled => MenuStyles.Muted,
-        _ => MenuStyles.Warn,
+        ModState.Loaded => MenuPalette.Good,
+        ModState.Failed => MenuPalette.Bad,
+        ModState.Disabled => MenuPalette.Muted,
+        _ => MenuPalette.Warn,
     };
 }

@@ -1,24 +1,26 @@
 using NeetModKit.Registry;
+using NeetModKit.Ui.Toolkit;
 using UnityEngine;
 
 namespace NeetModKit.Menu;
 
-/// <summary>Draws the menu frame: title bar, tabs, the selected page and the footer.</summary>
+/// <summary>The mod menu's window: tabs along the top, the selected page below.</summary>
 internal sealed class MenuWindow
 {
-    // Share of the game window the menu takes, and the smallest size it shrinks to.
-    private const float WidthShare = 0.9f;
-    private const float HeightShare = 0.88f;
-    private const float MinWidth = 760f;
-    private const float MinHeight = 480f;
+    private const float RefreshInterval = 0.25f;
+    private const float TabWidth = 150f;
 
     private readonly OwnedList<MenuPage> _pages;
+    private readonly UiWindow _window;
     private MenuPage _selected;
-    private Vector2 _scroll;
+    private float _nextRefresh;
+    private bool _tabsDirty = true;
 
-    public MenuWindow(OwnedList<MenuPage> pages)
+    public MenuWindow(NeetLoader.NeetMod owner, OwnedList<MenuPage> pages)
     {
         _pages = pages;
+        _window = new UiWindow(owner, "NEET MODS", ModMenu.Close);
+        _pages.Changed += () => _tabsDirty = true;
     }
 
     public string SelectedTitle => _selected?.Title;
@@ -32,87 +34,68 @@ internal sealed class MenuWindow
         }
     }
 
-    public void OnOpened()
+    public void Open()
     {
         if (_selected == null || !Contains(_selected))
-            _selected = _pages.Items.Count > 0 ? _pages.Items[0] : null;
-        _selected?.OnShow();
-    }
-
-    public void OnClosed() => _selected?.OnHide();
-
-    public void Draw()
-    {
-        MenuStyles.Ensure();
-        var previousSkin = GUI.skin;
-        GUI.skin = MenuStyles.Skin;
-
-        float scale = Mathf.Clamp(KitMod.Config.Value.MenuScale, 0.6f, 2f) * Screen.height / 1080f;
-        var previousMatrix = GUI.matrix;
-        GUI.matrix = Matrix4x4.Scale(new Vector3(scale, scale, 1f));
-
-        float screenW = Screen.width / scale, screenH = Screen.height / scale;
-        float w = Mathf.Min(screenW, Mathf.Max(MinWidth, screenW * WidthShare));
-        float h = Mathf.Min(screenH, Mathf.Max(MinHeight, screenH * HeightShare));
-        var area = new Rect((screenW - w) / 2f, (screenH - h) / 2f, w, h);
-
-        GUILayout.BeginArea(area, MenuStyles.Window);
-        DrawTitleBar();
-        DrawTabs();
-        Widgets.Space(6);
-
-        if (_selected == null || !Contains(_selected))
-        {
-            Widgets.Text("Nothing here yet.");
-        }
-        else if (_selected.FillsHeight)
-        {
-            GUILayout.BeginVertical(GUILayout.ExpandHeight(true));
-            _selected.Draw();
-            GUILayout.EndVertical();
-        }
+            Show(_pages.Items.Count > 0 ? _pages.Items[0] : null);
         else
-        {
-            _scroll = Widgets.BeginScroll(_scroll);
-            _selected.Draw();
-            GUILayout.EndScrollView();
-        }
-
-        GUILayout.EndArea();
-        GUI.matrix = previousMatrix;
-        GUI.skin = previousSkin;
+            BuildPage(); // Things may have changed while the menu was closed.
+        _window.Show();
     }
 
-    private void DrawTitleBar()
+    public void Close()
     {
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("NEET Mods", MenuStyles.Title);
-        GUILayout.FlexibleSpace();
-        GUILayout.Label($"Loader {NeetLoader.Loader.Version}  ·  {KitMod.Config.Value.MenuKey} to close", MenuStyles.TextLine);
-        if (Widgets.Button("Close", 70))
-            ModMenu.Close();
-        GUILayout.EndHorizontal();
+        _selected?.OnHide();
+        _window.Hide();
     }
 
-    private void DrawTabs()
+    /// <summary>Runs every frame while the menu is open.</summary>
+    public void Tick()
     {
-        GUILayout.BeginHorizontal();
-        foreach (var page in _pages.Items)
+        if (_tabsDirty)
+            BuildTabs();
+
+        if (_selected == null)
+            return;
+        if (_selected.RebuildRequested)
+            BuildPage();
+        else if (Time.unscaledTime >= _nextRefresh)
         {
-            if (GUILayout.Button(page.Title, page == _selected ? MenuStyles.TabActive : MenuStyles.Tab))
-                Show(page);
+            _nextRefresh = Time.unscaledTime + RefreshInterval;
+            _selected.Refresh();
         }
-        GUILayout.EndHorizontal();
     }
 
     private void Show(MenuPage page)
     {
-        if (page == _selected)
+        if (page == _selected && page != null)
             return;
         _selected?.OnHide();
         _selected = page;
-        _scroll = Vector2.zero;
-        page.OnShow();
+        _tabsDirty = true;
+        BuildPage();
+    }
+
+    private void BuildPage()
+    {
+        _window.Content.Clear();
+        if (_selected == null)
+            return;
+        _selected.RebuildRequested = false;
+        _selected.Build(_window.Content);
+        _selected.Refresh();
+        _nextRefresh = Time.unscaledTime + RefreshInterval;
+    }
+
+    private void BuildTabs()
+    {
+        _tabsDirty = false;
+        _window.Toolbar.Clear();
+        foreach (var page in _pages.Items)
+        {
+            var target = page;
+            _window.Toolbar.Button(page.Title.ToUpperInvariant(), () => Show(target), TabWidth, accent: page == _selected);
+        }
     }
 
     private bool Contains(MenuPage page)

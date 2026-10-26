@@ -1,9 +1,10 @@
 using NeetModKit.Settings;
+using NeetModKit.Ui.Toolkit;
 using UnityEngine;
 
 namespace NeetModKit.Menu.Pages;
 
-/// <summary>Every registered config, with changes saved half a second after the last edit.</summary>
+/// <summary>Every registered config. Edits are saved half a second after the last change.</summary>
 internal sealed class SettingsPage : MenuPage
 {
     private const float SaveDelay = 0.5f;
@@ -14,28 +15,28 @@ internal sealed class SettingsPage : MenuPage
     public override string Title => "Settings";
     public override int Order => 30;
 
-    public override void Draw()
+    public override void Build(UiBuilder ui)
     {
+        var list = ui.Scroll(out _);
+        if (ModSettings.Sections.Count == 0)
+            list.Text("No mod has settings to show.");
+
         foreach (var section in ModSettings.Sections)
         {
-            Widgets.Section(section.Title, () =>
-            {
-                if (ConfigEditor.Draw(section.Value()))
-                    MarkDirty(section);
-            });
+            var target = section;
+            var panel = list.Panel();
+            panel.Header(section.Title.ToUpperInvariant());
+            ConfigEditor.Build(panel, section.Value(), () => MarkDirty(target));
         }
-
-        if (ModSettings.Sections.Count == 0)
-            Widgets.Text("No mod has settings to show.");
-
-        FlushIfDue();
     }
 
-    public override void OnHide()
+    public override void Refresh()
     {
-        _dirty?.Save();
-        _dirty = null;
+        if (_dirty != null && Time.unscaledTime >= _saveAt)
+            Flush();
     }
+
+    public override void OnHide() => Flush();
 
     private void MarkDirty(SettingsSection section)
     {
@@ -45,11 +46,9 @@ internal sealed class SettingsPage : MenuPage
         _saveAt = Time.unscaledTime + SaveDelay;
     }
 
-    private void FlushIfDue()
+    private void Flush()
     {
-        if (_dirty == null || Time.unscaledTime < _saveAt)
-            return;
-        _dirty.Save();
+        _dirty?.Save();
         _dirty = null;
     }
 }

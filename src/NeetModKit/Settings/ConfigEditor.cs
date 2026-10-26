@@ -5,11 +5,12 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using NeetModKit.Menu;
+using NeetModKit.Ui.Toolkit;
 using UnityEngine;
 
 namespace NeetModKit.Settings;
 
-/// <summary>Draws editable controls for the public fields of a settings object.</summary>
+/// <summary>Builds controls for the public fields of a settings object and writes edits back.</summary>
 internal static class ConfigEditor
 {
     private sealed class FieldView
@@ -23,51 +24,72 @@ internal static class ConfigEditor
 
     private static readonly Dictionary<Type, List<FieldView>> Cache = new Dictionary<Type, List<FieldView>>();
 
-    /// <summary>Draws the fields; returns true if anything changed.</summary>
-    public static bool Draw(object settings)
+    /// <summary>Adds a control per field. <paramref name="changed"/> runs after every edit.</summary>
+    public static void Build(UiBuilder ui, object settings, Action changed)
     {
-        bool changed = false;
         foreach (var view in Views(settings.GetType()))
         {
-            object current = view.Field.GetValue(settings);
-            object updated = DrawField(view, current);
-            if (!Equals(current, updated))
-            {
-                view.Field.SetValue(settings, updated);
-                changed = true;
-            }
+            BuildField(ui, view, settings, changed);
             if (view.Help != null)
-                Widgets.Small(view.Help);
-            Widgets.Space(4);
+                ui.Text(MenuPalette.Paint(view.Help, MenuPalette.Muted));
         }
-        return changed;
     }
 
-    private static object DrawField(FieldView view, object value)
+    private static void BuildField(UiBuilder ui, FieldView view, object settings, Action changed)
     {
-        var type = view.Field.FieldType;
+        var field = view.Field;
+        var type = field.FieldType;
+        object value = field.GetValue(settings);
+
+        void Set(object v)
+        {
+            field.SetValue(settings, v);
+            changed();
+        }
+
         if (type == typeof(bool))
-            return Widgets.Toggle(view.Label, (bool)value);
-        if (type.IsEnum)
-            return Enum.Parse(type, view.EnumNames[Widgets.Choice(view.Label, Array.IndexOf(view.EnumNames, value.ToString()), view.EnumNames)]);
-        if (type == typeof(float) && view.Range != null)
-            return Widgets.Slider(view.Label, (float)value, view.Range.Min, view.Range.Max);
-        if (type == typeof(int) && view.Range != null)
-            return Mathf.RoundToInt(Widgets.Slider(view.Label, (int)value, view.Range.Min, view.Range.Max, "0"));
-        if (type == typeof(string))
-            return Widgets.TextField(view.Label, (string)value);
-        if (type == typeof(float) || type == typeof(int) || type == typeof(double))
-            return ParseOr(Widgets.TextField(view.Label, Convert.ToString(value, CultureInfo.InvariantCulture)), type, value);
-
-        Widgets.Small($"{view.Label}: edit in the config file");
-        return value;
+            ui.Toggle(view.Label, (bool)value, v => Set(v));
+        else if (type.IsEnum)
+            BuildChoice(ui, view, value.ToString(), name => Set(Enum.Parse(type, name)));
+        else if (type == typeof(float) && view.Range != null)
+            ui.Slider(view.Label.ToUpperInvariant(), (float)value, view.Range.Min, view.Range.Max, v => Set(v));
+        else if (type == typeof(int) && view.Range != null)
+            ui.Slider(view.Label.ToUpperInvariant(), (int)value, view.Range.Min, view.Range.Max, v => Set(Mathf.RoundToInt(v)), wholeNumbers: true);
+        else if (type == typeof(string))
+            ui.LabeledInput(view.Label.ToUpperInvariant(), (string)value, v => Set(v));
+        else if (type == typeof(float) || type == typeof(int) || type == typeof(double))
+            ui.LabeledInput(view.Label.ToUpperInvariant(), Convert.ToString(value, CultureInfo.InvariantCulture), text =>
+            {
+                if (TryParse(text, type, out object parsed))
+                    Set(parsed);
+            });
+        else
+            ui.Text(MenuPalette.Paint($"{view.Label}: edit in the config file", MenuPalette.Muted));
     }
 
-    private static object ParseOr(string text, Type type, object fallback)
+    private static void BuildChoice(UiBuilder ui, FieldView view, string current, Action<string> pick)
     {
-        try { return Convert.ChangeType(text, type, CultureInfo.InvariantCulture); }
-        catch (FormatException) { return fallback; }
-        catch (OverflowException) { return fallback; }
+        ui.SubHeader(view.Label.ToUpperInvariant());
+        var row = ui.Row(6f, 26f);
+        foreach (string name in view.EnumNames)
+        {
+            string option = name;
+            row.Button(name.ToUpperInvariant(), () => pick(option), 120f, accent: name == current);
+        }
+    }
+
+    private static bool TryParse(string text, Type type, out object value)
+    {
+        try
+        {
+            value = Convert.ChangeType(text, type, CultureInfo.InvariantCulture);
+            return true;
+        }
+        catch (Exception e) when (e is FormatException || e is OverflowException)
+        {
+            value = null;
+            return false;
+        }
     }
 
     private static List<FieldView> Views(Type type)
