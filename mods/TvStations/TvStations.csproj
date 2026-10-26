@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>TvStations</RootNamespace>
+    <Description>Video files as stations on the living room TV.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
+    <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
+  </ItemGroup>
+
+  <!-- Videos and the station list ship in the mod folder so they can be swapped in place. -->
+  <ItemGroup>
+    <None Include="tv/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

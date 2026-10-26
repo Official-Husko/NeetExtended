@@ -1,0 +1,9 @@
+{
+  "id": "TvStations",
+  "name": "Custom TV Stations",
+  "version": "0.1.0",
+  "author": "pawbeans",
+  "description": "Your own videos on the living room TV: drop MP4 or WebM files into a tv folder to add stations, replace the game's channels or hide them.",
+  "dependencies": { "NeetModKit": "0.1.0" },
+  "hotReload": true
+}
