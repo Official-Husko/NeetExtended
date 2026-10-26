@@ -10,6 +10,9 @@
     <Version>0.1.0</Version>
   </PropertyGroup>
 
+  <!-- The commit a build comes from, in each assembly's informational version. -->
+  <Import Project="build/Revision.targets" />
+
   <!-- Optional per-machine overrides (gitignored). -->
   <Import Project="build/Local.props" Condition="Exists('$(MSBuildThisFileDirectory)build/Local.props')" />
 
