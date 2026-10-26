@@ -49,7 +49,7 @@ Action-to-intent mapping (`BrainPlayer.cs:111-132`):
 `IntentHolder` also declares `Pee`, `Poop`, `Puke`, `RemoveClothing` and `LookAt`, but `BrainPlayer` never sets them and `Player_Abilities` never reads them. Treat them as unused for the player.
 
 `Intent` (`IntentHolder.cs:8-75`):
-- `Active` is `isHeld`. Reading it also schedules `UpdateState(sustained)` for the next frame via `Commons.CoroutineWrapOneFrame` (`IntentHolder.cs:23`). This side effect is easy to miss if you read `Active` from a patch.
+- `Active` is `isHeld`. The getter also builds `Commons.CoroutineWrapOneFrame(() => UpdateState(sustained))` (`IntentHolder.cs:23`), but that only creates an iterator and nobody starts it as a coroutine (`Commons.cs:75`), so reading `Active` has no side effect.
 - `Started` is `isHeld && !wasHeld`. `Ended` is `wasHeld && !isHeld`.
 - `strength` is only non-zero while held.
 
@@ -383,7 +383,7 @@ Caveats:
 - `StatusHandler.Update` (`:175-182`): the duration countdown runs only for the last element of `effects` (the test `effects.Count - 1 == num` is true only for the last index). Other effects may not expire until they reach the end of the list. Verify in-game.
 - `StatusEffectType.amplifier` appears inert. `AddEffect` clears `st.statRef` on the asset (`StatusHandler.cs:199`), then loops over `st.statRef` (`:251`), which is empty. So the `OnChanged` hook is never attached.
 - `persistent` effects apply `effectSize` every frame without `Time.deltaTime`. The total effect depends on frame rate.
-- Calling `IntentHolder.Intent.Active` schedules a state update for the next frame (`IntentHolder.cs:23`). Reading `Active` in a patch can change the state seen by later code.
+- Reading `IntentHolder.Intent.Active` is safe from patches: the "update next frame" coroutine it builds is never started (`IntentHolder.cs:23`, `Commons.cs:75`).
 - `Player_Abilities.Breath` adds `hunger` +2 per frame while exhaling with a cigarette mask (`:717-718`). That is per frame, not per second.
 - `PlayerStats.Start` can run again through `Load`. It is guarded by `alreadyStarted`. `StatusHandler.Start` and `Player_Abilities.Start` have the same guard.
 - Teleport to a point below the ground or inside geometry may cause the body to be pushed by collision.
