@@ -90,13 +90,12 @@ public sealed partial class UiBuilder
         slider.SetValueWithoutNotify(value);
         Size(go.transform, height: M.RowHeight * 0.7f, flexibleWidth: 1f);
 
-        var readout = row.Text(Format(value, wholeNumbers));
+        var readout = row.Text("");
         Size(readout, width: M.ReadoutWidth);
-        slider.onValueChanged.AddListener(v =>
-        {
-            readout.text = Format(v, wholeNumbers);
-            onChange(v);
-        });
+        var sync = go.AddComponent<UiSliderReadout>();
+        sync.Slider = slider;
+        sync.Label = readout;
+        slider.onValueChanged.AddListener(v => onChange(v));
         return slider;
     }
 
@@ -144,5 +143,4 @@ public sealed partial class UiBuilder
         text.resizeTextMinSize = Math.Max(6, text.fontSize / 2);
     }
 
-    private static string Format(float value, bool whole) => whole ? ((int)value).ToString() : value.ToString("0.##");
 }
