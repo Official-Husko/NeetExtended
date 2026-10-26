@@ -40,6 +40,8 @@ public static class ModSaveData
     public static void Register<T>(NeetMod owner, Func<T> save, Action<T> load, string key = null) where T : class, new()
     {
         key ??= owner.Info.Id;
+        if (Slots.ContainsKey(key))
+            throw new ArgumentException($"Save data key '{key}' is already used. Pass a different key.");
         var slot = new Slot
         {
             Save = () => JToken.FromObject(save()),

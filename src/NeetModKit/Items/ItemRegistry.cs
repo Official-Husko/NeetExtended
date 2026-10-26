@@ -62,6 +62,13 @@ public static class ItemRegistry
         var def = entry.Definition;
         try
         {
+            // Never replace one of the game's own items (or another mod's).
+            if (PickupBank.pickupsDict.TryGetValue(def.Name, out var existing) && existing.obj != entry.Template && existing.obj != null)
+            {
+                _log.Error($"Item '{def.Name}' wasn't added: the game (or another mod) already has an item with that name.");
+                return;
+            }
+
             if (entry.Template == null)
                 entry.Template = ItemTemplateBuilder.Build(def, Spawning.ItemPrefab(def.BasedOn));
 
