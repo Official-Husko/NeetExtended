@@ -184,6 +184,10 @@
         {
           "text": "Cheat Menu mod: press Insert for god mode, needs, speed, teleport, money, crystals, spawning, fire, power, doors and game speed.",
           "area": "Cheat Menu"
+        },
+        {
+          "text": "Open House mod: walk into the pantry and through the black basement door and dad's yard door, with optional switches for the attic, the roof and the demo's store limits.",
+          "area": "Open House"
         }
       ],
       "changed": [
