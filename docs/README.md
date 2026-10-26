@@ -6,9 +6,10 @@
 | --- | --- |
 | [Getting started](modding/getting-started.md) | Building, installing, the edit-build-reload loop, writing your first mod |
 | [Loader](modding/loader.md) | `mod.json`, mod lifecycle, hot reload, logging, runtime control |
-| [Framework](modding/framework.md) | NeetModKit: game access, events, items, cards, saves, features, settings |
+| [Framework](modding/framework.md) | NeetModKit: game access, events, dialogue, items, cards, saves, features, settings |
 | [UI and the mod menu](modding/ui-and-menu.md) | The UI toolkit, themes, menu pages, settings pages |
 | [Computer apps](modding/computer-apps.md) | The in-game computer's apps, URLs, adding new apps and games |
+| [Phone calls](modding/phone.md) | The Phone Expansion mod: call files, conditions, actions, Ink calls, the C# API |
 | [Save format](modding/save-format.md) | The `.nsav` format and the Open Saves mod |
 | [Dev bridge](modding/dev-bridge.md) | Controlling the running game from tools and scripts |
 | [Tools](modding/tools.md) | The `neet` command-line tool, the changelog and the MCP server |
