@@ -17,6 +17,7 @@ public sealed class PerformanceFixesMod : NeetMod
     {
         Instance = this;
         ModFeatures.Register(this, new FastPaintSavesFeature());
+        ModFeatures.Register(this, new TextureLeaksFeature());
     }
 
     // Paint pictures still being written must reach the disk before the process ends.
