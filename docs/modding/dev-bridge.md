@@ -106,6 +106,7 @@ The table lists all 53 built-in commands. Parameters marked `?` are optional. `h
 | `game.info` | none | Scene, `houseReady`, loader and Unity versions, fps, time scale, game time, and the mod list with state. |
 | `game.quit` | none | Close the game. Returns `"bye"`. |
 | `game.save` | none | Save now, like the autosave. Works only in the house. Returns `"saved"`. |
+| `save.check` | `max?`: problems to list, default 20 | Runs every save subscriber (everything `SaveAll` writes) on its own without saving. Returns the count, counts by type, and the subscribers that throw or whose object is destroyed, with the item name and save id for items. |
 | `game.timescale` | `value`: 0 pauses, 1 is normal | Set `Time.timeScale`. Negative values are clamped to 0. Returns the new value. |
 | `scene.load` | `name`: `MainMenu`, `Tutorial`, `NEET_House`, `DreamZone`, `Nightmare1` | Load a scene by name. Returns `"loading"` without waiting for the load. |
 | `rooms.list` | none | Every room in the current scene, keyed by room name, with its centre as `[x,y,z]`. |
