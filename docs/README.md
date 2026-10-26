@@ -30,6 +30,7 @@ Notes on how NEET Demo works, written from its decompiled code. Paths like `deco
 | [World](game/world-environment.md) | Doors, fire, power, physics, misc objects |
 | [Dialogue and rendering](game/dialogue-and-rendering.md) | Ink dialogue, paint and decals, rendering helpers |
 | [Third-party libraries](game/third-party-libs.md) | The in-game console and the other bundled libraries |
+| [Known bugs](game/known-bugs.md) | Bugs in the game itself, why they happen, and how Unofficial NEET Patches fixes them |
 
 ## Research
 

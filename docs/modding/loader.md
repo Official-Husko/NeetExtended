@@ -62,6 +62,7 @@ Public constant `Loader.Version` is `"0.1.0"`.
 | `loadAfter` | string[] | `[]` | Mods to load before this one if they are present. Not required. |
 | `autoPatch` | bool | `true` | Apply Harmony patches for every class in the mod's assemblies. See [Harmony patching](#harmony-patching). |
 | `hotReload` | bool | `false` | Load the DLLs from memory and reload the mod when they change. The mod must clean up in `OnUnload`. See [Hot reload](#hot-reload). |
+| `essential` | bool | `false` | Always on: the mod can't be switched off or unloaded, and neither can the mods it depends on. Reloading still works. For the framework (NeetModKit) and mods that protect something (No Feedback). |
 
 Example:
 
@@ -301,12 +302,14 @@ private void DumpWarnings()
 | `Get<T>()` | The entry object of the first loaded mod whose entry is a `T`. |
 | `OwnerOf(Type)` | The loaded mod whose assemblies contain `type`. |
 | `Load(id, done)` | Loads the mod now. Fails if it is already loaded, or was loaded earlier this session and isn't `hotReload`. |
-| `Unload(id, done)` | Unloads the mod now. Loaded dependents are unloaded first. |
+| `Unload(id, done)` | Unloads the mod now. Loaded dependents are unloaded first. Refused for mods that are always on. |
 | `Reload(id, done)` | Reloads the mod and its loaded dependents as one batch. |
 | `ReloadAll(done)` | Reloads every loaded `hotReload` mod as one batch. |
 | `Rescan()` | Looks for new folders. Returns the new `ModInfo`s, which start `Disabled`. |
-| `IsEnabled(id)` | The "load when the game starts" switch. |
-| `SetEnabled(id, bool)` | Sets the switch and saves it. Takes effect on the next launch. |
+| `IsEnabled(id)` | The "load when the game starts" switch. Always true for mods that are always on. |
+| `SetEnabled(id, bool)` | Sets the switch and saves it. Takes effect on the next launch. Returns `null`, or why the mod can't be switched off. |
+| `AlwaysOnBecause(ModInfo)` | The essential mod that keeps this one on (itself, or an essential mod that needs it), or `null`. |
+| `AlwaysOnReason(ModInfo)` | The same as text ("it's always on", "No Feedback needs it and is always on"), or `null`. |
 | `RestartNeeded` | True if any switch differs from what is running. |
 | `AutoReload` | Gets or sets automatic reloading. Saved to settings. |
 | `ModLoaded` | `event Action<ModInfo>`. Raised after a mod loads or reloads. |
@@ -435,7 +438,7 @@ Don't call `Invoke` from code the main thread waits on. It deadlocks until the t
 
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `DisabledMods` | string[] | `[]` | Ids of mods switched off. Applied on the next launch. |
+| `DisabledMods` | string[] | `[]` | Ids of mods switched off. Applied on the next launch. Mods that are always on load anyway. |
 | `AutoReload` | bool | `true` | Reload hot-reload mods when their DLLs change. |
 | `VerboseLog` | bool | `false` | Write `Debug` lines to `latest.log`. |
 

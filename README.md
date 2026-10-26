@@ -12,8 +12,9 @@ Not affiliated with the game's developer.
 | **NeetModKit** (`src/NeetModKit`) | The framework mods build on: game access, events, items, the anime card game, computer apps, dialogue scripts in the game's own dialogue system, save data, a UI toolkit built from the game's own menus, switchable features, and the mod menu (F1, or MODS in the pause menu). |
 | **DevBridge** (`mods/DevBridge`) | A local socket for tools: read and change game state, spawn things, click UI, take screenshots, reload mods. |
 | **Open Saves** (`mods/OpenSaves`) | Compressed, documented `.nsav` saves (about 16x smaller) and cleanup of old save files. |
-| **No Feedback** (`mods/NoFeedback`) | Stops the pause menu sending feedback reports to the original developer. |
-| **Card Expansion** (`mods/CardExpansion`) | Twelve Halloween cards, summons, an auto-clicker, a better crystal exchange and a fix for promoted cards in the computer's card game. |
+| **No Feedback** (`mods/NoFeedback`) | Stops the pause menu sending feedback reports to the original developer. Always on, like the framework. |
+| **Unofficial NEET Patches** (`mods/UnofficialNeetPatches`) | Fixes for bugs in the game itself: saves failing with a dead house spider around, story events breaking after Grandpa dies, story events repeating every frame after an error, promoted cards losing their stats. Each fix can be switched off. |
+| **Card Expansion** (`mods/CardExpansion`) | Twelve Halloween cards, summons, an auto-clicker and a better crystal exchange for the computer's card game. |
 | **Pumpkin Smash** (`mods/PumpkinSmash`) | A whack-a-pumpkin game on the in-game computer. |
 | **Open House** (`mods/OpenHouse`) | Opens what the demo closes off: the pantry, the black basement door, dad's yard door, and optionally the attic, the roof and the demo's other limits. |
 | **Phone Expansion** (`mods/PhoneExpansion`) | New numbers to dial and new calls that ring in, with choices and consequences: pizza delivery, Spookbusters, a deal with Satan, a call you shouldn't answer. Calls are JSON or Ink files any mod can ship. |
