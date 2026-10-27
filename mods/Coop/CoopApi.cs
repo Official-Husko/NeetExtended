@@ -55,6 +55,28 @@ public static class CoopApi
         return text.ToString();
     }
 
+    private static long _lastSent, _lastReceived;
+    private static float _lastAt = -1f;
+
+    /// <summary>Traffic since the last call (or the session start): KB/s each way and the totals.</summary>
+    public static string Traffic()
+    {
+        if (!(CoopSession.Transport is ITrafficStats stats))
+            return "This connection doesn't count its traffic.";
+        float now = UnityEngine.Time.realtimeSinceStartup;
+        long sent = stats.BytesSent, received = stats.BytesReceived;
+        string rate = "";
+        if (_lastAt >= 0f && now > _lastAt && sent >= _lastSent)
+        {
+            float seconds = now - _lastAt;
+            rate = $"{(sent - _lastSent) / 1024f / seconds:0.0} KB/s out, {(received - _lastReceived) / 1024f / seconds:0.0} KB/s in over {seconds:0.0} s; ";
+        }
+        _lastSent = sent;
+        _lastReceived = received;
+        _lastAt = now;
+        return rate + $"total {sent / 1024} KB out ({stats.PacketsSent} packets), {received / 1024} KB in ({stats.PacketsReceived} packets).";
+    }
+
     /// <summary>"1.2.3.4", "1.2.3.4:8889", "host.name:9000".</summary>
     internal static void ParseAddress(string address, int defaultPort, out string host, out int port)
     {

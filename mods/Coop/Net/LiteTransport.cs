@@ -13,7 +13,7 @@ namespace Coop.Net;
 /// the running NetManager and its listener are parked in ReloadState and the next copy of the mod
 /// carries on with the same connection. Events are queued by LiteNetLib and raised in <see cref="Poll"/>.
 /// </summary>
-internal sealed class LiteTransport : ITransport
+internal sealed class LiteTransport : ITransport, ITrafficStats
 {
     private const string ManagerKey = "Coop.Net.Manager";
     private const string ListenerKey = "Coop.Net.Listener";
@@ -28,6 +28,11 @@ internal sealed class LiteTransport : ITransport
     private int _maxPeers;
 
     public bool IsRunning => _manager != null && _manager.IsRunning;
+
+    public long BytesSent => _manager?.Statistics.BytesSent ?? 0;
+    public long BytesReceived => _manager?.Statistics.BytesReceived ?? 0;
+    public long PacketsSent => _manager?.Statistics.PacketsSent ?? 0;
+    public long PacketsReceived => _manager?.Statistics.PacketsReceived ?? 0;
 
     public event Action<int> Connected;
     public event Action<int, string> Disconnected;
@@ -144,6 +149,7 @@ internal sealed class LiteTransport : ITransport
             // Loading the host's house can keep the main thread busy for a while.
             DisconnectTimeout = 20000,
             UpdateTime = 15,
+            EnableStatistics = true,
         };
         Attach();
     }
