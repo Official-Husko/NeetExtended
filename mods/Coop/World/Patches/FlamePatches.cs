@@ -34,8 +34,10 @@ internal static class FlamePatches
     [HarmonyPatch(typeof(Flame), nameof(Flame.Ignite))]
     private static void Lit(Flame __instance)
     {
-        if (!Quiet)
-            Flames.FlameSync.Changed(__instance);
+        if (Quiet)
+            return;
+        Flames.FlameSync.Changed(__instance);
+        Flames.FireballSync.Lit(__instance);
     }
 
     [HarmonyPrefix]
@@ -86,6 +88,10 @@ internal static class FlamePatches
     {
         if (Quiet || !__instance.lit || g == null || g.GetComponentInChildren<Flame>() != null)
             return true;
+        // A copy of another game's fireball lights what is simulated here and nothing else: the
+        // furniture, and anything that isn't here, catches in the game that made the ball.
+        if (Flames.FireballSync.IsCopy(__instance))
+            return g.GetComponent<Usable>() != null && Flames.FlameRules.Simulates(g);
         bool roomFire = Flames.FlameRules.IsRoomFire(__instance);
         if (!roomFire && !Flames.FlameRules.Simulates(__instance))
             return false;
@@ -132,5 +138,14 @@ internal static class FlamePatches
     {
         if (__runOriginal)
             Flames.BlastSync.Exploded(__instance.GetComponent<Usable>(), __instance.transform.position);
+    }
+
+    // An overdue tax bill burns up in a puff of fire, where the host's tax handler runs.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(TaxBill), nameof(TaxBill.Timer), MethodType.Setter)]
+    private static void BillBurning(TaxBill __instance, float value)
+    {
+        if (value <= 0f && __instance.stage + 1 >= 3 && __instance.bill != null)
+            Flames.PuffSync.Burnt(__instance.bill.transform.position);
     }
 }

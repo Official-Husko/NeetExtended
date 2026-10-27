@@ -45,6 +45,8 @@ internal static class WorldSync
         FlameSync.Init();
         GasSync.Init();
         BlastSync.Init();
+        FireballSync.Init();
+        PuffSync.Init();
         CopVanSync.Init();
         Hazards.BodyHazards.Init();
         Ambience.SkySync.Init();
@@ -168,6 +170,7 @@ internal static class WorldSync
         FireSync.Clear();
         FlameSync.Clear();
         GasSync.Clear();
+        FireballSync.Clear();
         CopVanSync.Clear();
         Ambience.SkySync.Clear();
         Ambience.ToiletSync.Clear();
@@ -252,6 +255,7 @@ internal static class WorldSync
         OwnershipNet.Flush();
         StateSync.LateTick();
         FlameSync.LateTick();
+        FireballSync.LateTick();
         PaintSync.LateTick();
         SpawnSender.FlushDestroys();
         WorldTiming.End(WorldTiming.Late, started);

@@ -96,4 +96,7 @@ public static class MessageIds
     public const ushort WorldGas = 148;
     public const ushort WorldBlast = 149;
     public const ushort WorldNpcSound = 157;
+    public const ushort WorldFireball = 161;
+    public const ushort WorldFireballGone = 162;
+    public const ushort WorldPuff = 163;
 }

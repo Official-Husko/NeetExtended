@@ -10,7 +10,7 @@ namespace Coop.World.Flames;
 /// place among its flames; a flame of the scene (not on an item) by where it sits in the scene.
 /// Left out, because they are shared some other way: the room fire's flames (FireSync), the stove's
 /// (GasSync) and the heat of pans and pots (their HeatHolder, which is state: HeatState).
-/// Anything else that burns (a spray's fireball, a laser's dot) lives and dies in the game that made it.
+/// A spray's fireball isn't an item's flame either: the game that made it tells the others (FireballSync).
 /// </summary>
 internal static class FlameBook
 {
