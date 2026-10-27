@@ -50,6 +50,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Grandpa doesn't get stuck after the thief**: the game could send Grandpa to a routine he doesn't have, which kept erroring. Now he takes the closest one.
 - **Cops only come for orders that went through**: blocked or unaffordable black and occult market orders could still bring a cop van.
 - **Custom cassettes cost what the shop says**: the custom tape shop charged 10$ more than its label.
+- **Every achievement has a spot on the medal shelf**: the last achievement's medals never showed up in the shed.
 
 ## Performance Fixes (experimental)
 

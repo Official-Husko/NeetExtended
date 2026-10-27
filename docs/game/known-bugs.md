@@ -24,6 +24,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Grandpa is sent to a routine he doesn't have | `SegmentLines` |
 | Market orders that don't go through can still bring the cops | `FailedOrderCops` |
 | Custom cassettes cost 10$ more than shown | `CassettePrice` |
+| The last achievement has no spot on the medal shelf | `LastMedal` |
 
 ## Saving fails with a dead house spider around
 
@@ -201,6 +202,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a postfix sets the tape's buy button up again with `priceOffset` 0, keeping the game's callback that puts the song on the tape.
 
 **Reproduce:** order a custom tape and compare the money before and after with the label.
+
+## The last achievement has no spot on the medal shelf
+
+**What happens:** the medal shelf in the shed (`StarMedal_Case_Achievements`) shows wings and medals for nine of the ten achievements; the last (`pissCount`) never shows.
+
+**Cause:** `AchievementViewer.Start` lays out achievements while `i * 5 + j < achievements.Count - 1` (`AchievementViewer.cs:26`).
+
+**Fix:** a transpiler turns the `- 1` into `- 0`.
+
+**Reproduce:** count `achievementWings` on the `AchievementViewer` after the house loads: 9 without `LastMedal`, 10 with it.
 
 ## Not bugs
 
