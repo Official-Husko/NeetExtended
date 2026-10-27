@@ -126,6 +126,10 @@ Packages dropped at the front door the way the computer's stores deliver orders,
 
 The box falls in at `HouseManager.packageDropOffPoint` and is sized to its content like the game's own boxes.
 
+### WorldRole
+
+`WorldRole.RunsWorld` is false while this game shows a house another game runs (a co-op client). Anything that happens on its own, like timed calls, emails or random events, should check it, or it happens once per player. `WorldRole.ShowOtherWorld(owner)` turns it off until the handle is disposed or the owner unloads; `WorldRole.Changed` fires when it flips.
+
 ### Spawning
 
 Items come from `PickupBank.pickupsDict`, NPCs from `BrainBank.brainsDict`. Both are filled only inside the house.
@@ -298,7 +302,7 @@ RuleActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount",
 For content that happens by itself (a call ringing in, an email arriving):
 
 - `TriggerRules`: `Trigger` (`random`, `order`, `arrive`, `wake`, `manual`), `Weight`, `When`, `Once`, `CooldownMinutes`, `DelaySeconds`, `Store`. `TriggerRules.Parse(json, allowedTriggers, defaults)` reads `true` or `{ "trigger": ..., "weight": ..., ... }` from a file; `IsOn(json)` says whether the field turns it on; `Describe("Rings")` makes a line for menus.
-- `Triggers.CanFire(subject, rules, trigger, store, secondsSinceLast)` and `Triggers.Pick(items, rules, canFire, buffer)`: what may fire now, and a weighted pick among them.
+- `Triggers.CanFire(subject, rules, trigger, store, secondsSinceLast)` and `Triggers.Pick(items, rules, canFire, buffer)`: what may fire now, and a weighted pick among them. Only `manual` triggers fire in a game that doesn't run the house (`WorldRole`, below).
 - `ScheduleList`: ids waiting for some play time, kept in your save data. `Add(id, seconds)`, `Remove`, `Contains`, and `TakeDue(handle, retrySeconds)` once in a while.
 
 ### Flags

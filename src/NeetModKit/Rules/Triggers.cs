@@ -16,6 +16,9 @@ public static class Triggers
     {
         if (rules == null || rules.Trigger != trigger)
             return false;
+        // Things that fire on their own happen where the house runs, not once per co-op player.
+        if (trigger != TriggerRules.Manual && !Game.WorldRole.RunsWorld)
+            return false;
         if (store != null && rules.Store != null && !string.Equals(rules.Store, store, StringComparison.OrdinalIgnoreCase))
             return false;
         if (rules.Once && subject.Times > 0)
