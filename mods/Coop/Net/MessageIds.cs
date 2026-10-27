@@ -23,4 +23,16 @@ public static class MessageIds
     public const ushort Body = 42;
 
     // World: 100-199, see World/.
+    public const ushort WorldSpawn = 100;
+    public const ushort WorldDestroy = 101;
+    public const ushort WorldBodies = 102;
+    public const ushort WorldSettled = 103;
+    public const ushort WorldClaim = 104;
+    public const ushort WorldOwner = 105;
+    public const ushort WorldNpcPoses = 106;
+    public const ushort WorldNpcEvent = 107;
+    public const ushort WorldState = 108;
+    public const ushort MoneyDelta = 109;
+    public const ushort MoneyTotal = 110;
+    public const ushort WorldManifest = 111;
 }

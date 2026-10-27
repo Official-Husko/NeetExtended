@@ -159,6 +159,19 @@ Every game is a little different. Each save gets a seed that decides:
 
 Each part can be switched off. **Seed for new games** in Settings lets you play a seed someone shared; the **Randomizer** tab shows yours.
 
+## Co-op
+
+Play the house together, over the internet or your own network. The host's house is the shared world: its items, money, doors, lights and the people in it. Everyone keeps their own body: health, needs, status effects and clothes.
+
+- **Host**: load a game, open the mod menu (F1), **Co-op** tab, **OPEN MY HOUSE**. Friends connect to your address on UDP port 8889 (setting **Port**). The port has to be open in your router and firewall; a VPN like Tailscale or ZeroTier works too.
+- **Join**: **Co-op** tab, type the host's address, **JOIN**. You don't need a save, and your own saves aren't touched while you're in someone else's house.
+- **Shared**: things you pick up, throw, eat, break or order; money; doors and locks, lights, fuses, the TV, taps, the stove, flashlights and lighters; visitors and the other characters, who live on the host's game.
+- **Your own body comes back**: the host's save keeps your needs, clothes and where you stood, so next time you join you pick up where you left off.
+- **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and only the host talks to visitors. Going back to the main menu leaves; when the host leaves, the game ends for everyone.
+- Everyone needs the same mods. Mods that only change your own game (Cheat Menu, Performance Fixes, Open Saves and the like) can differ.
+- Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4).
+- Not everything is shared yet (fire, paint made after you join, and more): see [Known limitations](docs/modding/coop.md#known-limitations).
+
 ## Card Expansion
 
 More for the computer's anime card game.
