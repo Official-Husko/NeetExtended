@@ -1,4 +1,9 @@
 using NeetLoader;
+using NeetLoader.Config;
+using NeetModKit.Features;
+using NeetModKit.Settings;
+using UnityEngine.SceneManagement;
+using WeatherExpansion.Fog;
 
 namespace WeatherExpansion;
 
@@ -10,8 +15,27 @@ namespace WeatherExpansion;
 public sealed class WeatherExpansionMod : NeetMod
 {
     internal static WeatherExpansionMod Instance { get; private set; }
+    internal static ConfigFile<WeatherExpansionConfig> Config { get; private set; }
 
-    public override void OnLoad() => Instance = this;
+    public override void OnLoad()
+    {
+        Instance = this;
+        Config = LoadConfig<WeatherExpansionConfig>();
+        Config.Save();
+        ModSettings.Register(this, Config, "Weather Expansion");
 
-    public override void OnUnload() => Instance = null;
+        ModFeatures.Register(this, new StormFogFeature());
+        ModFeatures.Register(this, new LightningGlowFeature());
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    public override void OnUpdate() => FogLook.Tick(Config.Value);
+
+    public override void OnUnload()
+    {
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        Instance = null;
+    }
+
+    private static void OnSceneUnloaded(Scene scene) => FogLook.SceneGone();
 }

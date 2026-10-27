@@ -191,6 +191,13 @@ Tells you when a newer version is out. Always on; switch off **Check for updates
 - **Check for updates** in Mod Settings (on by default). Off: the mod never goes online.
 - **Tell me in the game** in Mod Settings (on by default). Off: only the note in the corner.
 
+## Weather Expansion (experimental)
+
+Changes how the storm outside looks. Each look is its own switch on the Mods page, and the amounts are in Mod Settings under "Weather Expansion". It's all drawn by your own game, so in co-op everybody sees their own.
+
+- **Stormy fog**: the night's fog is a dark blue-grey instead of pure black, so the house and the trees show as shapes in the haze, and it slowly thickens and thins. **Fog thickness** and **Fog brightness** in Mod Settings.
+- **Lightning glow**: a lightning flash lights up the fog and the sky as well as the things near you, so the sky shows the landscape behind the yard for a moment. **Lightning glow** in Mod Settings.
+
 ## Randomizer
 
 Off until you switch it on: on the Mods tab, pick Randomizer and tick **Load when the game starts** (or press LOAD NOW to try it right away).
