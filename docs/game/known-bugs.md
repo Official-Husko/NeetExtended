@@ -284,16 +284,6 @@ The same field is compared in three more places:
 
 **Reproduce:** wear shoes, pants and shirt, save, load: read `Player_Abilities.clothings[i].transform.position.y` and `Rigidbody.isKinematic` a few seconds later. Without `WornClothes` y keeps dropping; with it the pieces stay at -500.
 
-## Not bugs
-
-- `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.
-- `Door.Load` ignores the saved `unbreakable` flag (`Door.cs:170`); the scene's value is the one that's wanted anyway.
-- `EncounterSpawner` checks visitor conditions (`SpawnIfVisitedKnots`) against its own copy of the story, which never moves (`EncounterSpawner.cs:156,219`). No visitor in the demo has conditions.
-- Earned achievement medals only spawn when a goal completes, but they're items, so a save keeps them.
-- `KnotList must be instantiated using the ScriptableObject.CreateInstance method` in the log after every load: the save loader rebuilds the spam list with `new`. Unity warns, but the list works.
-
-- A locked card's medal is reset to 0 on load: the `Locked` setter (`AnimeCard.cs:147-166`) does that on purpose; unlocked cards keep their medal.
-
 ## Dying with a mask on gets stuck half way
 
 **What happens:** a player or character who dies while wearing a mask doesn't finish dying: no death animation, no reaping, no respawn, and an `InvalidOperationException` ("Collection was modified") in the log. They can't die again afterwards.
@@ -304,3 +294,12 @@ The same field is compared in three more places:
 
 **Reproduce:** wear a mask, then die (`player.set` health 0 with god mode off): with `MaskDeath` off the death stops with the error above; with it on the body dies and respawns as usual. Found in co-op testing, where a downed player bled out wearing one.
 
+## Not bugs
+
+- `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.
+- `Door.Load` ignores the saved `unbreakable` flag (`Door.cs:170`); the scene's value is the one that's wanted anyway.
+- `EncounterSpawner` checks visitor conditions (`SpawnIfVisitedKnots`) against its own copy of the story, which never moves (`EncounterSpawner.cs:156,219`). No visitor in the demo has conditions.
+- Earned achievement medals only spawn when a goal completes, but they're items, so a save keeps them.
+- `KnotList must be instantiated using the ScriptableObject.CreateInstance method` in the log after every load: the save loader rebuilds the spam list with `new`. Unity warns, but the list works.
+
+- A locked card's medal is reset to 0 on load: the `Locked` setter (`AnimeCard.cs:147-166`) does that on purpose; unlocked cards keep their medal.
