@@ -26,6 +26,10 @@ internal sealed class Conversation
     public bool More;
     public readonly List<string> Choices = new List<string>();
     public bool OfferingTime;
+    // The line is said in the talker's own voice (a choice they picked), for the players watching.
+    public bool PlayerVoice;
+    // The watchers were told the choices came up.
+    public bool ChoicesSent;
     public bool BucketOff;
 
     // How it ended, if it did.

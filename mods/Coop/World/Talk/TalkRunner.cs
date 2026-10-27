@@ -144,6 +144,17 @@ internal static class TalkRunner
         // A copy: DeniedOffering moves the story on while the tags are read.
         Tags.Clear();
         Tags.AddRange(story.currentTags);
+        bool audioTag = false, playerTag = false;
+        foreach (string tag in Tags)
+        {
+            if (Starts(tag, "SpeakerAudio:"))
+            {
+                audioTag = true;
+                playerTag = tag.Substring(13) == "Player";
+            }
+        }
+        // AdvanceStory's choice of voice: a picked choice is the player's unless a tag says the speaker's.
+        c.PlayerVoice = isChoice && (!audioTag || playerTag);
         foreach (string tag in Tags)
         {
             if (c.Closed)
@@ -175,6 +186,7 @@ internal static class TalkRunner
     private static void Line(Conversation c, string text, bool isChoice)
     {
         c.HasLine = true;
+        c.PlayerVoice = false;
         c.Text = text ?? "";
         c.IsChoice = isChoice;
     }

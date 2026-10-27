@@ -24,6 +24,7 @@ internal static class ClientTalk
     private static CharacterStories _speaker;
     private static bool _more;
     private static bool _closingHere;
+    private static bool _choicesSent;
     private static CharacterStories _asked;
     private static float _askedAt;
     private static BrainPlayer _brain;
@@ -121,7 +122,15 @@ internal static class ClientTalk
             Outbox.ToHost(w, Channel.Events);
         }
         else if (Choices.Count > 0)
+        {
             TalkView.ShowChoices(Choices);
+            if (!_choicesSent)
+            {
+                // The others in earshot see the choices come up at the same moment.
+                _choicesSent = true;
+                Outbox.ToHost(Begin(TalkProtocol.Showed), Channel.Events);
+            }
+        }
     }
 
     public static void OnView(in Sender from, NetDataReader r)
@@ -166,6 +175,7 @@ internal static class ClientTalk
         _id = id;
         _speaker = speaker;
         _more = (flags & TalkProtocol.More) != 0;
+        _choicesSent = false;
         _asked = null;
         var d = Dialogue._;
         d.currSpeaker = speaker;

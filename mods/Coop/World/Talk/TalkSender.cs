@@ -38,6 +38,7 @@ internal static class TalkSender
         for (int i = 0; i < count; i++)
             w.Put(c.Choices[i]);
         Outbox.ToSlot(c.Slot, w, Channel.Events);
+        Watch.WatchSender.Line(c);
         if (c.Closed)
             HostTalks.End(c, hangUp: false, tell: false);
     }

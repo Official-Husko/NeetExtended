@@ -77,6 +77,11 @@ internal static class HostTalks
         int id = r.GetInt();
         if (!BySlot.TryGetValue(from.Slot, out var c) || c.Id != id)
             return;
+        if (kind == TalkProtocol.Showed)
+        {
+            Watch.WatchSender.Choices(c);
+            return;
+        }
         if (kind == TalkProtocol.Leave)
         {
             End(c, hangUp: true, tell: false);
@@ -85,7 +90,10 @@ internal static class HostTalks
         int index = kind == TalkProtocol.Choose ? r.GetByte() : -1;
         PlayerMasks.Read(r, from.Slot, out c.Held, out c.Body);
         if (kind == TalkProtocol.Choose)
+        {
+            Watch.WatchSender.Pick(c, index);
             TalkRunner.Pick(c, index);
+        }
         else if (c.More)
             TalkRunner.Advance(c);
         else if (c.IsPhone && c.Choices.Count == 0)
@@ -289,5 +297,6 @@ internal static class HostTalks
         if (tell && !c.Closed)
             TalkSender.Close(c);
         c.Closed = true;
+        Watch.WatchSender.Close(c);
     }
 }

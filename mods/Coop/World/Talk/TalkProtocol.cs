@@ -7,7 +7,8 @@ namespace Coop.World.Talk;
 /// - Start: speaker, how (talk, harm, disgust), the player's lists (<see cref="PlayerMasks"/>);
 /// - Advance: conversation id, lists;
 /// - Choose: conversation id, choice index, lists;
-/// - Leave: conversation id.
+/// - Leave: conversation id;
+/// - Showed: conversation id. The choices came up in the talker's box (the others' boxes follow, see <see cref="Watch.WatchProtocol"/>).
 ///
 /// WorldTalkView (host to clients): kind, then
 /// - Line (to the talker): id, speaker, flags, text, choices;
@@ -23,6 +24,7 @@ internal static class TalkProtocol
     public const byte Advance = 1;
     public const byte Choose = 2;
     public const byte Leave = 3;
+    public const byte Showed = 4;
 
     public const byte Line = 0;
     public const byte Close = 1;

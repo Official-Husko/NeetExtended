@@ -110,6 +110,31 @@ public static class TalkTestApi
         return text.ToString();
     }
 
+    /// <summary>Voice blips played here so far, and the last one's source.</summary>
+    public static string Blips() => TalkView.Blips + ", last: " + TalkView.LastVoice;
+
+    /// <summary>Host: sends one player the state of every conversation, as a joiner gets it.</summary>
+    public static string ResendWatched(int slot)
+    {
+        Watch.WatchSender.SendAllTo((byte)slot);
+        return Watched();
+    }
+
+    /// <summary>The conversations this game knows others are in (<see cref="Watch.Watching"/>): speaker, talker, line, choices.</summary>
+    public static string Watched()
+    {
+        var text = new StringBuilder();
+        foreach (var t in Watch.Watching.All)
+        {
+            text.Append(t.Speaker != null ? t.Speaker.characterName : "?").Append(" with ").Append(t.Talker).Append(t.Lingering ? " (lingering)" : "")
+                .Append(": ").Append(t.Text);
+            if (t.ChoicesShown)
+                text.Append(" | choices ").Append(string.Join(" / ", t.Choices)).Append(t.Picked >= 0 ? " picked " + t.Picked : "");
+            text.Append('\n');
+        }
+        return text.Length == 0 ? "None." : text.ToString();
+    }
+
     /// <summary>Host: a shared item lands in the candy bucket (what the bucket's trigger does).</summary>
     public static string Offer(int itemId)
     {

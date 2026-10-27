@@ -135,7 +135,7 @@ internal static class WorldSync
         CopVanSync.SendAgain();
         NpcPoseSender.SendAllAgain();
         NpcClothes.SendAllAgain();
-        TalkSync.PlayerReady();
+        TalkSync.PlayerReady(player.Slot);
     }
 
     private static void End()

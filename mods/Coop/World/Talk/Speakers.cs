@@ -17,6 +17,9 @@ internal struct SpeakerRef
 
     public bool IsValid => Kind != None;
 
+    /// <summary>One number per speaker, for dictionaries.</summary>
+    public long Key => ((long)Kind << 56) | (Kind == Shared ? Ref.Key : Index);
+
     public void Write(NetDataWriter w)
     {
         w.Put(Kind);
@@ -108,6 +111,18 @@ internal static class Speakers
     {
         var puppet = Players.RemotePlayers.Find(slot);
         return puppet != null ? puppet.gameObject : null;
+    }
+
+    /// <summary>Where a player's body is in this game: this game's own player, or a remote one's body. Null between bodies.</summary>
+    public static Transform PlayerAt(byte slot)
+    {
+        if (slot == WorldSide.LocalSlot)
+        {
+            var own = WorldSide.LocalPlayer;
+            return own != null ? own.transform : null;
+        }
+        var puppet = Players.RemotePlayers.Find(slot);
+        return puppet != null ? puppet.transform : null;
     }
 
     public static string NameOf(byte slot)

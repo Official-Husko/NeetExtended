@@ -9,6 +9,7 @@ internal static class TalkSync
     {
         Messages.On(MessageIds.WorldTalk, HostTalks.OnRequest);
         Messages.On(MessageIds.WorldTalkView, ClientTalk.OnView);
+        Watch.Watching.Init();
         PhoneRequests.Init();
         PhoneScreens.Init();
         SoulTrade.Init();
@@ -38,11 +39,16 @@ internal static class TalkSync
         if (!host)
             ClientTalk.Tick();
         TalkView.Tick();
+        Watch.Watching.Tick();
     }
 
     public static void HostLateUpdate() => PhoneScreens.HostTick();
 
-    public static void PlayerReady() => PhoneScreens.SendAgain();
+    public static void PlayerReady(byte slot)
+    {
+        PhoneScreens.SendAgain();
+        Watch.WatchSender.SendAllTo(slot);
+    }
 
     public static void PlayerLeft(byte slot)
     {
@@ -58,6 +64,7 @@ internal static class TalkSync
         PhoneScreens.Clear();
         Speakers.Clear();
         TalkView.Clear();
+        Watch.Watching.Clear();
         Players.PlayerFacts.Clear();
     }
 }
