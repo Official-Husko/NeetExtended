@@ -316,6 +316,16 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 
 **Reproduce:** hold something, die (`player.set` health 0 with god mode off; in co-op you go down first and die 15 s later), or skeletonize (`obj.call` `SkeletonizeAccessor` on the player). With `DeathDrops` off the old clothes stay at y -500; with it on they lie where you died, and the new body has the default outfit.
 
+## Camera photos replace each other and come back blank
+
+**What happens:** after about 20 seconds of play, every photo from the camera is saved to the same file, `StreamingAssets/photograph_-2147483648.jpg`, so a new photo also changes the picture on every older one. After loading a save, camera photos are blank.
+
+**Cause:** `PhotoCamera.PrintPicture` names the file `"photograph_" + Mathf.RoundToInt(100000000f * Time.realtimeSinceStartup)` (`PhotoCamera.cs:31`); past about 21.5 seconds that's more than an int holds and comes out as -2147483648. The picture keeps the file's full path in `Picture.storedImagePath`, and the save stores it. On load, `Picture.loadImage("")` only looks for `StreamingAssets/<storedImagePath>.jpg` and then for a texture of that name in Resources (`Picture.cs:44-53`), which a full path never is.
+
+**Fix:** a transpiler on `PrintPicture`'s state machine takes the number from a counter that starts after the highest `photograph_N.jpg` already there. A prefix on `Picture.loadImage` loads a stored full path from disk when the file exists, and sets `storedImagePath` as soon as a picture starts loading instead of when the file has been read.
+
+**Reproduce:** hold a camera (`PhotoCamera`) and use it twice: with `CameraPhotos` off both photos go to `photograph_-2147483648.jpg` (once the game has run 21 s), with it on to `photograph_1.jpg` and `photograph_2.jpg`. Spawn a `Picture`, set its `storedImagePath` to a photo's full path and call `Start`: blank with the fix off, the photo with it on.
+
 ## Not bugs
 
 - `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.

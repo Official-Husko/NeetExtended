@@ -71,6 +71,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Dying with a mask on works**: anyone who died wearing a mask got stuck half dead and couldn't die again.
 - **Skeletons don't ruin the black pants**: a skeleton that had to crap threw an error and left every pair of black pants you bought or found afterwards dirty and sticky, until you restarted the game.
 - **Your stuff stays where you died**: the clothes you wore when you died were gone for good (the game hid them under the house, in every save). Now everything you had, clothes, masks and whatever was in your hands, falls where you died, so you can go back for it.
+- **Camera photos are kept**: every photo after the first 20 seconds of play used to overwrite the one before (changing the older pictures too), and photos came back blank after loading. Each photo now gets its own file and loads again.
 
 ## Performance Fixes (experimental)
 
