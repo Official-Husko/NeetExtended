@@ -1,6 +1,260 @@
 {
   "releases": [
     {
+      "version": "0.3.0",
+      "date": "2026-10-27",
+      "released": true,
+      "added": [
+        {
+          "text": "When you join a game again, you get your own body back, with your needs, clothes and the spot you left.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Play the house together over the internet or your own network. Everyone shares the host's house, items and money, and keeps their own health, needs and clothes. Host or join on the Co-op tab of the mod menu.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Stocks, tax bills, the card game, the cop van and fires are shared, and the thief takes every player into account.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Everyone can pick up the rats and the cat, and the radio and cardboard boxes are shared.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Other players can be hurt: hits, weapons and explosions on another player reach their game.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Everyone gets the host's emails.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Dead characters lie the same for everyone, and anyone can drag the bodies around.",
+          "area": "Co-op"
+        },
+        {
+          "text": "When your health runs out you go down instead of dying, and anyone can get you back up within 15 seconds by feeding you.",
+          "area": "Co-op"
+        },
+        {
+          "text": "An experimental setting gives other players the physics-driven hands you see on yourself.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Everyone can buy things on the computer; the host's game takes the money and sends the box.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Everyone can talk to the characters and use the phones. The host's game runs the conversation, so whatever it gives or costs happens once.",
+          "area": "Co-op"
+        },
+        {
+          "text": "The mod menu and the cheat menu don't pause the game, so the house keeps going for everyone.",
+          "area": "Co-op"
+        },
+        {
+          "text": "The cops, the hostile visitor, house spiders and the skeleton parasite go after the nearest player who's still standing, and leave downed players alone.",
+          "area": "Co-op"
+        },
+        {
+          "text": "The hitman line. Call 448-626, pay $69 and pick a player, yourself included, and a van full of agents comes for them.",
+          "area": "Co-op"
+        },
+        {
+          "text": "The host decides the mods, their switches and the settings that change the house; everyone else follows live and gets their own setup back after leaving.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Carry a downed player over your shoulder; look at them with an empty hand and press that hand's button, press it again to put them down.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Blood, poop, piss, water, scorch marks, footprints and cleaning show up for everyone, whoever made the mess.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Custom photos and tapes, camera photos, the computer's wallpaper and your face are shared with the other players.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Everyone gets the host's TV stations and mixtapes.",
+          "area": "Co-op"
+        },
+        {
+          "text": "When you join, the files already in the game come first, so the house loads with everyone's pictures, tapes, faces and videos in it.",
+          "area": "Co-op"
+        },
+        {
+          "text": "The players' own TV stations and mixtapes are in the game too, not only the host's.",
+          "area": "Co-op"
+        },
+        {
+          "text": "A note in the corner shows files being sent and received, with a progress bar.",
+          "area": "Co-op"
+        },
+        {
+          "text": "TV videos wait until everyone has them, start for everyone at once and stay in step with the host's TV.",
+          "area": "Co-op"
+        },
+        {
+          "text": "A note in the corner when someone is joining, joins or leaves.",
+          "area": "Co-op"
+        },
+        {
+          "text": "The host gets a Players tab to help players (heal, bring them over, go to them, give items, kick) or mess with them (the hitman, slap, yeet, freeze, starve, a rat next to them and more).",
+          "area": "Co-op"
+        },
+        {
+          "text": "In someone else's game the pause menu's Get out button says Disconnect and takes you out.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Radios play in step for everyone, both tapes and the mixtape radio station.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Windows, glass and breakable walls break for everyone, and stay broken for players who join later.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Other players' arms reach for what they hold, their heads look up and down with them, and you see them kick.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Every death puts you down first, gibbing and skeletons included, and a healing pill, a sip of water or blood, or holding a hand on a downed player's chest gets them up too.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Candles, lighters, burning things, the stove's gas and exploding fuses and lighters are the same for everyone, and a room fire grows on everyone's screen as it does for the host.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Characters look and sound the same for everyone: crouching, kicking, undressing and being stripped, masks, being skeletonized or blown up (blood included), groans, hurt sounds and footsteps.",
+          "area": "Co-op"
+        },
+        {
+          "text": "The state of things is the same for everyone: how cooked, spoiled, soaked, dirty or burnt they are, what a glass holds, the water in sinks and the bath, egg cartons, toilet paper, vacuums, magazines, dust balls, the piggy bank and the cat's bowl.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Other players wear exactly what you wear: custom shirts with your own picture, dirty pants, hats, masks, glasses and cigarettes.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Everyone near a conversation or phone call (in the same room or in sight) sees and hears it too, line by line, with the same voice, at the same moment as the one talking.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Host or join with a Steam ID, no port forwarding needed. Needs Valve's steam_api.dll, which the installer offers to fetch (or run \"neet steam\").",
+          "area": "Co-op over Steam"
+        },
+        {
+          "text": "In a co-op game everyone can open and answer its emails; the host's game runs them, so everyone sees the same conversation and what an email pays or sends comes once.",
+          "area": "Email Expansion"
+        },
+        {
+          "text": "Tells you when a new version is out, with a note next to the version in the corner and, if you let it, an email and a couple of rude phone calls.",
+          "area": "Update Checker"
+        },
+        {
+          "text": "A station whose video isn't playing yet shows an old \"Please stand by\" card instead of a black screen.",
+          "area": "Custom TV Stations"
+        },
+        {
+          "text": "The release zip has use-32bit and use-64bit scripts that switch the game between its original 32-bit version and the 64-bit one, in case 64-bit gives you trouble."
+        }
+      ],
+      "changed": [
+        {
+          "text": "Calls, emails and the TV station and mixtape lists are now .jsonc files (JSON with comments). Your own .json files still work."
+        },
+        {
+          "text": "The mod menu has fewer tabs: every mod's page and settings are now on one Mod Settings tab, picked from a list like the Mods tab.",
+          "area": "Framework"
+        },
+        {
+          "text": "The Randomizer is off until you switch it on: on the Mods tab, pick it and tick \"Load when the game starts\".",
+          "area": "Mod loader"
+        },
+        {
+          "text": "It doesn't open while you're in someone else's co-op game, and while you host, the game speed stays normal.",
+          "area": "Cheat Menu"
+        },
+        {
+          "text": "The installer now sets up the 64-bit version of the game. If that can't be downloaded or set up, it finishes with the original 32-bit version, and installing again keeps whichever version you picked.",
+          "area": "Command-line tool"
+        }
+      ],
+      "fixed": [
+        {
+          "text": "With god mode on, other characters can die again.",
+          "area": "Framework"
+        },
+        {
+          "text": "Picking up the thief's beanie no longer throws an error and leaves your hand stuck.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Characters no longer pick up things that belong to something switched off, like the thief's beanie before he shows up.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Autosave works again after loading a save.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Loose change, dust, sink water, toilet flushes and blood and paint sprays no longer stop after loading a save.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Clothes you were wearing when you saved no longer fall out of the world after loading.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Dying with a mask on no longer leaves you stuck half dead.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "A skeleton that has to crap no longer throws an error and leaves every new pair of black pants dirty and sticky.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "The clothes you wear when you die no longer vanish: they fall where you died, together with your masks and whatever you held, so you can go get them back.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "The clothes of characters who died or left no longer fall forever below the house after loading a save.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Photos from the camera no longer overwrite each other after the first 20 seconds, and they show again after loading a save.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Blood, scorch marks and other paint loaded from a save no longer go missing on some surfaces.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "A TV that was on when you saved now shows its channel after loading, not just its sound over a dark screen.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Shirts from the custom shop now show your picture as soon as you put them on, not only after saving and loading.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Saving a house with a lot of paint no longer crashes the game.",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "Two copies of the game running from the same folder no longer reset each other's mod settings.",
+          "area": "Mod loader"
+        }
+      ],
+      "removed": []
+    },
+    {
       "version": "0.2.0",
       "date": "2026-10-27",
       "released": true,
@@ -22,6 +276,10 @@
           "area": "Email Expansion"
         },
         {
+          "text": "The game's three unsent emails now arrive: mom's love, your clone's hate mail after you trade soul for a clone, and the tax reminder with your first tax bill.",
+          "area": "Email Expansion"
+        },
+        {
           "text": "Your own music on cassettes for the radio. Buy them in the store or find them in the house.",
           "area": "Mixtapes"
         },
@@ -32,10 +290,6 @@
         {
           "text": "A seed per save that shuffles who knocks at night, store prices, deliveries, the house on a new game and how fast you get hungry.",
           "area": "Randomizer"
-        },
-        {
-          "text": "The game's three unsent emails now arrive: mom's love, your clone's hate mail after you trade soul for a clone, and the tax reminder with your first tax bill.",
-          "area": "Email Expansion"
         }
       ],
       "changed": [
@@ -138,6 +392,14 @@
           "area": "Mod loader"
         },
         {
+          "text": "The framework and mods that other mods rely on can be reloaded too; a rebuild updates everything in place without restarting the game.",
+          "area": "Mod loader"
+        },
+        {
+          "text": "Problems during play are collected in NeetLoader/logs/errors.log, with versions and mod list, ready to attach to a bug report.",
+          "area": "Mod loader"
+        },
+        {
           "text": "One command installs the mod loader into the game, and one removes it again and restores the original files.",
           "area": "Command-line tool"
         },
@@ -162,7 +424,35 @@
           "area": "Command-line tool"
         },
         {
+          "text": "Command-line tools to list saves and convert them between the compressed format and readable JSON.",
+          "area": "Command-line tool"
+        },
+        {
+          "text": "The installer can switch the game to 64-bit (downloaded from Unity) and turn on incremental garbage collection, which removes the short freezes when memory is cleaned up.",
+          "area": "Command-line tool"
+        },
+        {
           "text": "God mode: no dying and needs stay where they are.",
+          "area": "Framework"
+        },
+        {
+          "text": "Mods keep their in-game data when they are reloaded.",
+          "area": "Framework"
+        },
+        {
+          "text": "Mods can be split into features that switch on and off individually while the game runs.",
+          "area": "Framework"
+        },
+        {
+          "text": "Mods can add their own lines, choices and conversations to the game's dialogue.",
+          "area": "Framework"
+        },
+        {
+          "text": "The bottom left corner shows the mod pack's name, version and build. You can hide it in Settings.",
+          "area": "Framework"
+        },
+        {
+          "text": "The corner says \"game build not tested\" when your game is a different build than the one the mods were tested with, for example after a game update.",
           "area": "Framework"
         },
         {
@@ -202,8 +492,16 @@
           "area": "Mod menu"
         },
         {
-          "text": "The framework and mods that other mods rely on can be reloaded too; a rebuild updates everything in place without restarting the game.",
-          "area": "Mod loader"
+          "text": "The Mods page lists each mod's features with on/off switches.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "PC Apps page in the mod menu to see and change every computer app's address.",
+          "area": "Mod menu"
+        },
+        {
+          "text": "Errors tab in the mod menu: what went wrong this session, colour-coded, with details and a button to copy the report.",
+          "area": "Mod menu"
         },
         {
           "text": "Mods can add new items that spawn, sell in the online stores and save like the game's own.",
@@ -212,10 +510,6 @@
         {
           "text": "Mods can add new cards to the computer's anime card game.",
           "area": "Card game"
-        },
-        {
-          "text": "Mods keep their in-game data when they are reloaded.",
-          "area": "Framework"
         },
         {
           "text": "Twelve new Halloween cards in the anime card game, with spooky recoloured art.",
@@ -238,6 +532,10 @@
           "area": "Interface"
         },
         {
+          "text": "Mods can build menus that use the game's own fonts, buttons and controls.",
+          "area": "Interface"
+        },
+        {
           "text": "Saves are written in a compressed, open format (.nsav) that's about 16 times smaller; older saves still load.",
           "area": "Saves"
         },
@@ -250,32 +548,12 @@
           "area": "Saves"
         },
         {
-          "text": "Command-line tools to list saves and convert them between the compressed format and readable JSON.",
-          "area": "Command-line tool"
-        },
-        {
-          "text": "Mods can build menus that use the game's own fonts, buttons and controls.",
-          "area": "Interface"
-        },
-        {
-          "text": "Mods can be split into features that switch on and off individually while the game runs.",
-          "area": "Framework"
-        },
-        {
-          "text": "The Mods page lists each mod's features with on/off switches.",
-          "area": "Mod menu"
-        },
-        {
           "text": "Every website on the in-game computer can be given a different address.",
           "area": "Computer apps"
         },
         {
           "text": "Mods can add their own apps and games to the in-game computer, with start menu entries.",
           "area": "Computer apps"
-        },
-        {
-          "text": "PC Apps page in the mod menu to see and change every computer app's address.",
-          "area": "Mod menu"
         },
         {
           "text": "A whack-a-pumpkin game on the in-game computer that pays a little cash.",
@@ -288,10 +566,6 @@
         {
           "text": "Open House mod: walk into the pantry and through the black basement door and dad's yard door, with optional switches for the attic, the roof and the demo's store limits.",
           "area": "Open House"
-        },
-        {
-          "text": "Mods can add their own lines, choices and conversations to the game's dialogue.",
-          "area": "Framework"
         },
         {
           "text": "Phone Expansion mod: new numbers to call and new calls that ring in, with choices that can deliver food, cut the lights, open doors and more.",
@@ -330,14 +604,6 @@
           "area": "Unofficial NEET Patches"
         },
         {
-          "text": "Problems during play are collected in NeetLoader/logs/errors.log, with versions and mod list, ready to attach to a bug report.",
-          "area": "Mod loader"
-        },
-        {
-          "text": "Errors tab in the mod menu: what went wrong this session, colour-coded, with details and a button to copy the report.",
-          "area": "Mod menu"
-        },
-        {
           "text": "Custom TV Stations mod: your own MP4 or WebM videos as stations on the living room TV, added after the game's channels or in place of them.",
           "area": "Custom TV Stations"
         },
@@ -358,24 +624,16 @@
           "area": "Performance Fixes"
         },
         {
-          "text": "The installer can switch the game to 64-bit (downloaded from Unity) and turn on incremental garbage collection, which removes the short freezes when memory is cleaned up.",
-          "area": "Command-line tool"
-        },
-        {
           "text": "Install scripts for Linux (install.sh) and Windows (install.bat) that set up the loader and all mods in one go, with the option to switch to 64-bit."
-        },
-        {
-          "text": "The bottom left corner shows the mod pack's name, version and build. You can hide it in Settings.",
-          "area": "Framework"
-        },
-        {
-          "text": "The corner says \"game build not tested\" when your game is a different build than the one the mods were tested with, for example after a game update.",
-          "area": "Framework"
         }
       ],
       "changed": [
         {
           "text": "Converting 10K crystals pays $5 instead of $3, and the amount can be changed in the settings.",
+          "area": "Card Expansion"
+        },
+        {
+          "text": "Card Expansion's parts (spooky cards, summons, auto-clicker, exchange rate, promotion fix) can be switched on and off one by one.",
           "area": "Card Expansion"
         },
         {
@@ -387,8 +645,8 @@
           "area": "Mod menu"
         },
         {
-          "text": "Card Expansion's parts (spooky cards, summons, auto-clicker, exchange rate, promotion fix) can be switched on and off one by one.",
-          "area": "Card Expansion"
+          "text": "Cheats moved out of the mod menu into the Cheat Menu mod, opened with Insert.",
+          "area": "Mod menu"
         },
         {
           "text": "Compressed saves and save cleanup are now the Open Saves mod, so they can be installed or removed on their own.",
@@ -397,10 +655,6 @@
         {
           "text": "Blocking feedback reports is now the No Feedback mod.",
           "area": "No Feedback"
-        },
-        {
-          "text": "Cheats moved out of the mod menu into the Cheat Menu mod, opened with Insert.",
-          "area": "Mod menu"
         },
         {
           "text": "The framework and No Feedback are always on and can no longer be switched off or unloaded.",
@@ -445,6 +699,10 @@
           "area": "Mod loader"
         },
         {
+          "text": "Closing the game no longer ends in a crash (and a crash report) on the 32-bit game.",
+          "area": "Mod loader"
+        },
+        {
           "text": "MCP tools that talk to the game no longer fail with an internal error.",
           "area": "Command-line tool"
         },
@@ -454,6 +712,10 @@
         },
         {
           "text": "A save with more anime cards than the game has loads instead of throwing an error.",
+          "area": "Framework"
+        },
+        {
+          "text": "The pause menu's MODS buttons no longer show through the Rebind Controls screen.",
           "area": "Framework"
         },
         {
@@ -497,20 +759,12 @@
           "area": "Unofficial NEET Patches"
         },
         {
-          "text": "The game no longer uses more and more video memory each time the house loads (after dying or sleeping), with Performance Fixes.",
-          "area": "Performance Fixes"
-        },
-        {
           "text": "The frame rate and vsync you pick in the settings now stick instead of going back to 120 fps without vsync.",
           "area": "Unofficial NEET Patches"
         },
         {
-          "text": "Closing the game no longer ends in a crash (and a crash report) on the 32-bit game.",
-          "area": "Mod loader"
-        },
-        {
-          "text": "The pause menu's MODS buttons no longer show through the Rebind Controls screen.",
-          "area": "Framework"
+          "text": "The game no longer uses more and more video memory each time the house loads (after dying or sleeping), with Performance Fixes.",
+          "area": "Performance Fixes"
         }
       ],
       "removed": [
