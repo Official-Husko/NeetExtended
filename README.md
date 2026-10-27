@@ -23,9 +23,10 @@ Mods, a mod loader and modding tools for [NEET Demo](https://store.steampowered.
 
 | Mod | What it does |
 | --- | --- |
-| **Unofficial NEET Patches** | Fixes bugs in the game: saves that stop working, put-out fires that come back after loading, story events stuck in a loop, status effects that never wear off, frame rate and vsync settings that reset themselves, and more. |
+| **Unofficial NEET Patches** | Fixes bugs in the game: saves that stop working, put-out fires that come back after loading, story events stuck in a loop, status effects that never wear off, frame rate and vsync settings that reset themselves, an empty inbox and repeating spam after loading, and more. |
 | **Performance Fixes** | Saving without the freeze, no more video memory piling up on every load, the front door's peephole camera only running near the door, a shadow setting, less log spam. Experimental. |
-| **Phone Expansion** | New numbers to call and new calls that ring in: pizza delivery, Spookbusters, a deal with Satan, and a few you'd rather not answer. |
+| **Phone Expansion** | Over 60 new calls and 18 numbers to dial: pizza delivery, Spookbusters, a deal with Satan, hotlines, telemarketers, kids prank calling you, and a few you'd rather not answer. |
+| **Email Expansion** | About 70 new emails in the computer's inbox that you can answer: scams, mom, cults, bills, creeps. Replies can pay you, cost you, or send something to your door. |
 | **Custom TV Stations** | Your own videos (MP4 or WebM) on the living room TV. |
 | **Open House** | Opens the pantry, the basement backroom, dad's yard, and if you want the attic and the roof. |
 | **Card Expansion** | Twelve Halloween cards, summons, an auto-clicker and a better crystal exchange for the computer's card game. |
