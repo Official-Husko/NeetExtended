@@ -163,12 +163,18 @@ The game loads the newest file in the save folder by modification time, so `deco
 ## changelog
 
 ```sh
-neet changelog            # print the JSON
-neet changelog --write    # write changelog.json at the repo root
+neet changelog                          # print the JSON
+neet changelog --write                  # write changelog.json at the repo root
 neet changelog --write --out FILE
+neet changelog --suggest                # what changed since the last release, and a suggested version
+neet changelog --release X.Y.Z --notes X.Y.Z   # Markdown release notes for a version not tagged yet
 ```
 
 Run it from inside the repository. `--out` only applies together with `--write`.
+
+- `--release X.Y.Z` treats the commits after the last tag as version X.Y.Z, released today, before its tag exists. The release script writes `changelog.json` this way, so the release commit already has it as released.
+- `--notes X.Y.Z` prints that version's lines as Markdown (`### Added`, `- **Area:** text`), for the GitHub release.
+- `--suggest` counts the changelog lines and breaking changes since the last `vX.Y.Z` tag and suggests the next version: breaking changes bump the major version (the minor one before 1.0), added or removed things the minor, changes and fixes the patch. Breaking means a `!` after the commit type (`feat(kit)!:`) or a `BREAKING CHANGE:` trailer. Before the first tag it suggests the version in `Directory.Build.props`.
 
 ### Trailers
 
@@ -188,7 +194,7 @@ Changelog-Fixed: Settings no longer reset when a mod is reloaded.
 
 ### Release resolution
 
-Every `vX.Y.Z` tag closes a release that covers the commits after the previous tag. Commits after the last tag belong to the upcoming version, which is the `<Version>` in `Directory.Build.props`. If that version is already tagged, the entry is labelled `Unreleased`. Releases with no changelog lines are left out. The output lists the newest release first.
+Every `vX.Y.Z` tag closes a release that covers the commits after the previous tag. Commits after the last tag belong to the upcoming version, which is the `<Version>` in `Directory.Build.props`. If that version is already tagged (between releases, since the release script sets it), the entry is labelled `Unreleased`. Releases with no changelog lines are left out. The output lists the newest release first.
 
 The date of a tagged release is the tag's creation date. The date of the upcoming release is the date of its newest commit.
 
@@ -226,6 +232,57 @@ The date of a tagged release is the tag's creation date. The date of the upcomin
 - `added`, `changed`, `fixed`, `removed`: always present, possibly empty. Each item has `text` and, when the commit had a scope, `area`.
 
 Do not edit `changelog.json` by hand. The in-game What's New screen reads it, and the next `--write` replaces it.
+
+## compat
+
+```sh
+neet compat              # installed game build, the tested build, and Steam's latest
+neet compat --record     # record the installed build as tested (compat/game.json)
+neet compat --check      # exit code 1 if the installed game isn't the tested build
+neet compat --offline    # don't ask Steam for the latest build
+```
+
+Run it from inside the repository. A game build is told apart by its game code: the module version id and SHA-256 of `NEET_Data/Managed/Assembly-CSharp.dll`, which change with every build of the game and which the installer never touches (unlike `NEET.exe`, which `--64bit` swaps). It also shows Steam's build id from `appmanifest_2054460.acf` in the game's Steam library and the Unity version from `globalgamemanagers`. Steam's latest public build comes from `api.steamcmd.net`, a public mirror of Steam's app info (SteamDB has no API).
+
+`compat/game.json` is the record:
+
+```json
+{
+  "game": "NEET Demo",
+  "appId": 2054460,
+  "buildId": "16934891",
+  "unity": "2022.3.17f1",
+  "gameCode": { "file": "NEET_Data/Managed/Assembly-CSharp.dll", "mvid": "176f8319-...", "sha256": "9ca507db..." },
+  "testedWith": "0.1.0",
+  "testedOn": "2026-10-27"
+}
+```
+
+When the game updates: test the mods on the new build, fix what broke, then `neet compat --record` and commit the file. Three things read it:
+
+- The framework ships it as `game-compat.json` and compares it with the running game's `Assembly-CSharp`; on another build the version label adds "game build not tested" and the log says so (`About/GameCompat.cs`).
+- The release script refuses to release unless the installed game is the recorded build.
+- The `Game compatibility` workflow (`.github/workflows/game-compat.yml`) compares it with Steam's latest public build every day and on every change to the file, and writes the README badge (green: tested, orange: Steam has a build that isn't) as a shields.io endpoint file to the `badges` branch.
+
+## release
+
+`build/release.sh` publishes a release on GitHub (needs `gh`, logged in with access to the repository):
+
+```sh
+build/release.sh --suggest            # what changed since the last release, and a suggested version
+build/release.sh 0.2.0 --dry-run      # check everything and show the notes, change nothing
+build/release.sh 0.2.0                # or major, minor, patch (from the last tag); asks before publishing
+```
+
+It checks that the tree is clean, that `main` isn't behind GitHub, that `gh` is logged in, that the version is new, and that the installed game is the tested build (`neet compat --check`). Then it:
+
+1. sets `<Version>` in `Directory.Build.props`, writes `changelog.json` with the version released (`--release`) and records the game build in `compat/game.json` with the new version;
+2. commits that as `chore(release): X.Y.Z`;
+3. builds the package from that commit (`build/package.sh`), so the game shows the release's commit hash;
+4. tags `vX.Y.Z` with the notes;
+5. pushes `main` and the tag, and creates the GitHub release with the zip. The notes are the version's changelog lines, the tested game build and how to install.
+
+If anything fails before the push, the release commit and tag are taken back. The version is picked by whoever releases; `--suggest` only advises.
 
 ## mcp
 

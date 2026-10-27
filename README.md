@@ -11,6 +11,7 @@ Mods, a mod loader and modding tools for [NEET Demo](https://store.steampowered.
 [![Last commit](https://img.shields.io/github/last-commit/Official-Husko/NeetExtended)](https://github.com/Official-Husko/NeetExtended/commits)
 <br>
 [![NEET Demo on Steam](https://img.shields.io/badge/Steam-NEET%20Demo-1b2838?logo=steam&logoColor=white)](https://store.steampowered.com/app/2054460/)
+[![Game compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FOfficial-Husko%2FNeetExtended%2Fbadges%2Fcompat.json)](compat/game.json)
 ![Windows and Linux](https://img.shields.io/badge/runs%20on-Windows%20%7C%20Linux%20(Proton)-4a4a4a)
 ![Unity 2022.3](https://img.shields.io/badge/Unity-2022.3.17f1-222?logo=unity&logoColor=white)
 
@@ -62,6 +63,8 @@ It asks two things:
 - **Switch to 64-bit?** Downloads Unity's 64-bit player for the game's exact Unity version straight from Unity (about 180 MB) and swaps it in. Slightly faster, more memory. The 32-bit files are kept, so you can switch back.
 - **Incremental garbage collection?** Memory gets cleaned up a little every frame instead of all at once, which gets rid of the short freezes. Recommended.
 
+Each release is tested with a specific build of the game; the **game compatibility** badge at the top shows whether that's still Steam's current build. If the game updates, the mods tell you in the corner of the screen and usually keep working until a tested release follows.
+
 Running the installer again updates the mods and keeps your settings. `uninstall.bat` / `uninstall.sh` put the game back the way it was; your saves stay.
 
 ## Building from source
@@ -78,7 +81,7 @@ dotnet run --project tools/NeetTool -- launch  # start the game in a window
 
 If the game isn't in your main Steam library, set `NEET_GAME_DIR` or put a `<NeetGameDir>` in `build/Local.props`.
 
-With the game running, rebuild and the changed mods reload by themselves within a second or so. `build/package.sh` makes the release zip.
+With the game running, rebuild and the changed mods reload by themselves within a second or so. `build/package.sh` makes the release zip and `build/release.sh` publishes a release ([how](docs/modding/tools.md#release)).
 
 Writing your own mod? Start with [getting started](docs/modding/getting-started.md). The rest of the guides are in [docs/](docs/README.md), along with notes on how the game's code works.
 
