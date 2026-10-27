@@ -7,8 +7,8 @@ using UnityEngine;
 namespace Coop.Players;
 
 /// <summary>
-/// Carrying a downed player: aim at them with an empty hand and press it; press it again to put them
-/// down. The downed player's own game moves its body onto the carrier's shoulder (so every game sees
+/// Carrying a downed player: aim at them with an empty hand and tap its button (<see cref="Reviving"/>
+/// tells a tap from a hold); press either hand again to put them down. The downed player's own game moves its body onto the carrier's shoulder (so every game sees
 /// the same), and decides who carries them: one carrier at a time, told to everyone. The carrier's
 /// game shows the body on its own shoulder straight away (<see cref="PlayerPuppet.Shoulder"/>). Being
 /// revived, dying, the carrier going down or either player leaving ends it.
@@ -19,11 +19,8 @@ namespace Coop.Players;
 internal static class Carrying
 {
     private const byte None = byte.MaxValue;
-    private const float Reach = 2.5f;
-    private const float AimRadius = 0.35f;
 
     private static readonly Dictionary<byte, byte> CarriedBy = new Dictionary<byte, byte>();
-    private static int _playerMask = -1;
 
     // This game's player carrying someone (or asking to).
     private static byte _carrying = None;
@@ -48,6 +45,9 @@ internal static class Carrying
     /// <summary>This game's player is being carried.</summary>
     public static bool LocalCarried => _carrier != None;
 
+    /// <summary>The player this game's player carries (or has just asked to), or 255.</summary>
+    public static byte Carried => _carrying;
+
     /// <summary>Who carries the player in <paramref name="slot"/>, or 255.</summary>
     public static byte CarrierOf(byte slot) => CarriedBy.TryGetValue(slot, out byte carrier) ? carrier : None;
 
@@ -57,43 +57,24 @@ internal static class Carrying
             return;
         CheckCarried();
         CheckCarrying();
-        if (!HouseManager._.player.TryGetComponent(out BrainPlayer brain) || brain.intents == null)
-            return;
-        if (brain.intents.LeftHand.Started)
-            Pressed(0);
-        if (brain.intents.RightHand.Started)
-            Pressed(1);
+        // Either hand button puts down who is carried.
+        if (_carrying != None && HouseManager._.player.TryGetComponent(out BrainPlayer brain) && brain.intents != null
+            && (brain.intents.LeftHand.Started || brain.intents.RightHand.Started))
+            Ask(_carrying, false);
     }
 
-    // A hand button: put down who this hand carries, or pick up the downed player this player looks at.
-    private static void Pressed(int hand)
+    /// <summary>
+    /// Pick up the downed player in <paramref name="slot"/> with <paramref name="hand"/> (an empty hand
+    /// that tapped the button while looking at them).
+    /// </summary>
+    public static void PickUp(byte slot, int hand)
     {
-        if (_carrying != None)
-        {
-            if (hand == _hand)
-                Ask(_carrying, false);
+        if (_carrying != None || Downed.LocalDown || !Downed.IsDown(slot) || CarrierOf(slot) != None)
             return;
-        }
-        if (Downed.LocalDown || !HouseManager._.player.TryGetComponent(out Player_Abilities hands) || hands.pickups[hand] != null)
-            return;
-        var target = Aimed();
-        if (target == null || !Downed.IsDown(target.Slot) || CarrierOf(target.Slot) != None)
+        if (!HouseManager._.player.TryGetComponent(out Player_Abilities hands) || hands.pickups[hand] != null)
             return;
         _hand = hand;
-        Ask(target.Slot, true);
-    }
-
-    private static PlayerPuppet Aimed()
-    {
-        var camera = HouseManager._.mainCamera;
-        if (camera == null)
-            return null;
-        if (_playerMask < 0)
-            _playerMask = LayerMask.GetMask("Player");
-        var eye = camera.transform;
-        if (!Physics.SphereCast(eye.position, AimRadius, eye.forward, out var hit, Reach, _playerMask, QueryTriggerInteraction.Ignore))
-            return null;
-        return hit.collider.GetComponentInParent<PlayerPuppet>();
+        Ask(slot, true);
     }
 
     // Carrier: ask the carried player's game; show them on this shoulder straight away.

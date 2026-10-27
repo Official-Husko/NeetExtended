@@ -33,12 +33,12 @@ internal sealed class Nameplate : MonoBehaviour
     private TextMesh _mesh;
     private string _name;
 
-    /// <summary>Shows under the name that this player is down and needs feeding.</summary>
+    /// <summary>Shows under the name that this player is down and needs help.</summary>
     public void SetDowned(bool down)
     {
         _mesh ??= GetComponent<TextMesh>();
         _name ??= _mesh.text;
-        _mesh.text = down ? _name + "\n<color=red>DOWN - feed this idiot</color>" : _name;
+        _mesh.text = down ? _name + "\n<color=red>DOWN - save this idiot</color>" : _name;
     }
 
     private void LateUpdate()

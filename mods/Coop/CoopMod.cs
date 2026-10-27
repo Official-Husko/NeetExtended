@@ -69,6 +69,7 @@ public sealed class CoopMod : NeetMod
         BodySender.Init();
         Downed.Init();
         Carrying.Init();
+        Reviving.Init();
         Session.SessionNotices.Init();
         Admin.PlayerAdmin.Init();
         Menu.DisconnectButton.Init();
