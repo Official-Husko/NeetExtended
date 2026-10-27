@@ -1,4 +1,4 @@
-using PhoneExpansion.Rules;
+using NeetModKit.Rules;
 
 namespace PhoneExpansion.Calls;
 
@@ -6,7 +6,7 @@ namespace PhoneExpansion.Calls;
 /// One call: a number the player can dial, a call that rings in, or both. What's said lives in an
 /// Ink knot (written by hand or generated from a call file's "say" list).
 /// </summary>
-public sealed class PhoneCall
+public sealed class PhoneCall : IRuleSubject
 {
     /// <summary>Unique id, "ModId/name" for calls from files.</summary>
     public string Id;
@@ -43,6 +43,10 @@ public sealed class PhoneCall
     public string DisplayNumber => Number == null ? "" : Number.Length > 3 ? Number.Substring(0, 3) + "-" + Number.Substring(3) : Number;
 
     public bool ReplacesGameNumber => Number != null && GameNumbers.Contains(Number);
+
+    string IRuleSubject.Id => Id;
+
+    int IRuleSubject.Times => PhoneMemory.TimesPlayed(Id);
 
     public override string ToString() => Id;
 }

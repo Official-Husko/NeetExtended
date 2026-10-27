@@ -88,7 +88,7 @@ Steps run top to bottom. A step is one of these:
 
 | Step | What it does |
 | --- | --- |
-| `"text"` | The caller says it. Line breaks split it into separate lines. Unity rich text works (`<color=\"red\">`, `<size=150%>`). |
+| `"text"` | The caller says it. Line breaks split it into separate lines. Unity rich text works (`<color=red>`, `<size=150%>`), but not in a choice's text. |
 | `{ "player": "text" }` | The player says it (the player's voice blips). |
 | `{ "choices": [ ... ] }` | Choices. Each is `{ "text", "say", "if", "once" }`: `say` is what follows, `if` hides the choice unless a condition holds, `once` removes it after it's picked. The chosen text is said by the player, like in the game's calls. |
 | `{ "choice": { "text": steps, ... } }` | Shorter form when no choice needs `if` or `once`. |
@@ -104,13 +104,14 @@ Wherever steps are expected, a single step works too: `"then": "Oh hi."`. After 
 
 ### Conditions
 
-A condition is an object; every key in it must hold. Used by `when`, `if`, choice `if` and `incoming.when`.
+A condition is an object; every key in it must hold. Used by `when`, `if`, choice `if` and `incoming.when`. Conditions and actions are shared with every mod that reads content files (emails use the same ones), and flags are shared too: an email can set a flag a call checks. `called`, `dialed`, `give` and `ring` come from the phone; the rest from the framework.
 
 | Key | Holds when |
 | --- | --- |
 | `money` | Cash compares: `20` means at least 20, or `"< 5"`, `">= 100"`, `"= 0"`, `"!= 3"`. |
-| `night` | The night number compares (1, 2, ...). |
+| `day` | Which day it is compares: 1 at the start, one more every time the player sleeps and wakes up. |
 | `minutes` | Minutes of play in this save compare. |
+| `night` | The game's own night counter. The game never moves it on, so use `day`. |
 | `stat` | Player stats compare: `{ "Hunger": "< 25", "Energy": "< 50" }` or `"Hunger < 25"`. Stats run 0 (empty) to 100 (full); there's also Health, Bladder, Hygiene, Soul (starts at 66) and more. |
 | `holding` | The player holds this item in either hand: `"Pumpkin"`, or a list of names. |
 | `room` | The player is in this room: `"Kitchen"`, or a list. Room names are the game's: Kitchen, Livingroom, Basement, Bedroom_Neet, ... |
@@ -124,7 +125,7 @@ A condition is an object; every key in it must hold. Used by `when`, `if`, choic
 | `not` | A condition that must not hold. |
 
 ```json
-"when": { "night": ">= 2", "any": [ { "holding": "Pumpkin" }, { "flag": "pumpkin_friend" } ] }
+"when": { "day": ">= 2", "any": [ { "holding": "Pumpkin" }, { "flag": "pumpkin_friend" } ] }
 ```
 
 ### Actions
@@ -143,7 +144,7 @@ A condition is an object; every key in it must hold. Used by `when`, `if`, choic
 | `fuses` | | Pops every fuse out of the fuse box. The lights stay out until the player puts them back. |
 | `unlock` | `door` | Unlocks doors by id: `BASEMENT` (the black door), `DADYARD`, `Attic`. |
 | `site` | `url` | Opens a site or app on the computer. |
-| `ring` | `call`, `after` | Rings a call after `after` seconds of play. Survives saving; if the line is busy it rings when it's free. |
+| `ring` | `call`, `after` | Rings a call after `after` seconds of play. Survives saving; if the line is busy it rings when it's free. Works from emails too (use the full id, `ModId/call`). |
 | `flag` | `name`, `set` or `add` | Sets a flag (default 1) or changes it. `"set": 0` clears it. Flags are saved. |
 | `sequence` | `name`, `arg` | Runs one of the game's scene sequences, like the game's TriggerSequence. |
 | `knockout` | `seconds` | Knocks the player out. |
@@ -189,20 +190,22 @@ For anything bigger, write the call in Ink, the language the game's dialogue is 
 - End the call on the `EndPhoneCall` tag, like the game's calls. If a call runs out of lines without it, the phone hangs up when the player presses use on the last line.
 - Choices without brackets (`* Hi.`) are said by the player, like the game's; with brackets (`* [Hi.]`) they aren't.
 - Prefix knot names with your mod id. Names are shared with the whole game story.
-- The game's lists, variables and functions are available (`nightId`, `playerBody ? naked`, `GiveItem("Mug")`, `TradeSoulForClone()`, ...; the list is in `docs/game/dialogue-and-rendering.md`), plus the phone's own:
+- The game's lists, variables and functions are available (`nightId`, `playerBody ? naked`, `GiveItem("Mug")`, `TradeSoulForClone()`, ...; the list is in `docs/game/dialogue-and-rendering.md`), plus the framework's:
 
 | Function | Does |
 | --- | --- |
-| `PhoneAct(action, values)` | Runs an action. `values` is `"key=value; key2=value2"`, or a single value for the action's main value: `PhoneAct("deliver", "Pizza")`, `PhoneAct("ring", "call=pizza-driver; after=30")`. |
-| `PhoneCheck(condition, value)` | Tests a condition: `{PhoneCheck("money", ">= 20"): ...}`, `PhoneCheck("holding", "Pumpkin")`, `PhoneCheck("stat", "Hunger < 25")`. |
-| `PhoneFlag(name)` | A flag's value (0 if unset). |
-| `SetPhoneFlag(name, value)`, `AddPhoneFlag(name, amount)` | Change a flag. |
+| `Act(action, values)` | Runs an action. `values` is `"key=value; key2=value2"`, or a single value for the action's main value: `Act("deliver", "Pizza")`, `Act("ring", "call=pizza-driver; after=30")`. |
+| `Check(condition, value)` | Tests a condition: `{Check("money", ">= 20"): ...}`, `Check("holding", "Pumpkin")`, `Check("stat", "Hunger < 25")`. |
+| `Flag(name)` | A flag's value (0 if unset). |
+| `SetFlag(name, value)`, `AddFlag(name, amount)` | Change a flag. |
+
+The older names `PhoneAct`, `PhoneCheck`, `PhoneFlag`, `SetPhoneFlag` and `AddPhoneFlag` still work.
 
 `VAR` declarations don't work in mod scripts (they'd never reach the game's story); use flags. See `docs/modding/framework.md` ("Dialogue") for the other limits.
 
 ## From code
 
-Namespace `PhoneExpansion.Calls` and `PhoneExpansion.Rules`. Add `"PhoneExpansion": "0.1.0"` to your mod's dependencies and reference the project.
+Namespace `PhoneExpansion.Calls`; conditions, actions and flags are in the framework's `NeetModKit.Rules` (see [framework.md](framework.md#rules)). Add `"PhoneExpansion": "0.1.0"` to your mod's dependencies and reference the project.
 
 ```csharp
 // A call with hand-written Ink.
@@ -220,26 +223,23 @@ PhoneBook.Add(this, new PhoneCall
 // Ring it in two minutes of play.
 PhoneRing.Ring("MyMod/landlord", 120f);
 
-// New action and condition for call files.
-PhoneActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount", 10)), "amount", "Throws confetti.");
-PhoneConditions.Register(this, "raining", value => { bool want = value.Value<bool>(); return call => Weather.Raining == want; }, "true while it rains");
+// New action and condition for call files (and emails, and anything else that reads them).
+RuleActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount", 10)), "amount", "Throws confetti.");
+RuleConditions.Register(this, "raining", value => { bool want = value.Value<bool>(); return _ => Weather.Raining == want; }, "true while it rains");
 ```
 
 | API | |
 | --- | --- |
 | `PhoneBook.Add(owner, call)`, `All`, `Find(id)`, `WithNumber(digits)`, `Changed` | Every modded call. Calls are removed when the owner cleans up. |
-| `PhoneCall` | `Id`, `Number`, `Name`, `CallerId`, `Knot`, `When`, `OtherwiseKnot`, `Incoming`, `Source` |
+| `PhoneCall` | `Id`, `Number`, `Name`, `CallerId`, `Knot`, `When`, `OtherwiseKnot`, `Incoming`, `Source`. It's an `IRuleSubject`, so conditions like `times` know which call they're checking. |
 | `IncomingRules` | `Trigger`, `Weight`, `When`, `Once`, `CooldownMinutes`, `DelaySeconds`, `Store` |
-| `Condition.Parse(json)`, `Condition.Of(func)`, `Test(call)` | Conditions in code. |
 | `PhoneRing.Ring(id or call, delaySeconds)`, `Cancel(call)`, `Ringing`, `Active` | Ring calls; what's ringing or being talked on now. |
-| `PhoneActions.Register(owner, name, run, mainValue, help)`, `Run(name, values, call)` | Actions. `run` gets `ActionArgs` (`Str`, `Num`, `Int`, `Bool`, `Has`, `Require`, `Values`, `Call`). |
-| `PhoneConditions.Register(owner, name, compile, help)` | Conditions: `compile` turns the file's value into a test once, when the file loads, so mistakes show up right away (throw `FormatException`). |
-| `PhoneMemory` | `Flag`, `SetFlag`, `AddFlag`, `TimesPlayed(id)`, `SecondsSincePlayed(id)`, `TimesDialed(digits)`, `PlaySeconds`. Saved with the game. |
+| `PhoneMemory` | `TimesPlayed(id)`, `SecondsSincePlayed(id)`, `TimesDialed(digits)`. Saved with the game. Flags and play time are `ModFlags` in the framework. |
 
 ## Testing
 
 - The Phone tab: RING NOW on any call, HANG UP, RELOAD CALLS.
-- The in-game console (backquote): `phoneCalls`, `phoneRing <id>`, `phoneDial <number>` (dials on the phone nearest to you), `phoneHangUp`, `phoneReload`, `phoneFlags`.
+- The in-game console (backquote): `phoneCalls`, `phoneRing <id>`, `phoneDial <number>` (dials on the phone nearest to you), `phoneHangUp`, `phoneReload`, and the framework's `flags` and `setFlag <name> <value>`.
 - From a terminal through the dev bridge: `neet call console.exec '{"command":"phoneRing PhoneExpansion/pizza"}'`.
 
 To pick up or talk on a call you need to be at a phone: one is in the kitchen, the other in the upstairs lobby.
@@ -249,5 +249,5 @@ To pick up or talk on a call you need to be at a phone: one is in the kitchen, t
 - The game starts every call with `Dialogue.InitCharacterDialogue(phone, "Phone", knot)`: `Phone.p` + digits when dialing, `Phone.pPrank` + 1..11 when answering. A prefix on that method swaps in a modded knot when a call fits, or plays the busy tone for a modded number that doesn't pick up.
 - Modded numbers are added to each handset's list of known numbers, so they connect after the short ring like the game's numbers.
 - When the phones ring, the first handset to start ringing picks the call for that ring; answering any handset plays it.
-- Call files become Ink (`Script/InkWriter.cs`): each branch is its own stitch, conditions and actions become `PhoneIf(n)` and `PhoneDo(n)` calls into a table. The whole file compiles with the game's Ink compiler and joins the game's story through the framework's `InkScripts`.
-- Before the game saves, a modded call in progress hangs up, so saves never depend on the mod. Flags, call counts, scheduled rings and play time go into the save through `ModSaveData`.
+- Call files become Ink through the framework's `StepWriter`: each branch is its own stitch, conditions and actions become `RuleIf(n)` and `RuleDo(n)` calls into the framework's `RuleSteps` table. The whole file compiles with the game's Ink compiler and joins the game's story through the framework's `InkScripts`.
+- Before the game saves, a modded call in progress hangs up, so saves never depend on the mod. Call counts and scheduled rings go into the save through `ModSaveData`; flags and play time are the framework's `ModFlags`. Saves from 0.1.0 kept flags with the phone; they move over to `ModFlags` when such a save loads.

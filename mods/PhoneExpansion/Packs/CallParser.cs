@@ -5,9 +5,8 @@ using System.Text;
 using NeetLoader.Runtime;
 using NeetModKit.Conversations;
 using Newtonsoft.Json.Linq;
+using NeetModKit.Rules;
 using PhoneExpansion.Calls;
-using PhoneExpansion.Rules;
-using PhoneExpansion.Script;
 
 namespace PhoneExpansion.Packs;
 
@@ -18,6 +17,14 @@ namespace PhoneExpansion.Packs;
 internal static class CallParser
 {
     private static readonly JsonLoadSettings Settings = new JsonLoadSettings { CommentHandling = CommentHandling.Ignore };
+
+    // Calls end on the game's EndPhoneCall tag, like its own calls, and { "player": "..." } is a
+    // line the player says.
+    private static readonly StepWriterOptions Writing = new StepWriterOptions
+    {
+        EndLines = new[] { "# EndPhoneCall" },
+        TaggedLines = { ["player"] = "SpeakerAudio:Player" },
+    };
 
     public static void LoadFile(string path, string displayName, string modId, ITracker scope, List<string> problems, List<InkScript> scripts)
     {
@@ -98,12 +105,12 @@ internal static class CallParser
         };
 
         string knot = "Phone_" + InkText.Identifier(modId) + "_" + InkText.Identifier(id);
-        Func<JObject, int> addAction = step => StepTable.AddAction(scope, step);
-        Func<JToken, int> addCondition = when => StepTable.AddCondition(scope, when);
+        Func<JObject, int> addAction = step => RuleSteps.AddAction(scope, step, () => CallRouter.Active);
+        Func<JToken, int> addCondition = when => RuleSteps.AddCondition(scope, when, () => CallRouter.Active);
 
         if (json["say"] != null)
         {
-            ink.Append(InkWriter.Write(knot, json["say"], addAction, addCondition));
+            ink.Append(StepWriter.Write(knot, json["say"], addAction, addCondition, Writing));
             call.Knot = knot;
         }
         else if (json["ink"] != null)
@@ -120,7 +127,7 @@ internal static class CallParser
 
         if (json["otherwise"] != null)
         {
-            ink.Append(InkWriter.Write(knot + "_otherwise", json["otherwise"], addAction, addCondition));
+            ink.Append(StepWriter.Write(knot + "_otherwise", json["otherwise"], addAction, addCondition, Writing, "otherwise"));
             call.OtherwiseKnot = knot + "_otherwise";
         }
 

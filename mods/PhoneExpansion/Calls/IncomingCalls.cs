@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NeetModKit.Events;
+using NeetModKit.Rules;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -86,7 +87,7 @@ internal static class IncomingCalls
         if (!GameEvents.IsHouseReady)
             return;
 
-        float now = PhoneMemory.PlaySeconds;
+        float now = ModFlags.PlaySeconds;
         for (int i = 0; i < scheduled.Count; i++)
         {
             if (scheduled[i].DueAt > now)
@@ -175,6 +176,6 @@ internal static class IncomingCalls
             if (string.Equals(entry.CallId, call.Id, StringComparison.OrdinalIgnoreCase))
                 return; // Already waiting to ring.
         }
-        scheduled.Add(new PhoneMemory.ScheduledRing { CallId = call.Id, DueAt = PhoneMemory.PlaySeconds + seconds });
+        scheduled.Add(new PhoneMemory.ScheduledRing { CallId = call.Id, DueAt = ModFlags.PlaySeconds + seconds });
     }
 }

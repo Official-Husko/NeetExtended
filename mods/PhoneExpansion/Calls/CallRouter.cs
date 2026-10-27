@@ -1,4 +1,5 @@
 using NeetModKit.Conversations;
+using NeetModKit.Rules;
 
 namespace PhoneExpansion.Calls;
 
@@ -80,6 +81,7 @@ internal static class CallRouter
     {
         knot = target;
         Active = call;
+        RuleContext.Active = call;
         ActivePhone = phone;
         ActiveKnot = target;
         if (played)
@@ -88,6 +90,8 @@ internal static class CallRouter
 
     public static void End()
     {
+        if (Active != null && RuleContext.Active == Active)
+            RuleContext.Active = null;
         Active = null;
         ActivePhone = null;
         ActiveKnot = null;

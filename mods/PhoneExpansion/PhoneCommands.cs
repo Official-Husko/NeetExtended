@@ -17,7 +17,6 @@ internal static class PhoneCommands
         ConsoleCommands.Add<string>(mod, "phoneDial", "Dials a number on the phone nearest to you.", Dial);
         ConsoleCommands.Add(mod, "phoneHangUp", "Ends the modded call in progress.", CallRouter.HangUpActive);
         ConsoleCommands.Add(mod, "phoneReload", "Loads every call file again.", PackLoader.Reload);
-        ConsoleCommands.Add(mod, "phoneFlags", "Shows the flags calls have set.", Flags);
     }
 
     private static void List()
@@ -54,13 +53,5 @@ internal static class PhoneCommands
         CallerScreen.Forget(phone);
         phone.screenText.text = digits.Length > 3 ? digits.Substring(0, 3) + "-" + digits.Substring(3) : digits;
         phone.Call();
-    }
-
-    private static void Flags()
-    {
-        var sb = new StringBuilder();
-        foreach (var pair in PhoneMemory.Flags)
-            sb.Append(pair.Key).Append(" = ").Append(pair.Value).Append('\n');
-        Debug.Log(sb.Length > 0 ? sb.ToString() : "No flags set.");
     }
 }

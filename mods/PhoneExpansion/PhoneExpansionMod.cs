@@ -31,8 +31,8 @@ public sealed class PhoneExpansionMod : NeetMod
         ModSettings.Register(this, Config, "Phone Expansion");
 
         PhoneMemory.Init(this);
-        BuiltinConditions.Register(this);
-        BuiltinActions.Register(this);
+        CallConditions.Register(this);
+        CallActions.Register(this);
         PhoneInkFunctions.Register(this);
         PackLoader.Init(this);
         PhoneCommands.Register(this);
@@ -44,6 +44,7 @@ public sealed class PhoneExpansionMod : NeetMod
         PhoneBook.Changed += SyncNumbers;
         GameEvents.WhenHouseReady(this, SyncNumbers);
         GameEvents.HouseReady.Subscribe(this, IncomingCalls.OnHouseReady);
+        GameEvents.ItemOrdered.Subscribe(this, order => IncomingCalls.OnOrder(order.Store));
         GameEvents.BeforeSave.Subscribe(this, CallRouter.HangUpActive);
     }
 
