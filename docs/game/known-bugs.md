@@ -304,6 +304,16 @@ The same field is compared in three more places:
 
 **Reproduce:** `obj.call` `PlayerEat` with `[260]` on a `SkeletonCorpseDad`'s `Player_Abilities`. With `SkeletonPants` off: the error above, the Pants_Black prefab's `Wearable.dirty` is true, and `items.spawn Pants_Black` comes out dirty. With it on: a turd, no error, clean pants. Found in co-op testing.
 
+## The clothes you die in are lost for good
+
+**What happens:** after the player dies and comes back, the clothes they wore are gone: the new body wears the default outfit, and the old pieces never show up again. They aren't destroyed either: every save keeps them, hidden under the house. Being skeletonized or blown up (Obliterate) can also take the masks or what was in the hands.
+
+**Cause:** worn clothes are separate items parked at y -500, kinematic and hidden (`Wearable`). Every death of the player ends in `HouseManager.CreateAndSetNewPlayer(prevPlayer)` (`HouseManager.cs:441-467`), which moves the old body 600 m up, makes a new body that puts on fresh copies of the prefab's outfit (`Player_Abilities.Start`), and the old body is destroyed a frame later. Nothing ever frees the old pieces. The normal death drops the hands and takes the masks off in `DieAccessor`, but `Skeletonize` moves the body to y 500 first (`Player_Abilities.cs:1914`) and leaves the masks on, and `Obliterate` (`:1655`) drops nothing.
+
+**Fix:** prefixes on `DieAccessor`, `SkeletonizeAccessor` and `Obliterate` remember where this game's player died (the first one wins), and a prefix on `CreateAndSetNewPlayer` drops whatever the old body still holds or wears there: hands with the game's `Drop`, masks with `RemoveMask`, clothes with `RemoveClothing(noHandInsert: true)`, each scattered a little around the spot. In co-op each game does this for its own player, and the items are shared like any other.
+
+**Reproduce:** hold something, die (`player.set` health 0 with god mode off; in co-op you go down first and die 15 s later), or skeletonize (`obj.call` `SkeletonizeAccessor` on the player). With `DeathDrops` off the old clothes stay at y -500; with it on they lie where you died, and the new body has the default outfit.
+
 ## Not bugs
 
 - `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.
