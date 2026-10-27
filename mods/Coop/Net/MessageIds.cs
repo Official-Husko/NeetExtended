@@ -99,4 +99,6 @@ public static class MessageIds
     public const ushort WorldFireball = 161;
     public const ushort WorldFireballGone = 162;
     public const ushort WorldPuff = 163;
+    public const ushort WorldWeather = 164;
+    public const ushort WorldWeatherAsk = 165;
 }

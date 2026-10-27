@@ -51,6 +51,7 @@ internal static class WorldSync
         CopVanSync.Init();
         Hazards.BodyHazards.Init();
         Ambience.SkySync.Init();
+        Ambience.WeatherSync.Init();
         Ambience.ToiletSync.Init();
         Ambience.TvPlayback.Init();
         Ambience.RadioPlayback.Init();
@@ -114,6 +115,7 @@ internal static class WorldSync
             StartClient();
         TalkSync.Start(_hosting);
         WorldSide.Running = true;
+        Ambience.WeatherSync.Ask();
         NpcPoseSender.SendAllAgain();
         CoopMod.Log.Info($"World: running as {(_hosting ? "host" : "client")}" + (resumed ? $", {carried} owners carried over the reload." : "."));
     }
@@ -148,6 +150,7 @@ internal static class WorldSync
         NpcPoseSender.SendAllAgain();
         NpcClothes.SendAllAgain();
         TalkSync.PlayerReady(player.Slot);
+        Ambience.WeatherSync.SendTo(player.Slot);
     }
 
     private static void End()
