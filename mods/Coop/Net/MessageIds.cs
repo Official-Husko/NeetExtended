@@ -17,5 +17,9 @@ public static class MessageIds
     // Join
     public const ushort Snapshot = 20;
 
+    // Players
+    public const ushort Pose = 40;
+    public const ushort Appearance = 41;
+
     // World: 100-199, see World/.
 }

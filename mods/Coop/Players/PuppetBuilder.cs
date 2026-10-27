@@ -1,0 +1,90 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Coop.Players;
+
+/// <summary>
+/// Builds a remote player's body from the game's player prefab: only the model (animator, skinned
+/// mesh, bones and hands) is copied, under a plain kinematic capsule, so none of the player's scripts
+/// (input, stats, saving, camera, HUD) exist on it.
+/// </summary>
+internal static class PuppetBuilder
+{
+    private const string BodyChild = "Neet";
+
+    public static PlayerPuppet Build(byte slot, string name)
+    {
+        var prefab = HouseManager._ != null ? HouseManager._.playerPrefab : null;
+        var model = prefab != null ? prefab.transform.Find(BodyChild) : null;
+        if (model == null)
+        {
+            CoopMod.Log.Warn("Couldn't find the player model to build another player's body from.");
+            return null;
+        }
+
+        var root = new GameObject("CoopPlayer_" + slot);
+        var capsule = root.AddComponent<CapsuleCollider>();
+        if (prefab.TryGetComponent(out CapsuleCollider template))
+        {
+            capsule.center = template.center;
+            capsule.radius = template.radius;
+            capsule.height = template.height;
+            capsule.direction = template.direction;
+        }
+        var body = root.AddComponent<Rigidbody>();
+        body.isKinematic = true;
+        body.interpolation = RigidbodyInterpolation.Interpolate;
+
+        var copy = Object.Instantiate(model.gameObject, root.transform, false);
+        copy.name = BodyChild;
+        copy.transform.localPosition = model.localPosition;
+        copy.transform.localRotation = model.localRotation;
+        copy.transform.localScale = model.localScale;
+        StripScripts(copy);
+
+        var puppet = root.AddComponent<PlayerPuppet>();
+        GiveOwnMeshes(copy, puppet.OwnedMeshes);
+        var skin = FindDeep(copy.transform, BodyChild)?.GetComponent<SkinnedMeshRenderer>();
+        var hands = new List<SkinnedMeshRenderer>();
+        foreach (var renderer in copy.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+        {
+            if (renderer != skin)
+                hands.Add(renderer);
+        }
+        puppet.Init(slot, copy.GetComponent<Animator>(), FindDeep(copy.transform, "headbone"), skin, hands.ToArray());
+        Nameplate.Attach(root.transform, name, capsule.center.y + capsule.height * 0.5f + 0.15f);
+        return puppet;
+    }
+
+    // The model has no game scripts today; this keeps it that way if a mod or update adds some.
+    private static void StripScripts(GameObject go)
+    {
+        foreach (var behaviour in go.GetComponentsInChildren<MonoBehaviour>(true))
+            Object.Destroy(behaviour);
+    }
+
+    // The game swaps clothing UVs on the shared mesh, which would dress every body the same.
+    private static void GiveOwnMeshes(GameObject go, List<Mesh> owned)
+    {
+        foreach (var renderer in go.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+        {
+            if (renderer.sharedMesh == null)
+                continue;
+            renderer.sharedMesh = Object.Instantiate(renderer.sharedMesh);
+            owned.Add(renderer.sharedMesh);
+        }
+    }
+
+    private static Transform FindDeep(Transform parent, string name)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == name)
+                return child;
+            var found = FindDeep(child, name);
+            if (found != null)
+                return found;
+        }
+        return null;
+    }
+}

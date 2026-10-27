@@ -2,6 +2,7 @@ using System;
 using Coop.Join;
 using Coop.Menu;
 using Coop.Net;
+using Coop.Players;
 using Coop.Session;
 using NeetLoader;
 using NeetLoader.Config;
@@ -59,6 +60,9 @@ public sealed class CoopMod : NeetMod
         ScenePolicy.Init(this);
         JoinLoader.Init(this);
         SnapshotSender.Init();
+        PoseSender.Init();
+        RemotePlayers.Init();
+        AppearanceSync.Init();
         ModMenu.AddPage(this, new CoopPage());
     }
 
