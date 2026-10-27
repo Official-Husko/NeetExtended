@@ -13,6 +13,8 @@ public static class MessageIds
     public const ushort PlayerLeft = 4;
     public const ushort Ready = 5;
     public const ushort Resync = 6;
+    public const ushort ModAction = 7;
+    public const ushort ModState = 8;
 
     // Join
     public const ushort Snapshot = 20;

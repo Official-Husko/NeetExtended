@@ -58,6 +58,7 @@ public sealed class CoopMod : NeetMod
         RemoteClock.Init();
         Handshake.Init();
         ScenePolicy.Init(this);
+        ModBridge.Init(this);
         JoinLoader.Init(this);
         SnapshotSender.Init();
         PoseSender.Init();
