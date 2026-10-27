@@ -29,6 +29,9 @@ internal sealed class PlayerPuppet : MonoBehaviour
 
     internal Nameplate Plate { get; set; }
 
+    /// <summary>The experimental physics arms, or null for the body's own arms.</summary>
+    internal PuppetHands Hands { get; set; }
+
     public void Init(byte slot, Animator animator, Transform head, SkinnedMeshRenderer skin, SkinnedMeshRenderer[] hands)
     {
         Slot = slot;
@@ -54,8 +57,11 @@ internal sealed class PlayerPuppet : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_poses.IsEmpty)
-            Place(_poses.Sample(RemoteClock.PlaybackTime(Slot)), snap: false);
+        if (_poses.IsEmpty)
+            return;
+        var pose = _poses.Sample(RemoteClock.PlaybackTime(Slot));
+        Place(pose, snap: false);
+        Hands?.Follow(transform, pose);
     }
 
     private void LateUpdate()

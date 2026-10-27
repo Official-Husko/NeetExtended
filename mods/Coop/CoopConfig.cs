@@ -24,6 +24,10 @@ public sealed class CoopConfig
     [Range(2, 4)]
     public int MaxPlayers = 4;
 
+    [Label("Physics hands on other players (experimental)")]
+    [Description("Other players get the floppy, physics-driven hands you see on yourself, following where their hands really are. Off: the plain arms of their body.")]
+    public bool PhysicsHands = false;
+
     /// <summary>Identifies this install to hosts, so a player who comes back gets their own body back.</summary>
     [Hidden]
     public string PlayerId = "";

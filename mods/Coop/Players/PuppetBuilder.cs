@@ -11,6 +11,7 @@ namespace Coop.Players;
 internal static class PuppetBuilder
 {
     private const string BodyChild = "Neet";
+    private const string HandRenderer = "NeetHand";
 
     public static PlayerPuppet Build(byte slot, string name)
     {
@@ -46,17 +47,21 @@ internal static class PuppetBuilder
         copy.transform.localRotation = model.localRotation;
         copy.transform.localScale = model.localScale;
         StripScripts(copy);
+        var hands = CoopMod.Config.Value.PhysicsHands ? PuppetHands.Create(copy, body) : null;
+        if (hands == null)
+            StripHandPhysics(copy);
 
         var puppet = root.AddComponent<PlayerPuppet>();
         GiveOwnMeshes(copy, puppet.OwnedMeshes);
         var skin = FindDeep(copy.transform, BodyChild)?.GetComponent<SkinnedMeshRenderer>();
-        var hands = new List<SkinnedMeshRenderer>();
+        var handMeshes = new List<SkinnedMeshRenderer>();
         foreach (var renderer in copy.GetComponentsInChildren<SkinnedMeshRenderer>(true))
         {
             if (renderer != skin)
-                hands.Add(renderer);
+                handMeshes.Add(renderer);
         }
-        puppet.Init(slot, copy.GetComponent<Animator>(), FindDeep(copy.transform, "headbone"), skin, hands.ToArray());
+        puppet.Init(slot, copy.GetComponent<Animator>(), FindDeep(copy.transform, "headbone"), skin, handMeshes.ToArray());
+        puppet.Hands = hands;
         puppet.Plate = Nameplate.Attach(root.transform, name, capsule.center.y + capsule.height * 0.5f + 0.15f);
         return puppet;
     }
@@ -66,6 +71,24 @@ internal static class PuppetBuilder
     {
         foreach (var behaviour in go.GetComponentsInChildren<MonoBehaviour>(true))
             Object.Destroy(behaviour);
+    }
+
+    // The player's first-person hands are jointed physics bodies that the player's scripts move; on a
+    // copy nothing does, so they hang off the body as a floppy second pair of arms. The body mesh has
+    // arms of its own, so the copy keeps the hands out of physics and out of sight.
+    private static void StripHandPhysics(GameObject go)
+    {
+        foreach (var joint in go.GetComponentsInChildren<Joint>(true))
+            Object.DestroyImmediate(joint);
+        foreach (var body in go.GetComponentsInChildren<Rigidbody>(true))
+            Object.DestroyImmediate(body);
+        foreach (var collider in go.GetComponentsInChildren<Collider>(true))
+            Object.DestroyImmediate(collider);
+        foreach (var renderer in go.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+        {
+            if (renderer.name == HandRenderer)
+                renderer.enabled = false;
+        }
     }
 
     // The game swaps clothing UVs on the shared mesh, which would dress every body the same.

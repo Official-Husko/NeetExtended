@@ -177,7 +177,7 @@ Play the house together, over the internet or your own network. The host's house
 - **Down, not dead**: when your health runs out you go down instead of dying. For 15 seconds anyone can get you back up by using food on you (look at you, use it); otherwise you die and respawn as usual.
 - **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and only the host talks to visitors. Going back to the main menu leaves; when the host leaves, the game ends for everyone.
 - Everyone needs the same mods. Mods that only change your own game (Cheat Menu, Performance Fixes, Open Saves and the like) can differ.
-- Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4).
+- Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4), and **Physics hands on other players** (experimental: other players get the floppy first-person arms you see on yourself, reaching for what they hold, instead of their body's plain arms).
 - Not everything is shared yet (fire, paint made after you join, and more): see [Known limitations](docs/modding/coop.md#known-limitations).
 
 ## Card Expansion

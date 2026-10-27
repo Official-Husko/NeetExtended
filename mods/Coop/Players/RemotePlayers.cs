@@ -22,6 +22,9 @@ internal static class RemotePlayers
         CoopSession.PlayerLeft += player => Remove(player.Slot);
         CoopSession.Ended += _ => Clear();
         CoopLoop.Unloading += Clear;
+        // A body is built for one hands setting; the next poses build them again. (Each copy of the
+        // mod has its own config object, so nothing to unsubscribe on reload.)
+        CoopMod.Config.Changed += _ => Clear();
     }
 
     public static PlayerPuppet Find(byte slot) =>
