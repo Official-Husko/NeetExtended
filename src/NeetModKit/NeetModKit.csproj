@@ -13,6 +13,8 @@
     <None Include="$(RepoRoot)changelog.json" Link="changelog.json" CopyToOutputDirectory="PreserveNewest" />
     <!-- The game build this version was tested with, compared with the running game. -->
     <None Include="$(RepoRoot)compat/game.json" Link="game-compat.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Stands in for a save file while a house loads from memory (SaveSource). -->
+    <None Include="Saves/neet-join.marker" Link="neet-join.marker" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- Ships as a regular mod folder: <game>/Mods/NeetModKit. -->

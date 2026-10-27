@@ -26,6 +26,7 @@ public sealed class KitMod : NeetMod
         GameEvents.Init(this);
         GameEvents.SceneLoaded.Subscribe(this, _ => Ui.Toolkit.UiInputLock.OnSceneLoaded());
         Saves.ModSaveData.Init(Log);
+        Saves.SaveSource.RestoreAfterReload();
         Items.ItemRegistry.Init(Log);
         Conversations.InkStory.Init(Log);
         Conversations.InkFunctions.Init(this);
@@ -60,6 +61,7 @@ public sealed class KitMod : NeetMod
     public override void OnUnload()
     {
         Config.Changed -= OnConfigChanged;
+        Saves.SaveSource.KeepForReload();
         ModMenu.Shutdown();
         Items.StoreListings.KeepForReload();
         Items.PrefabStash.Release();

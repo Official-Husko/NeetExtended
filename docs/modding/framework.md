@@ -395,6 +395,29 @@ OpenSaves registers its `.nsav` format this way. It registers the reader for the
 
 `SaveFiles.Newest()` is the newest `neet*` file in `Application.persistentDataPath` by write time, the one the game loads (null when there's none, a new game); `ReadNewest()` reads it as JSON in any save format. Checked in a `BeforeLoad` handler, `Newest() == null` tells a new game from a loaded one.
 
+### Saves in memory: SaveSnapshot, SaveCapture, SaveSource, SaveLock
+
+For handing a house from one game to another without a save file (co-op joins).
+
+```csharp
+SaveSnapshot snapshot = SaveCapture.Take();          // main thread, in the house
+snapshot.Save["Save"]                                // the AllSaveDataToJSon object: edit it before using it
+snapshot.Paint                                       // PaintTarget.saveId -> PNG
+byte[] blob = snapshot.Encode();                     // GZip of minified JSON + paint
+var copy = SaveSnapshot.Decode(blob);
+
+SaveSource.Use(copy);                                // the next LoadAll reads this instead of disk
+SaveSource.Loaded += error => { };                   // LoadAll is done (null) or threw
+SaveSource.Clear();
+using (SaveLock.Acquire(this, "joined a co-op game")) { }   // no SaveAll, no "reset save"
+```
+
+- `SaveCapture.Take()` writes no file and runs none of the save hooks (`BeforeSave`, the dialogue guard), so it's safe while the player is mid-call. Mod data is in the save object as usual. Paint comes from the surface's current texture, not the one the game's own save reads.
+- While a snapshot is in use, `LoadAll` sees one marker file (`neet-join.marker` in the framework's folder) instead of the save folder, the save text, mod data and `SaveFiles.Newest()/ReadNewest()` come from the snapshot, and surfaces are painted from `Paint`. The player's own saves are not listed or read. The snapshot is cleared when `LoadAll` ends, so it applies to one load.
+- It only works when `LoadAll` runs, which is when the house scene starts. To load one, set `SceneLoadingData.sceneNameToLoad = "NEET_House"` and load `Loading`; don't call `LoadAll` again inside a running house.
+- A framework reload while a snapshot waits keeps it.
+- `SaveLock` is ref-counted and released when the owner unloads. Scene changes the game does around saving (sleeping, dying) still happen; only the writing stops.
+
 ## Save safety
 
 The framework changes what the game does with saves that mention content which no longer exists, typically because a mod was removed.

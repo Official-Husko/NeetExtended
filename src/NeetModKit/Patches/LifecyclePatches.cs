@@ -22,7 +22,12 @@ internal static class LifecyclePatches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SaveLoadHandler), nameof(SaveLoadHandler.SaveAll))]
-    private static void AfterSave() => GameEvents.Raise(GameEvents.AfterSave);
+    private static void AfterSave(bool __runOriginal)
+    {
+        // Nothing was saved when SaveLock (or another mod) skipped the save.
+        if (__runOriginal)
+            GameEvents.Raise(GameEvents.AfterSave);
+    }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SaveLoadHandler), nameof(SaveLoadHandler.LoadAll))]

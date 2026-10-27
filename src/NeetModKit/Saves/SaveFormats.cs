@@ -34,6 +34,9 @@ public static class SaveFormats
 
     public static string ReadText(string path)
     {
+        if (SaveSource.Active)
+            return SaveSource.Current.JsonText;
+
         byte[] data = File.ReadAllBytes(path);
         foreach (var format in Formats)
         {
