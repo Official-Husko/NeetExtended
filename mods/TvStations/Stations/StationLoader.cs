@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using NeetModKit.IO;
 using Newtonsoft.Json.Linq;
 using TvStations.Tv;
@@ -19,9 +17,7 @@ internal static class StationLoader
     public const string ListFile = "stations.json";
 
     /// <summary>File types Unity's video player can open on Windows.</summary>
-    private static readonly string[] VideoTypes = { ".mp4", ".m4v", ".mov", ".webm", ".ogv", ".avi", ".wmv", ".mpg", ".mpeg", ".asf", ".dv", ".vp8" };
-
-    private static readonly JsonLoadSettings Json = new JsonLoadSettings { CommentHandling = CommentHandling.Ignore };
+    private static readonly HashSet<string> VideoTypes = new HashSet<string> { ".mp4", ".m4v", ".mov", ".webm", ".ogv", ".avi", ".wmv", ".mpg", ".mpeg", ".asf", ".dv", ".vp8" };
     private static readonly List<Station> Loaded = new List<Station>();
     private static readonly HashSet<string> Hidden = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     private static readonly List<string> ProblemList = new List<string>();
@@ -56,73 +52,24 @@ internal static class StationLoader
 
     private static void LoadFolder(ModContent.Folder folder)
     {
-        var videos = Directory.GetFiles(folder.Path, "*.*", SearchOption.AllDirectories)
-            .Where(f => VideoTypes.Contains(Path.GetExtension(f).ToLowerInvariant()))
-            .OrderBy(f => f, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        var list = ReadList(folder);
-        if (list != null)
-            AddListed(folder, list, videos);
-
-        foreach (string file in videos)
-            Loaded.Add(new Station { Name = Path.GetFileNameWithoutExtension(file), File = file, Source = folder.Display(file) });
-    }
-
-    private static JObject ReadList(ModContent.Folder folder)
-    {
-        string path = Path.Combine(folder.Path, ListFile);
-        if (!File.Exists(path))
-            return null;
-        try
+        var videos = MediaFolder.Read(folder, VideoTypes, ListFile, "stations", ProblemList, out var list);
+        foreach (var video in videos)
         {
-            return JObject.Parse(File.ReadAllText(path), Json);
+            var entry = video.Entry;
+            Loaded.Add(new Station
+            {
+                Name = entry?.Value<string>("name") ?? video.Name,
+                File = video.Path,
+                Source = video.Source,
+                Volume = Math.Max(0f, Math.Min(1f, entry?.Value<float?>("volume") ?? 1f)),
+                Replaces = entry?["replace"]?.ToString(),
+            });
         }
-        catch (Exception e)
-        {
-            ProblemList.Add($"{folder.Display(path)}: {e.Message}");
-            return null;
-        }
-    }
 
-    /// <summary>Stations named in the list, in its order. Their files are taken off <paramref name="videos"/>.</summary>
-    private static void AddListed(ModContent.Folder folder, JObject list, List<string> videos)
-    {
-        string where = folder.Display(Path.Combine(folder.Path, ListFile));
-
-        if (list["hide"] is JArray hide)
+        if (list?["hide"] is JArray hide)
         {
             foreach (var channel in hide)
                 Hidden.Add(channel.ToString());
-        }
-
-        if (!(list["stations"] is JArray stations))
-            return;
-        for (int i = 0; i < stations.Count; i++)
-        {
-            if (!(stations[i] is JObject entry) || entry.Value<string>("file") == null)
-            {
-                ProblemList.Add($"{where}, station {i + 1}: needs a \"file\".");
-                continue;
-            }
-
-            string file = Path.GetFullPath(Path.Combine(folder.Path, entry.Value<string>("file")));
-            int index = videos.FindIndex(v => string.Equals(Path.GetFullPath(v), file, StringComparison.OrdinalIgnoreCase));
-            if (index < 0)
-            {
-                ProblemList.Add($"{where}, station {i + 1}: there's no video \"{entry.Value<string>("file")}\" in the tv folder.");
-                continue;
-            }
-            videos.RemoveAt(index);
-
-            Loaded.Add(new Station
-            {
-                Name = entry.Value<string>("name") ?? Path.GetFileNameWithoutExtension(file),
-                File = file,
-                Source = folder.Display(file),
-                Volume = Math.Max(0f, Math.Min(1f, entry.Value<float?>("volume") ?? 1f)),
-                Replaces = entry["replace"]?.ToString(),
-            });
         }
     }
 }
