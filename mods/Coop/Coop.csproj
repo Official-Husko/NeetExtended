@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Coop</RootNamespace>
+    <Description>Play the house together: one shared world, everyone with their own body, needs and clothes.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
+    <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
+  </ItemGroup>
+
+  <!--
+    LiteNetLib (MIT) does the UDP work. Its DLL sits in the mod folder; the loader resolves it by name and
+    loads it once, so the connection can be handed over when the mod hot reloads.
+  -->
+  <ItemGroup>
+    <PackageReference Include="LiteNetLib" Version="1.3.1" GeneratePathProperty="true" />
+    <None Include="$(PkgLiteNetLib)/lib/net471/LiteNetLib.dll" Link="LiteNetLib.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+</Project>
