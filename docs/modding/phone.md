@@ -21,6 +21,7 @@ Calls are plain files. Any mod can ship them in a `phone` folder; no code needed
 | 555-0251 | Dot next door | She wants her cup of sugar back. |
 | 555-0261 to 0266 | Hotlines | Psychic (first call free, then $5), Dial-a-Joke, a crisis line, PC help, Lonely Hearts, store complaints (one refund). |
 | 555-0272 | Tallow Creek Fitness | Collections for a gym membership. |
+| 555-9328 | Weather Line | Skip reads the weather now and what the forecast says comes next, and answers a question or two. It ships with Weather Expansion (`mods/WeatherExpansion/phone/weather-line.jsonc`); an ad for it rings in once. |
 
 Calls that ring in by themselves (`phone/*.jsonc`, about 50 of them):
 

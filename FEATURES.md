@@ -134,6 +134,7 @@ New numbers to call and new calls that ring in, with choices and consequences.
 | 555-0265 | Lonely Hearts | Your matches are terrible. |
 | 555-0266 | Store Complaints | Complain about a late order and get a refund, once. |
 | 555-0272 | Tallow Creek Fitness | Collections for a gym membership you forgot about. |
+| 555-9328 | Weather Line | Skip tells you the weather and what's coming (needs Weather Expansion). |
 
 About 50 calls ring in by themselves, in place of the game's own prank calls: telemarketers and robocalls, creepy callers (one cuts the power, one sounds like you), wrong numbers, kids daring each other, the neighbours complaining about the smell, people from your old life, a shock-jock radio show, surveys, plus a mysterious **PRIVATE** caller (once per save), **MOM** when you're starving (sends food), **FEDUP** after you order something, and the **PIZZA** driver. Some only call after something else happened, and some pay you or send stuff to the door. They're as crude as the game's own calls.
 
@@ -203,6 +204,7 @@ Changes how the storm outside looks. Each look is its own switch on the Mods pag
 - **Lightning crackle on the radio**: a strike makes a playing radio crackle with static and cuts the music in and out for a moment. **Radio crackle** in Mod Settings.
 - **Lightning on the phones**: a strike garbles the phone screens for a moment, and a call in progress gets a burst of static (never cut off). **Static in phone calls** in Mod Settings.
 - **Lightning pops a fuse** (off until you switch it on): a strike can trip a breaker in the fuse box and cut a room's power until you flip it back. **Fuse pop chance** in Mod Settings. In co-op the host's game does it and everybody sees the breaker go.
+- **Weather hotline**: call 555-9328 and Skip reads you the weather and what the forecast says comes next, in a different way each time. He makes something up when nobody has a forecast. An ad for the number rings in once (needs Phone Expansion).
 
 ## Randomizer
 

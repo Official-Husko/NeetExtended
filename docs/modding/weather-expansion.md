@@ -25,6 +25,10 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 | Lightning on the phones (`PhoneStatic`) | The handset screens garble for a moment; a call in progress gets a burst of static. | Static in phone calls (on) |
 | Lightning pops a fuse (`FusePop`, off by default) | A strike can trip a breaker and cut a room's power until someone flips it back. | Fuse pop chance (0.1 a strike, 0 to 1) |
 
+## The weather line
+
+**The weather line** is the call `phone/weather-line.jsonc`: dial 555-9328 (W-E-A-T on the keypad). Skip Moistman reads the weather now (three variants per kind, picked with the `weather` condition), then what comes next when there is a forecast (`"forecast": "storm"` and so on, with `{{weather:in}}` for the time), or makes something up when there isn't (`"forecast": false` is a branch of its own). Skip derails a little more with every kind (a drizzle is Skip locked out in the yard, a storm is Skip on the roof with the Rain Cult and the line cutting out). Then a menu of at most three choices, said the way the player would say them: "can i go out" (answers by weather), "am i gonna get fried" (storms only) or "when does this shit stop" (every other time), and "Fuck off Skip", which ends the call. An ad for the number rings in once per save. The file is picked up from the mod's `phone` folder like any call pack (the csproj copies the folder), so Weather Expansion doesn't depend on Phone Expansion; without Phone Expansion the file simply isn't read. Both the conditions and the `{{weather}}` texts are the framework's (see [phone.md](phone.md) and [framework.md](framework.md#sky)).
+
 ## How the fog looks work
 
 `Fog/FogLook.cs` owns the scene's `RenderSettings.fogColor`, `fogDensity` and the sky material's `_Tint` while either fog look is on. Two features want those values, so one class applies them, once per frame from `WeatherExpansionMod.OnUpdate` (0.4 microseconds, no allocation). The game's own values are captured when the house is ready and put back when the last fog look goes off, when the mod unloads and when the house scene unloads (the sky material is a shared asset and would otherwise keep the flash tint into the main menu).
@@ -81,6 +85,7 @@ Intensity 1 is the kind's usual strength; wetness is also multiplied by it, and 
 | `WeatherExpansionMod.cs` | Registers the features and the settings, runs `FogLook.Tick` every frame. |
 | `WeatherExpansionConfig.cs` | The settings. |
 | `Storm/WeatherFollow.cs` | Turns `Sky.Weather` into smoothed multipliers for fog, mist, wetness and drop speed. |
+| `phone/weather-line.jsonc` | The weather hotline and its ad. |
 | `Fog/FogLook.cs`, `FlashLevel.cs` | Applying fog and sky tint, and following the lightning. |
 | `Fog/StormFogFeature.cs`, `LightningGlowFeature.cs` | The two fog looks. |
 | `Fog/MistBanksFeature.cs`, `MistSystem.cs`, `SoftTexture.cs` | The mist banks, their particle systems and the puff picture. |
@@ -110,6 +115,7 @@ Strike effects: `neet call sky.strike` (the effects start when the flash peaks, 
 
 ## Known limitations
 
+- The weather line is only read by Phone Expansion. The forecast says the same thing on every call until the weather changes; the lines are picked at random from a few variants.
 - Nothing here is saved with the game. The looks follow `Sky.Weather` but only the three kinds (drizzle, rain, storm); there is no clear spell, and nothing in this mod changes the weather.
 - There is no height fog and no fog that sits in the sky: Unity's fog is one global colour and density, and a fog volume needs a shader the game doesn't ship. Mist banks stand in for it, over the two yards only.
 - Mist puffs are flat billboards without soft edges, so one that drifts into a wall or the ground shows a hard line there.

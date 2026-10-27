@@ -1,0 +1,114 @@
+// The weather hotline, 555-9328 (W-E-A-T on the keypad). A guy reads the weather now and what the
+// forecast says comes next, from the Sky API: the "weather" and "forecast" conditions and the
+// {{weather}}, {{weather:next}} and {{weather:in}} texts. Without a forecast he makes something up.
+// Phone Expansion plays it; this mod doesn't need it loaded.
+{
+  "calls": [
+    {
+      "id": "weather-line",
+      "number": "555-9328",
+      "name": "Weather Line",
+      "callerId": "WEATHER",
+      "say": [
+        { "random": [
+          [ "Weather line. Skip.", "Hold on, I got a mouthful.", "<size=60%>*chewing*<size=100%>", "Okay. Go." ],
+          [ "<size=150%>WEATHER LINE<size=100%>", "Skip here. Brenda is in the yard setting my shit on fire.", "Anyway." ],
+          [ "Yo. Weather.", "This is Skip. Skip is on his third sandwich.", "Skip is not okay." ]
+        ] },
+
+        // Now. Every kind gets worse as it goes: drizzle is a little off, a storm is Skip losing it.
+        { "if": { "weather": "drizzle" }, "then": { "random": [
+          [ "Right now it's a drizzle.", "Rain for pussies. Barely a spit.", "I'm outside in it. Brenda locked the door.", "It's fine. I'm fine. She'll cool off." ],
+          [ "Drizzle outside.", "A baby is peeing on your house. A small baby.", "Not a mean baby. A baby that just wants to be held.", "...Is that weird? Forget I said it." ],
+          [ "Drizzle.", "My dog's out in it eating her own shit.", "She does that rain or shine. Rain makes it soupy.", "Anyway that's the weather." ]
+        ] } },
+        { "if": { "weather": "rain" }, "then": { "random": [
+          [ "It's raining.", "Normal rain. Gets in your socks.", "Gets in everything. It got in the sandwich.", "I'm still eating the sandwich." ],
+          [ "Rain, champ.", "The satellite says rain.", "I don't trust the satellite. It watches Brenda shower.", "I told it to stop. It rained harder." ],
+          [ "Rain. Plain old rain.", "The Church of the Wet Ones says it's the Lord's pee.", "I joined. They gave me a sandwich. It was wet.", "I'm in the church now. Choir's getting rained on. Hallelujah, pennis." ]
+        ] } },
+        { "if": { "weather": "storm" }, "then": { "random": [
+          [ "<size=150%>IT IS A STORM<size=100%>", "Wind, lightning, the whole dick.", "<color=red>Do not go out there.</color>", "<size=60%>I'm out here<size=100%>", "I'm in the yard. I wanted to see it up close.", "Storm warning for your ar-", "<size=60%>*zzzt*<size=100%>", "Okay I'm back. Lightning hit the phone. Twice.", "I'm fine. I'm a little fine." ],
+          [ "Storm. Huge fucking storm.", "The sky is throwing up on your roof.", "There's a guy on my roof yelling the forecast at it.", "It's me. I'm the guy.", "<size=60%>Brenda get out of the tub the tub is metal<size=100%>" ],
+          [ "<size=150%>FOLKS WE HAVE A STORM<size=100%>", "Lightning like a thousand angry dicks.", "<color=red>The Rain Cult says tonight is the Big Wet.</color>", "They want me to sacrifice the sandwich.", "I'm gonna do it. Clarice hold the door", "<size=60%>Clarice the window just broke<size=100%>", "Anyway. Stay inside." ]
+        ] } },
+
+        // Next, when somebody forecasts
+        { "if": { "forecast": true }, "then": [
+          { "if": { "forecast": "storm" }, "then": { "random": [
+            [ "And in {{weather:in}}? <color=red>STORM.</color>", "Get ready. Hide your pets. Hide your wiener." ],
+            [ "Coming up in {{weather:in}}: a fucking storm.", "I checked the chart. The chart is screaming." ]
+          ] } },
+          { "if": { "forecast": "rain" }, "then": { "random": [
+            [ "In {{weather:in}} it's back to regular rain.", "Boring. I know. Don't blame me, blame the sky." ],
+            [ "Then in {{weather:in}} it's {{weather:next}}.", "Rain. Nice and wet. Just how you like it, you freak." ]
+          ] } },
+          { "if": { "forecast": "drizzle" }, "then": { "random": [
+            [ "In {{weather:in}} it eases up to a drizzle.", "Phew. Your hair might live." ],
+            [ "Then in {{weather:in}}: drizzle.", "The sky finally ran out of piss." ]
+          ] } }
+        ], "else": { "random": [
+          [ "As for later? No idea.", "The forecast machine is broken. Somebody put a sandwich in it.", "So my guess is more of whatever this is." ],
+          [ "What's coming next?", "Weather.", "Mostly. Maybe some more of it. I'm gonna say a 90% chance of weather." ],
+          [ "Forecast? My ass is itchy, that means rain.", "Or not rain.", "<size=150%>THE ITCH DOES NOT LIE<size=100%>", "<size=60%>Brenda says it's a rash<size=100%>" ],
+          [ "Can't tell you what's next, the satellite's busy.", "<size=60%>it's watching a lady shower<size=100%>", "I mean uh. Weather. Moving on." ]
+        ] } },
+
+        { "label": "menu" },
+        { "choices": [
+          { "text": "can i go out", "say": [
+            { "if": { "weather": "storm" }, "then": { "random": [
+              [ "Out? Yeah go. Go. Put a metal hat on.", "<size=150%>DO IT<size=100%>", "The Rain Cult wants you out there.", "I mean I don't. I'm just saying what they said." ],
+              [ "Fuck no. Are you stupid?", "Don't answer that.", "<size=60%>he's gonna go out there<size=100%>" ]
+            ] } },
+            { "if": { "weather": "rain" }, "then": { "random": [
+              [ "Sure. You'll get wet.", "Wet's good. Wet's holy.", "Take a sandwich. Give it to the sky." ],
+              [ "Take a hat.", "Or don't. Hat's wet by lunch. Everything's wet.", "I'm wet. Brenda's wet. Forget I said that." ]
+            ] } },
+            { "if": { "weather": "drizzle" }, "then": { "random": [
+              [ "Yeah go. Touch some grass, you pale slug.", "Don't actually touch it. Dog shit on it. My dog's." ],
+              [ "It's a drizzle. Go outside, dickhead.", "Pet a dog. NOT MINE. She's mean." ]
+            ] } },
+            { "goto": "menu" }
+          ] },
+          // Three choices at most fit: the lightning question in a storm, the stopping one otherwise.
+          { "text": "am i gonna get fried", "if": { "weather": "storm" }, "say": [
+            { "random": [
+              [ "Fried? Maybe. Crispy on the outside.", "It hits tall shit. You're tall. In spirit.", "The Cult says it picks the sinners.", "So yeah. You're so fucked." ],
+              [ "I don't know man, I do weather, not lightning.", "Lightning does what it wants. It hit my car.", "Then my other car.", "<size=60%>I don't have a car<size=100%>" ],
+              [ "Yeah. Real quick. Zap.", "Your dick goes first. The rest follows." ]
+            ] },
+            { "goto": "menu" }
+          ] },
+          { "text": "when does this shit stop", "if": { "not": { "weather": "storm" } }, "say": [
+            { "random": [
+              [ "Stop? Stop what?", "<size=60%>oh the rain<size=100%>", "Never. Why would it." ],
+              [ "No.", "It never stops. I've been on this line eleven days.", "Brenda left. The sandwiches stopped.", "The rain didn't." ]
+            ] },
+            { "goto": "menu" }
+          ] },
+          { "text": "Fuck off Skip", "say": [
+            { "random": [
+              [ "Hey! HEY. I have a wife, you know.", "Had.", "<size=60%>*click*" ],
+              [ "Wow. Okay.", "Stay damp, dickhead." ],
+              [ "<size=150%>FUCK YOU TOO<size=100%>", "That one's from the Rain Cult. I just work here.", "<size=60%>*click*" ]
+            ] }
+          ] }
+        ] }
+      ]
+    },
+    {
+      // Rings in now and then, like the psychic's ad.
+      "id": "weather-line-ad",
+      "callerId": "WEATHER",
+      "incoming": { "trigger": "random", "once": true },
+      "say": [
+        "<size=150%>RAIN!!! RAIN RAIN RAIN!!! CALL NOW<size=100%>",
+        "Are you wet? Don't know why? Do you hate guessing?",
+        "Call the Weather Line. 555-9328. That's W-E-A-T on the keypad, you dumb sack.",
+        "We tell you if it's raining. It's raining. It's always raining.",
+        "Skip Moistman. Ask for Skip. He's in the yard."
+      ]
+    }
+  ]
+}

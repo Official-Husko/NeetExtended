@@ -8,4 +8,9 @@
     <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
     <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
   </ItemGroup>
+
+  <!-- The weather hotline, played by Phone Expansion like any mod's phone folder. -->
+  <ItemGroup>
+    <None Include="phone/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
