@@ -20,4 +20,9 @@ public sealed class WeatherExpansionConfig
     [Range(0f, 2f)]
     [Description("How strongly the fog and the sky light up with each lightning flash while \"Lightning glow\" is on.")]
     public float LightningGlow = 1f;
+
+    [Label("Mist")]
+    [Range(0f, 2f)]
+    [Description("How much mist drifts over the front and back yard while \"Mist in the yards\" is on.")]
+    public float Mist = 1f;
 }

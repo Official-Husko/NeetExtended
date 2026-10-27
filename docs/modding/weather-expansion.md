@@ -16,6 +16,7 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 | --- | --- | --- |
 | Stormy fog (`StormFog`) | The fog is a dark blue-grey instead of black, as thick as the setting says, and slowly thickens and thins. | Fog thickness (1.3, 0.5 to 3; 1 is the game's own), Fog brightness (1, 0 to 2) |
 | Lightning glow (`LightningGlow`) | In a flash the fog turns bright blue-white and the sky's tint comes up, so the night landscape in the sky cubemap shows behind the yard. | Lightning glow (1, 0 to 2) |
+| Mist in the yards (`MistBanks`) | Two banks of mist drift over the front and the back yard, tinted like the fog and brighter in a flash. | Mist (1, 0 to 2) |
 
 ## How the fog looks work
 
@@ -24,6 +25,10 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 - **Stormy fog**: colour `(0.035, 0.05, 0.085)` times the brightness setting, density = the game's density (0.06, ExponentialSquared) times the thickness setting times `StormInputs.FogDensity` times a drift of about plus or minus 16% (two slow sine waves, a minute or so).
 - **Lightning glow**: `Fog/FlashLevel.cs` turns the moon light's intensity into a 0 to 1 flash (`HouseManager.Thunder` pushes the moon from 0.2 to 14-22 and back; 14 counts as full). The fog colour is lerped to `(0.40, 0.47, 0.66)` and the sky `_Tint` from the game's 0.038 grey to `(0.50, 0.58, 0.78)` by that amount times the setting. Following the light itself needs no event, so it survives house loads, story strikes (`Thunder(instant: true)`) and hot reloads.
 - The sky is `Skybox_CubeTest`, a `Skybox/Cubemap` of a moonlit golf course (`moonlit_golf_4k`) darkened to 0.038, which is why the sky is black. Brought up, it shows hills, trees and a few lights on the horizon, which is what lights up behind the yard in a flash.
+
+## How the mist works
+
+`Fog/MistBanksFeature.cs` makes one particle system per yard (`Fog/MistSystem.cs`), centred on the game's own `Particle_Rain_Frontyard` and `Particle_Rain_Backyard`, 2.5 m up so 4 to 7 m wide puffs stay off the ground. Each system holds at most 70 puffs (rate 3.5 a second times the setting, 18 s life), drifting with a fixed wind and fading in and out. They share one material: a copy of the game's `Legacy Shaders/Particles/Alpha Blended` shader and a soft round texture the mod draws once. The tint is set once per frame (night colour to flash colour by the same flash level); the game's fog fades far puffs out.
 
 ## The storm seam
 
@@ -38,6 +43,7 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 | `Storm/StormInputs.cs` | The multipliers the Sky API will drive. |
 | `Fog/FogLook.cs`, `FlashLevel.cs` | Applying fog and sky tint, and following the lightning. |
 | `Fog/StormFogFeature.cs`, `LightningGlowFeature.cs` | The two fog looks. |
+| `Fog/MistBanksFeature.cs`, `MistSystem.cs`, `SoftTexture.cs` | The mist banks, their particle systems and the puff picture. |
 
 ## Testing
 
@@ -56,4 +62,5 @@ A real strike is `neet call obj.call target='House_Manager---------------' compo
 
 - Nothing here is saved with the game, and none of it follows the storm: fog, mist and glass look the same all night. Drizzle, heavy rain and a clear spell come with the Sky API.
 - There is no height fog and no fog that sits in the sky: Unity's fog is one global colour and density, and a fog volume needs a shader the game doesn't ship. Mist banks stand in for it, over the two yards only.
+- Mist puffs are flat billboards without soft edges, so one that drifts into a wall or the ground shows a hard line there.
 - A custom shader (drops and trails drawn on the graphics card, height fog, wet surfaces) would need an asset bundle built in the Unity editor, which needs the editor installed and an account to activate it. None of that is in the repo.

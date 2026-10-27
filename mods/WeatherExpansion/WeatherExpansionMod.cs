@@ -26,6 +26,7 @@ public sealed class WeatherExpansionMod : NeetMod
 
         ModFeatures.Register(this, new StormFogFeature());
         ModFeatures.Register(this, new LightningGlowFeature());
+        ModFeatures.Register(this, new MistBanksFeature());
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 

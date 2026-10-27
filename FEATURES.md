@@ -197,6 +197,7 @@ Changes how the storm outside looks. Each look is its own switch on the Mods pag
 
 - **Stormy fog**: the night's fog is a dark blue-grey instead of pure black, so the house and the trees show as shapes in the haze, and it slowly thickens and thins. **Fog thickness** and **Fog brightness** in Mod Settings.
 - **Lightning glow**: a lightning flash lights up the fog and the sky as well as the things near you, so the sky shows the landscape behind the yard for a moment. **Lightning glow** in Mod Settings.
+- **Mist in the yards**: banks of mist drift over the front and back yard and light up with the lightning. **Mist** in Mod Settings.
 
 ## Randomizer
 
