@@ -63,6 +63,8 @@ public sealed class CoopMod : NeetMod
         PoseSender.Init();
         RemotePlayers.Init();
         AppearanceSync.Init();
+        BodyBook.Init(this);
+        BodySender.Init();
         ModMenu.AddPage(this, new CoopPage());
     }
 

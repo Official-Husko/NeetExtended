@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using Coop.Net;
+using Coop.Players;
 using Coop.Session;
 using NeetModKit.Saves;
 
@@ -17,7 +18,7 @@ internal static class SnapshotSender
         {
             var timer = Stopwatch.StartNew();
             var snapshot = SaveCapture.Take();
-            SnapshotSanitizer.ForJoiner(snapshot.Save);
+            SnapshotSanitizer.ForJoiner(snapshot.Save, BodyBook.Find(player.Id));
             byte[] data = snapshot.Encode();
 
             var message = Outbox.Begin(MessageIds.Snapshot);

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -5,14 +6,16 @@ namespace Coop.Join;
 
 /// <summary>
 /// Turns the host's save into the one a joining player loads: the world stays exactly the host's,
-/// but the body in it is a new one for the joiner, and the host's open conversation is closed.
+/// but the body in it is the joiner's own (the one they had last time, or a new one), and the host's
+/// open conversation is closed.
 /// </summary>
 internal static class SnapshotSanitizer
 {
     // How far in front of the host a new player turns up.
     private const float SpawnDistance = 1.2f;
 
-    public static void ForJoiner(JObject save)
+    /// <param name="storedBody">The joiner's body from an earlier session (BodyBook), or null.</param>
+    public static void ForJoiner(JObject save, string storedBody)
     {
         var entries = save["Save"] as JArray;
         if (entries == null)
@@ -23,7 +26,11 @@ internal static class SnapshotSanitizer
             {
                 case "Brain":
                     if (entry["basicBrainData"]?.Value<string>("instanceName") == "Player")
-                        FreshBody((JObject)entry["basicBrainData"]);
+                    {
+                        var brain = (JObject)entry["basicBrainData"];
+                        if (storedBody == null || !BodyRestore.TryRestore(brain, storedBody, ItemIds(entries)))
+                            FreshBody(brain);
+                    }
                     break;
                 case "Dialogue":
                     CloseConversation((JObject)entry);
@@ -64,5 +71,16 @@ internal static class SnapshotSanitizer
         dialogue["currentText"] = "";
         dialogue["bucketActive"] = false;
         dialogue["currKnot"] = "";
+    }
+
+    private static HashSet<int> ItemIds(JArray entries)
+    {
+        var ids = new HashSet<int>();
+        foreach (var entry in entries)
+        {
+            if (entry.Value<string>("type") == "Usable" && entry["saveId"] != null)
+                ids.Add(entry.Value<int>("saveId"));
+        }
+        return ids;
     }
 }

@@ -20,6 +20,7 @@ public static class MessageIds
     // Players
     public const ushort Pose = 40;
     public const ushort Appearance = 41;
+    public const ushort Body = 42;
 
     // World: 100-199, see World/.
 }
