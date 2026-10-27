@@ -265,7 +265,7 @@
           "text": "Install scripts for Linux (install.sh) and Windows (install.bat) that set up the loader and all mods in one go, with the option to switch to 64-bit."
         },
         {
-          "text": "The bottom right corner shows the mod pack's name, version and build. You can hide it in Settings.",
+          "text": "The bottom left corner shows the mod pack's name, version and build. You can hide it in Settings.",
           "area": "Framework"
         }
       ],
@@ -329,6 +329,10 @@
         {
           "text": "Characters walking around (trick-or-treaters, the cat, rats, the delivery guy) no longer plan their path again every frame (with Performance Fixes).",
           "area": "Performance Fixes"
+        },
+        {
+          "text": "The mod menu's scrollbars match the game's menus: an orange handle on a dark track.",
+          "area": "Interface"
         }
       ],
       "fixed": [
@@ -399,6 +403,10 @@
         {
           "text": "Closing the game no longer ends in a crash (and a crash report) on the 32-bit game.",
           "area": "Mod loader"
+        },
+        {
+          "text": "The pause menu's MODS buttons no longer show through the Rebind Controls screen.",
+          "area": "Framework"
         }
       ],
       "removed": [
