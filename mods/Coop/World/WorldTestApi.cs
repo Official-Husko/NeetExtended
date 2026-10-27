@@ -84,6 +84,61 @@ public static class WorldTestApi
     }
 
     /// <summary>Where a shared thing is here, who simulates it and whether it's a replica.</summary>
+    /// <summary>Orders a store item the way the store's buy button does (a request to the host on a client).</summary>
+    public static string Order(string item, float priceOffset = 0f)
+    {
+        var computer = HouseManager._?.mainComputer;
+        if (computer == null || !PickupBank.pickupsDict.TryGetValue(item, out var known))
+            return computer == null ? "No computer." : $"No item called {item}.";
+        var ordered = computer.OrderItem(known.obj, null, priceOffset);
+        return WorldSide.IsClient ? "Asked the host." : ordered != null ? "Ordered." : "Refused.";
+    }
+
+    /// <summary>Orders like the custom shops do: the item gets a picture (or, with song, a tape's song) from a file.</summary>
+    public static string OrderCustom(string item, string path, bool song = false)
+    {
+        var computer = HouseManager._?.mainComputer;
+        if (computer == null || !PickupBank.pickupsDict.TryGetValue(item, out var known))
+            return computer == null ? "No computer." : $"No item called {item}.";
+        var custom = new Economy.BoxCustomization(song ? Economy.BoxCustomization.Song : Economy.BoxCustomization.Picture, path);
+        var ordered = computer.OrderItem(known.obj, null, 10f, custom.AsDelegate());
+        return WorldSide.IsClient ? "Asked the host." : ordered != null ? "Ordered." : "Refused.";
+    }
+
+    /// <summary>Items the custom shops can make (they carry a picture or song loader).</summary>
+    public static string CustomItems()
+    {
+        var text = new System.Text.StringBuilder();
+        foreach (var pair in PickupBank.pickupsDict)
+        {
+            var obj = pair.Value.obj;
+            if (obj != null && (obj.GetComponentInChildren<CustomTextureSaveLoader>(true) != null || obj.GetComponentInChildren<CustomMusicSaveLoader>(true) != null))
+                text.Append(pair.Key).Append('\n');
+        }
+        return text.ToString();
+    }
+
+    /// <summary>Buys an app the way the app store's button does; <see cref="Apps"/> lists them.</summary>
+    public static string BuyApp(int appId)
+    {
+        var apps = Economy.AppSync.Downloader();
+        if (apps == null)
+            return "No app store.";
+        apps.BuyApp(appId);
+        return WorldSide.IsClient ? "Asked the host." : Apps();
+    }
+
+    public static string Apps()
+    {
+        var apps = Economy.AppSync.Downloader();
+        if (apps?.boughtApps == null)
+            return "No app store.";
+        var text = new System.Text.StringBuilder();
+        for (int i = 0; i < apps.boughtApps.Length; i++)
+            text.Append(i).Append(apps.boughtApps[i] ? " owned" : " -").Append(i < apps.prices.Length ? $" ({apps.prices[i]}$)" : "").Append('\n');
+        return text.ToString();
+    }
+
     public static string Where(int itemId)
     {
         var o = Find(itemId);

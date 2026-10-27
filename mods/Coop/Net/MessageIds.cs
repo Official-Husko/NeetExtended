@@ -51,4 +51,8 @@ public static class MessageIds
     public const ushort WorldForward = 121;
     public const ushort WorldHealth = 122;
     public const ushort WorldEmail = 123;
+    public const ushort WorldPurchase = 124;
+    public const ushort WorldPurchaseResult = 125;
+    public const ushort WorldApps = 126;
+    public const ushort WorldBoxExtra = 127;
 }

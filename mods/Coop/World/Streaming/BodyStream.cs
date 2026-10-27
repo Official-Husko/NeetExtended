@@ -20,7 +20,10 @@ internal static class BodyStream
 {
     private const float Interval = 0.05f;
     private const int MaxEntries = 120;
+    // Unreliable packets can't be split: LiteNetLib refuses anything over about 1 KB (Steam splits
+    // and loses whole messages over 1.2 KB). A packet is sent before an entry would push it past this.
     private const int PacketBudget = 1000;
+    private const int LargestEntry = 5 + 1 + 12 + 16 + 12;
     private const int SweepParts = 4;
     private const float MoveSq = 0.001f * 0.001f;
     private const float TurnDot = 0.999999f;
@@ -87,15 +90,15 @@ internal static class BodyStream
             return;
         if (!Changed(o, out byte flags, out bool scaled))
             return;
-        _writer ??= Begin(_me, _now);
-        Write(_writer, o, flags, scaled);
-        NetObjects.MarkMoving(o, _now);
-        _sent++;
-        if (_writer.Length > PacketBudget)
+        if (_writer != null && _writer.Length + LargestEntry > PacketBudget)
         {
             Outbox.ToPlayers(_writer, Channel.WorldStream);
             _writer = null;
         }
+        _writer ??= Begin(_me, _now);
+        Write(_writer, o, flags, scaled);
+        NetObjects.MarkMoving(o, _now);
+        _sent++;
     }
 
     private static NetDataWriter Begin(byte slot, float now)

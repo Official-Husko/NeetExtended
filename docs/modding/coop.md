@@ -132,7 +132,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### World
 
-Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, the radio, taps, stove knobs, flashlights, BBQ lighters, cardboard boxes (opened, taped, what's frozen inside), room fires, the cop van, and on the computer the money, stock market, tax bills, the anime card game and the inbox. The lines below are what isn't, or only partly.
+Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, the radio, taps, stove knobs, flashlights, BBQ lighters, cardboard boxes (opened, taped, what's frozen inside), room fires, the cop van, and on the computer the money, store orders, apps, stock market, tax bills, the anime card game and the inbox. The lines below are what isn't, or only partly.
 
 State of things:
 
@@ -160,8 +160,9 @@ NPCs:
 
 Money and the computer:
 
-- One shared wallet, kept by the host. A client's spend shows at once, but two quick purchases on a client can both pass the "enough money" check before the host's total comes back.
-- Buying and selling stocks, paying tax bills, the card game's buttons and the cop van's roll on a client are requests the host carries out. A stock trade or card upgrade the host turns down still played its "done" sound on the client, and the card game shows a client's clicks and upgrades at once, then the host's numbers half a second later.
+- One shared wallet, kept by the host. Everything a client buys on the computer is a request the host carries out with the game's own checks: store orders (every store, the custom shops, and items mods put in the stores), apps, stocks, tax bills and the card game. So the money check, the demo block on the black and occult markets, the cop van's roll and the delivery box happen once, on the host, and two players can't spend the same money twice. Mods that change orders (Randomizer's mystery deliveries) do it on the host's run.
+- A client hears its order or app go through or get refused once the host answers (a few milliseconds on a LAN). A stock trade or card upgrade the host turns down still played its "done" sound on the client, and the card game shows a client's clicks and upgrades at once, then the host's numbers half a second later.
+- A custom photo or tape from the custom shops is unpacked by whoever opens its box, wherever it was ordered; the item keeps the file's path, and each game loads the picture or song from that path on its own machine.
 - Card game experience and crystals come from the host twice a second, so the bars move in small steps on clients.
 
 Other:

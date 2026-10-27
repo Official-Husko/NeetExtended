@@ -14,7 +14,9 @@ namespace Coop.World.Npcs;
 internal static class NpcPoseSender
 {
     private const float Interval = 1f / 15f;
+    // Unreliable packets can't be split (see BodyStream); one is sent before an entry would overflow it.
     private const int PacketBudget = 1000;
+    private const int EntrySize = 5 + NpcPose.Size;
 
     private static float _next;
 
@@ -38,6 +40,11 @@ internal static class NpcPoseSender
                 continue;
             rig.Sent = pose;
             rig.HasSent = true;
+            if (w != null && w.Length + EntrySize > PacketBudget)
+            {
+                Outbox.ToPlayers(w, Channel.WorldStream);
+                w = null;
+            }
             if (w == null)
             {
                 w = Outbox.Begin(MessageIds.WorldNpcPoses);
@@ -45,11 +52,6 @@ internal static class NpcPoseSender
             }
             o.Ref.Write(w);
             pose.Write(w);
-            if (w.Length > PacketBudget)
-            {
-                Outbox.ToPlayers(w, Channel.WorldStream);
-                w = null;
-            }
         }
         if (w != null)
             Outbox.ToPlayers(w, Channel.WorldStream);

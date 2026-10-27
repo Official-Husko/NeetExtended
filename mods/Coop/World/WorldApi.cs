@@ -147,6 +147,27 @@ public static class WorldApi
         return text.ToString();
     }
 
+    /// <summary>Every body whose object name contains <paramref name="name"/>: height, kinematic, and what it is shared as.</summary>
+    public static string Bodies(string name)
+    {
+        var text = new StringBuilder();
+        foreach (var body in Object.FindObjectsOfType<Rigidbody>())
+        {
+            if (body.name.IndexOf(name, System.StringComparison.OrdinalIgnoreCase) < 0)
+                continue;
+            var o = NetObjects.Find(body.gameObject);
+            text.Append(body.GetInstanceID()).Append(' ').Append(body.name).Append(" y ").Append(Mathf.RoundToInt(body.position.y))
+                .Append(body.isKinematic ? " kinematic" : " dynamic");
+            if (o == null)
+                text.Append(", not shared");
+            else
+                text.Append(", ").Append(o.Ref).Append(o.IsReplica ? " replica" : " simulated here").Append(" owner ").Append(o.Owner)
+                    .Append(o.Go == body.gameObject ? "" : " (other object)");
+            text.Append('\n');
+        }
+        return text.ToString();
+    }
+
     private static uint Mix(uint x)
     {
         unchecked

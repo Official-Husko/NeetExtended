@@ -20,13 +20,15 @@ namespace Coop.World.Forwarding;
 /// WorldForward: target slot, kind, then
 /// - Damage: position, amount, damage kind, force (optional);
 /// - Blast: centre, radius (an explosion's push);
-/// - NpcDamage (to the host): NPC ref, position, amount, damage kind, force (optional).
+/// - NpcDamage (to the host): NPC ref, position, amount, damage kind, force (optional);
+/// - Possess: the skeleton parasite that got the player (its mask goes on their face).
 /// </summary>
 internal static class Forwarder
 {
     private const byte Damage = 0;
     private const byte Blast = 1;
     private const byte NpcDamage = 2;
+    private const byte Possess = 3;
 
     // What the game's explosions push bodies with (Commons.ExplosionDamage).
     private const float BlastForce = 100f;
@@ -51,6 +53,16 @@ internal static class Forwarder
         npc.Write(w);
         PutHit(w, position, amount, kind, force);
         Send(WorldSide.HostSlot, w);
+    }
+
+    /// <summary>Host: a skeleton parasite reached another player; they're knocked out and get its mask.</summary>
+    public static void Possessed(byte slot, NetRef parasite)
+    {
+        if (!WorldSide.Running || !WorldSide.IsHost)
+            return;
+        var w = Begin(slot, Possess);
+        parasite.Write(w);
+        Send(slot, w);
     }
 
     /// <summary>After an explosion here: other players' bodies in reach get its push at home.</summary>
@@ -114,6 +126,9 @@ internal static class Forwarder
             case NpcDamage:
                 HurtNpc(NetObjects.Find(NetRef.Read(reader)), reader);
                 break;
+            case Possess:
+                BePossessed(NetObjects.Find(NetRef.Read(reader)));
+                break;
         }
     }
 
@@ -130,6 +145,27 @@ internal static class Forwarder
         var player = WorldSide.LocalPlayer;
         if (player != null && player.TryGetComponent(out Rigidbody body))
             body.AddExplosionForce(BlastForce, centre, radius, BlastLift, ForceMode.Impulse);
+    }
+
+    // What the parasite's own possession does to the host's player: knocked out, a worn mask off,
+    // its skull mask on (the mask is a new item made here, so it's this player's from the start).
+    private static void BePossessed(NetObject parasite)
+    {
+        var player = WorldSide.LocalPlayer;
+        var mask = parasite != null && parasite.Alive && parasite.Go.TryGetComponent(out SkeletonParasite skull) ? skull.mask : null;
+        if (player == null || !player.TryGetComponent(out PlayerStats stats) || !player.TryGetComponent(out Player_Abilities hands))
+            return;
+        stats.knockout.SetVal(10f);
+        foreach (var worn in hands.masks)
+        {
+            if (worn != null && worn.TryGetComponent(out MaskFace face) && !face.stackable)
+            {
+                face.RemoveMask(player);
+                break;
+            }
+        }
+        if (mask != null)
+            Object.Instantiate(mask, Vector3.up * 100f, Quaternion.identity).GetComponent<MaskFace>()?.PutOnMask(player, notHeld: true);
     }
 
     private static void HurtNpc(NetObject npc, NetDataReader reader)

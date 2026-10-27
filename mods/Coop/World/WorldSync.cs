@@ -190,6 +190,7 @@ internal static class WorldSync
             NpcPoseReceiver.LateTick();
         HealthReport.Tick();
         SpawnSender.FlushSpawns();
+        EconomySync.AfterSpawns();
         OwnershipNet.Flush();
         StateSync.LateTick();
         SpawnSender.FlushDestroys();
@@ -201,6 +202,7 @@ internal static class WorldSync
         if (WorldSide.Running && CoopSession.IsActive)
             OwnershipParking.Park();
         NpcPuppets.RestoreDamage();
+        Purchases.Unload();
         WorldSide.Running = false;
     }
 }
