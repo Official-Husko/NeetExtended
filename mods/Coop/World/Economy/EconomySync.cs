@@ -1,8 +1,8 @@
 namespace Coop.World.Economy;
 
 /// <summary>
-/// The computer's economy as one part of world sync: the wallet, the stock market, tax bills and the
-/// card game. All of it runs on the host; clients see its state and send their actions as requests.
+/// The computer as one part of world sync: the wallet, the stock market, tax bills, the card game
+/// and the inbox. All of it runs on the host; clients see its state and send their actions as requests.
 /// </summary>
 internal static class EconomySync
 {
@@ -12,6 +12,7 @@ internal static class EconomySync
         StockSync.Init();
         TaxSync.Init();
         CardSync.Init();
+        InboxSync.Init();
     }
 
     /// <summary>A new house or session: forget what was sent.</summary>
@@ -30,6 +31,7 @@ internal static class EconomySync
         StockSync.SendAllTo(slot);
         TaxSync.SendAgain();
         CardSync.SendAgain();
+        InboxSync.SendAllTo(slot);
     }
 
     /// <summary>Every frame: money written behind the setter's back.</summary>

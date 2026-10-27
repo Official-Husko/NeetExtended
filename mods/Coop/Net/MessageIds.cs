@@ -46,4 +46,5 @@ public static class MessageIds
     public const ushort WorldCopVan = 120;
     public const ushort WorldForward = 121;
     public const ushort WorldHealth = 122;
+    public const ushort WorldEmail = 123;
 }

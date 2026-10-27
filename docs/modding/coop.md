@@ -128,7 +128,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### World
 
-Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, the radio, taps, stove knobs, flashlights, BBQ lighters, cardboard boxes (opened, taped, what's frozen inside), room fires, the cop van, and on the computer the money, stock market, tax bills and the anime card game. The lines below are what isn't, or only partly.
+Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, the radio, taps, stove knobs, flashlights, BBQ lighters, cardboard boxes (opened, taped, what's frozen inside), room fires, the cop van, and on the computer the money, stock market, tax bills, the anime card game and the inbox. The lines below are what isn't, or only partly.
 
 State of things:
 
@@ -136,7 +136,8 @@ State of things:
 - The stove's knob is shared, but what the gas does afterwards (lighting, exploding) happens on each machine on its own.
 - The radio's tape starts from the top on each machine; the play position isn't shared.
 - Fire: the host spreads it and clients get its flames once a second, so a client sees a growing fire in steps. A flame a client puts out goes out on the host too (the nearest one). Candles and other flames a fire lights on a client stay lit only there.
-- Spam email and prank calls only happen on the host; clients don't get them.
+- Prank calls only ring on the host.
+- The inbox is the host's: every email that arrives there reaches everyone (a joining player gets the whole list). Which emails you've read is your own. Replies to Email Expansion's emails only count on the host: on a client the reply buttons still show, and a reply there only moves that client's copy of the conversation.
 
 Picking things up and pushing them:
 
