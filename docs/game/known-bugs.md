@@ -394,6 +394,16 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 
 **Reproduce:** `sky.strike measure=true` and read `moonNow` (0 with `MoonRestore` off, 0.2 with it on).
 
+## Lightning and lamp flicker depend on the frame rate
+
+**What happens:** the flash of lightning and the lamps dipping with it last as long as the frames take: at 144 fps they are over in less than half the time they take at 60.
+
+**Cause:** the Moon's flash and fade use `Mathf.Lerp(.., 0.6f)` and `Lerp(.., 0.1f)` once per frame (`HouseManager.cs:500-514`), and `LightSwitch.FlickerCoroutine` uses `Lerp(.., 0.22f)` once per frame in both directions (`LightSwitch.cs:160-175`). A fixed share per frame means the speed is proportional to the frame rate.
+
+**Fix:** each of those factors `k` becomes `1 - (1 - k)^(dt * 60)` with the frame's unscaled time `dt`, which gives the same result over the same real time as at 60 fps (the code is rewritten in the two coroutines; if the game's code doesn't look as expected, the fix leaves it alone and says so in the log).
+
+**Reproduce:** `sky.strike measure=true` at different frame rates and compare `secondsAbove1`: it shrinks with the frame rate when `LightningTiming` is off and stays near 0.4 s with it on.
+
 ## Not bugs
 
 - `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.

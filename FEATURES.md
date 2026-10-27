@@ -80,6 +80,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Pans cool down after food burns in them**: a frying pan that had food burn in it stayed hot for good, even long after the stove was off. It cools down like any other pan.
 - **Thunder keeps going**: once the story had set off its own lightning there was no thunder again until you restarted the game. Thunder now carries on at random.
 - **The moon comes back after lightning**: the first flash switched the moonlight off for good. It goes back to its usual light when the flash is over.
+- **Lightning looks the same at any frame rate**: the flash and the lamps flickering with it were over in half the time at 144 fps. They now last as long as they do at 60.
 
 ## Performance Fixes (experimental)
 

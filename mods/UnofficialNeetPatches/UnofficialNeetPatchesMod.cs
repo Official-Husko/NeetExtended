@@ -51,6 +51,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new PanCoolingFix());
         ModFeatures.Register(this, new ThunderLoopFix());
         ModFeatures.Register(this, new MoonRestoreFix());
+        ModFeatures.Register(this, new LightningTimingFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);
