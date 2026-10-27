@@ -39,6 +39,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new HiddenPickupsFix());
         ModFeatures.Register(this, new AutosaveAfterLoadFix());
         ModFeatures.Register(this, new SpawnersAfterLoadFix());
+        ModFeatures.Register(this, new WornClothesFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);

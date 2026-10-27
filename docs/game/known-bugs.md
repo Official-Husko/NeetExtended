@@ -30,6 +30,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Characters pick up things that belong to switched-off objects | `HiddenPickups` |
 | No autosave after loading a save | `AutosaveAfterLoad` |
 | Timed spawners stop after loading a save | `SpawnersAfterLoad` |
+| Worn clothes fall out of the world after loading | `WornClothes` |
 
 ## Saving fails with a dead house spider around
 
@@ -271,6 +272,16 @@ The same field is compared in three more places:
 - `Toilet_Flush.cs:107` uses `Time.time >= timeToLastLoad + 0.5f`, which is correct.
 - `DeliveryGuy.cs:53` deactivates the delivery guy in `Start` when `timeToLastLoad == 0 || timeToLastLoad > 0.5f`. After a load the second part is always true, so he is switched off even if the save had him on his way. It is probably meant as "load was more than half a second ago" but `Start` runs in the same frame as the load, so it was most likely meant the other way round. Left alone: the effect is a delivery guy that disappears when a save is loaded mid-delivery, and getting it wrong would leave him standing in the hall.
 - `RefrigerationZone.cs:54,76` skips the freezer's `OnEnable`/`OnDisable` work when a load happened and `timeToLastLoad <= 0.2f`, which only holds for a load in the first 0.2 s of the game. Probably meant as "just loaded". The effect would be fridge counts changing while the load switches fuses and food, which nothing here has shown to be wrong. Left alone.
+
+## Worn clothes fall out of the world after loading
+
+**What happens:** clothes worn when the game was saved are ordinary falling items after the load, forever. One reached -20,000 km.
+
+**Cause:** `Wearable.Wear` parks worn clothes at y = -500 with a kinematic body (`Wearable.cs:20-33`). The save stores `isKinematic` (`Usable.cs:241`) but the load code never applies it, and `Player_Abilities.Load` puts the loaded clothes on with `PutOnClothes` directly (`Player_Abilities.cs:361-369`), not through `Wear`. Putting them on yourself and the clothes a rig starts with (`:437-439`) go through `Wear` and are fine.
+
+**Fix:** a postfix on `Player_Abilities.PutOnClothes` makes a worn piece kinematic and, if it was not, moves it back to the parking spot.
+
+**Reproduce:** wear shoes, pants and shirt, save, load: read `Player_Abilities.clothings[i].transform.position.y` and `Rigidbody.isKinematic` a few seconds later. Without `WornClothes` y keeps dropping; with it the pieces stay at -500.
 
 ## Not bugs
 
