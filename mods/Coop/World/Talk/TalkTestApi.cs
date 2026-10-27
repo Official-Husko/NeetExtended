@@ -110,6 +110,17 @@ public static class TalkTestApi
         return text.ToString();
     }
 
+    /// <summary>Host: a shared item lands in the candy bucket (what the bucket's trigger does).</summary>
+    public static string Offer(int itemId)
+    {
+        var o = NetObjects.Find(new NetRef(NetKind.Item, itemId));
+        if (o == null || !o.Alive || Dialogue._ == null)
+            return $"No shared item {itemId}.";
+        var bucket = Dialogue._.bucket;
+        Dialogue._.ProcessOffering(o.Go);
+        return $"Offered {o.Go.name}; bucket for {(bucket != null && bucket.targetOwner != null ? bucket.targetOwner.name : "nobody")}.";
+    }
+
     /// <summary>Presses a handset's button the way a hand does (0-9, -1 call or answer, -2 clear).</summary>
     public static string Press(int phone, int button)
     {

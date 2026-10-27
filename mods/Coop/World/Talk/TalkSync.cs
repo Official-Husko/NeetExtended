@@ -12,6 +12,7 @@ internal static class TalkSync
         PhoneRequests.Init();
         PhoneScreens.Init();
         SoulTrade.Init();
+        StoryFunctions.Init();
     }
 
     public static void Start(bool host)

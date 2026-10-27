@@ -58,9 +58,10 @@ internal static class TalkPatches
     [HarmonyPatch(typeof(Dialogue), nameof(Dialogue.AdvanceStory))]
     private static bool Advance() => !OnClient;
 
+    // A client's copy of the story never takes offerings; the host's bucket may be a remote player's.
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Dialogue), nameof(Dialogue.ProcessOffering))]
-    private static bool Offering() => !OnClient;
+    private static bool Offering(GameObject offering) => !OnClient && Offerings.BeforeProcess(offering);
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Dialogue), nameof(Dialogue.DeniedOffering))]
@@ -68,7 +69,7 @@ internal static class TalkPatches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Usable), nameof(Usable.GoToDialogueFunctions))]
-    private static bool StoryFunctions() => !OnClient;
+    private static bool ItemStory(string fullKnotPath) => Talk.StoryFunctions.Before(fullKnotPath);
 
     // The host decides when a speaker walks off; clients hear it from TalkSender.Left.
     [HarmonyPrefix]

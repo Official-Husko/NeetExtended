@@ -82,6 +82,23 @@ internal static class TalkRunner
         });
     }
 
+    /// <summary>ProcessOffering's story part: the offering's lists for the story, then the knot's "got something" branch.</summary>
+    public static void Offered(Conversation c, GameObject item)
+    {
+        c.Offering = item;
+        Run(c, () =>
+        {
+            var story = Dialogue._.masterStory;
+            var offering = item.GetComponent<Offering>();
+            story.variablesState["tempCurrOffering"] = offering.OfferingStatsToInkList(story);
+            if (offering.isMoney && item.TryGetComponent(out Usable usable))
+                story.variablesState["offeringValue"] = usable.price;
+            Offerings.BucketOff(c);
+            Choose(c.Knot + ".got_something");
+            Step(c, isChoice: false, again: false);
+        });
+    }
+
     /// <summary>The conversation ends from inside a step (a tag, or something the story's functions closed).</summary>
     public static void Close(Conversation c, bool keepText = false, bool left = false)
     {
@@ -132,7 +149,7 @@ internal static class TalkRunner
             if (c.Closed)
                 break;
             if (Starts(tag, "OfferingTime"))
-                c.OfferingTime = true;
+                Offerings.BucketOn(c);
             else if (Starts(tag, "DeniedOffering"))
                 Denied(c);
             else if (Starts(tag, "Leaving"))

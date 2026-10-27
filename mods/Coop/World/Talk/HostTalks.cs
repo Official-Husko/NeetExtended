@@ -42,6 +42,9 @@ internal static class HostTalks
         return BySpeaker.TryGetValue(speaker, out var c) ? c.Slot : WorldSide.None;
     }
 
+    /// <summary>The remote player's conversation with <paramref name="speaker"/>, or null.</summary>
+    public static Conversation Of(CharacterStories speaker) => BySpeaker.TryGetValue(speaker, out var c) ? c : null;
+
     /// <summary>Runs <paramref name="start"/> (something that calls InitCharacterDialogue) as <paramref name="slot"/>'s start.</summary>
     public static void RunAs(byte slot, string held, string body, Action start)
     {
@@ -278,6 +281,9 @@ internal static class HostTalks
             if (c.IsPhone)
                 d.aliveFlowNames.Remove(c.Flow);
         }
+        // CloseDialogue puts the bucket away.
+        if (c.Speaker != null)
+            Offerings.BucketOff(c);
         if (hangUp && c.Speaker != null && c.Speaker.TryGetComponent(out Phone_Interface phone))
             phone.ClearScreen(noDistanceCheck: true);
         if (tell && !c.Closed)

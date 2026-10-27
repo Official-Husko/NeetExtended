@@ -28,6 +28,8 @@ internal static class TalkSender
             flags |= TalkProtocol.SpeakerLeft;
         if (c.OfferingTime)
             flags |= TalkProtocol.OfferingTime;
+        if (c.BucketOff)
+            flags |= TalkProtocol.BucketOff;
         w.Put(flags);
         if (c.HasLine)
             w.Put(c.Text);

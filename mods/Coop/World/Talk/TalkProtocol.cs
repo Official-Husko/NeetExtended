@@ -42,6 +42,7 @@ internal static class TalkProtocol
     public const byte KeepText = 16;
     public const byte SpeakerLeft = 32;
     public const byte OfferingTime = 64;
+    public const byte BucketOff = 128;
 
     public static byte KindOf(string flow)
     {

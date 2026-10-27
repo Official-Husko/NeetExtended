@@ -171,6 +171,10 @@ internal static class ClientTalk
         d.currSpeaker = speaker;
         if (text != null)
             TalkView.ShowLine(speaker, text, (flags & TalkProtocol.IsChoice) != 0);
+        if ((flags & TalkProtocol.OfferingTime) != 0)
+            Offerings.Show(speaker, on: true);
+        if ((flags & TalkProtocol.BucketOff) != 0)
+            Offerings.Show(speaker, on: false);
         if ((flags & TalkProtocol.SpeakerLeft) != 0)
             MarkLeft(speaker);
         if ((flags & TalkProtocol.Closed) != 0)
@@ -203,6 +207,7 @@ internal static class ClientTalk
             if (keepText)
             {
                 TalkView.HideChoices();
+                Offerings.Show(_speaker, on: false);
                 d.NPCReset();
             }
             else

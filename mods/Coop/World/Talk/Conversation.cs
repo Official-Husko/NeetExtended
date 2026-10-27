@@ -26,6 +26,7 @@ internal sealed class Conversation
     public bool More;
     public readonly List<string> Choices = new List<string>();
     public bool OfferingTime;
+    public bool BucketOff;
 
     // How it ended, if it did.
     public bool Closed;
@@ -41,5 +42,6 @@ internal sealed class Conversation
     {
         HasLine = false;
         OfferingTime = false;
+        BucketOff = false;
     }
 }
