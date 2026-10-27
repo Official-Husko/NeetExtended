@@ -94,7 +94,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 ### Connecting
 
 - Direct IP: the host needs the UDP port forwarded in their router and open in their firewall (firewalld on Linux blocks it by default). There is no UPnP, NAT punch-through or relay; a VPN (Tailscale, ZeroTier) is the workaround.
-- Over Steam (no port forwarding) needs the Co-op over Steam mod, which hasn't been run in a game yet; see the Steam list below.
+- Over Steam (no port forwarding) needs the Co-op over Steam mod, which has hosted under Proton but never had a second account join; see the Steam list below.
 - No password or allow list: anyone who has the address and the same mods can join. Traffic isn't encrypted.
 - At most 4 players. No host migration: when the host leaves, the game ends for everyone.
 - A joiner needs every shared mod the host runs installed, in the same version; it's turned away otherwise, with the missing mods named. Switched on or off doesn't matter (mods off by default, like the Randomizer, too): the host sends its mod setup right after Welcome, so the joiner loads them before the house loads, and unloads shared mods the host doesn't run, for the session. Mods that only change your own game (Dev Bridge, Cheat Menu, Performance Fixes, No Feedback, Open Saves, Co-op over Steam) can differ.
@@ -102,7 +102,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### Steam
 
-- **Never run in a game yet.** It compiles and `neet steam` fetches and checks the DLL, but nobody has connected over it. Next: `SteamProbe.Run()` in one game (does the Steam API start under Proton, is the relay ready), then host and join with a second Steam account on another machine.
+- **Never joined over Steam yet.** The Steam API starts under GE-Proton10 (`SteamProbe.Run()`), the relay gets ready and a game hosts over Steam, but nobody has joined: that needs a second Steam account on another machine.
 - One Steam account probably can't connect to itself, so two games on one PC can't test it (use direct there).
 - No lobbies, no invites, no "Join Game" in the friends list, no rich presence: friends type the host's SteamID64. The overlay only exists when Steam started the game.
 - No Steam auth tickets: the identity Steam gives each connection is trusted, but owner id under Family Sharing and VAC status aren't checked.
@@ -131,7 +131,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 - Physics hands on other players (experimental setting) has only been checked by eye: an arm reaching for a held item looks right; fast moves and two-handed holds haven't been looked at.
 - Going down only happens in co-op, to a game's own player, and only when the death runs through `DieAccessor`: being gibbed, skeletonized or killed by a story event is still instant death. Reviving takes food; nothing else (medicine, a slap) works yet. There's no carrying a downed player.
 - Remote players have the default face, and their hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
-- Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Spiders still ignore remote players (they want an enabled Brain), and NPCs only talk to the host. Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
+- Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.
 
 ### Mod setup
@@ -161,7 +161,6 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 - A client never saves. Their progress in the host's house exists only in the host's save (and see "Bodies aren't kept" above).
 - Timed content from mods (Phone Expansion's incoming calls, Email Expansion's mail) only happens on the host.
-- Clients can't talk to the people in the house (visitors, Grandpa, the thief): their story runs on the host, and a client's conversation would move its own copy of it. Only the host talks to them, and the others don't see that conversation. The phone works for everyone.
 - If the Co-op mod is switched off (not reloaded) while in someone's house, the game goes back to the main menu after 10 seconds.
 
 ### World
@@ -215,7 +214,7 @@ Other:
 - The sun and moon drift apart between machines (the game turns them a fixed step per frame), and thunder flickers at different times in each game.
 - During a hot reload of the Co-op mod (about 0.2 s), changes aren't sent. The resync afterwards fixes items, but something a client used up or destroyed during its own reload comes back.
 - A few scene objects with no id of their own are matched by their place in the scene. A mod that changes the scene differently on two machines would break that match.
-- Some worn clothes in older saves aren't kinematic and keep falling below the house forever (a game quirk, fixed for new saves by Unofficial NEET Patches). World stops sending things once they're 1 km below the house.
+- Things that fall below the house (a body without a floor under it) stop being sent once they're 1 km down. Clothes parked by the game used to do that after every load; Unofficial NEET Patches parks them again now (`WornClothes`).
 
 Cost (two games on one PC, a house with about 550 shared things and 13 NPCs; `WorldApi.Timing`, `perf.frames`):
 
