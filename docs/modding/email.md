@@ -77,7 +77,7 @@ A file holds one email, a list of emails, or `{ "emails": [ ... ] }`. `//` and `
 
 ### Steps
 
-The same steps as phone calls (see [phone.md](phone.md#steps)), except there are no `player` lines:
+The same steps as phone calls (see [phone.md](phone.md#steps)), with the same [text values](phone.md#text-values) like `{{money}}`, except there are no `player` lines:
 
 | Step | What it does |
 | --- | --- |

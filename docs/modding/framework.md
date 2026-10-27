@@ -301,6 +301,7 @@ RuleActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount",
 
 - `RuleConditions.Register(owner, name, compile, help)`: `compile` turns the value from the file into a test once, when the file loads, so mistakes show up right away (throw `FormatException`). The test gets the `IRuleSubject` it runs for.
 - `RuleActions.Register(owner, name, run, mainValue, help)`: `run` gets `ActionArgs` (`Str`, `Num`, `Int`, `Bool`, `Has`, `Require`, `Values`, `Subject`, `Repeat(action)` for `"count"`). `mainValue` is what a bare value fills in Ink (`Act("deliver", "Pizza")`). `RuleActions.Later(owner, seconds, action)` runs something after a delay.
+- `RuleTexts.Register(owner, name, read, help)`: a text value files write as `{{name}}` or `{{name:arg}}` in lines and choices (`read` gets the argument, "" without one, and runs when the line shows). `StepWriter` turns them into `{RuleText("name", "arg")}`; a choice with a value is written in brackets and said as its branch's first line, since Ink would read a leading `{...}` as a condition. Unknown names throw `FormatException` when the file loads. Built in: `money`, `flag`.
 - `Condition.Parse(json)`, `Condition.Of(func)`, `Test(subject)`: a whole condition object, with `any`, `all` and `not`.
 - `ActionList.Parse(json)`, `Run(subject)`: a list of `{ "do": ... }` objects, checked when parsed.
 - `Comparison.Parse("< 25")`, `NamedComparisons.Parse({ "name": ">= 2" })`: the number tests conditions use.

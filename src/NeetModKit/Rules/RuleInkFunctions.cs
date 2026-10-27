@@ -6,7 +6,8 @@ namespace NeetModKit.Rules;
 /// Ink functions for the rules, bound to the dialogue and the email story. RuleIf and RuleDo are
 /// what <see cref="StepWriter"/> writes; the rest are for hand-written scripts:
 /// <c>~ Act("deliver", "item=Pizza; after=30")</c>, <c>{Check("money", "&gt;= 20"): ...}</c>,
-/// <c>{Flag("met_ghost")}</c>, <c>~ SetFlag("met_ghost", 1)</c>, <c>~ AddFlag("visits", 1)</c>.
+/// <c>{Flag("met_ghost")}</c>, <c>~ SetFlag("met_ghost", 1)</c>, <c>~ AddFlag("visits", 1)</c>,
+/// <c>{RuleText("money", "")}</c>.
 /// They run for <see cref="RuleContext.Active"/>.
 /// </summary>
 internal static class RuleInkFunctions
@@ -27,6 +28,8 @@ internal static class RuleInkFunctions
         });
         InkFunctions.Register(kit, "Check", new[] { "condition", "value" }, a =>
             RuleConditions.Check(InkValues.Str(a, 0), RuleActions.Literal(InkValues.Str(a, 1)), RuleContext.Active), lookaheadSafe: true);
+
+        InkFunctions.Register(kit, "RuleText", new[] { "name", "arg" }, a => RuleTexts.Read(InkValues.Str(a, 0), InkValues.Str(a, 1)), lookaheadSafe: true);
 
         InkFunctions.Register(kit, "Flag", new[] { "name" }, a => ModFlags.Get(InkValues.Str(a, 0)), lookaheadSafe: true);
         InkFunctions.Register(kit, "SetFlag", new[] { "name", "value" }, a => Run(() =>

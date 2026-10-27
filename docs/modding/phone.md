@@ -119,6 +119,21 @@ Steps run top to bottom. A step is one of these:
 
 Wherever steps are expected, a single step works too: `"then": "Oh hi."`. After a branch (a choice, an if, a random pick), the call carries on with the steps after it. Every call hangs up after its last step.
 
+### Text values
+
+Lines and choices can show values that change, written `{{name}}` or `{{name:argument}}`:
+
+| Value | Shows |
+| --- | --- |
+| `{{money}}` | The cash on the computer, in whole dollars. |
+| `{{flag:name}}` | A flag's number. |
+
+Other mods add their own, like co-op's `{{player:1}}` (a player's name). A name that doesn't exist is reported when the file loads. In hand-written Ink the same values are `{RuleText("money", "")}` and `{RuleText("flag", "name")}`.
+
+```json
+"You got {{money}} bucks and you still call me?"
+```
+
 ### Conditions
 
 A condition is an object; every key in it must hold. Used by `when`, `if`, choice `if` and `incoming.when`. Conditions and actions are shared with every mod that reads content files (emails use the same ones), and flags are shared too: an email can set a flag a call checks. `called`, `dialed` and `ring` come from the phone; the rest from the framework. The ones about the player (`stat`, `holding`, `room`, and the actions `stat` and `knockout`) are about the player on the call; in co-op that's whoever is talking, not the host.

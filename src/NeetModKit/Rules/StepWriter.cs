@@ -201,12 +201,17 @@ public sealed class StepWriter
 
     private bool Choice(string text, JToken then, JToken condition, bool once, string rest, string where, ref int count)
     {
-        string escaped = InkText.Escape(text ?? "");
+        string escaped = Text(text, where);
         if (escaped.Length == 0)
             throw new FormatException($"{where}: a choice needs some text.");
         string test = condition != null ? $" {{RuleIf({Condition(condition, where + ".if")})}}" : "";
-        string shown = _options.SayChoices ? escaped : "[" + escaped + "]";
+        // Ink reads a choice that starts with "{...}" as another condition, so text with values
+        // shows in brackets and, when choices are said, is said as the branch's first line instead.
+        bool values = RuleTexts.HasValues(text);
+        string shown = _options.SayChoices && !values ? escaped : "[" + escaped + "]";
         Line($"{(once ? "*" : _options.ChoiceMark)}{test} {shown}");
+        if (_options.SayChoices && values)
+            Line("  " + escaped);
         Line("  -> " + Branch(then, rest, where));
         count++;
         return condition != null || once;
@@ -239,11 +244,18 @@ public sealed class StepWriter
     {
         foreach (string raw in (text ?? "").Split('\n'))
         {
-            string line = InkText.Escape(raw);
+            string line = Text(raw, "a line");
             if (line.Length == 0)
                 continue;
             Line(tag == null ? line : line + " # " + tag);
         }
+    }
+
+    // Plain text with {{values}} (RuleTexts) as Ink.
+    private static string Text(string text, string where)
+    {
+        try { return RuleTexts.ToInk(text ?? ""); }
+        catch (FormatException e) { throw new FormatException($"{where}: {e.Message}"); }
     }
 
     private int Condition(JToken condition, string where)

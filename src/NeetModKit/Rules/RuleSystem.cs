@@ -1,6 +1,6 @@
 namespace NeetModKit.Rules;
 
-/// <summary>Sets up the shared rules: flags, the built-in conditions and actions, and their Ink functions and console commands.</summary>
+/// <summary>Sets up the shared rules: flags, the built-in conditions, actions and text values, and their Ink functions and console commands.</summary>
 internal static class RuleSystem
 {
     public static void Init(NeetLoader.NeetMod kit)
@@ -8,6 +8,7 @@ internal static class RuleSystem
         ModFlags.Init(kit);
         BuiltinConditions.Register(kit);
         BuiltinActions.Register(kit);
+        BuiltinTexts.Register(kit);
         RuleInkFunctions.Register(kit);
         FlagCommands.Register(kit);
     }
