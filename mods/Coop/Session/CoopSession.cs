@@ -47,6 +47,9 @@ public static class CoopSession
     /// <summary>Why the last session ended, for the menu.</summary>
     public static string LastEndReason { get; private set; } = "";
 
+    /// <summary>True while the session ends and its players are taken out (their PlayerLeft isn't news).</summary>
+    public static bool IsEnding { get; private set; }
+
     /// <summary>The transport this session uses (the last one used when offline).</summary>
     internal static ITransport Transport { get; private set; }
 
@@ -197,7 +200,15 @@ public static class CoopSession
             return;
         LastEndReason = reason;
         CoopMod.Log.Info($"Co-op ended: {reason}");
-        Reset();
+        IsEnding = true;
+        try
+        {
+            Reset();
+        }
+        finally
+        {
+            IsEnding = false;
+        }
         Ended?.Invoke(reason);
     }
 

@@ -66,7 +66,7 @@ internal static class SessionNotices
     {
         Announced.Remove(Key(player));
         Close(player.Slot);
-        if (On)
+        if (On && !CoopSession.IsEnding)
             Notices.Show(CoopMod.Instance, player.Name + " left", InTheHouse(), seconds: Linger);
     }
 
