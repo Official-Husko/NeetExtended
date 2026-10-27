@@ -70,6 +70,7 @@ public sealed class CoopMod : NeetMod
         Downed.Init();
         Carrying.Init();
         World.WorldSync.Init(this);
+        Assets.FileSharing.Init(this);
         World.Ownership.HoldRepair.Init();
         Content.CoopStory.Register(this);
         SharedHouse.Init(this);

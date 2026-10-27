@@ -45,13 +45,16 @@ internal sealed class BoxCustomization
     {
         if (content == null)
             return;
-        bool present = Path.Length > 0 && File.Exists(Path);
+        // Files from other games come as shared paths (Assets), fetched by the loader's hook if they
+        // aren't here yet. The host never takes another game's plain path: that would be its own disk.
+        string path = Session.CoopSession.IsHost && !Assets.SharedPaths.IsShared(Path) ? "" : Path;
+        bool present = path.Length > 0 && (File.Exists(path) || Assets.SharedPaths.IsShared(path));
         if (Kind == Song)
         {
             var music = content.GetComponentInChildren<CustomMusicSaveLoader>();
             if (music == null)
                 return;
-            music.persistentMusicPath = Path;
+            music.persistentMusicPath = path;
             if (present)
                 music.CustomizeItem(content);
         }
@@ -60,9 +63,9 @@ internal sealed class BoxCustomization
             var picture = content.GetComponentInChildren<CustomTextureSaveLoader>();
             if (picture == null)
                 return;
-            picture.persistentTexturePath = Path;
+            picture.persistentTexturePath = path;
             if (present)
-                LoadPicture(picture, picture.gameObject, Path);
+                LoadPicture(picture, picture.gameObject, path);
         }
     }
 
@@ -94,7 +97,7 @@ internal sealed class BoxCustomization
         return true;
     }
 
-    private static CustomItemShop ShopOf(object target)
+    internal static CustomItemShop ShopOf(object target)
     {
         if (target is CustomItemShop shop)
             return shop;

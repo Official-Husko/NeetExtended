@@ -34,6 +34,21 @@ public sealed class CoopConfig
     [Shared]
     public int HitmanCooldown = 10;
 
+    [Label("Biggest file to share (MB)")]
+    [Description("Custom photos and tapes, faces, wallpapers, TV videos and mixtapes are sent to the other players. Files bigger than this aren't sent or taken; others see what the game shows without them.")]
+    [Range(1, 4096)]
+    public int MaxFileMb = 512;
+
+    [Label("File upload speed (KB/s)")]
+    [Description("How fast this game sends those files to the others, so a big video doesn't slow the game down.")]
+    [Range(64, 102400)]
+    public int UploadKbps = 4096;
+
+    [Label("File cache size (MB)")]
+    [Description("Files from other players are kept in Mods/Coop/cache, so each is only sent once. When it's full, the ones used longest ago go.")]
+    [Range(64, 65536)]
+    public int CacheMb = 2048;
+
     /// <summary>Identifies this install to hosts, so a player who comes back gets their own body back.</summary>
     [Hidden]
     public string PlayerId = "";

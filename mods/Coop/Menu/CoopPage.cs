@@ -14,6 +14,7 @@ internal sealed class CoopPage : MenuPage
     private string _address;
     private string _message = "";
     private readonly List<(CoopPlayer, Text)> _pings = new List<(CoopPlayer, Text)>();
+    private Text _files;
 
     public override string Title => "Co-op";
     public override int Order => 36;
@@ -86,6 +87,7 @@ internal sealed class CoopPage : MenuPage
             if (!player.IsLocal)
                 _pings.Add((player, row.Text(PingText(player))));
         }
+        _files = ui.Text(MenuPalette.Paint(Assets.FileSharing.StatusLine(), MenuPalette.Muted));
     }
 
     private static string PingText(CoopPlayer player) => MenuPalette.Paint(
@@ -115,6 +117,8 @@ internal sealed class CoopPage : MenuPage
     {
         foreach (var (player, label) in _pings)
             label.text = PingText(player);
+        if (_files != null)
+            _files.text = MenuPalette.Paint(Assets.FileSharing.StatusLine(), MenuPalette.Muted);
     }
 
     private void Changed() => Rebuild();

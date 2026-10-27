@@ -15,6 +15,9 @@ internal static class SpawnContext
 
     public static bool Loading => _loading > 0;
 
+    /// <summary>Making what another game sent (its spawn and its parts' saves).</summary>
+    public static bool IsApplying => _applying > 0;
+
     /// <summary>Nothing that happens now is news for the other games.</summary>
     public static bool Silent => _loading > 0 || _applying > 0 || _quiet > 0;
 

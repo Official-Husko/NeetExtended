@@ -10,9 +10,10 @@ The Co-op mod (`mods/Coop`) lets several games share one house over the network.
 - While in co-op you can rest with your eyes shut, but nobody dreams, and the story's scene changes wait (they'd take one player, or the whole house, away from the others).
 - **The host decides the mods:** the mods that shape the shared house (all but Cheat Menu, Performance Fixes, Open Saves, No Feedback, the dev bridge and Co-op over Steam), their features and their shared settings (prices, chances, timings) are the host's. A client's mod menu shows them locked. When the host loads or unloads one of those mods, switches a feature or changes a shared setting, every client follows within a second; leaving gives a client its own setup back (nothing of the host's is saved on the client).
 - The mod menu and the cheat menu don't pause the game in co-op: the house keeps going for everyone while you're in a menu.
+- **Your files go to the others:** custom photos and tapes you buy in the custom shops, photos you take with the camera, a wallpaper you pick on the computer and your face (the computer's face changer) are sent to the other players, and theirs to you. The TV stations and mixtapes are the host's: everyone gets the host's videos and songs. Files come in the background; until one has arrived you see what the game shows without it. The Co-op tab shows what's on its way.
 - **The hitman line:** in co-op, call 448-626 on either phone. For $69 the hitman takes a job on any player in the game, yourself included: about a minute later the cop van comes, its agents go straight for that player wherever they are, and they leave once the target is down or dead. One job at a time, and after an order the line won't take another for a while (setting **Hitman line cooldown**, 10 minutes of play by default; the host's setting counts). Outside co-op the line is busy.
 
-Settings (Mods page, Co-op): **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown**, **Physics hands on other players** (experimental).
+Settings (Mods page, Co-op): **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown**, **Physics hands on other players** (experimental), **Biggest file to share** (512 MB), **File upload speed** (4096 KB/s), **File cache size** (2048 MB).
 
 ### Over Steam
 
@@ -29,7 +30,7 @@ The **Co-op over Steam** mod (`mods/CoopSteam`) adds Steam next to direct IP. No
 
 - LiteNetLib 1.3.1 (MIT) over UDP, behind `Coop.Net.ITransport`, so another transport (Steam's relay) can be added without touching the rest. The Steam option is researched in [docs/research/coop-steam.md](../research/coop-steam.md).
 - Four channels: `Stream` (sequenced, for poses and transforms), `Events`, `State` and `Bulk` (reliable and ordered; the join snapshot goes on `Bulk` so it never holds up anything else).
-- Every message starts with a `ushort` id (`Coop.Net.MessageIds`: 1-19 session, 20-39 join, 40-59 players, 100-199 world). Handlers are registered with `Messages.On(id, handler)` and run on the main thread. Sending: `Outbox.Begin(id)`, fill the writer, then `Outbox.ToPlayers`, `ToHost` or `ToSlot`. Clients only talk to the host; the host passes on what the others need.
+- Every message starts with a `ushort` id (`Coop.Net.MessageIds`: 1-19 session, 20-39 join, 40-59 players, 60-79 files, 100-199 world). Handlers are registered with `Messages.On(id, handler)` and run on the main thread. Sending: `Outbox.Begin(id)`, fill the writer, then `Outbox.ToPlayers`, `ToHost` or `ToSlot`. Clients only talk to the host; the host passes on what the others need.
 - The connection key carries `Protocol.Version`, and the hello carries the mod's version; mismatched games are turned away with a message.
 
 ### Session
@@ -69,6 +70,19 @@ Blood, poop, piss, dirt, water, scorch marks, footprints and cleaner all go thro
 - A room fire scorches under every burning sphere on every physics step. Those splats are merged before sending: two per spot and second (`PaintRepeats`). Painting a channel raises it to the splat's value rather than adding up, so repeats add little. Splats that can't reach their surface (a footprint's sphere cast goes on through the floors below) aren't sent.
 - The host sends when a surface's water dries (clients have the game's drying off), and keeps the paint made while someone joins (up to 1 MB) for when they're in (`PaintCatchUp`).
 - `Coop.World.Painting.PaintTestApi` (counters, `Trace` of who paints, `Drop` the game's blood or water blobs, `Splat`, `Dry`, `View`) and `PaintProbes` (`Coverage`, `Info`, `Unbound`) are the test hooks.
+
+### Files
+
+Custom pictures and tapes from the custom shops, camera photos, the computer's wallpaper, faces, and the host's TV stations and mixtapes come from files on one player's disk. `Assets/` sends them to the others (`FileSharing` wires the parts up):
+
+- A file is known by its content (`AssetId`: SHA-256, size, type) and kept in each game's cache, `Mods/Coop/cache` (`cache-2` for a second game on the same PC), as `hash.ext`. It's sent once per pair of games and kept across sessions. When the cache is over its size setting, the files used longest ago go; files used since the game started stay. `HashIndex` (`cache/hashes.json`) remembers hashes by path, size and write time, so unchanged files aren't read again.
+- Things in the house keep a **shared path**: one whose file name is `hash.ext` (`SharedPaths`). When a file from a player's disk goes into the house during a session (a custom shop order, a photo, a picked wallpaper; on the host, when it starts hosting, the custom items, photos and wallpaper already in the house), it's copied into that player's cache, and the item, box or computer keeps the shared path from then on, in the host's saves too. The game's own loaders (`CustomTextureSaveLoader.CustomizeItem`, `CustomMusicSaveLoader.CustomizeItem`, `Picture.loadImage`, `WallpaperPicker.LoadWallpaper`) are hooked (`Hooks/LoaderPatches`, always on): a shared path becomes this game's copy right before the file is read, or the load waits and runs again once the file is here. On a client, a plain full path in the house is the host's and isn't read from the client's disk; the host drops plain paths that come with another game's item or box.
+- What changes after a thing was shared (a new photo, a picked wallpaper, the host's items when it starts hosting) goes out as `AssetPath`: kind, item, shared path.
+- Faces (`Faces/`): each game offers its face file (`StreamingAssets/Faces/Face.png` or `.jpg`, which the face changer replaces) and sends its id; the others put it on that player's body, on the body's own copy of the skin material (`PuppetFace`). A face changed on the computer goes out again.
+- TV stations and mixtapes (`Media/`): every game hashes the loaded mods' `tv` and `mixtapes` folders in the background (when Co-op loads and when a folder changes). The host sends the listing (each file's id, the list files' text) to a player as soon as they arrive, before their house loads, and to everyone when it changes. A client shows the host's folders in place of its own (the framework's `ModContent.Substitute`, with folders whose files are in the cache), so its channel numbers and tape items match the host's straight away; a station or tape whose file hasn't arrived yet is black or silent (Custom TV Stations and Mixtapes wait for missing files quietly), and the mods load their folders again when it arrives. Leaving gives a client its own folders back.
+- Transfers (`Transfer/`): whoever needs a file asks for it (a client always asks the host; the host asks whoever offered it). Clients only talk to the host, so the host fetches every file a client puts in the house straight away and then passes it on. Chunks of 16 KB go on `Bulk`, at most 256 KB ahead of the receiver's acknowledgements per transfer, all of them together under the upload setting, smallest file first, and only to players who are in the house (a joiner gets its house first). The receiver writes `hash.ext.part`, checks the hash on a background thread, and only then uses the file. A transfer that goes quiet for 20 s is asked for again from where it stopped, and so is one cut by a hot reload: the part file stays, and what waited for a file waits again in the next copy of the mod.
+- Only pictures, songs and videos the game or the mods load (and small JSON lists) are sent or taken, each up to the size setting. A game only ever reads, for another, a file it offered itself or has in its cache, never a path that came over the network, and only writes `hash.ext` names inside its cache.
+- `Coop.Assets.AssetsApi` is the bridge's way in: `Status`, `Item`, `Items`, `Wallpaper`, `FaceOn`, and test hands that go through the game's code (`OrderCustom`, `OpenCustomBoxes`, `TakePhoto`, `PickWallpaper`, `UseFace`). For a real transfer between two games on one PC, `ReceiveOnly(true)` (and `ClearCache`, `AskMedia`) makes a game use only what it was sent, since both see the same disk.
 
 ### Steam transport
 
@@ -111,6 +125,17 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 - A joiner needs every shared mod the host runs installed, in the same version; it's turned away otherwise, with the missing mods named. Switched on or off doesn't matter (mods off by default, like the Randomizer, too): the host sends its mod setup right after Welcome, so the joiner loads them before the house loads, and unloads shared mods the host doesn't run, for the session. Mods that only change your own game (Dev Bridge, Cheat Menu, Performance Fixes, No Feedback, Open Saves, Co-op over Steam) can differ.
 - A connection carried over a hot reload keeps the channel layout it was opened with; after a change to the channels, leave and join again.
 
+### Files
+
+- Files come as fast as the upload setting (4 MB/s by default) and the connection allow, in the background. Until one has arrived, its thing shows what the game shows without it: a blank picture or photo, a silent tape, a black TV station, the default face. A 300 MB video takes over a minute.
+- A file over a player's **Biggest file to share** setting isn't sent (or taken). The host's TV and tape lists still name it, so channels and tapes match, but it stays empty there.
+- The TV stations and mixtapes are the host's; a client's own videos and songs aren't in the session. Each game plays a station's video from the top on its own (like the radio's tape), and a client's TV and tapes load again (restarting a playing video) each time more of the host's files arrive.
+- A file a client put in the house is kept in the host's cache once it has it, and the host's save points at it there. The cache drops files used longest ago when it's full, so a save not played for a long time can lose a client's picture; nobody else may still have it.
+- A save made in co-op keeps shared paths. On the PC that saved, they're real files and work without Co-op; a save copied to another PC needs Co-op (and the files in its cache).
+- Custom items bought before hosting are shared once the host starts hosting, a moment later (they're copied into the cache in the background); a player who joins in that moment gets them a second later.
+- The custom shop's page background (random pictures from its own folder) stays each player's own. NPC faces come from each game's own files, so a soul-trade clone made from a client shows the face the drawing game has.
+- Untested: over Steam, between two real PCs (only two games on one PC, loopback), and with three or more players (a file from one client reaches another through the host, which gets it first). The upload limit is per game, shared by all its transfers.
+
 ### Steam
 
 - **Never joined over Steam yet.** The Steam API starts under GE-Proton10 (`SteamProbe.Run()`), the relay gets ready and a game hosts over Steam, but nobody has joined: that needs a second Steam account on another machine.
@@ -134,14 +159,13 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
   - a body is only kept if the host saves after the player was there.
 - Joining costs the host a hitch of about 200 ms per joiner (the snapshot), plus the time to send about 130 KB. Both grow with the paint in the house (one picture per painted surface): with 467 painted surfaces it was 1.7 s and 2.5 MB.
 - If the host is in a conversation when someone joins, the joiner's copy of the story may start inside it (only the dialogue box is closed). Untested.
-- Things that come from local files (custom photos, custom cassettes from the cassette site, the player's face) show blank or default for the others.
 
 ### Players
 
 - Physics hands on other players (experimental setting) has only been checked by eye: an arm reaching for a held item looks right; fast moves and two-handed holds haven't been looked at.
 - Going down only happens in co-op, to a game's own player, and only when the death runs through `DieAccessor`: being gibbed, skeletonized or killed by a story event is still instant death. Reviving takes food; nothing else (medicine, a slap) works yet.
 - Carrying a downed player (`Players/Carrying`): aim at them with an empty hand and press it, press it again to put them down. The downed player's own game moves its body onto the carrier's shoulder (as that game sees the carrier, so others see it a moment behind) and decides who carries them, one carrier at a time. The game doesn't know the carrier's hand is busy, so it can still pick things up; the carrier can't feed the player they carry (that body's colliders are off in the carrier's game so it can't push them), but anyone else can.
-- Remote players have the default face, and their hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
+- Remote players' hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
 - Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.
 
@@ -217,7 +241,7 @@ Money and the computer:
 
 - One shared wallet, kept by the host. Everything a client buys on the computer is a request the host carries out with the game's own checks: store orders (every store, the custom shops, and items mods put in the stores), apps, stocks, tax bills and the card game. So the money check, the demo block on the black and occult markets, the cop van's roll and the delivery box happen once, on the host, and two players can't spend the same money twice. Mods that change orders (Randomizer's mystery deliveries) do it on the host's run.
 - A client hears its order or app go through or get refused once the host answers (a few milliseconds on a LAN). A stock trade or card upgrade the host turns down still played its "done" sound on the client, and the card game shows a client's clicks and upgrades at once, then the host's numbers half a second later.
-- A custom photo or tape from the custom shops is unpacked by whoever opens its box, wherever it was ordered; the item keeps the file's path, and each game loads the picture or song from that path on its own machine.
+- A custom photo or tape from the custom shops is unpacked by whoever opens its box, wherever it was ordered; its file is shared like any other (see "Files" under How it works).
 - Card game experience and crystals come from the host twice a second, so the bars move in small steps on clients.
 
 Paint:

@@ -2,7 +2,7 @@ namespace Coop.Net;
 
 /// <summary>
 /// Every message type, in one place so ids never clash. Ranges: 1-19 session, 20-39 join,
-/// 40-59 players, 100-199 world. Raise <see cref="Protocol.Version"/> when a payload changes.
+/// 40-59 players, 60-79 assets (files), 100-199 world. Raise <see cref="Protocol.Version"/> when a payload changes.
 /// </summary>
 public static class MessageIds
 {
@@ -28,6 +28,17 @@ public static class MessageIds
     public const ushort Revive = 44;
     public const ushort CarryRequest = 45;
     public const ushort CarryState = 46;
+
+    // Assets: 60-79, see Assets/.
+    public const ushort AssetWant = 60;
+    public const ushort AssetChunk = 61;
+    public const ushort AssetAck = 62;
+    public const ushort AssetMissing = 63;
+    public const ushort AssetCancel = 64;
+    public const ushort AssetOffer = 65;
+    public const ushort AssetPath = 66;
+    public const ushort AssetFace = 67;
+    public const ushort AssetMedia = 68;
 
     // World: 100-199, see World/.
     public const ushort WorldSpawn = 100;
