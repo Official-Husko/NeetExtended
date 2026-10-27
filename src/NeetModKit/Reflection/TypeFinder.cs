@@ -16,7 +16,8 @@ public static class TypeFinder
     {
         if (string.IsNullOrEmpty(name))
             return null;
-        if (Cache.TryGetValue(name, out var cached))
+        // A mod that hot reloaded since leaves its old types behind; look those up again.
+        if (Cache.TryGetValue(name, out var cached) && !NeetLoader.LoadedAssemblies.IsStale(cached.Assembly))
             return cached;
 
         var type = Type.GetType(name, false) ?? Search(name);
