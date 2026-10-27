@@ -36,14 +36,17 @@ public sealed class BridgeServer : IDisposable
         _log = log;
     }
 
+    /// <summary>The configured port, moved up by one for each extra game instance (27851 for the second).</summary>
+    private int Port => _config.Port + Instance.Number - 1;
+
     public void Start()
     {
-        _listener = new TcpListener(IPAddress.Parse(_config.Address), _config.Port);
+        _listener = new TcpListener(IPAddress.Parse(_config.Address), Port);
         _listener.Start();
         _running = true;
         _acceptThread = new Thread(AcceptLoop) { IsBackground = true, Name = "DevBridge accept" };
         _acceptThread.Start();
-        _log.Info($"Listening on {_config.Address}:{_config.Port}");
+        _log.Info($"Listening on {_config.Address}:{Port}");
     }
 
     public void Dispose()
