@@ -23,6 +23,7 @@ public static class ChangelogBuilder
         ["cheats"] = "Cheat Menu",
         ["openhouse"] = "Open House",
         ["phone"] = "Phone Expansion",
+        ["email"] = "Email Expansion",
         ["patches"] = "Unofficial NEET Patches",
         ["tv"] = "Custom TV Stations",
         ["perf"] = "Performance Fixes",
