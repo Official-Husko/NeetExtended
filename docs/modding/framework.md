@@ -149,6 +149,8 @@ Sky.OnStrike.Subscribe(this, () => Log.Info("Lightning"));
 
 `WeatherState` is a small value: `Kind` (`WeatherKind.Drizzle`, `Rain`, `Storm`), `Intensity` (1 is the kind's usual strength), `StartedAt`, an optional forecast (`NextKind`, `NextAt`), and helpers `Name` (the word players read), `NextName`, `Age`, `SecondsUntilNext`. Times are play seconds (`ModFlags.PlaySeconds`). With no mod driving it the weather is a steady `Rain`. `SetWeather` is for the mod that drives the weather (the Weather mod on the host; Co-op on a client that follows the host): the last mod to set it owns it, it goes back to the default when that mod unloads, and `WeatherChanged` is raised with each new state. It only keeps the state: reading mods apply their own effects (the multipliers above, a phone line, a mood).
 
+Rules can read it: the `weather` condition (`"weather": "storm"`, `"weather": ["drizzle", "rain"]`) and the text values `{{weather}}` and `{{weather:next}}`.
+
 Gotchas:
 
 - The multipliers, the delay provider and the weather all belong to the mod that set them and go away when it unloads, so a mod that hot reloads sets them again in `OnLoad`. House loads keep them: they're applied again to each new house.
@@ -348,13 +350,13 @@ Namespace `NeetModKit.Rules`. Content files (phone calls, emails) share one set 
 ### Conditions and actions
 
 ```csharp
-RuleConditions.Register(this, "raining", value => { bool want = value.Value<bool>(); return _ => Weather.Raining == want; }, "true while it rains");
+RuleConditions.Register(this, "stormy", value => { bool want = value.Value<bool>(); return _ => (Sky.Weather.Kind == WeatherKind.Storm) == want; }, "true during a storm");
 RuleActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount", 10)), "amount", "Throws confetti.");
 ```
 
 - `RuleConditions.Register(owner, name, compile, help)`: `compile` turns the value from the file into a test once, when the file loads, so mistakes show up right away (throw `FormatException`). The test gets the `IRuleSubject` it runs for.
 - `RuleActions.Register(owner, name, run, mainValue, help)`: `run` gets `ActionArgs` (`Str`, `Num`, `Int`, `Bool`, `Has`, `Require`, `Values`, `Subject`, `Repeat(action)` for `"count"`). `mainValue` is what a bare value fills in Ink (`Act("deliver", "Pizza")`). `RuleActions.Later(owner, seconds, action)` runs something after a delay.
-- `RuleTexts.Register(owner, name, read, help)`: a text value files write as `{{name}}` or `{{name:arg}}` in lines and choices (`read` gets the argument, "" without one, and runs when the line shows). `StepWriter` turns them into `{RuleText("name", "arg")}`; a choice with a value is written in brackets and said as its branch's first line, since Ink would read a leading `{...}` as a condition. Unknown names throw `FormatException` when the file loads. Built in: `money`, `flag`.
+- `RuleTexts.Register(owner, name, read, help)`: a text value files write as `{{name}}` or `{{name:arg}}` in lines and choices (`read` gets the argument, "" without one, and runs when the line shows). `StepWriter` turns them into `{RuleText("name", "arg")}`; a choice with a value is written in brackets and said as its branch's first line, since Ink would read a leading `{...}` as a condition. Unknown names throw `FormatException` when the file loads. Built in: `money`, `flag`, `weather`.
 - `Condition.Parse(json)`, `Condition.Of(func)`, `Test(subject)`: a whole condition object, with `any`, `all` and `not`.
 - `ActionList.Parse(json)`, `Run(subject)`: a list of `{ "do": ... }` objects, checked when parsed.
 - `Comparison.Parse("< 25")`, `NamedComparisons.Parse({ "name": ">= 2" })`: the number tests conditions use.

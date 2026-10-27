@@ -9,6 +9,7 @@ internal static class RuleSystem
         BuiltinConditions.Register(kit);
         BuiltinActions.Register(kit);
         BuiltinTexts.Register(kit);
+        WeatherRules.Register(kit);
         RuleInkFunctions.Register(kit);
         FlagCommands.Register(kit);
     }

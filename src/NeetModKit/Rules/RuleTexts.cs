@@ -11,9 +11,9 @@ namespace NeetModKit.Rules;
 /// <c>"Whack {{player:1}}"</c>. A value is a name, optionally with an argument after a colon (letters,
 /// digits, <c>_ . -</c>), and is read when the line is shown. Mods register their own:
 /// <code>
-/// RuleTexts.Register(this, "weather", _ => Weather.Name, "today's weather");
+/// RuleTexts.Register(this, "rent", _ => Rent.Due.ToString(), "what's owed");
 /// </code>
-/// Hand-written Ink uses <c>{RuleText("weather", "")}</c>.
+/// Hand-written Ink uses <c>{RuleText("rent", "")}</c>.
 /// </summary>
 public static class RuleTexts
 {
