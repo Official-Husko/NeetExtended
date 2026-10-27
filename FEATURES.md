@@ -42,6 +42,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Emails stay in the inbox after loading**: loading a save used to leave the computer's inbox empty until new mail came in. Now every email you had is there.
 - **Spam emails only come once**: the game's spam no longer arrives all over again after every load.
 - **Spam keeps its timer through saves**: after loading, the next spam comes when it was due instead of 15 seconds in.
+- **Spam doesn't double up after loading**: the game ran its spam timer twice after a load, so spam came twice as often. Now it runs once.
 
 ## Performance Fixes (experimental)
 

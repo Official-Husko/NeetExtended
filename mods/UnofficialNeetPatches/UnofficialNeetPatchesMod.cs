@@ -28,6 +28,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new LostInboxFix());
         ModFeatures.Register(this, new RepeatingSpamFix());
         ModFeatures.Register(this, new SpamTimerFix());
+        ModFeatures.Register(this, new DoubleSpamFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);
