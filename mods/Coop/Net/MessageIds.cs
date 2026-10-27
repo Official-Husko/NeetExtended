@@ -81,4 +81,5 @@ public static class MessageIds
     public const ushort WorldPaintDry = 135;
     public const ushort WorldSky = 136;
     public const ushort WorldToilet = 137;
+    public const ushort WorldTv = 138;
 }

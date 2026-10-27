@@ -39,6 +39,9 @@ public static class AssetsApi
     /// <summary>The session's TV stations and tapes as this game shows them: each folder, whose it is, and how many files are here.</summary>
     public static string Media() => MediaStandIn.Describe();
 
+    /// <summary>The TV's video here, and what the host last said about it.</summary>
+    public static string Tv() => World.Ambience.TvPlayback.Describe();
+
     private static int _testFolders;
 
     /// <summary>Tests: puts a folder of this game's own into the session ("tv" or "mixtapes"), as if a mod had it.</summary>

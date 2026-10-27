@@ -162,7 +162,7 @@ Your own videos on the living room TV. Put MP4 or WebM files into a mod's `tv` f
 - **Keep the game's channels**: switch off to watch only your own stations. Single channels can be hidden with a `stations.jsonc` in the `tv` folder.
 - **Station volume** in Mod Settings.
 - A station whose video isn't playing yet shows an old "Please stand by" card instead of a black screen.
-- In co-op everyone's stations are on everyone's TV.
+- In co-op everyone's stations are on everyone's TV, and the videos play in step.
 
 ## Mixtapes
 
@@ -210,6 +210,7 @@ Play the house together, over the internet or your own network. The host's house
 - **Enemies pick the nearest player**: the cops, the hostile visitor, house spiders and the skeleton parasite go after whoever is closest and still standing, and leave downed players alone.
 - **Paint is shared**: blood, poop, piss, water, scorch marks, footprints and cleaning show up for everyone, whoever made the mess.
 - **Your files are shared**: custom photos and tapes from the custom shops, photos you take with the camera, the wallpaper you pick on the computer and your face go to the other players, and theirs come to you. Everyone's TV stations and mixtapes are in the game for everyone. When you join you get the files already in the game first, then the house loads with all of it there; files added later come in the background. A note in the bottom right corner shows what's being sent and received.
+- **The TV plays in step**: a video waits on its "Please stand by" card until everyone has it, then starts for everyone at once and stays in step with the host's TV.
 - **Talking and the phones**: everyone can talk to the characters and use both phones. The host's game runs the conversation, so whatever it gives, costs or sets off happens once, and what it checks or does to you (your needs, what you're holding, knocking you out) is about whoever is talking. Only the one talking sees the lines, and a character talks to one player at a time: anyone else gets a busy line.
 - **The hitman line**: in co-op, call 448-626. Pay $69, pick a player (or yourself), and about a minute later the van comes: its agents go straight for that player and leave once they're down. One job at a time, then the line waits a while before the next (setting **Hitman line cooldown**, 10 minutes by default).
 - **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and the mod and cheat menus don't pause the game. Going back to the main menu leaves; when the host leaves, the game ends for everyone.

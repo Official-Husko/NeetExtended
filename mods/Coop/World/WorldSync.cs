@@ -42,6 +42,7 @@ internal static class WorldSync
         CopVanSync.Init();
         Ambience.SkySync.Init();
         Ambience.ToiletSync.Init();
+        Ambience.TvPlayback.Init();
         Forwarder.Init();
         HealthReport.Init();
         TalkSync.Init();
@@ -154,6 +155,7 @@ internal static class WorldSync
         CopVanSync.Clear();
         Ambience.SkySync.Clear();
         Ambience.ToiletSync.Clear();
+        Ambience.TvPlayback.Clear();
         PaintSync.Clear();
         RemoteNeeds.Clear();
         HealthReport.Clear();
@@ -218,6 +220,7 @@ internal static class WorldSync
             NpcPoseReceiver.LateTick();
         Ambience.SkySync.LateTick(_hosting);
         Ambience.ToiletSync.LateTick();
+        Ambience.TvPlayback.LateTick(_hosting);
         HealthReport.Tick();
         SpawnSender.FlushSpawns();
         EconomySync.AfterSpawns();
