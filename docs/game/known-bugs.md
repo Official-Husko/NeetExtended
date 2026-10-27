@@ -17,6 +17,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | One object that can't be saved stops all saving | `SaveCrashes` |
 | Frame rate and vsync settings don't stick | `FrameRateSettings` |
 | The inbox is empty after loading a save | `LostInbox` |
+| Spam emails come again after every load | `RepeatingSpam` |
 
 ## Saving fails with a dead house spider around
 
@@ -125,6 +126,18 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 
 **Reproduce:** with `LostInbox` off, get a few emails, save, and load the save (or `scene.load NEET_House`); the inbox is empty while `email.lists` shows them as delivered.
 
+## Spam emails come again after every load
+
+**What happens:** each of the five spam emails is meant to arrive once per game, but after loading a save they can all arrive again, so the inbox fills with copies.
+
+**Cause:** `SendSpam` marks sent emails off in `randomEmailsInstance`, a copy of the `randomEmails` list made in `Awake`. `EmailHandler.Save` writes `randomEmails`, the untouched asset (`EmailHandler.cs:62-65`), and `Load` restores that into `randomEmailsInstance`, so nothing is marked as sent anymore.
+
+**Fix:** a postfix on `EmailHandler.Save` puts `randomEmailsInstance` into the save data instead.
+
+**Reproduce:** with `RepeatingSpam` off, let a spam email arrive, save, load, and check the random list with `email.lists`: every entry is `accessible` again.
+
 ## Not bugs
+
+- `KnotList must be instantiated using the ScriptableObject.CreateInstance method` in the log after every load: the save loader rebuilds the spam list with `new`. Unity warns, but the list works.
 
 - A locked card's medal is reset to 0 on load: the `Locked` setter (`AnimeCard.cs:147-166`) does that on purpose; unlocked cards keep their medal.

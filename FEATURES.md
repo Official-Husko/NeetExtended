@@ -40,6 +40,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Frame rate and vsync settings stick**: the frame rate and vsync you pick in the game's settings stay, instead of going back to 120 fps without vsync whenever the house loads or someone shows up.
 - **Keep promoted card stats**: promoted cards in the computer's card game keep their doubled earnings after loading.
 - **Emails stay in the inbox after loading**: loading a save used to leave the computer's inbox empty until new mail came in. Now every email you had is there.
+- **Spam emails only come once**: the game's spam no longer arrives all over again after every load.
 
 ## Performance Fixes (experimental)
 
