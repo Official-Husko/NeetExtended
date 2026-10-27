@@ -72,13 +72,27 @@ public static class ChangelogBuilder
             {
                 if (line.Kind != kind || !seen.Add(line.Text))
                     continue;
-                var item = new JsonObject { ["text"] = line.Text };
-                if (commit.Scope != null)
-                    item["area"] = AreaNames.TryGetValue(commit.Scope, out string? name) ? name : Capitalize(commit.Scope);
+                string? area = commit.Scope == null ? null
+                    : AreaNames.TryGetValue(commit.Scope, out string? name) ? name : Capitalize(commit.Scope);
+                var item = new JsonObject { ["text"] = WithoutArea(line.Text, area) };
+                if (area != null)
+                    item["area"] = area;
                 array.Add(item);
             }
         }
         return array;
+    }
+
+    /// <summary>
+    /// A new mod's line often starts with its own name ("Mixtapes: your own music..."). The area is
+    /// shown in front of every line already, so the name is dropped there.
+    /// </summary>
+    private static string WithoutArea(string text, string? area)
+    {
+        if (area == null || !text.StartsWith(area + ":", StringComparison.OrdinalIgnoreCase))
+            return text;
+        string rest = text[(area.Length + 1)..].TrimStart();
+        return rest.Length == 0 ? text : Capitalize(rest);
     }
 
     private static string Capitalize(string s) => s.Length == 0 ? s : char.ToUpperInvariant(s[0]) + s[1..];
