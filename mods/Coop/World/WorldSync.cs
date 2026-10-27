@@ -39,6 +39,7 @@ internal static class WorldSync
         StateSync.Init();
         NpcClothes.Init();
         NpcEffects.Init();
+        NpcVoices.Init();
         EconomySync.Init();
         FireSync.Init();
         FlameSync.Init();
@@ -181,6 +182,8 @@ internal static class WorldSync
         OwnershipNet.Clear();
         ReplicaDriver.Clear();
         NpcPoseReceiver.Clear();
+        NpcEffects.Clear();
+        NpcVoices.Clear();
         NpcPuppets.Forget();
         ContactClaims.Reset();
     }
@@ -226,6 +229,7 @@ internal static class WorldSync
         {
             NpcPoseSender.LateTick();
             NpcClothes.Tick();
+            NpcVoices.LateTick();
             EconomySync.HostLateUpdate();
             FireSync.HostTick();
             CopVanSync.HostTick();
@@ -234,7 +238,10 @@ internal static class WorldSync
             Hitman.Tick();
         }
         else
+        {
             NpcPoseReceiver.LateTick();
+            NpcEffects.LateTick();
+        }
         Ambience.SkySync.LateTick(_hosting);
         Ambience.ToiletSync.LateTick();
         Ambience.TvPlayback.LateTick(_hosting);

@@ -14,9 +14,6 @@ internal struct NpcPose
     public const byte RightHand = 2;
     public const byte Active = 4;
 
-    /// <summary>The latest kick landed on something (it makes a thud).</summary>
-    public const byte KickHit = 8;
-
     public Vector3 Position;
     public Quaternion Rotation;
     public ushort Bools;

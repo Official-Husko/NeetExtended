@@ -95,4 +95,5 @@ public static class MessageIds
     public const ushort WorldFlame = 147;
     public const ushort WorldGas = 148;
     public const ushort WorldBlast = 149;
+    public const ushort WorldNpcSound = 157;
 }

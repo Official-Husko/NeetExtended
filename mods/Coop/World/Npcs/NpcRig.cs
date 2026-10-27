@@ -17,7 +17,6 @@ internal sealed class NpcRig
 
     // The body collider's shape while standing and while crouching, sitting or lying down (the
     // numbers Player_Movement.Update sets).
-    private const float KickImpactDelay = 0.2f;
     private const float StandHeight = 1.67f;
     private const float CrouchHeight = 0.55f;
     private static readonly Vector3 CrouchCenter = new Vector3(0f, -0.6f, 0f);
@@ -29,6 +28,9 @@ internal sealed class NpcRig
     public Player_Abilities Abilities;
     public CapsuleCollider Capsule;
 
+    // The sources the rig's own scripts play its sounds on: the body's, then the feet's (same order in every game).
+    public AudioSource[] Voices;
+
     private AnimatorBools _bools;
     private bool _hasDancing;
     private bool _readParameters;
@@ -39,14 +41,17 @@ internal sealed class NpcRig
     public int DressSignature;
     public bool DressSent;
     public byte KickCount;
-    public bool KickHit;
+    public bool[] VoiceOn;
+    public bool[] VoiceNew;
+    public AudioClip[] VoiceClip;
+    public bool VoicesKnown;
 
     // Client: poses from the host.
     public readonly TimedRing<NpcPose> Poses = new TimedRing<NpcPose>(6);
     public bool Driving;
     public NpcPose Shown;
     private bool _hasShown;
-    private bool _crouched;
+    private int _shape = -1;
 
     public static NpcRig TryCreate(Brain brain)
     {
@@ -54,7 +59,7 @@ internal sealed class NpcRig
         var abilities = brain.GetComponent<Player_Abilities>();
         if (movement == null || abilities == null || movement.neetAC == null)
             return null;
-        return new NpcRig
+        var rig = new NpcRig
         {
             Animator = movement.neetAC,
             Skin = abilities.neetRend,
@@ -63,6 +68,21 @@ internal sealed class NpcRig
             Abilities = abilities,
             Capsule = brain.GetComponent<CapsuleCollider>(),
         };
+        rig.Voices = FindVoices(abilities, movement);
+        rig.VoiceOn = new bool[rig.Voices.Length];
+        rig.VoiceNew = new bool[rig.Voices.Length];
+        rig.VoiceClip = new AudioClip[rig.Voices.Length];
+        return rig;
+    }
+
+    private static AudioSource[] FindVoices(Player_Abilities abilities, Player_Movement movement)
+    {
+        var body = abilities.GetComponents<AudioSource>();
+        var feet = movement.feet != null ? movement.feet.GetComponents<AudioSource>() : System.Array.Empty<AudioSource>();
+        var all = new AudioSource[body.Length + feet.Length];
+        body.CopyTo(all, 0);
+        feet.CopyTo(all, body.Length);
+        return all;
     }
 
     /// <summary>Animator parameters only exist once the animator is active, so they're read late.</summary>
@@ -91,8 +111,6 @@ internal sealed class NpcRig
             Speed = 50,
             Kicks = KickCount,
         };
-        if (KickHit)
-            pose.Flags |= NpcPose.KickHit;
         if (root.gameObject.activeSelf)
             pose.Flags |= NpcPose.Active;
         if (Ready())
@@ -122,7 +140,7 @@ internal sealed class NpcRig
             Animator.speed = pose.Speed > 0 ? pose.Speed / 50f : 1f;
             ShapeCollider(Animator.GetBool(CrouchHash));
             if (_hasShown && pose.Kicks != Shown.Kicks)
-                Kick((pose.Flags & NpcPose.KickHit) != 0);
+                Animator.SetTrigger(KickHash);
         }
         bool left = (pose.Flags & NpcPose.LeftHand) != 0;
         bool right = (pose.Flags & NpcPose.RightHand) != 0;
@@ -143,25 +161,16 @@ internal sealed class NpcRig
         DieIfDead();
     }
 
-    // The movement script that does this on the host is switched off here.
+    // The movement script that does this on the host is switched off here. The first call always
+    // sets the shape: the prefab's own height isn't the standing one.
     private void ShapeCollider(bool crouching)
     {
-        if (crouching == _crouched || Capsule == null)
+        int shape = crouching ? 1 : 0;
+        if (shape == _shape || Capsule == null)
             return;
-        _crouched = crouching;
+        _shape = shape;
         Capsule.center = crouching ? CrouchCenter : Vector3.zero;
         Capsule.height = crouching ? CrouchHeight : StandHeight;
-    }
-
-    // The swing; what the kick hits is the host's business and arrives as item moves and damage.
-    private void Kick(bool hit)
-    {
-        Animator.SetTrigger(KickHash);
-        if (hit && Abilities != null && Abilities.punchImpactAudio != null)
-        {
-            Abilities.punchImpactAudio.pitch = Random.Range(0.9f, 1.1f);
-            Abilities.punchImpactAudio.PlayDelayed(KickImpactDelay);
-        }
     }
 
     // The host's NPC died: this copy becomes a corpse the game's way (it can be picked up, it bleeds

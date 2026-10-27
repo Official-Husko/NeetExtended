@@ -36,6 +36,7 @@ internal static class NpcPuppets
             o.Body.useGravity = false;
             o.Body.interpolation = RigidbodyInterpolation.Interpolate;
         }
+        NpcEffects.Appeared(o);
         if (!Later.Contains(o))
             Later.Add(o);
     }

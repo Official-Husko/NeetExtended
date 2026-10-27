@@ -17,28 +17,18 @@ namespace Coop.World.Patches;
 [HarmonyPatch]
 internal static class NpcPatches
 {
-    private static readonly AccessTools.FieldRef<Player_Abilities, Coroutine> KickRoutine =
-        AccessTools.FieldRefAccess<Player_Abilities, Coroutine>("kickCorout");
-
     private static bool Hosting => WorldSide.Running && WorldSide.IsHost;
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.Kick))]
-    private static void BeforeKick(Player_Abilities __instance, out bool __state) =>
-        __state = KickRoutine(__instance) == null;
-
-    // The game starts the kick's impact only when something is in reach and no kick is still landing.
+    // The kick's swing; its impact sound comes with the rig's other sounds (NpcVoices).
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.Kick))]
-    private static void Kicked(Player_Abilities __instance, bool __state)
+    private static void Kicked(Player_Abilities __instance)
     {
         if (!Hosting)
             return;
         var rig = NetObjects.Find(__instance.gameObject)?.Rig;
-        if (rig == null)
-            return;
-        rig.KickCount++;
-        rig.KickHit = __state && KickRoutine(__instance) != null;
+        if (rig != null)
+            rig.KickCount++;
     }
 
     [HarmonyPostfix]
@@ -75,15 +65,17 @@ internal static class NpcPatches
     [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.SkeletonizeAccessor))]
     private static void Skeletonized(Player_Abilities __instance)
     {
-        if (Hosting && NetObjects.Find(__instance.gameObject)?.Rig != null)
-            NpcEffects.Send(NpcEffects.Wind, __instance);
+        var o = Hosting ? NetObjects.Find(__instance.gameObject) : null;
+        if (o?.Rig != null)
+            NpcEffects.Send(NpcEffects.Wind, o, __instance);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.Obliterate))]
     private static void Obliterated(Player_Abilities __instance)
     {
-        if (Hosting && NetObjects.Find(__instance.gameObject)?.Rig != null)
-            NpcEffects.Send(NpcEffects.Burst, __instance);
+        var o = Hosting ? NetObjects.Find(__instance.gameObject) : null;
+        if (o?.Rig != null)
+            NpcEffects.Send(NpcEffects.Burst, o, __instance);
     }
 }
