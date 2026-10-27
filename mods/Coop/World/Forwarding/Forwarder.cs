@@ -25,7 +25,8 @@ namespace Coop.World.Forwarding;
 /// - Possess: the skeleton parasite that got the player (its mask goes on their face);
 /// - Kill, Skeletonize, Knockout (seconds): the story did it to the player it was talking to;
 /// - Stat: name, set (else add), value: a rule changed a stat of the player it was about;
-/// - Disarm: hand: a cop knocked what's in it out of the player's hand.
+/// - Disarm: hand: a cop knocked what's in it out of the player's hand;
+/// - Move, Gib: see <see cref="BodyMoves"/>.
 /// </summary>
 internal static class Forwarder
 {
@@ -38,6 +39,8 @@ internal static class Forwarder
     private const byte Knockout = 6;
     private const byte Stat = 7;
     private const byte Disarm = 8;
+    internal const byte Move = 9;
+    internal const byte Gib = 10;
 
     // What the game's explosions push bodies with (Commons.ExplosionDamage).
     private const float BlastForce = 100f;
@@ -113,7 +116,7 @@ internal static class Forwarder
     }
 
     /// <summary>After an explosion here: other players' bodies in reach get its push at home.</summary>
-    public static void Exploded(Vector3 centre, float radius)
+    public static void Exploded(Vector3 centre, float radius, float obliterateRadius)
     {
         if (!WorldSide.Running)
             return;
@@ -122,8 +125,12 @@ internal static class Forwarder
             if (player.IsLocal || !player.InWorld)
                 continue;
             var body = RemotePlayers.Find(player.Slot);
-            if (body == null || (body.transform.position - centre).sqrMagnitude > radius * radius)
+            float sqrDistance = body != null ? (body.transform.position - centre).sqrMagnitude : float.MaxValue;
+            if (sqrDistance > radius * radius)
                 continue;
+            // Close enough to be gibbed, as the game's explosions do to anything that can be.
+            if (obliterateRadius > 0f && sqrDistance < obliterateRadius * obliterateRadius)
+                BodyMoves.Gibbed(player.Slot);
             var w = Begin(player.Slot, Blast);
             Put(w, centre);
             w.Put(radius);
@@ -131,7 +138,7 @@ internal static class Forwarder
         }
     }
 
-    private static NetDataWriter Begin(byte target, byte kind)
+    internal static NetDataWriter Begin(byte target, byte kind)
     {
         var w = Outbox.Begin(MessageIds.WorldForward);
         w.Put(target);
@@ -139,7 +146,7 @@ internal static class Forwarder
         return w;
     }
 
-    private static void Send(byte target, NetDataWriter w)
+    internal static void Send(byte target, NetDataWriter w)
     {
         if (WorldSide.IsHost)
             Outbox.ToSlot(target, w, Channel.Events);
@@ -187,6 +194,10 @@ internal static class Forwarder
                 break;
             case Disarm:
                 LoseHeld(reader.GetByte());
+                break;
+            case Move:
+            case Gib:
+                BodyMoves.Receive(kind, reader);
                 break;
         }
     }
@@ -291,12 +302,12 @@ internal static class Forwarder
         force = r.GetBool() ? Get(r) : (Vector3?)null;
     }
 
-    private static void Put(NetDataWriter w, Vector3 v)
+    internal static void Put(NetDataWriter w, Vector3 v)
     {
         w.Put(v.x);
         w.Put(v.y);
         w.Put(v.z);
     }
 
-    private static Vector3 Get(NetDataReader r) => new Vector3(r.GetFloat(), r.GetFloat(), r.GetFloat());
+    internal static Vector3 Get(NetDataReader r) => new Vector3(r.GetFloat(), r.GetFloat(), r.GetFloat());
 }

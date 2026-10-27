@@ -41,6 +41,7 @@ internal static class WorldSync
         EconomySync.Init();
         FireSync.Init();
         CopVanSync.Init();
+        Hazards.BodyHazards.Init();
         Ambience.SkySync.Init();
         Ambience.ToiletSync.Init();
         Ambience.TvPlayback.Init();

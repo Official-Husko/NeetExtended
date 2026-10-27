@@ -18,6 +18,7 @@ internal sealed class PlayerPuppet : MonoBehaviour
 
     private readonly PoseBuffer _poses = new PoseBuffer();
     private Rigidbody _body;
+    private CapsuleCollider _capsule;
     private Animator _animator;
     private AnimatorBools _bools;
     private PuppetLook _look;
@@ -45,6 +46,9 @@ internal sealed class PlayerPuppet : MonoBehaviour
     /// </summary>
     internal Transform Shoulder { get; private set; }
 
+    /// <summary>Where the body is, for checks against the house's hazards (kill planes, teleporters).</summary>
+    internal Bounds Bounds => _capsule != null ? _capsule.bounds : new Bounds(transform.position, Vector3.one);
+
     internal void Carry(Transform carrier)
     {
         Shoulder = carrier;
@@ -56,6 +60,7 @@ internal sealed class PlayerPuppet : MonoBehaviour
     {
         Slot = slot;
         _body = GetComponent<Rigidbody>();
+        _capsule = GetComponent<CapsuleCollider>();
         _animator = animator;
         _bools = animator != null ? new AnimatorBools(animator) : null;
         _look = animator != null ? PuppetLook.Create(animator.transform) : null;

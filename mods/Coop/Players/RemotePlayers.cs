@@ -27,6 +27,9 @@ internal static class RemotePlayers
         CoopMod.Config.Changed += _ => Clear();
     }
 
+    /// <summary>Every body in the house (allocation-free to loop over).</summary>
+    public static Dictionary<byte, PlayerPuppet>.ValueCollection All => Puppets.Values;
+
     public static PlayerPuppet Find(byte slot) =>
         Puppets.TryGetValue(slot, out var puppet) && puppet != null ? puppet : null;
 
