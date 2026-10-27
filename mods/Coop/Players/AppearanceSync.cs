@@ -53,6 +53,8 @@ internal static class AppearanceSync
         var message = Outbox.Begin(MessageIds.Appearance);
         look.Write(message, CoopSession.Local.Slot);
         Outbox.ToPlayers(message, Channel.Events);
+        if (CoopSession.IsClient)
+            BodySender.SendSoon();
     }
 
     private static void OnAppearance(in Sender from, NetDataReader reader)

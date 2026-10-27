@@ -7,8 +7,8 @@ using UnityEngine;
 namespace Coop.Players;
 
 /// <summary>
-/// Client: sends this player's body to the host every few seconds, as the game would save it, so the
-/// host's save keeps it (<see cref="BodyBook"/>).
+/// Client: sends this player's body to the host every few seconds, and right after their clothes or masks
+/// change, as the game would save it, so the host's save keeps it (<see cref="BodyBook"/>).
 /// </summary>
 internal static class BodySender
 {
@@ -17,6 +17,13 @@ internal static class BodySender
     private static float _next;
 
     public static void Init() => CoopLoop.Update += Tick;
+
+    /// <summary>
+    /// Sends the body on the next frame instead of waiting: what the player wears just changed, and a
+    /// player who leaves right after would otherwise come back without it (a hat they put on would stay
+    /// parked under the house, see <see cref="MaskParking"/>).
+    /// </summary>
+    public static void SendSoon() => _next = 0f;
 
     private static void Tick()
     {

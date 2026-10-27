@@ -56,7 +56,7 @@ Handshake: the client connects and sends Hello (protocol, version, player id, na
 3. The client holds `SaveLock` (no `SaveAll`, no "reset save"), hands the snapshot to `SaveSource.Use` and loads `NEET_House` through the `Loading` scene. The game's own `LoadAll` reads the snapshot instead of the save folder.
 4. On `HouseReady` the client sends Ready. Paint made while they loaded follows right after (see Paint).
 
-Returning players: every 10 seconds a client sends its body as the game would save it (`BrainPlayer.Save()`: position, stats, status effects, hands and clothes). The host keeps the latest one per player id in its own save (`BodyBook`, mod data), and the next join puts it into the joiner's `Player` entry instead of a fresh body (`BodyRestore`), with empty hands, and with the default outfit if a worn item is gone (the game's load stops on a missing item id).
+Returning players: every 10 seconds, and right after its clothes or masks change, a client sends its body as the game would save it (`BrainPlayer.Save()`: position, stats, status effects, hands and clothes). The host keeps the latest one per player id in its own save (`BodyBook`, mod data), and the next join puts it into the joiner's `Player` entry instead of a fresh body (`BodyRestore`), with empty hands, and with the default outfit if a worn item is gone (the game's load stops on a missing item id).
 
 ### Players
 
@@ -188,7 +188,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 ### Joining
 
 - A first join gets a fresh body (full needs, empty hands, default clothes) in front of the host. After that, the host's save keeps each player's body (sent every 10 seconds) and a returning player gets it back, with these gaps:
-  - up to the last 10 seconds of changes are lost when a player leaves;
+  - up to the last 10 seconds of changes are lost when a player leaves (not clothes and masks: those are sent as soon as they change);
   - hands come back empty, and what they held stays where it fell;
   - if a piece they wore isn't in the house any more, they get the default outfit;
   - bodies are kept per install (a player id in the Co-op config), so the same person on another PC gets a new body;
