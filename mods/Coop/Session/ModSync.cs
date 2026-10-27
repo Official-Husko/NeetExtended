@@ -54,6 +54,8 @@ internal static class ModSync
         Messages.On(MessageIds.ModSetup, OnMessage);
         CoopLoop.Update += Tick;
         CoopLoop.Unloading += Park;
+        // As soon as a player arrives, so its game runs the host's mods before the house loads.
+        CoopSession.PlayerArrived += player => SendTo(player.Slot);
         CoopSession.PlayerReady += player => SendTo(player.Slot);
         CoopSession.WorldReady += AskHost;
         CoopSession.Resumed += () =>

@@ -27,20 +27,29 @@ internal static class ModList
             .OrderBy(s => s, System.StringComparer.Ordinal)
             .ToList();
 
-    /// <summary>Null when the joiner's list matches the host's; otherwise a short reason for the joiner.</summary>
+    /// <summary>
+    /// "Id@version" of every installed mod that shapes the shared house, running or not: what a joiner
+    /// could run. A mod that's off (or off by default, like the Randomizer) still counts, since the
+    /// joiner loads what the host runs (<see cref="ModSync"/>).
+    /// </summary>
+    public static List<string> Available() =>
+        ModRegistry.Mods
+            .Where(m => m.State != ModState.Failed && !LocalOnly.Contains(m.Id))
+            .Select(m => m.Id + "@" + m.Manifest.Version)
+            .OrderBy(s => s, System.StringComparer.Ordinal)
+            .ToList();
+
+    /// <summary>
+    /// Null when the joiner can run every shared mod the host runs (<paramref name="joiner"/> is its
+    /// <see cref="Available"/> list); otherwise a short reason for the joiner. Mods the joiner runs
+    /// and the host doesn't are fine: the joiner unloads them for the session.
+    /// </summary>
     public static string Mismatch(List<string> joiner)
     {
-        var host = Shared();
-        var missing = host.Except(joiner).Select(Describe).ToList();
-        var extra = joiner.Except(host).Select(Describe).ToList();
-        if (missing.Count == 0 && extra.Count == 0)
+        var missing = Shared().Except(joiner).Select(Describe).ToList();
+        if (missing.Count == 0)
             return null;
-        var parts = new List<string>();
-        if (missing.Count > 0)
-            parts.Add("the host has " + Join(missing));
-        if (extra.Count > 0)
-            parts.Add("you have " + Join(extra));
-        return "Different mods: " + string.Join("; ", parts) + ".";
+        return "Missing mods: the host runs " + Join(missing) + ". Install the same version to join.";
     }
 
     private static string Describe(string entry) => entry.Replace("@", " ");

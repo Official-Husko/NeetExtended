@@ -93,7 +93,7 @@ internal static class Handshake
         hello.Put(CoopMod.Version);
         hello.Put(config.PlayerId);
         hello.Put(CoopMod.PlayerName);
-        var mods = ModList.Shared();
+        var mods = ModList.Available();
         hello.Put((ushort)mods.Count);
         foreach (string mod in mods)
             hello.Put(mod);

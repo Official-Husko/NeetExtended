@@ -97,7 +97,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 - Over Steam (no port forwarding) needs the Co-op over Steam mod, which hasn't been run in a game yet; see the Steam list below.
 - No password or allow list: anyone who has the address and the same mods can join. Traffic isn't encrypted.
 - At most 4 players. No host migration: when the host leaves, the game ends for everyone.
-- Both sides need the same mods at the same versions, except mods that only change your own game (Dev Bridge, Cheat Menu, Performance Fixes, No Feedback, Open Saves, Co-op over Steam). The message lists at most three differences.
+- A joiner needs every shared mod the host runs installed, in the same version; it's turned away otherwise, with the missing mods named. Switched on or off doesn't matter (mods off by default, like the Randomizer, too): the host sends its mod setup right after Welcome, so the joiner loads them before the house loads, and unloads shared mods the host doesn't run, for the session. Mods that only change your own game (Dev Bridge, Cheat Menu, Performance Fixes, No Feedback, Open Saves, Co-op over Steam) can differ.
 - A connection carried over a hot reload keeps the channel layout it was opened with; after a change to the channels, leave and join again.
 
 ### Steam
