@@ -10,17 +10,21 @@ internal static class DownedHud
     private static Canvas _canvas;
     private static Text _text;
     private static int _shownSeconds = -1;
+    private static bool _shownCarried;
 
     public static void Show(float secondsLeft)
     {
         int seconds = Mathf.Max(0, Mathf.CeilToInt(secondsLeft));
+        bool carried = Carrying.LocalCarried;
         if (_text == null)
             Build();
-        if (seconds == _shownSeconds && _canvas.enabled)
+        if (seconds == _shownSeconds && carried == _shownCarried && _canvas.enabled)
             return;
         _shownSeconds = seconds;
+        _shownCarried = carried;
         _canvas.enabled = true;
-        _text.text = $"<size=150%><color=red>U R DOWN</color></size>\nsomeone shove food in ur face or ur dead in {seconds}";
+        _text.text = $"<size=150%><color=red>U R DOWN</color></size>\nsomeone shove food in ur face or ur dead in {seconds}"
+            + (carried ? "\n<size=70%>somebody is hauling ur fat ass around</size>" : "");
     }
 
     public static void Hide()

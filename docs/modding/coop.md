@@ -129,7 +129,8 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 ### Players
 
 - Physics hands on other players (experimental setting) has only been checked by eye: an arm reaching for a held item looks right; fast moves and two-handed holds haven't been looked at.
-- Going down only happens in co-op, to a game's own player, and only when the death runs through `DieAccessor`: being gibbed, skeletonized or killed by a story event is still instant death. Reviving takes food; nothing else (medicine, a slap) works yet. There's no carrying a downed player.
+- Going down only happens in co-op, to a game's own player, and only when the death runs through `DieAccessor`: being gibbed, skeletonized or killed by a story event is still instant death. Reviving takes food; nothing else (medicine, a slap) works yet.
+- Carrying a downed player (`Players/Carrying`): aim at them with an empty hand and press it, press it again to put them down. The downed player's own game moves its body onto the carrier's shoulder (as that game sees the carrier, so others see it a moment behind) and decides who carries them, one carrier at a time. The game doesn't know the carrier's hand is busy, so it can still pick things up; the carrier can't feed the player they carry (that body's colliders are off in the carrier's game so it can't push them), but anyone else can.
 - Remote players have the default face, and their hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
 - Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.

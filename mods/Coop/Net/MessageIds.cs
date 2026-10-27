@@ -26,6 +26,8 @@ public static class MessageIds
     public const ushort Body = 42;
     public const ushort Downed = 43;
     public const ushort Revive = 44;
+    public const ushort CarryRequest = 45;
+    public const ushort CarryState = 46;
 
     // World: 100-199, see World/.
     public const ushort WorldSpawn = 100;

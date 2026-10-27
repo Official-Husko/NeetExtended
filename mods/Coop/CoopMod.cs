@@ -68,6 +68,7 @@ public sealed class CoopMod : NeetMod
         BodyBook.Init(this);
         BodySender.Init();
         Downed.Init();
+        Carrying.Init();
         World.WorldSync.Init(this);
         World.Ownership.HoldRepair.Init();
         Content.CoopStory.Register(this);
