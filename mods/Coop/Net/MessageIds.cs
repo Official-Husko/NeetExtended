@@ -90,4 +90,6 @@ public static class MessageIds
     public const ushort WorldNpcEffect = 155;
     public const ushort WorldNpcUndress = 156;
     public const ushort WorldTalkWatch = 160;
+    public const ushort WorldFireDelta = 145;
+    public const ushort WorldFireStart = 146;
 }
