@@ -27,8 +27,19 @@ case "$answer" in
     *) flags="$flags --incremental-gc" ;;
 esac
 
+printf "\nCo-op over Steam needs one file from Valve (steam_api.dll, about 270 KB) that this pack can't\n"
+printf "include. Download it now from github.com (the Steamworks.NET release)? [y/N] "
+read -r answer
+steam=no
+case "$answer" in
+    [yY]*) steam=yes ;;
+esac
+
 echo
 # shellcheck disable=SC2086 # flags are separate words on purpose
 "$neet" install --mods "$here/Mods" $flags "$@"
+if [ "$steam" = yes ]; then
+    "$neet" steam "$@" || echo "Couldn't fetch steam_api.dll. Try again later with: neet steam"
+fi
 echo
 echo "Done. Start NEET Demo from Steam; F1 opens the mod menu."

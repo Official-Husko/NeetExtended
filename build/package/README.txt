@@ -7,7 +7,8 @@ Install
 -------
 1. Close the game.
 2. Linux: run install.sh. Windows: run install.bat.
-3. Answer the two questions (64-bit player, incremental garbage collection).
+3. Answer the questions (64-bit player, incremental garbage collection, and whether to fetch the
+   file Co-op over Steam needs).
 4. Start the game from Steam. F1 opens the mod menu.
 
 If the installer can't find the game, pass its folder:
@@ -15,6 +16,11 @@ If the installer can't find the game, pass its folder:
     install.bat --game "D:\SteamLibrary\steamapps\common\NEET Demo"
 
 Running install again updates the mods and keeps your settings.
+
+Co-op over Steam needs steam_api.dll, a file from Valve that the pack can't include. The
+installer offers to download it; you can also do it later with the neet tool:
+    tool/linux-x64/neet steam          (Windows: tool\win-x64\neet.exe steam)
+It is fetched from the Steamworks.NET release on GitHub and checked against a known hash.
 
 Uninstall
 ---------

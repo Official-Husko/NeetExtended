@@ -21,6 +21,14 @@ echo Clean up memory in small steps instead of freezing the game for a moment ev
 set /p "ANSWER=(incremental garbage collection)? Recommended. [Y/n] "
 if /i not "%ANSWER%"=="n" if /i not "%ANSWER%"=="no" set "FLAGS=%FLAGS% --incremental-gc"
 
+set "ANSWER="
+set "STEAM="
+echo.
+echo Co-op over Steam needs one file from Valve (steam_api.dll, about 270 KB) that this pack can't
+set /p "ANSWER=include. Download it now from github.com (the Steamworks.NET release)? [y/N] "
+if /i "%ANSWER%"=="y" set "STEAM=1"
+if /i "%ANSWER%"=="yes" set "STEAM=1"
+
 echo.
 "%NEET%" install --mods "%HERE%Mods" %FLAGS% %*
 if errorlevel 1 (
@@ -28,6 +36,10 @@ if errorlevel 1 (
     echo The installation didn't finish. See the message above.
     pause
     exit /b 1
+)
+if defined STEAM (
+    "%NEET%" steam %*
+    if errorlevel 1 echo Couldn't fetch steam_api.dll. Try again later with: neet steam
 )
 echo.
 echo Done. Start NEET Demo from Steam; F1 opens the mod menu.

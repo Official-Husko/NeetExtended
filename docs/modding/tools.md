@@ -71,6 +71,7 @@ Fetches `steam_api.dll` for the Co-op over Steam mod (`mods/CoopSteam`) and puts
 - It refuses to replace an existing DLL while the game is open, because the game has it loaded.
 - `--remove` deletes `steam_api.dll` again. Co-op over Steam then says "Steam support isn't installed" and nothing else changes.
 
+The release package's install scripts offer to run this after installing.
 
 ## uninstall
 
@@ -403,9 +404,9 @@ If the bridge does not answer, a bridge tool returns an error result with the te
 
 | In the zip | What it is |
 | --- | --- |
-| `Mods/` | Every mod folder from a Release build, except DevBridge (it opens a port and is only for development). |
+| `Mods/` | Every mod folder from a Release build, except DevBridge (it opens a port and is only for development). `package.sh` stops if a `steam_api.dll` ever ends up in there. |
 | `tool/linux-x64/neet`, `tool/win-x64/neet.exe` | The tool, self-contained (no .NET needed), with `payload/` next to it. |
-| `install.sh`, `install.bat` | Ask whether to switch to the 64-bit player (default no) and whether to turn on incremental GC (default yes), then run `neet install --mods Mods ...`. Extra arguments, like `--game DIR`, are passed on. |
+| `install.sh`, `install.bat` | Ask whether to switch to the 64-bit player (default no), whether to turn on incremental GC (default yes) and whether to fetch Valve's `steam_api.dll` for Co-op over Steam (default no), then run `neet install --mods Mods ...` and, if asked, `neet steam`. Extra arguments, like `--game DIR`, are passed on to both. |
 | `uninstall.sh`, `uninstall.bat` | Run `neet uninstall`, passing arguments on. |
 | `README.txt` | Install and uninstall steps for players. |
 

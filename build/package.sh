@@ -28,6 +28,12 @@ for project in "$repo"/src/NeetModKit "$repo"/mods/*/; do
     echo "  $id"
 done
 
+# steam_api.dll is Valve's. The Co-op over Steam mod gets it from 'neet steam', never from the package.
+if [ -n "$(find "$out" -iname 'steam_api*.dll' -print -quit)" ]; then
+    echo "steam_api.dll ended up in the package; it must not be shipped." >&2
+    exit 1
+fi
+
 for rid in linux-x64 win-x64; do
     echo "Publishing neet for $rid..."
     dotnet publish "$repo/tools/NeetTool" -c Release -r "$rid" --self-contained true \
