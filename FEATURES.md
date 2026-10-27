@@ -53,6 +53,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Every achievement has a spot on the medal shelf**: the last achievement's medals never showed up in the shed.
 - **The money platinum medal checks the right thing**: it read the progress of a different medal.
 - **Picking up the thief's beanie works**: it used to throw an error and leave your hand stuck holding it.
+- **Characters leave hidden items alone**: characters no longer pick up things that belong to something switched off, like the thief's beanie before he shows up.
 
 ## Performance Fixes (experimental)
 

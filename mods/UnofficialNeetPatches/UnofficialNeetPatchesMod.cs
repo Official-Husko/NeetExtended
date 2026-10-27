@@ -36,6 +36,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new LastMedalFix());
         ModFeatures.Register(this, new MoneyMedalFix());
         ModFeatures.Register(this, new WigPickupFix());
+        ModFeatures.Register(this, new HiddenPickupsFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);

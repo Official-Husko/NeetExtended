@@ -27,6 +27,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | The last achievement has no spot on the medal shelf | `LastMedal` |
 | The money platinum medal reads another medal's progress | `MoneyMedal` |
 | Picking up the thief's beanie throws and leaves a broken hand | `WigPickup` |
+| Characters pick up things that belong to switched-off objects | `HiddenPickups` |
 
 ## Saving fails with a dead house spider around
 
@@ -232,6 +233,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a transpiler on `Wig.PickupTrigger` asks for any `Collider` (what `Usable.Start` does for the same list, `Usable.cs:304`) and makes the `IgnoreCollision` call skip a null collider.
 
 **Reproduce:** with `WigPickup` off, spawn the thief's beanie (or take it from `Bad_Thief` after the story event) and pick it up: the error shows in the log and the hand is stuck. With it on, the beanie is picked up and the wig script removes itself as intended.
+
+## Characters pick up things that belong to switched-off objects
+
+**What happens:** a character picked up the beanie of the thief while `Bad_Thief` was still switched off.
+
+**Cause:** a character that wants an item draws from its room memory, which is the live `Locator.usables` list (`Brain.cs:224`, `Locator.cs:45-62`) of everything that entered the room's trigger and hasn't left. `BrainNeetAI.FindObjInroom` (`:350-371`) takes any entry (its filter even lets destroyed ones through), and `PickupTargetObj` (`:403-419`) hands the object to `Player_Abilities.Pickup`, which with a given object checks neither distance nor whether it is switched on. `Bad_Thief` starts active and is switched off 0.2 s later (`Brain.cs:150`, `disableOnStart`), so its beanie can be listed in a room by then. Whether Unity ever sends the trigger exit for an object that is switched off wasn't checked in play; the code has nothing that removes it (guess).
+
+**Fix:** a prefix on `BrainNeetAI.PickupTargetObj` gives up on a target that is not active in the scene and removes it from the rooms' lists, so the character picks something else next time. The player's own pickup is not touched (it can only reach what it can see), and neither is loading a save, where a switched-off character gets its held items back through the same call.
+
+**Reproduce:** take the dev bridge's object list for `Bad_Thief` (inactive), put its beanie in a room's `usables` and give an NPC `pickupTgt` the beanie: without `HiddenPickups` the NPC holds it afterwards, with it the NPC's hands stay empty.
 
 ## Not bugs
 
