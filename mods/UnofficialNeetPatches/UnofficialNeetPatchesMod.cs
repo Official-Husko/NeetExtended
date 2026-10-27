@@ -47,6 +47,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new LoadedPaintFix());
         ModFeatures.Register(this, new TvAfterLoadFix());
         ModFeatures.Register(this, new CustomShirtsFix());
+        ModFeatures.Register(this, new PanCoolingFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);

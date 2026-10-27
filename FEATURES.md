@@ -76,6 +76,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Loaded paint shows**: blood, scorch marks and other paint you saved could be missing on some surfaces after loading, and the next splat there wiped it. In co-op, the mess already in the house when you joined didn't show at all. Now it all shows.
 - **The TV shows after loading**: a TV that was on when you saved came back on with its sound playing but a dark screen. It shows its channel again.
 - **Custom shirts show when you wear them**: a shirt from the custom shop showed your picture in your hand, but was plain once you put it on, until you saved and loaded. It shows the picture right away.
+- **Pans cool down after food burns in them**: a frying pan that had food burn in it stayed hot for good, even long after the stove was off. It cools down like any other pan.
 
 ## Performance Fixes (experimental)
 

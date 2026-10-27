@@ -38,6 +38,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Paint loaded from a save doesn't show | `LoadedPaint` |
 | A TV that was on comes back dark after loading | `TvAfterLoad` |
 | A custom shirt looks plain once it's worn | `CustomShirts` |
+| A pan stays hot for good after food burned in it | `PanCooling` |
 
 ## Saving fails with a dead house spider around
 
@@ -351,6 +352,16 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 **Fix:** a postfix on `TV.Start` shows the saved channel again (`Control(displayedScreenModule, noAudio: true)`) when the TV is on. A TV that's off isn't touched.
 
 **Reproduce:** turn the TV on, save (sleep), load. With `TvAfterLoad` off the screen is dark with the channel's sound playing; with it on the channel shows.
+
+## A pan stays hot for good after food burned in it
+
+**What happens:** food that burns in a frying pan can leave the pan hot for good. Long after the stove is off the pan keeps its heat (and its flame level: it still cooks, burns whoever touches it and hisses), and it never cools down.
+
+**Cause:** a `HeatHolder` (`HeatHolder.cs`) keeps the flames touching it in `flamesInContact`: added in `OnTriggerEnter`, removed in `OnTriggerExit` by looking up the other collider's `Flame`. Burning food gets a `Flame` of its own (`Flame.AddBurnCollider`, `Flame.cs`) which the game destroys again (`deleteFlameOnExtinguish`, or after its timer), and Unity sends no exit for a component that was destroyed, so the dead `Flame` stays in the set (the later exit finds no `Flame` on the food to remove). `Update` calls `DistributeHeat` for every entry, and `DistributeHeat` ends with `decayDelayTimer = 2f` even when the flame is gone (`HeatHolder.cs:190`). The delay restarts every frame, so the heat never decays.
+
+**Fix:** a prefix on `HeatHolder.Update` drops destroyed flames from `flamesInContact` first.
+
+**Reproduce:** burn a piece of meat in a pan on a lit stove, turn the stove off, destroy the meat and lift the pan away from the stove, then read `HeatHolder._heatIndex` and `flamesInContact`: with `PanCooling` off the set holds destroyed flames and the heat stays put, with it on the set is clean and the heat falls by 1 a second. (A pan left inside the stove's zone doesn't cool either way: the stove's `Stove_Zone` flame stays in the set while the pan touches it, and it resets the delay too. That is how the game is, not part of this fix.)
 
 ## Not bugs
 
