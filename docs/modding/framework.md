@@ -305,6 +305,18 @@ RuleActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount",
 - `IRuleSubject` (`Id`, `Times`) is what's running: a phone call, an email. `RuleContext.Active` is the one playing right now, for actions called from hand-written Ink.
 - `RuleIds.Find(items, idOf, id, nearMod)`: finds a call, an email, ... by id, where a short id ("pizza") means one from `nearMod` first.
 
+### The player a rule is about
+
+The built-in conditions and actions that are about "the player" (`stat`, `holding`, `room`; `stat`, `knockout`, and where `give` and `fire` happen when there's no speaker) go through `RulePlayer.Current`, an `IRulePlayer`: `Position`, `InFront(distance)`, `GetStat`, `SetStat`, `AddStat`, `Knockout(seconds)`, `Holds(names)`. Use it in your own conditions and actions too, so they work for whoever the rule is about.
+
+Normally it's this game's player (`RulePlayer.Local`). A mod that runs a conversation for someone else adds a source that names that player while it runs; co-op does this for remote players' conversations, which run in the host's game:
+
+```csharp
+RulePlayer.AddSource(this, () => talking != null ? talking.Player : null);
+```
+
+Sources are asked newest first, every time a rule needs the player, and the first one that doesn't return null wins. `RulePlayer.Require()` throws when there's no player at all (outside the house). `Spawning.PrefabName(name)` strips "(Clone)" for comparing held items with item names.
+
 ### Triggers and schedules
 
 For content that happens by itself (a call ringing in, an email arriving):

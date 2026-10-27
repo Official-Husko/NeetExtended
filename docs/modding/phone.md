@@ -121,7 +121,7 @@ Wherever steps are expected, a single step works too: `"then": "Oh hi."`. After 
 
 ### Conditions
 
-A condition is an object; every key in it must hold. Used by `when`, `if`, choice `if` and `incoming.when`. Conditions and actions are shared with every mod that reads content files (emails use the same ones), and flags are shared too: an email can set a flag a call checks. `called`, `dialed` and `ring` come from the phone; the rest from the framework.
+A condition is an object; every key in it must hold. Used by `when`, `if`, choice `if` and `incoming.when`. Conditions and actions are shared with every mod that reads content files (emails use the same ones), and flags are shared too: an email can set a flag a call checks. `called`, `dialed` and `ring` come from the phone; the rest from the framework. The ones about the player (`stat`, `holding`, `room`, and the actions `stat` and `knockout`) are about the player on the call; in co-op that's whoever is talking, not the host.
 
 | Key | Holds when |
 | --- | --- |

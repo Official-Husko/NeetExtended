@@ -23,11 +23,11 @@ internal static class BuiltinConditions
         RuleConditions.Register(kit, "chance", Chance,
             "A random chance from 0 to 1: 0.25 holds a quarter of the time.");
         RuleConditions.Register(kit, "stat", Stat,
-            "Player stats: { \"Hunger\": \"< 25\" } or \"Hunger < 25\". 0 is empty, 100 is full.");
+            "Stats of the player the rule is about: { \"Hunger\": \"< 25\" } or \"Hunger < 25\". 0 is empty, 100 is full.");
         RuleConditions.Register(kit, "holding", Holding,
-            "The player holds this item (or one of a list) in either hand.");
+            "The player the rule is about holds this item (or one of a list) in either hand.");
         RuleConditions.Register(kit, "room", InRoom,
-            "The player is in this room (or one of a list).");
+            "The player the rule is about is in this room (or one of a list).");
         RuleConditions.Register(kit, "flag", Flag,
             "A flag is set (\"name\") or compares: { \"name\": \">= 2\" }.");
     }
@@ -61,7 +61,7 @@ internal static class BuiltinConditions
             tests = new NamedComparisons();
             tests.Add(text.Substring(0, split), Comparison.Parse(text.Substring(split)));
         }
-        return _ => tests.All(name => PlayerControl.FindStat(name).GetVal());
+        return _ => tests.All(name => RulePlayer.Require().GetStat(name));
     }
 
     private static Func<IRuleSubject, bool> Holding(JToken value)
@@ -69,15 +69,8 @@ internal static class BuiltinConditions
         var names = Names(value);
         return _ =>
         {
-            var abilities = GameRefs.PlayerAbilities;
-            if (abilities == null)
-                return false;
-            foreach (var held in abilities.pickups)
-            {
-                if (held != null && names.Contains(CleanName(held.name)))
-                    return true;
-            }
-            return false;
+            var player = RulePlayer.Current;
+            return player != null && player.Holds(names);
         };
     }
 
@@ -86,7 +79,11 @@ internal static class BuiltinConditions
         var rooms = new HashSet<Location>();
         foreach (string name in Names(value))
             rooms.Add(Rooms.Parse(name));
-        return _ => GameRefs.Player != null && rooms.Contains(Rooms.At(GameRefs.Player.transform.position));
+        return _ =>
+        {
+            var player = RulePlayer.Current;
+            return player != null && rooms.Contains(Rooms.At(player.Position));
+        };
     }
 
     private static Func<IRuleSubject, bool> Flag(JToken value)
@@ -113,11 +110,5 @@ internal static class BuiltinConditions
             names.Add(value.Value<string>());
         }
         return names;
-    }
-
-    private static string CleanName(string name)
-    {
-        int clone = name.IndexOf("(Clone)", StringComparison.Ordinal);
-        return (clone >= 0 ? name.Substring(0, clone) : name).Trim();
     }
 }

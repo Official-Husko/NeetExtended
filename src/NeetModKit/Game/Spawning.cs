@@ -45,6 +45,13 @@ public static class Spawning
     public static GameObject NpcInRoom(string name, Location room) =>
         Npc(name, Rooms.FloorPoint(room) ?? throw new ArgumentException($"{room} isn't in this scene."));
 
+    /// <summary>The prefab name an object was made from: its name without "(Clone)".</summary>
+    public static string PrefabName(string name)
+    {
+        int clone = name.IndexOf("(Clone)", StringComparison.Ordinal);
+        return (clone >= 0 ? name.Substring(0, clone) : name).Trim();
+    }
+
     public static Vector3 InFrontOfPlayer(float distance = 0.6f)
     {
         var cam = Camera.main;
