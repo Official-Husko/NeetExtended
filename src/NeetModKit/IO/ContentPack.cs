@@ -52,7 +52,7 @@ public sealed class ContentPack
     public static ContentPack Watch(NeetMod owner, string folderName, InkStory story, Action<ContentFile> loadJson, Action loaded = null)
     {
         var pack = new ContentPack(owner, story, loadJson, loaded);
-        pack._content = ModContent.Watch(owner, folderName, pack.LoadAll, "*.json", "*.ink");
+        pack._content = ModContent.Watch(owner, folderName, pack.LoadAll, "*.jsonc", "*.json", "*.ink");
         // Files compile conditions from other mods; when those come or go, load again.
         Action changed = pack._content.MarkDirty;
         Rules.RuleRegistry.Changed += changed;
@@ -104,8 +104,11 @@ public sealed class ContentPack
                 try { _scripts.Add(InkScripts.Add(_scope, _story, folder.Display(file), File.ReadAllText(file))); }
                 catch (IOException e) { _problems.Add($"{folder.Display(file)}: {e.Message}"); }
             }
-            foreach (string file in files.Where(f => f.EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
+            var skipped = new List<string>();
+            foreach (string file in JsonFiles.Pick(files, skipped))
                 jsonFiles.Add(new ContentFile(this, file, folder.Display(file), folder.Mod.Id));
+            foreach (string file in skipped)
+                _owner.Log.Info($"{folder.Display(file)} is left out: there's a .jsonc of the same name next to it.");
         }
 
         // Scripts from every mod first, so a file can use another mod's knots.
@@ -129,7 +132,7 @@ public sealed class ContentPack
     internal static JToken Parse(string path) => JToken.Parse(File.ReadAllText(path), JsonSettings);
 }
 
-/// <summary>One .json file of a <see cref="ContentPack"/>, while it loads.</summary>
+/// <summary>One .jsonc or .json file of a <see cref="ContentPack"/>, while it loads.</summary>
 public sealed class ContentFile
 {
     private readonly ContentPack _pack;
@@ -144,7 +147,7 @@ public sealed class ContentFile
 
     public string Path { get; }
 
-    /// <summary>"ModId/folder/file.json", for messages.</summary>
+    /// <summary>"ModId/folder/file.jsonc", for messages.</summary>
     public string Display { get; }
 
     /// <summary>The mod whose folder it's in. Ids in the file are usually "ModId/id".</summary>

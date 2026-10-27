@@ -7,7 +7,7 @@ namespace Mixtapes;
 public sealed class MixtapesConfig
 {
     [Label("Tape price")]
-    [Description("What a mixtape costs in the store, unless its tapes.json entry says otherwise.")]
+    [Description("What a mixtape costs in the store, unless its tapes.jsonc entry says otherwise.")]
     [Range(0, 200)]
     public int Price = 15;
 }

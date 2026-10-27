@@ -144,7 +144,7 @@ Modders can add emails as JSON or Ink files in any mod's `email` folder.
 
 Your own videos on the living room TV. Put MP4 or WebM files into a mod's `tv` folder (there's an example station in `Mods/TvStations/tv`) and they show up as stations, next to the game's channels.
 
-- **Keep the game's channels**: switch off to watch only your own stations. Single channels can be hidden with a `stations.json` in the `tv` folder.
+- **Keep the game's channels**: switch off to watch only your own stations. Single channels can be hidden with a `stations.jsonc` in the `tv` folder.
 - **Station volume** in Settings.
 
 ## Mixtapes
@@ -152,7 +152,7 @@ Your own videos on the living room TV. Put MP4 or WebM files into a mod's `tv` f
 Your own music on cassettes for the radio. Put OGG, MP3 or WAV files into a mod's `mixtapes` folder (there's an example tape, Pumpkin Mix, in `Mods/Mixtapes/mixtapes`) and each one is a tape: sold in the computer's store, and if you want, left lying in a room of the house. Put it in the radio like the game's own tapes.
 
 - **Mixtape radio**: with no tape in, the radio plays your songs one after another, shuffled, like a station. It still needs a fuse and the music button.
-- **Tape price** in Settings. Names, prices, colours and the room a tape is left in go in a `tapes.json` in the `mixtapes` folder.
+- **Tape price** in Settings. Names, prices, colours and the room a tape is left in go in a `tapes.jsonc` in the `mixtapes` folder.
 
 ## Randomizer
 

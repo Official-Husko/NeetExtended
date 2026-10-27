@@ -12,13 +12,14 @@ namespace Mixtapes.Tapes;
 
 /// <summary>
 /// Reads the "mixtapes" folder of every loaded mod: each song file is a tape, and an optional
-/// tapes.json names them, prices them, colours them and leaves them in a room. Songs the list
+/// tapes.jsonc names them, prices them, colours them and leaves them in a room. Songs the list
 /// doesn't mention follow the listed ones, by file name. Everything loads again when a file changes.
 /// </summary>
 internal static class TapeLoader
 {
     public const string FolderName = "mixtapes";
-    public const string ListFile = "tapes.json";
+    /// <summary>tapes.jsonc (or tapes.json) in a mixtapes folder.</summary>
+    public const string ListName = "tapes";
 
     private static readonly List<Tape> Loaded = new List<Tape>();
     private static readonly List<string> ProblemList = new List<string>();
@@ -51,7 +52,7 @@ internal static class TapeLoader
         var files = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var folder in _content.Folders())
         {
-            foreach (var song in MediaFolder.Read(folder, SongLibrary.Types, ListFile, "tapes", ProblemList, out _))
+            foreach (var song in MediaFolder.Read(folder, SongLibrary.Types, ListName, "tapes", ProblemList, out _))
             {
                 var tape = Read(song);
                 if (tape == null)

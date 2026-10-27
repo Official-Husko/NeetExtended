@@ -27,7 +27,7 @@ The remote's six channel buttons pick channels 1 to 6. Hitting the remote goes t
 | 1 to 6 | The game's Static, Bingo, Snail, Church, Sports, Rap |
 | 7 and up | Your stations |
 
-To put a station on one of the six buttons, show it **in place of** a game channel. To drop game channels, **hide** them. Both are done in a `stations.json` in the same folder:
+To put a station on one of the six buttons, show it **in place of** a game channel. To drop game channels, **hide** them. Both are done in a `stations.jsonc` (or `stations.json`) in the same folder:
 
 ```json
 {

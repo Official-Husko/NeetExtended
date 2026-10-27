@@ -8,10 +8,10 @@ Emails are plain files. Any mod can ship them in an `email` folder; no code need
 
 | Subject | When | What happens |
 | --- | --- | --- |
-| Welcom to Rail Mail!! | Soon after you get home, once | Free money, or a candy for emotional damage. The example email (`email/example.json`). |
+| Welcom to Rail Mail!! | Soon after you get home, once | Free money, or a candy for emotional damage. The example email (`email/example.jsonc`). |
 | RE: ur free money | The morning after you took the money | Rail Mail wants it back. |
 | money on ur card | Now and then, at most every 45 minutes | Mom sends snack money. Written in Ink by hand (`email/from-mom.ink`). |
-| love u bb | Some morning from day 2, once | The game's own `LoveYou` email, which the game never sends (`email/game-emails.json`). |
+| love u bb | Some morning from day 2, once | The game's own `LoveYou` email, which the game never sends (`email/game-emails.jsonc`). |
 | fuck you (from you) | 90 seconds after you trade soul for a clone, once | The game's own `HateYou`, signed "Your own clone." Sent by `Mail/GameMail.cs`. |
 | TAX SEASON IS UPON YOU | With the first tax bill, once | The game's own `TaxReminder`. The game's reader would only show its first line; the mod's shows all of it. |
 
@@ -19,14 +19,14 @@ And about 70 more, one file per kind, most of them arriving at random and some o
 
 | File | What's in it |
 | --- | --- |
-| `spam.json` | A prince stuck in gravy, the Rail Lotery, phishing, a crypto coin, the uncledad's cow, a scammer in love and her mom, miracle pills. |
-| `family.json` | Mom's shower articles and snack money, grandpa in all caps, the cousin with a boat, a reply-all ham thread, your clone, dad's out-of-office. |
-| `orders.json` | After store orders: confirmations, a pizza review, the black market survey, a live occult package, a courier who ate your bread, refunds, Rail Mail's newsletter. |
-| `cults.json` | The Low Church of Brown, tithes, Satan's newsletter, Hell's HR, a ghost's house rules, a cult group chat, the Bishop. |
-| `online.json` | The 1337 gamer squad, a forum flame war, a dating site, the anime card game, a streamer, a guild kick, a virus pop-up, your fanfic. |
-| `authorities.json` | C.U.M. taxes and late fees, the power company, a court summons, jury duty, the census, an inspection, the water department, the HOA. |
-| `creepy.json` | The basement, the machine, your own account, dad's account, the walls, a photo of your back, your future self, a blackmail tape. |
-| `neighbourhood.json` | Follow-ups to the phone calls: Dot's list, smell complaints, Pumpkin Pizza, the Spookbusters invoice, the reunion, the stapler, a job rejection. |
+| `spam.jsonc` | A prince stuck in gravy, the Rail Lotery, phishing, a crypto coin, the uncledad's cow, a scammer in love and her mom, miracle pills. |
+| `family.jsonc` | Mom's shower articles and snack money, grandpa in all caps, the cousin with a boat, a reply-all ham thread, your clone, dad's out-of-office. |
+| `orders.jsonc` | After store orders: confirmations, a pizza review, the black market survey, a live occult package, a courier who ate your bread, refunds, Rail Mail's newsletter. |
+| `cults.jsonc` | The Low Church of Brown, tithes, Satan's newsletter, Hell's HR, a ghost's house rules, a cult group chat, the Bishop. |
+| `online.jsonc` | The 1337 gamer squad, a forum flame war, a dating site, the anime card game, a streamer, a guild kick, a virus pop-up, your fanfic. |
+| `authorities.jsonc` | C.U.M. taxes and late fees, the power company, a court summons, jury duty, the census, an inspection, the water department, the HOA. |
+| `creepy.jsonc` | The basement, the machine, your own account, dad's account, the walls, a photo of your back, your future self, a blackmail tape. |
+| `neighbourhood.jsonc` | Follow-ups to the phone calls: Dot's list, smell complaints, Pumpkin Pizza, the Spookbusters invoice, the reunion, the stapler, a job rejection. |
 
 Switch on the Mods page (F1): **New emails arrive**. In Settings, **Fewest/Most minutes between emails** set how often a random new email shows up (4 to 10 minutes by default).
 
@@ -34,13 +34,15 @@ The **Email** tab in the mod menu lists every email with a SEND NOW button, any 
 
 ## Where email files go
 
-Every `.json` and `.ink` file in `Mods/<any mod>/email/` (subfolders too) is loaded once all mods are loaded, and loaded again within a second of a file changing or a mod loading or unloading.
+Every `.jsonc`, `.json` and `.ink` file in `Mods/<any mod>/email/` (subfolders too) is loaded once all mods are loaded, and loaded again within a second of a file changing or a mod loading or unloading.
+
+Content files are JSON with comments (`//` and `/* */`), named `.jsonc`; plain `.json` works too. If a folder has both `name.json` and `name.jsonc`, only the `.jsonc` is read (an update that renamed its files can leave the old `.json` behind), and the log says so.
 
 ```
 Mods/MyEmails/
   mod.json          { "id": "MyEmails", "name": "My Emails", "version": "1.0.0", "dependencies": { "EmailExpansion": "0.1.0" } }
   email/
-    landlord.json
+    landlord.jsonc
 ```
 
 Problems (bad JSON, unknown actions, Ink compile errors) are logged and listed on the Email tab with the file and the step they're in. An email with a problem is skipped; the rest of the file still loads.

@@ -1,7 +1,7 @@
 {
   "id": "EmailExpansion",
   "name": "Email Expansion",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "pawbeans",
   "description": "New emails in the computer's inbox that you can reply to, and that can pay you, send stuff to the door or set things up for later. Emails are plain JSON or Ink files in any mod's email folder.",
   "dependencies": { "NeetModKit": "0.3.0" },

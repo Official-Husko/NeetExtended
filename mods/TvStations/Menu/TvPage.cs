@@ -18,7 +18,7 @@ internal sealed class TvPage : MenuPage
     {
         ui.Text(MenuPalette.Paint(
             "Videos (MP4 or WebM) in any mod's tv folder become stations on the living room TV. The remote's six buttons pick " +
-            "channels 1 to 6; hitting the remote goes to the next one. A stations.json in the folder names them, sets their " +
+            "channels 1 to 6; hitting the remote goes to the next one. A stations.jsonc in the folder names them, sets their " +
             "volume, puts them in place of a game channel and hides game channels.", MenuPalette.Muted));
 
         var top = ui.Row(8f, 26f);

@@ -1,4 +1,4 @@
-// A call written in Ink by hand, for when JSON isn't enough. scream-line.json gives it a number.
+// A call written in Ink by hand, for when JSON isn't enough. scream-line.jsonc gives it a number.
 // The game's lists, variables and functions are all available, plus the shared ones:
 //   Act(action, values)    Check(condition, value)
 //   Flag(name)             SetFlag(name, value)    AddFlag(name, amount)

@@ -10,7 +10,7 @@ internal sealed class GameChannelsFeature : ModFeature
     public override string Name => "Keep the game's channels";
     public override string Description =>
         "Static, Bingo, Snail, Church, Sports and Rap stay on the TV next to your stations. Switch this off to only " +
-        "watch your own. To drop single channels, list them under \"hide\" in a stations.json.";
+        "watch your own. To drop single channels, list them under \"hide\" in a stations.jsonc.";
 
     protected override void OnEnable() => TvChannels.SetKeepGameChannels(true);
 

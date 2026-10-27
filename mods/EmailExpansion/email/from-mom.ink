@@ -1,4 +1,4 @@
-// An email written in Ink by hand, for when JSON isn't enough. from-mom.json gives it a subject.
+// An email written in Ink by hand, for when JSON isn't enough. from-mom.jsonc gives it a subject.
 // The shared functions work here: Act(action, values), Check(condition, value), Flag(name),
 // SetFlag(name, value), AddFlag(name, amount). Choices are replies; [brackets] keep the reply
 // from showing up again as a line.

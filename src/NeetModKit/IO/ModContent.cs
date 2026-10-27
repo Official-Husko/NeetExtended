@@ -13,7 +13,7 @@ namespace NeetModKit.IO;
 /// file in one of them changes, or a mod with such a folder loads or unloads. Reloads wait for the
 /// next frame, so a burst of changes loads once.
 /// <code>
-/// _calls = ModContent.Watch(this, "phone", LoadCalls, "*.json", "*.ink");
+/// _calls = ModContent.Watch(this, "phone", LoadCalls, "*.jsonc", "*.json", "*.ink");
 /// public override void OnAllLoaded() => _calls.Load();
 /// void LoadCalls() { foreach (var folder in _calls.Folders()) ... }
 /// </code>

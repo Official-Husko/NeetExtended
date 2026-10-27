@@ -26,9 +26,9 @@ A file that can't be played shows up on the **Mixtapes** tab in the mod menu and
 
 Saves keep tapes by name ("Mixtape: Pumpkin Mix"). If the song or the mod is gone, the tape is left out when the save loads.
 
-## tapes.json
+## tapes.jsonc
 
-Optional, in the same folder:
+Optional, in the same folder (`tapes.json` works too):
 
 ```json
 {

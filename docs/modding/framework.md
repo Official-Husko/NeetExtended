@@ -342,7 +342,7 @@ Ink functions in every story: `Act(action, values)`, `Check(condition, value)`, 
 
 ## Content packs
 
-`NeetModKit.IO.ContentPack` loads a content folder from every loaded mod, the way the phone loads `phone/` and the email mod `email/`: `.ink` files go into an Ink story, `.json` files go to your reader, and it all loads again when a file changes or a mod comes or goes.
+`NeetModKit.IO.ContentPack` loads a content folder from every loaded mod, the way the phone loads `phone/` and the email mod `email/`: `.ink` files go into an Ink story, `.jsonc` and `.json` files go to your reader, and it all loads again when a file changes or a mod comes or goes. `JsonFiles` has the rules for content JSON: `Pick(files)` (a `.json` with a `.jsonc` twin is left out) and `Find(folder, name)` (`name.jsonc`, else `name.json`).
 
 ```csharp
 _pack = ContentPack.Watch(this, "phone", InkStory.Dialogue, CallParser.LoadFile, () => _pack.LogSummary("calls"));

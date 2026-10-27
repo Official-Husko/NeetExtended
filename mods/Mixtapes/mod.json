@@ -1,9 +1,9 @@
 {
   "id": "Mixtapes",
   "name": "Mixtapes",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "pawbeans",
   "description": "Your own music on cassettes for the radio: drop MP3, OGG or WAV files into a mixtapes folder and buy the tapes in the store or find them in the house. With no tape in, the radio plays them like a station.",
-  "dependencies": { "NeetModKit": "0.2.0" },
+  "dependencies": { "NeetModKit": "0.3.0" },
   "hotReload": true
 }

@@ -8,13 +8,14 @@ namespace TvStations.Stations;
 
 /// <summary>
 /// Reads the "tv" folder of every loaded mod: each video file is a station, and an optional
-/// stations.json names them, sets their volume, puts them in place of a game channel, and hides
+/// stations.jsonc names them, sets their volume, puts them in place of a game channel, and hides
 /// game channels. Videos the list doesn't mention are added after the listed ones, by file name.
 /// </summary>
 internal static class StationLoader
 {
     public const string FolderName = "tv";
-    public const string ListFile = "stations.json";
+    /// <summary>stations.jsonc (or stations.json) in a tv folder.</summary>
+    public const string ListName = "stations";
 
     /// <summary>File types Unity's video player can open on Windows.</summary>
     private static readonly HashSet<string> VideoTypes = new HashSet<string> { ".mp4", ".m4v", ".mov", ".webm", ".ogv", ".avi", ".wmv", ".mpg", ".mpeg", ".asf", ".dv", ".vp8" };
@@ -52,7 +53,7 @@ internal static class StationLoader
 
     private static void LoadFolder(ModContent.Folder folder)
     {
-        var videos = MediaFolder.Read(folder, VideoTypes, ListFile, "stations", ProblemList, out var list);
+        var videos = MediaFolder.Read(folder, VideoTypes, ListName, "stations", ProblemList, out var list);
         foreach (var video in videos)
         {
             var entry = video.Entry;

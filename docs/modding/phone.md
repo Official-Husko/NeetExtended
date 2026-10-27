@@ -8,7 +8,7 @@ Calls are plain files. Any mod can ship them in a `phone` folder; no code needed
 
 | Number | Who | What happens |
 | --- | --- | --- |
-| 555-0100 | Phone Company Test Line | The example call (`phone/example.json`). Tests the ringer (calls you back), the lights and flags. |
+| 555-0100 | Phone Company Test Line | The example call (`phone/example.jsonc`). Tests the ringer (calls you back), the lights and flags. |
 | 555-7492 | Pumpkin Pizza | Order a pizza ($15), delivered to the front door, and the driver calls when it's there. Free candy once. Prank them and you're on the list until you apologize. |
 | 555-2368 | Spookbusters | The game's "call later" number. The second time you call, they pick up: they'll open the black basement door for $30 or put out a fire. |
 | 666-6666 | Satan | The game's call plays the first time. After that he trades $666 for 20 soul, or a copy of you for 20 soul (the game's own TradeSoulForClone). |
@@ -22,7 +22,7 @@ Calls are plain files. Any mod can ship them in a `phone` folder; no code needed
 | 555-0261 to 0266 | Hotlines | Psychic (first call free, then $5), Dial-a-Joke, a crisis line, PC help, Lonely Hearts, store complaints (one refund). |
 | 555-0272 | Tallow Creek Fitness | Collections for a gym membership. |
 
-Calls that ring in by themselves (`phone/*.json`, about 50 of them):
+Calls that ring in by themselves (`phone/*.jsonc`, about 50 of them):
 
 | Caller | When |
 | --- | --- |
@@ -46,7 +46,9 @@ The **Phone** tab in the mod menu lists every call with a RING NOW button, any p
 
 ## Where call files go
 
-Every `.json` and `.ink` file in `Mods/<any mod>/phone/` (subfolders too) is loaded once all mods are loaded, and loaded again within a second of a file changing or a mod loading or unloading. The game doesn't need to restart, and neither does the mod.
+Every `.jsonc`, `.json` and `.ink` file in `Mods/<any mod>/phone/` (subfolders too) is loaded once all mods are loaded, and loaded again within a second of a file changing or a mod loading or unloading. The game doesn't need to restart, and neither does the mod.
+
+Content files are JSON with comments (`//` and `/* */`), named `.jsonc`; plain `.json` works too. If a folder has both `name.json` and `name.jsonc`, only the `.jsonc` is read (an update that renamed its files can leave the old `.json` behind), and the log says so.
 
 A call pack doesn't need code. This is a complete mod:
 
@@ -54,7 +56,7 @@ A call pack doesn't need code. This is a complete mod:
 Mods/MyCalls/
   mod.json          { "id": "MyCalls", "name": "My Calls", "version": "1.0.0", "dependencies": { "PhoneExpansion": "0.2.0" } }
   phone/
-    landlord.json
+    landlord.jsonc
 ```
 
 Problems (bad JSON, unknown actions, Ink compile errors) are logged and listed on the Phone tab with the file and the step they're in. A call with a problem is skipped; the rest of the file still loads.

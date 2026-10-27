@@ -33,10 +33,10 @@ public static class MediaFolder
     private static readonly JsonLoadSettings Json = new JsonLoadSettings { CommentHandling = CommentHandling.Ignore };
 
     /// <param name="extensions">Lower-case extensions with the dot: ".mp4", ".ogg".</param>
-    /// <param name="listFile">The list's file name ("stations.json"); it doesn't have to exist.</param>
+    /// <param name="listName">The list's file name without the extension ("stations" for stations.jsonc or stations.json); it doesn't have to exist.</param>
     /// <param name="listKey">The array in the list ("stations").</param>
     /// <param name="list">The whole list, for anything else in it, or null.</param>
-    public static List<MediaFile> Read(ModContent.Folder folder, ICollection<string> extensions, string listFile, string listKey,
+    public static List<MediaFile> Read(ModContent.Folder folder, ICollection<string> extensions, string listName, string listKey,
         List<string> problems, out JObject list)
     {
         var files = Directory.GetFiles(folder.Path, "*.*", SearchOption.AllDirectories)
@@ -45,19 +45,19 @@ public static class MediaFolder
             .ToList();
 
         var result = new List<MediaFile>();
-        list = ReadList(folder, listFile, problems);
+        string listPath = JsonFiles.Find(folder.Path, listName);
+        list = ReadList(folder, listPath, problems);
         if (list?[listKey] is JArray entries)
-            AddListed(folder, listFile, entries, files, result, problems);
+            AddListed(folder, listPath, entries, files, result, problems);
 
         foreach (string file in files)
             result.Add(new MediaFile { Path = file, Source = folder.Display(file) });
         return result;
     }
 
-    private static JObject ReadList(ModContent.Folder folder, string listFile, List<string> problems)
+    private static JObject ReadList(ModContent.Folder folder, string path, List<string> problems)
     {
-        string path = System.IO.Path.Combine(folder.Path, listFile);
-        if (!File.Exists(path))
+        if (path == null)
             return null;
         try
         {
@@ -71,10 +71,10 @@ public static class MediaFolder
     }
 
     /// <summary>Files named in the list, in its order. They're taken off <paramref name="files"/>.</summary>
-    private static void AddListed(ModContent.Folder folder, string listFile, JArray entries, List<string> files,
+    private static void AddListed(ModContent.Folder folder, string listPath, JArray entries, List<string> files,
         List<MediaFile> result, List<string> problems)
     {
-        string where = folder.Display(System.IO.Path.Combine(folder.Path, listFile));
+        string where = folder.Display(listPath);
         for (int i = 0; i < entries.Count; i++)
         {
             if (!(entries[i] is JObject entry) || entry.Value<string>("file") == null)
