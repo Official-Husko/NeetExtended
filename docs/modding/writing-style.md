@@ -14,6 +14,12 @@ and doesn't censor any of it. A survey caller asks "On a scale of 1 to 6 how wou
 burning of the hole?". A tax email comes from the Collections and Usury Minister at CUM.com. Write
 "fuck", not "f***".
 
+**Dick jokes and dirty insults.** The game loves them: "Mandatory Penis inspection day is
+forthcoming. Make preperations.", a spam email that just says "pennis", a vet who calls the player
+"you son of a bitch", a goth who's the "Defacto boss bitch", a player reply that's just "Slut!".
+Use them freely: penis, pennis, dick, dickhead, wiener, balls, bitch, son of a bitch, slut, whore,
+asshole, dipshit.
+
 **Absurd escalation, not wit.** A normal setup that goes off the rails: a pie store that delivers
 in pi weeks, a gamer tip line whose host starts telling you his wife left him. Dry, clever sitcom
 one-liners ("Your complaint has been noted by nobody.") don't fit.
@@ -49,10 +55,10 @@ computer, doesn't shower. Callers and senders can roast that, and mom enables it
 
 These are about real harm, not taste:
 
-- No slurs, and no jokes that punch at people for their race, ethnicity, disability, gender or
-  sexuality. Made-up cults and churches, Satan, ghosts are all fine.
-- Kids in calls can swear, roast each other and do gross-out stuff, like the game's own kids.
-  Nothing sexual involving a kid, in any direction.
+- No racial, ethnic, homophobic or disability slurs (the game has none). The game's own insults
+  above are all fine, and so are made-up cults and churches, Satan and ghosts.
+- Kids in calls can swear, call people dickheads and do gross-out stuff, like the game's own kids.
+  No sexual jokes with or about a kid.
 - No real people, companies, websites or phone numbers.
 - No jokes about the game itself, its developer or its development.
 - Don't tell the player to kill or hurt themselves.
