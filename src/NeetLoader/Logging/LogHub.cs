@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using NeetLoader.Runtime;
 using UnityEngine;
 
 namespace NeetLoader.Logging;
@@ -27,7 +28,7 @@ public static class LogHub
 
     internal static void Init(string logsDir)
     {
-        _file = new LogFile(Path.Combine(logsDir, "latest.log"));
+        _file = new LogFile(Path.Combine(logsDir, "latest" + Instance.Suffix + ".log"));
         ErrorReport.Init(logsDir);
         Application.logMessageReceivedThreaded += OnUnityLog;
     }

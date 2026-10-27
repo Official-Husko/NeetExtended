@@ -31,7 +31,7 @@ The loader starts from `NeetLoader.Entry.Init`, which the installer registers in
 5. `ModDiscovery.Scan` finds mod folders. Each one is added to the registry. Mods listed as disabled in `settings.json` get `ModState.Disabled`.
 6. `ModLifecycle.LoadBatch` loads everything still `Pending`, in dependency order.
 
-Public constant `Loader.Version` is `"0.1.0"`.
+Public constant `Loader.Version` is `"0.2.0"`.
 
 ## Folder layout
 
@@ -43,8 +43,11 @@ Public constant `Loader.Version` is `"0.1.0"`.
 | `<game>/NeetLoader/settings.json` | Loader settings, see [Settings file](#settings-file). |
 | `<game>/NeetLoader/logs/latest.log` | This session's log. |
 | `<game>/NeetLoader/logs/previous.log` | The previous session's log. |
+| `<game>/NeetLoader/logs/*-2.log` | The same files for a second game instance (`NEET_INSTANCE=2`, see `neet launch --instance`): `latest-2.log`, `previous-2.log`, `errors-2.log`. |
 
 `LoaderPaths` exposes these as public static properties: `GameDir` (the folder with `NEET.exe`), `ModsDir`, `DataDir` (`<game>/NeetLoader`) and `LogsDir`.
+
+`NeetLoader.Runtime.Instance` tells which copy of the game this is: `Number` (1 normally, 2 and up for extra copies started with `NEET_INSTANCE=N`), `IsFirst`, and `Suffix` (`""` or `"-2"`) for file names that two processes must not share.
 
 ## mod.json fields
 

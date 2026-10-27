@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using NeetLoader.Mods;
+using NeetLoader.Runtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -140,8 +141,8 @@ public static class ErrorReport
 
     internal static void Init(string logsDir)
     {
-        _path = Path.Combine(logsDir, "errors.log");
-        string previous = Path.Combine(logsDir, "errors-previous.log");
+        _path = Path.Combine(logsDir, "errors" + Instance.Suffix + ".log");
+        string previous = Path.Combine(logsDir, "errors-previous" + Instance.Suffix + ".log");
         try
         {
             if (File.Exists(previous))

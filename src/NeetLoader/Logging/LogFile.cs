@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using NeetLoader.Runtime;
 
 namespace NeetLoader.Logging;
 
@@ -15,7 +16,7 @@ internal sealed class LogFile : IDisposable
 
     public LogFile(string path)
     {
-        string previous = Path.Combine(Path.GetDirectoryName(path), "previous.log");
+        string previous = Path.Combine(Path.GetDirectoryName(path), "previous" + Instance.Suffix + ".log");
         try
         {
             if (File.Exists(path))
