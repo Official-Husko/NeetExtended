@@ -28,6 +28,14 @@
         {
           "text": "With no tape in, the radio plays your mixtapes like a station.",
           "area": "Mixtapes"
+        },
+        {
+          "text": "Randomizer: a seed per save that shuffles who knocks at night, store prices, deliveries, the house on a new game and how fast you get hungry.",
+          "area": "Randomizer"
+        },
+        {
+          "text": "The game's three unsent emails now arrive: mom's love, your clone's hate mail after you trade soul for a clone, and the tax reminder with your first tax bill.",
+          "area": "Email Expansion"
         }
       ],
       "changed": [
@@ -63,6 +71,30 @@
         },
         {
           "text": "Spam emails no longer come twice as often after loading a save.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Poopman says his lines when you hurt him or throw something gross at him.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Grandpa no longer gets stuck on a routine he doesn't have after the bad thief's timer runs out.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Black and occult market orders that don't go through no longer bring the cops.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Custom cassettes cost what the shop says (they were 10$ more).",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "All ten achievements have a spot on the medal shelf in the shed.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "The total money platinum medal no longer goes by a different medal's progress.",
           "area": "Unofficial NEET Patches"
         }
       ],
