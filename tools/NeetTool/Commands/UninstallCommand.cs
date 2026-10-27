@@ -12,7 +12,7 @@ public sealed class UninstallCommand : ICommand
     public Task<int> RunAsync(Args args)
     {
         var game = GameInstall.Locate(args.Get("game"));
-        if (GameProcess.IsRunning())
+        if (GameProcess.IsRunning(game))
             throw new InvalidOperationException("Close the game first.");
 
         // The 32-bit backup lives in the loader's folder, so put it back before anything is deleted.

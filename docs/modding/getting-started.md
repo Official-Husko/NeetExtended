@@ -54,9 +54,10 @@ The install:
 
 - copies `NeetLoader.dll`, `NeetLoader.pdb`, `0Harmony.dll` and `Mono.Cecil.dll` from the tool's payload into `NEET_Data/Managed`;
 - adds `NeetLoader.dll` to `NEET_Data/ScriptingAssemblies.json` and an `Entry.Init` call to `NEET_Data/RuntimeInitializeOnLoads.json`. The first time, the originals are saved next to them as `*.neetbak`;
-- creates `<game>/Mods`.
+- creates `<game>/Mods`;
+- switches the game to Unity's 64-bit player (downloaded from Unity the first time, about 180 MB; the 32-bit files are kept in `NeetLoader/backup/player-x86`). `--32bit` keeps or puts back the original 32-bit player, and later installs remember that. Details in [tools.md](tools.md#install).
 
-Use `--game DIR` if the tool can't find the game. If the game is running, the changes take effect after a restart. `neet uninstall` reverses the install; mods stay unless you pass `--remove-mods`.
+Use `--game DIR` if the tool can't find the game. If the game is running, the changes take effect after a restart (and the player stays as it is until an install with the game closed). `neet uninstall` reverses the install; mods stay unless you pass `--remove-mods`.
 
 Mod builds don't need `neet install` again. Every solution build updates `NeetLoader.dll` in `NEET_Data/Managed`, but a changed loader only takes effect after a restart.
 

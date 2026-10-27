@@ -55,11 +55,7 @@ public sealed class PlayerSwap
         CopyFolder(Path.Combine(_game.Dir, UnityPlayerSource.MonoFolder), Path.Combine(BackupDir, UnityPlayerSource.MonoFolder));
         yield return $"Kept the 32-bit player in {BackupDir}";
 
-        File.Copy(Path.Combine(playerDir, "WindowsPlayer.exe"), _game.Exe, overwrite: true);
-        File.Copy(Path.Combine(playerDir, Player), Path.Combine(_game.Dir, Player), overwrite: true);
-        File.Copy(Path.Combine(playerDir, CrashHandler64), Path.Combine(_game.Dir, CrashHandler64), overwrite: true);
-        DeleteIfThere(Path.Combine(_game.Dir, CrashHandler32));
-        CopyFolder(Path.Combine(playerDir, UnityPlayerSource.MonoFolder), Path.Combine(_game.Dir, UnityPlayerSource.MonoFolder));
+        Put64BitIn(playerDir);
         yield return $"Switched to the 64-bit player (Unity {UnityPlayerSource.UnityVersion})";
     }
 
@@ -74,6 +70,31 @@ public sealed class PlayerSwap
             throw new InvalidOperationException(
                 "The 32-bit player wasn't backed up here. Use Steam's \"Verify integrity of game files\" to get it back.");
 
+        Restore32Bit();
+        yield return "Switched back to the 32-bit player";
+    }
+
+    // If a copy fails half way (a full disk, say), the 32-bit files go back, so the game still starts.
+    private void Put64BitIn(string playerDir)
+    {
+        try
+        {
+            File.Copy(Path.Combine(playerDir, "WindowsPlayer.exe"), _game.Exe, overwrite: true);
+            File.Copy(Path.Combine(playerDir, Player), Path.Combine(_game.Dir, Player), overwrite: true);
+            File.Copy(Path.Combine(playerDir, CrashHandler64), Path.Combine(_game.Dir, CrashHandler64), overwrite: true);
+            DeleteIfThere(Path.Combine(_game.Dir, CrashHandler32));
+            CopyFolder(Path.Combine(playerDir, UnityPlayerSource.MonoFolder), Path.Combine(_game.Dir, UnityPlayerSource.MonoFolder));
+        }
+        catch
+        {
+            Restore32Bit();
+            throw;
+        }
+    }
+
+    // Copies the backed-up 32-bit files over the game's, then drops the backup.
+    private void Restore32Bit()
+    {
         foreach (string file in new[] { GameInstall.ExeName, Player, CrashHandler32 })
         {
             string source = Path.Combine(BackupDir, file);
@@ -86,7 +107,6 @@ public sealed class PlayerSwap
         string backupRoot = Path.GetDirectoryName(BackupDir)!;
         if (Directory.Exists(backupRoot) && !Directory.EnumerateFileSystemEntries(backupRoot).Any())
             Directory.Delete(backupRoot);
-        yield return "Switched back to the 32-bit player";
     }
 
     /// <summary>Reads the machine type from a Windows executable's PE header.</summary>

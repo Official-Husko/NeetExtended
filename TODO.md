@@ -5,7 +5,7 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 ## Planned mods
 
 - [ ] **Co-op**: 2 to 4 players in one house (`mods/Coop`, [docs/modding/coop.md](docs/modding/coop.md)). Done: direct-IP host and join, the house sent from memory, player bodies with poses and clothes, bodies kept for returning players, hot reload mid-session, world sync (items, NPCs, doors, money, fire, economy, emails, purchases), conversations and phones through the host, going down and reviving, enemies that pick the nearest player, the hitman line. Everything still missing is listed under [Known limitations](docs/modding/coop.md#known-limitations); keep that list current.
-  - [ ] Steam (`mods/CoopSteam`): hosting and the relay work under GE-Proton; still to do: test with a second account, then lobbies, invites, rich presence, auth tickets, 64-bit `steam_api64.dll`.
+  - [ ] Steam (`mods/CoopSteam`): hosting and the relay work under GE-Proton; still to do: test with a second account, then lobbies, invites, rich presence, auth tickets. Works on both players (64-bit `steam_api64.dll` and 32-bit `steam_api.dll`).
 - [ ] **Twitch Integration**: chat commands and channel point rewards that act in the game. Can reuse Phone Expansion's actions and conditions as the command set ("chat rings the phone", "chat pops the fuses").
   - [ ] Show the live chat on the living room TV (its world-space canvas, `HOUSE/FlatScreen/FlatScreen/Canvas`) and as a computer app (`ComputerApps.Register`), with names in their chat colours, badges and emotes (images loaded once with UnityWebRequestTexture and cached). In co-op, the host's chat shows for everyone.
 - [x] **Randomizer**: shuffle night visitors, store prices, dream layouts and the like. (Dreams are already random in the game; visitors, prices, deliveries, the house and needs are done.)
@@ -19,7 +19,7 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
   - [x] Skip `PaintTarget.Update` on surfaces with nothing to do.
   - [x] Characters plan their path only when the target moves.
   - [x] Quit without the shutdown crash on 32-bit (in the loader).
-  - [x] Optional 64-bit player and incremental GC in the installer.
+  - [x] 64-bit player (installed by default; `use-32bit` goes back) and incremental GC in the installer.
   - [ ] Fewer allocations per frame: about 11 KB, spread over the character rigs' update code (see "Still open" on the performance page).
   - [ ] Find out where "Coroutine continue failure" comes from (once per session in the house).
 

@@ -28,7 +28,8 @@ try
 {
     return await command.RunAsync(new Args(args.Skip(1)));
 }
-catch (Exception e) when (e is BridgeException or InvalidOperationException or ArgumentException or FileNotFoundException)
+catch (Exception e) when (e is BridgeException or InvalidOperationException or ArgumentException or FileNotFoundException
+    or HttpRequestException)
 {
     Out.Error(e.Message);
     return 1;

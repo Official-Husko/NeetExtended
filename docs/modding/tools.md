@@ -30,7 +30,7 @@ Expected errors (bad arguments, the game not found, the bridge not answering) pr
 ## install
 
 ```sh
-neet install [--game DIR] [--mods DIR] [--64bit | --32bit] [--incremental-gc | --no-incremental-gc]
+neet install [--game DIR] [--mods DIR] [--32bit | --64bit] [--incremental-gc | --no-incremental-gc]
 ```
 
 Copies these files from `payload/` into `NEET_Data/Managed/`: `NeetLoader.dll`, `NeetLoader.pdb` (optional), `0Harmony.dll`, `Mono.Cecil.dll`.
@@ -40,20 +40,26 @@ Then it edits two JSON files Unity reads at startup, both in `NEET_Data/`:
 - `ScriptingAssemblies.json`: adds `NeetLoader.dll` to `names` and `16` (user assembly) to `types`.
 - `RuntimeInitializeOnLoads.json`: adds an entry that calls `NeetLoader.Entry.Init` before the first scene loads.
 
-Before the first edit, each file is copied to `<name>.neetbak`. Those backups are kept until uninstall. Running `install` again is safe: entries are not added twice and the backups are not overwritten. It also creates the `Mods/` folder. If the game is running, it prints a warning, and the changes apply on the next start.
+Before the first edit, each file is copied to `<name>.neetbak`. Those backups are kept until uninstall. Running `install` again is safe: entries are not added twice and the backups are not overwritten. It also creates the `Mods/` folder. If the game is running, it prints a warning, and the changes apply on the next start. Then it sets up the [64-bit player](#the-64-bit-player), unless the game is set to keep its 32-bit one.
 
 Options:
 
 - `--mods DIR` copies every folder in `DIR` that has a `mod.json` into `Mods/`, file by file over the installed copy. Files that only exist in the game, like a mod's `config.json`, stay. The release package's install scripts use this.
-- `--64bit` swaps the game's 32-bit Unity player for the 64-bit player of the same Unity version (2022.3.17f1, Mono). The game's data is the same for both, so only `NEET.exe`, `UnityPlayer.dll`, the crash handler (`UnityCrashHandler32.exe` becomes `UnityCrashHandler64.exe`) and the `MonoBleedingEdge/` folder change. The 32-bit files are copied to `NeetLoader/backup/player-x86/` first.
-- `--32bit` puts the backed-up 32-bit player back. Steam's "Verify integrity of game files" does the same.
+- `--32bit` puts the game's original 32-bit player back from the backup and remembers the choice in `NeetLoader/keep-32bit.txt`, so later installs (updating the mods, say) leave the 32-bit player alone. Steam's "Verify integrity of game files" also brings the 32-bit player back, but doesn't set the choice. The release package's `use-32bit` scripts run this.
+- `--64bit` switches to the 64-bit player even after `--32bit`, and forgets that choice. The package's `use-64bit` scripts run this.
 - `--incremental-gc` adds `gc-max-time-slice=3` to `NEET_Data/boot.config` (original kept as `boot.config.neetbak`). Unity writes that line for games built with incremental garbage collection; with it, Mono collects garbage in slices of at most 3 ms instead of stopping the game for each collection. `--no-incremental-gc` restores the original file.
 
-`--64bit`, `--32bit` and the GC options refuse to run while the game is open.
+`--32bit`, `--64bit` and the GC options refuse to run while the game is open; a plain install leaves the player as it is then and says so. Only the game in the folder being installed counts, so a copy of the game running from another folder doesn't block it (Linux: the Wine command line names the exe; Windows: the process's main module).
+
+### The 64-bit player
+
+Unless `--32bit` was given (now or in an earlier install), `install` swaps the game's 32-bit Unity player for the 64-bit player of the same Unity version (2022.3.17f1, Mono). The game's data is the same for both, so only `NEET.exe`, `UnityPlayer.dll`, the crash handler (`UnityCrashHandler32.exe` becomes `UnityCrashHandler64.exe`) and the `MonoBleedingEdge/` folder change. The 32-bit files are copied to `NeetLoader/backup/player-x86/` first. If copying the 64-bit files fails half way, the 32-bit files go back and the backup is dropped, so the game still starts.
+
+If the player can't be downloaded or swapped in (no connection, a download that fails its checksum, a full disk), a plain install prints a warning and finishes with the 32-bit player: the loader and the mods work on both. Installing again tries again. With `--64bit` the same failure is an error (exit code 1).
 
 ### Where the 64-bit player comes from
 
-Unity's licence lets a game ship the player, not a mod, so `--64bit` downloads it from Unity when asked. The only standalone download with the Windows players is the "Windows Build Support (Mono)" module for the macOS editor:
+Unity's licence lets a game ship the player, not a mod, so `install` downloads it from Unity the first time it's needed. The only standalone download with the Windows players is the "Windows Build Support (Mono)" module for the macOS editor:
 
 `https://download.unity3d.com/download_unity/4fc78088f837/MacEditorTargetInstaller/UnitySetup-Windows-Mono-Support-for-Editor-2022.3.17f1.pkg` (180,824,073 bytes)
 
@@ -65,11 +71,11 @@ The download is checked against that size and a pinned SHA-256. The `.pkg` is a 
 neet steam [--game DIR] [--remove]
 ```
 
-Fetches `steam_api.dll` for the Co-op over Steam mod (`mods/CoopSteam`) and puts it in `<game>/Mods/CoopSteam/`. The DLL is Valve's (Steamworks SDK), so the pack and the repository don't contain it. The tool downloads the Steamworks.NET 2024.8.0 release zip (Steamworks SDK 1.60, picked because the Steam bridge of older Proton builds lacks interface versions that SDK 1.64 needs) from GitHub, checks the zip (size and SHA-256), takes `Windows-x86/steam_api.dll` out of it and checks that file's SHA-256 too. The same release is the source of the `Steamworks.NET.dll` the mod carries, so the two always match. The DLL stays in the tool's cache (`~/.cache/neet/steamworks-2024.8.0/`, `%LOCALAPPDATA%\neet\cache\` on Windows) and is copied from there, so running it again is free.
+Fetches `steam_api.dll` (for the 32-bit player) and `steam_api64.dll` (for the 64-bit one) for the Co-op over Steam mod (`mods/CoopSteam`) and puts them in `<game>/Mods/CoopSteam/`. Both are fetched, so switching the game's player later doesn't break Steam. The DLLs are Valve's (Steamworks SDK), so the pack and the repository don't contain them. The tool downloads the Steamworks.NET 2024.8.0 release zip (Steamworks SDK 1.60, picked because the Steam bridge of older Proton builds lacks interface versions that SDK 1.64 needs) from GitHub, checks the zip (size and SHA-256), takes `Windows-x86/steam_api.dll` and `Windows-x64/steam_api64.dll` out of it and checks each file's SHA-256 too. The same release is the source of both `Steamworks.NET.dll` builds the mod carries, so they always match. The DLLs stay in the tool's cache (`~/.cache/neet/steamworks-2024.8.0/`, `%LOCALAPPDATA%\neet\cache\` on Windows) and are copied from there, so running it again is free.
 
 - The CoopSteam mod has to be installed first (run the installer); the command stops with a message otherwise.
-- It refuses to replace an existing DLL while the game is open, because the game has it loaded.
-- `--remove` deletes `steam_api.dll` again. Co-op over Steam then says "Steam support isn't installed" and nothing else changes.
+- It refuses to replace existing DLLs while the game is open, because the game may have one loaded.
+- `--remove` deletes both DLLs again. Co-op over Steam then says "Steam support isn't installed" and nothing else changes.
 
 The release package's install scripts offer to run this after installing.
 
@@ -79,7 +85,7 @@ The release package's install scripts offer to run this after installing.
 neet uninstall [--game DIR] [--remove-mods]
 ```
 
-Puts the 32-bit player back if `install --64bit` swapped it (the backup is in the loader's folder, so this comes first) and restores `boot.config`. Then it restores both JSON files from their `.neetbak` backups and deletes the backups. If a backup is missing, it removes the loader's entries from the file instead. Then it deletes the four payload files from `NEET_Data/Managed/`. It refuses to run while the game is open.
+Puts the 32-bit player back if `install` swapped it (the backup is in the loader's folder, so this comes first) and restores `boot.config`. Then it restores both JSON files from their `.neetbak` backups and deletes the backups. If a backup is missing, it removes the loader's entries from the file instead. Then it deletes the four payload files from `NEET_Data/Managed/`. It refuses to run while the game is open.
 
 Mods stay in place unless `--remove-mods` is given. That option also deletes `Mods/` and `NeetLoader/` (loader data and logs), including each mod's config.
 
@@ -104,7 +110,7 @@ Running:     no
 Bridge:      down
 ```
 
-`Registered` is `yes` when both JSON files contain the loader's entries. `Player` reads the machine type from `NEET.exe`'s header. `Bridge` is `up` when the bridge answers `ping`.
+`Registered` is `yes` when both JSON files contain the loader's entries. `Player` reads the machine type from `NEET.exe`'s header; a 32-bit player kept with `install --32bit` shows `(picked with --32bit; installing again keeps it)`. `Bridge` is `up` when the bridge answers `ping`.
 
 ## launch
 
@@ -278,7 +284,7 @@ neet compat --check      # exit code 1 if the installed game isn't the tested bu
 neet compat --offline    # don't ask Steam for the latest build
 ```
 
-Run it from inside the repository. A game build is told apart by its game code: the module version id and SHA-256 of `NEET_Data/Managed/Assembly-CSharp.dll`, which change with every build of the game and which the installer never touches (unlike `NEET.exe`, which `--64bit` swaps). It also shows Steam's build id from `appmanifest_2054460.acf` in the game's Steam library and the Unity version from `globalgamemanagers`. Steam's latest public build comes from `api.steamcmd.net`, a public mirror of Steam's app info (SteamDB has no API).
+Run it from inside the repository. A game build is told apart by its game code: the module version id and SHA-256 of `NEET_Data/Managed/Assembly-CSharp.dll`, which change with every build of the game and which the installer never touches (unlike `NEET.exe`, which the installer swaps for the 64-bit player). It also shows Steam's build id from `appmanifest_2054460.acf` in the game's Steam library and the Unity version from `globalgamemanagers`. Steam's latest public build comes from `api.steamcmd.net`, a public mirror of Steam's app info (SteamDB has no API).
 
 `compat/game.json` is the record:
 
@@ -404,9 +410,11 @@ If the bridge does not answer, a bridge tool returns an error result with the te
 
 | In the zip | What it is |
 | --- | --- |
-| `Mods/` | Every mod folder from a Release build, except DevBridge (it opens a port and is only for development). `package.sh` stops if a `steam_api.dll` ever ends up in there. |
+| `Mods/` | Every mod folder from a Release build, except DevBridge (it opens a port and is only for development). `package.sh` stops if a `steam_api*.dll` ever ends up in there. |
 | `tool/linux-x64/neet`, `tool/win-x64/neet.exe` | The tool, self-contained (no .NET needed), with `payload/` next to it. |
-| `install.sh`, `install.bat` | Ask whether to switch to the 64-bit player (default no), whether to turn on incremental GC (default yes) and whether to fetch Valve's `steam_api.dll` for Co-op over Steam (default no), then run `neet install --mods Mods ...` and, if asked, `neet steam`. Extra arguments, like `--game DIR`, are passed on to both. |
+| `install.sh`, `install.bat` | Ask whether to turn on incremental GC (default yes) and whether to fetch Valve's `steam_api.dll` and `steam_api64.dll` for Co-op over Steam (default no), then run `neet install --mods Mods ...` (which sets up the 64-bit player unless the game was set to 32-bit) and, if asked, `neet steam`. Extra arguments, like `--game DIR`, are passed on to both. |
+| `use-32bit.sh`, `use-32bit.bat` | Run `neet install --32bit`: the original 32-bit player, kept by later installs. For PCs where the 64-bit player gives trouble. Arguments are passed on. |
+| `use-64bit.sh`, `use-64bit.bat` | Run `neet install --64bit`, back to the 64-bit player. Arguments are passed on. |
 | `uninstall.sh`, `uninstall.bat` | Run `neet uninstall`, passing arguments on. |
 | `README.txt` | Install and uninstall steps for players. |
 

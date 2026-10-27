@@ -117,7 +117,7 @@ Whether the player collects garbage incrementally is a build setting, written in
 
 ### In the installer
 
-Unity's player binaries can't be shipped with a mod (Unity's licence covers shipping them with your own game), so `neet install --64bit` downloads Unity's module from Unity at the player's request and does the swap in place, keeping the 32-bit files to switch back (`--32bit`, or Steam's "verify files"). `--incremental-gc` adds the `boot.config` line. The release package's install scripts ask about both. Details in [tools.md](../modding/tools.md#install).
+Unity's player binaries can't be shipped with a mod (Unity's licence covers shipping them with your own game), so `neet install` downloads Unity's module from Unity on the player's machine and does the swap in place, keeping the 32-bit files to switch back (`--32bit`, the package's `use-32bit` scripts, or Steam's "verify files"). The 64-bit player started as an opt-in (`--64bit`) and is now what every install sets up. `--incremental-gc` adds the `boot.config` line; the release package's install scripts ask about it. Details in [tools.md](../modding/tools.md#install).
 
 ## What's fixed
 
@@ -135,7 +135,7 @@ What the Performance Fixes mod (each fix a feature that can be switched off), Un
 | Incremental garbage collection | Installer: `--incremental-gc` | Collection spikes gone (see above). |
 | The player's frame rate and vsync settings | Unofficial NEET Patches: `FrameRateSettings` | The game forced 120 fps without vsync over the settings menu's choice whenever a camera started. |
 | Clean exit on 32-bit | Loader | No crash report on exit. |
-| 64-bit player | Installer: `--64bit` | About 5% faster. |
+| 64-bit player | Installer (default; `--32bit` goes back) | About 5% faster. |
 
 Saving also no longer fails for good when one object can't be saved (`SaveCrashes`) or a destroyed one is still subscribed (`GhostSaves`), both in Unofficial NEET Patches.
 

@@ -11,6 +11,12 @@ public static class GameProcess
     /// <summary>Is the game running? With an instance, only that copy counts (1 is the normal one).</summary>
     public static bool IsRunning(int? instance = null) => FindPids(instance).Any();
 
+    /// <summary>
+    /// Is the game in this folder running? A copy of the game in another folder (a test copy, say)
+    /// doesn't count, so the installer can work on one copy while another runs.
+    /// </summary>
+    public static bool IsRunning(GameInstall game) => FindPids(null, game.Exe).Any();
+
     /// <summary>Launches through Steam, which applies the user's own Proton choice and launch options.</summary>
     public static void LaunchViaSteam(IEnumerable<string> gameArgs)
     {
@@ -130,11 +136,12 @@ public static class GameProcess
         }
     }
 
-    private static IEnumerable<int> FindPids(int? instance)
+    // With exe, only processes started from that NEET.exe count.
+    private static IEnumerable<int> FindPids(int? instance, string? exe = null)
     {
-        // Windows can't tell instances apart from outside the process, so the filter is ignored there.
+        // Windows can't tell instances apart from outside the process, so the instance filter is ignored there.
         if (OperatingSystem.IsWindows())
-            return Process.GetProcessesByName("NEET").Select(p => p.Id);
+            return Process.GetProcessesByName("NEET").Where(p => exe is null || RunsFrom(p, exe)).Select(p => p.Id);
 
         // Under Wine the process shows up with its Windows path as the command line.
         var pids = new List<int>();
@@ -146,7 +153,8 @@ public static class GameProcess
             {
                 string cmd = File.ReadAllText(Path.Combine(dir, "cmdline"));
                 if (cmd.StartsWith("Z:\\", StringComparison.Ordinal) && cmd.Contains("\\NEET.exe", StringComparison.Ordinal)
-                    && (instance is null || InstanceOf(dir) == instance))
+                    && (instance is null || InstanceOf(dir) == instance)
+                    && (exe is null || StartedFrom(cmd, exe)))
                     pids.Add(pid);
             }
             catch (IOException)
@@ -157,5 +165,27 @@ public static class GameProcess
             }
         }
         return pids;
+    }
+
+    // The first word of a Wine command line is the exe's Windows path: Z: plus the Linux path.
+    private static bool StartedFrom(string cmdline, string exe)
+    {
+        int end = cmdline.IndexOf('\0');
+        string first = end < 0 ? cmdline : cmdline[..end];
+        return string.Equals(first, "Z:" + exe.Replace('/', '\\'), StringComparison.OrdinalIgnoreCase);
+    }
+
+    // A process whose path can't be read counts as a match, so nothing gets changed under a running game.
+    private static bool RunsFrom(Process process, string exe)
+    {
+        try
+        {
+            string? path = process.MainModule?.FileName;
+            return path is null || string.Equals(Path.GetFullPath(path), exe, StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception e) when (e is System.ComponentModel.Win32Exception or InvalidOperationException or NotSupportedException)
+        {
+            return true;
+        }
     }
 }
