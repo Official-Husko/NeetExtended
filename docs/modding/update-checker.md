@@ -1,6 +1,6 @@
 # Update Checker
 
-The Update Checker mod (`mods/UpdateChecker`) finds out whether a newer release of the pack is out. While there is one, the version label in the corner says so, and (if the player allows it) the game sends an email and rings the phone about it. It never downloads or installs anything.
+The Update Checker mod (`mods/UpdateChecker`) finds out whether a newer release of the pack is out. While there is one, the version label in the corner says so, and (if the player allows it) the game sends an email and rings the phone about it. It never downloads or installs anything. It's always on (`"essential": true`), so every player hears about updates; the **Check for updates** setting still keeps it offline.
 
 ## What it does
 

@@ -17,7 +17,7 @@ Press **F1**, or pick **MODS** in the pause menu (where the feedback form used t
 
 | Page | What's on it |
 | --- | --- |
-| **Mods** | Every installed mod: switch it on or off, load or unload it while playing, and switch its features. The Framework and No Feedback are always on. |
+| **Mods** | Every installed mod: switch it on or off, load or unload it while playing, and switch its features. The Framework, No Feedback and Update Checker are always on. |
 | **What's New** | The changes in each version. Opens by itself after an update (you can turn that off). |
 | **PC Apps** | The addresses of the apps on the in-game computer; change them to whatever you like. |
 | **Settings** | Every mod's settings in one place. |
@@ -158,7 +158,7 @@ Your own music on cassettes for the radio. Put OGG, MP3 or WAV files into a mod'
 
 ## Update Checker
 
-Tells you when a newer version is out.
+Tells you when a newer version is out. Always on; switch off **Check for updates** in Settings to keep it from going online.
 
 - **The check**: when the game starts and then every hour, the mod asks GitHub (`github.com/Official-Husko/NeetExtended`) for the newest release. It sends nothing about you or your game. If you're offline or GitHub doesn't answer, nothing happens and nothing is shown.
 - **In the corner**: while a newer version is out, the version label in the bottom left says `update available (v0.3.0)`.
