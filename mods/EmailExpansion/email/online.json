@@ -9,21 +9,21 @@
       "body": [
         "<size=150%>BRO U HAVE BEEN AFK 3 DAYS<size=100%>",
         "Here is ur daily injection of straight up pro gamer tip:",
-        "Dont eat cereal while u play. The crumbs go in the keyboard and then the keyboard is ur family now.",
-        "I used to have a squad. We had 14 members. Now we are 1 and the 1 is a bot named DEFENDER_77.",
+        "Dont eat cereal while u play. The crumbs go in the keyboard and then the keyboard is ur family now, and it's a dick about it.",
+        "I used to have a squad. We had 14 members. Now we are 1 and the 1 is a bot named DEFENDER_77. He's a total dickhead.",
         "<size=60%>my mom says i need to go outside. she is wrong. the sun is a bad streamer.<size=100%>",
         { "choices": [
           {
             "text": "Give me more tips.",
             "say": [
-              "Ok. Drink water. Pee in a bottle, its the pro move. Dont tell the squad.",
+              "Ok. Drink water. Pee in a bottle, its the pro move. Dont tell the squad, they will cry like little wieners.",
               { "do": "stat", "name": "Hygiene", "add": -5 }
             ]
           },
           {
             "text": "Send me the pro gamer pack.",
             "say": [
-              "Pack is on the way. Its a Candy Bar. Thats the pack. Its a pro pack.",
+              "Pack is on the way. Its a Candy Bar. Thats the pack. Its a pro pack, bitch.",
               { "do": "deliver", "item": "Candy_Bar", "after": 30 }
             ]
           },
@@ -35,7 +35,7 @@
             ]
           }
         ] },
-        "1337 gamer squad. We see u. We are watching ur grass grow."
+        "1337 gamer squad. We see u. We are watching ur grass grow and ur sad little pennis shrink."
       ]
     },
     {
@@ -45,8 +45,8 @@
       "body": [
         "<size=150%>xXDarkLord69Xx REPLIED TO UR POST<size=100%>",
         "Ur post: 'is a hot dog a sandwich (discuss)'",
-        "His reply: 'ur a stinky dumb idiot who lives in his moms basement and has never touched grass in ur life'",
-        "He also says ur avatar is a potato with a face drawn on it by a toddler. That is rude bro.",
+        "His reply: 'ur a stinky dumb idiot who lives in his moms basement, has never touched grass in ur life and has a dick the size of a grape'",
+        "He also says ur avatar is a potato with a face drawn on it by a toddler. Ur potato has a bigger pennis than u. That is rude bro.",
         "Ur post now has 0 likes and 1 dislike. The dislike is from u.",
         { "choices": [
           {
@@ -59,7 +59,7 @@
           {
             "text": "Reply: ur mom plays on my team.",
             "say": [
-              "Ur mom is not on the forum. Ur mom is on the couch, bro.",
+              "Ur mom is not on the forum. Ur mom is on the couch, bro, asking if u want a sandwich, you dickhead.",
               { "do": "flag", "name": "net_flamed_back" }
             ]
           },
@@ -77,14 +77,14 @@
       "body": [
         "<size=150%>YOU HAVE 3 NEW MATCHES<size=100%>",
         "Dawn, 34. Bio: 'i have a cat and the cat is my soulmate'. Her cat is in the photo. Her cat is 4.",
-        "Gerald, 52. Bio: 'i dont do showers i do vibes'. His profile pic is a wet hamster. We dont know whos hamster.",
-        "Big Terry, 41. Bio: 'lets do it in the car at the drive thru'. Says he has a truck. Says he has a truck 8 times.",
+        "Gerald, 52. Bio: 'i dont do showers i do vibes'. His profile pic is a wet hamster. Also a pennis, pixelated badly. We dont know whos hamster.",
+        "Big Terry, 41. Bio: 'lets do it in the car at the drive thru'. Says he has a truck. Says he has a truck 8 times. Says the truck has a bigger dick than him.",
         { "choices": [
           {
             "text": "Message Dawn (the cat).",
             "say": [
               "Hi Dawn. Ur cat is hot. I would like to meet the cat.",
-              "Dawn: cats dont date dude. Ur unmatched. Also ur hair looks like a sad carpet.",
+              "Dawn: cats dont date dude. Ur unmatched. Also ur hair looks like a sad carpet. Ur whole face looks like a dickhead.",
               { "do": "flag", "name": "net_dating_rejected" }
             ]
           },
@@ -92,7 +92,7 @@
             "text": "Message Big Terry.",
             "say": [
               "Hi Terry. Ur truck sounds great.",
-              "Terry: CAN U COME OVER TONIGHT. Bring the candy ring. I dont know what that means either.",
+              "Terry: CAN U COME OVER TONIGHT. Bring the candy ring and ur wiener. I dont know what that means either.",
               { "do": "flag", "name": "net_dating_terry" }
             ]
           },
@@ -101,7 +101,7 @@
             "if": { "money": 10 },
             "say": [
               { "do": "money", "amount": -10 },
-              "Ur profile is now BOOSTED. 0 people saw it. 1 was a hamster."
+              "Ur profile is now BOOSTED. 0 people saw it. 1 was a hamster, and he was not impressed by ur pennis."
             ]
           }
         ] }
@@ -114,7 +114,7 @@
       "body": [
         "<size=150%>WELCOME TO CARD PARTY, NEW FRIEND!!!<size=100%>",
         "Ur account is almost done. Plz confirm ur age so we know what waifus u can see.",
-        "Ur starter pack is 1 card: Sad Waifu Pillow (N). She is sad. She is ur first friend.",
+        "Ur starter pack is 1 card: Sad Waifu Pillow (N). She is sad. She is ur first friend. She has no dick, unlike u.",
         { "choices": [
           {
             "text": "Im 18+ lol",
@@ -127,7 +127,7 @@
           {
             "text": "Dont care, open it.",
             "say": [
-              "Thats not an option. We wrote [age unknown] on ur account. Ur a legend now.",
+              "Thats not an option. We wrote [age unknown] on ur account. Ur a legend now, dickhead.",
               { "do": "flag", "name": "net_anime_member" },
               { "do": "site", "url": "anime" }
             ]
@@ -137,11 +137,11 @@
             "if": { "money": 2 },
             "say": [
               { "do": "money", "amount": -2 },
-              "Rare pack opened. It is 1 card. The card is a sad drawing of ur mom's car."
+              "Rare pack opened. It is 1 card. The card is a sad drawing of ur mom's car with a dick painted on the hood."
             ]
           }
         ] },
-        "<size=60%>Card Party is not responsible for any feelings. Play responsibly.<size=100%>"
+        "<size=60%>Card Party is not responsible for any feelings, or dicks. Play responsibly.<size=100%>"
       ]
     },
     {
@@ -152,27 +152,27 @@
         "hey bro u watched my stream last night. thx for the 1 view. the other view was my mom.",
         "im doing a charity stream for my fund. the fund is for a better mic. the mic is 400$.",
         "<size=150%>DONATE 5$ OR I SAY UR NAME ON STREAM<size=100%>",
-        "I will say it wrong on purpose. I will say it like a sneeze.",
+        "I will say it wrong on purpose. I will say it like a sneeze. A wet one. Into my pennis.",
         { "choices": [
           {
             "text": "Donate $5.",
             "if": { "money": 5 },
             "say": [
               { "do": "money", "amount": -5 },
-              "THANK U BRO!!! U r on the wall now. The wall has 1 name. Its mine.",
+              "THANK U BRO!!! U r on the wall now. The wall has 1 name. Its mine, bitch.",
               { "do": "flag", "name": "net_donor" }
             ]
           },
           {
             "text": "Whats ur channel name?",
             "say": [
-              "Its SKIBIDI_DEFENDER_SHITSLAYER. Subscribe. 0 subs. Wait its 1 sub, its my mom.",
+              "Its SKIBIDI_DEFENDER_SHITSLAYER. Subscribe. 0 subs. Wait its 1 sub, its my mom, and she says ur a dick.",
               { "do": "ring", "call": "PhoneExpansion/tm-callback", "after": 120 }
             ]
           },
           {
             "text": "Ill donate in my dreams.",
-            "say": "<size=60%>ok bro. 2 viewers saw that. one was a bot"
+            "say": "<size=60%>ok bro. 2 viewers saw that. One was a bot. The other was a dickhead, and that's on u."
           }
         ] }
       ]
@@ -183,21 +183,21 @@
       "send": { "trigger": "random", "weight": 1, "when": { "day": ">= 2" } },
       "body": [
         "<size=150%>YOU HAVE BEEN REMOVED FROM SHADOW LEGION<size=100%>",
-        "Reason: inactive 41 days. Smells like cheese in voice chat. 'the way u say gg'.",
+        "Reason: inactive 41 days. Smells like cheese in voice chat. 'the way u say gg'. Also says ur pennis is a hot dog.",
         "Removed by: xX_ShadowSlayer_Xx (Guild Master, age 13)",
         "We voted. It was 4 to 0. The 0 was u, u didnt vote, u were asleep in voice chat.",
         { "choices": [
           {
             "text": "Ur 13 and a master? lol.",
             "say": [
-              "He cried. Then he pinged all 300 kids in the guild. Its a whole thing now.",
+              "He cried. Then he pinged all 300 kids in the guild. Its a whole thing now. Its called dickgate.",
               { "do": "flag", "name": "net_kicked" }
             ]
           },
           {
             "text": "Sorry guys. I'll be better.",
             "say": [
-              "Too late. Get fucked. Ur still on the wall with the cheese emoji.",
+              "Too late. Get fucked, you dickhead. Ur still on the wall with the cheese emoji.",
               { "do": "flag", "name": "net_kicked" }
             ]
           }
@@ -211,7 +211,7 @@
       "body": [
         "<size=150%>WARNING WARNING WARNING<size=100%>",
         "Ur computer has 9000 viruses. 3 of them are named 'dad'. 1 is named 'pennis'. Ur webcam is on.",
-        "Ur webcam is on right now. Hi.",
+        "Ur webcam is on right now. Hi. Nice pennis.",
         { "choices": [
           {
             "text": "Call the tech line.",
@@ -225,14 +225,14 @@
             "if": { "money": 5 },
             "say": [
               { "do": "money", "amount": -5 },
-              "THANK U. The viruses are now ur friend. Now there are 9001. Hes called pennis 2.",
+              "THANK U. The viruses are now ur friend. Now there are 9001. Hes called pennis 2 and hes a bitch.",
               { "do": "flag", "name": "net_scammed" }
             ]
           },
           {
             "text": "Let the viruses have my dad.",
             "say": [
-              "Ok. Dad virus is happy now. Ur monitor is dying. Ur lights are dying too.",
+              "Ok. Dad virus is happy now. Ur monitor is dying. Ur lights are dying too, dickhead.",
               { "do": "power", "on": false, "room": "Bedroom_Neet", "for": 30 }
             ]
           }
@@ -245,14 +245,14 @@
       "send": { "trigger": "random", "weight": 1, "when": { "day": ">= 2" } },
       "body": [
         "hi. dont know u. found ur fanfic on the old fanfic site. the one called 'Captain Mustache and the Dragon Who Cried Gravy'. Its 14 parts.",
-        "Part 14 is the one where the dragon becomes a dentist. Thats not a good ending bro.",
+        "Part 14 is the one where the dragon becomes a dentist. The dentist has a drill and the drill is a dick. Thats not a good ending bro.",
         "Part 9 has the line 'the sun was a warm cup of cum'. I read it 4 times at the library. Librarian saw. She said nothing. She just looked.",
-        "Ur 3 comments on it are all from u. Under different names. Thats sad.",
+        "Ur 3 comments on it are all from u. Under different names. Thats sad, you pathetic dickhead.",
         { "choices": [
           {
             "text": "Delete ur email.",
             "say": [
-              "Nah. I made a PDF. Its in my drawer next to the stapler."
+              "Nah. I made a PDF. Its in my drawer next to the stapler, you dickhead."
             ]
           },
           {
@@ -277,10 +277,10 @@
       "subject": "part 15 (the dragon is a dentist)",
       "send": { "trigger": "random", "weight": 3, "when": { "flag": "net_fanfic_fan", "read": "net-old-fanfic" } },
       "body": [
-        "Ok so i wrote part 15. Its 2 pages. The dragon is a dentist now. Its ur fault.",
+        "Ok so i wrote part 15. Its 2 pages. The dragon is a dentist now. Its ur fault, you dick.",
         "Mustache is in the chair. The dragon is holding the drill. The drill is a cassette player. Dont ask.",
         "<size=150%>THE END<size=100%>",
-        "Ur gonna comment on it. U have to. Its my only fan. Its u. Its u again."
+        "Ur gonna comment on it. U have to. Its my only fan. Its u. Its u again, bitch."
       ]
     }
   ]

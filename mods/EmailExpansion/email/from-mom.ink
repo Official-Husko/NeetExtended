@@ -8,9 +8,12 @@ Hey sweetie its mom.
 {Flag("mom_emails") > 0: Its mom again. U never call. U never shower. U just eat.}
 ~ AddFlag("mom_emails", 1)
 I put money on ur card so u can buy snacks and not leave ur room. Dont tell ur father.
+Also I bought u the big pack of tissues again. U go through them so fast bb. Is it allergies?
 ~ Act("money", "15")
 + [Thanks mom.]
     U are welcome. I love u even if u smell.^nxox
++ [It's allergies, mom.]
+    Poor baby. Ur father had the same allergies. Every night. Very loud allergies.
 + [Can I have more?]
     { Check("money", ">= 100"):
         U have {Check("money", ">= 500"): so much|enough} already. No.

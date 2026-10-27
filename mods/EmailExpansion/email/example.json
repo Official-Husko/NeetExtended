@@ -18,8 +18,8 @@
       // What it says, top to bottom. Every line is a paragraph; the game's rich text works.
       "body": [
         "<size=150%>WELCOM VALUED CUSTOMER<size=100%>",
-        "Thank u for choose Rail Mail, the #1 email of the house.",
-        "As welcome gift we are giving u free money. Is real money.",
+        "Thank u for choose Rail Mail, the #1 email of the house. Get railed by your mail without fail.",
+        "As welcome gift we are giving u free money. Is real money. Ur pennis is welcome too.",
 
         // Choices are replies. Each one shows as a button under the email; the email goes on
         // with what follows the reply. Actions run once, the first time the email gets there.
@@ -27,7 +27,7 @@
           {
             "text": "Give me the money.",
             "say": [
-              "Ok. Here is 20$. Dont spend on stupid things.",
+              "Ok. Here is 20$. Dont spend on stupid things. Dont spend it all on dick pills.",
               { "do": "money", "amount": 20 },
               // Flags are saved, and shared with phone calls and every other mod.
               { "do": "flag", "name": "railmail_greedy" }
@@ -36,7 +36,7 @@
           {
             "text": "This is a scam.",
             "say": [
-              "How dare u. We are wounded.",
+              "How dare u. We are wounded. Our pennis is wounded too.",
               "For emotional damage we send u a candy. To ur door.",
               { "do": "deliver", "item": "Candy_Bar", "after": 20 }
             ]
@@ -54,7 +54,7 @@
       "send": { "trigger": "wake", "when": { "flag": "railmail_greedy" } },
       "body": [
         "Hi its Rail Mail again.",
-        "Accounting say the free money was not free. U owe us 20$ plus 400$ late fee.",
+        "Accounting say the free money was not free. U owe us 20$ plus 400$ late fee, dickhead.",
         { "choices": [
           {
             "text": "Fine, take it.",

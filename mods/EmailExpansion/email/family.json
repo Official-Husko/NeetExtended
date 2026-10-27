@@ -10,18 +10,18 @@
       "body": [
         "Sweetie its mom again.",
         "I read an article at the pharmacy line. It says u dont need to shower anymore if ur personality is good.",
-        "Is ur personality good? Dont answer that. I can smell it from the kitchen.",
+        "Is ur personality good? Dont answer that. I can smell it from the kitchen, and it smells like a pennis in a sock.",
         { "if": { "times": ">= 1" }, "then": [ "This is the fourth article bb. I am printing them and putting them on the fridge." ] },
         { "choices": [
           {
             "text": "Ok mom.",
-            "say": [ "Good. Now go stand in the shower room and say hi to the tub." ]
+            "say": [ "Good. Now go stand in the shower room and say hi to the tub. It misses u. It has a rust stain shaped like a wiener." ]
           },
           {
             "text": "I showered in 2019.",
             "say": [
               "U showered in 2019 at ur cousins wedding and u smelled like a lighter that was crying.",
-              "Dont lie to ur mom."
+              "Dont lie to ur mom, u dipshit."
             ]
           },
           {
@@ -41,21 +41,21 @@
       "send": { "trigger": "wake", "delay": 30 },
       "body": [
         "Good morning bb. Here is 15$ for snacks.",
-        "<size=150%>SNACKS<size=100%>. Not the video game store. Not the store with the man in the van. SNACKS.",
+        "<size=150%>SNACKS<size=100%>. Not the video game store. Not the store with the man in the van. He has a pennis sticker on his door. SNACKS.",
         { "choices": [
           {
             "text": "Thanks mom.",
             "say": [
               { "do": "money", "amount": 15 },
               { "do": "flag", "name": "fam_snack_money" },
-              "Ok. Eat a vegetable. Ur not a dog, ur a pickle."
+              "Ok. Eat a vegetable. Ur not a dog, ur a pickle. A sad little dickle."
             ]
           },
           {
             "text": "Can I have 50?",
             "say": [
-              "Ur father asked me that every morning. Then he went in the basement and didnt come up for three days.",
-              "15 is what u get. Thats it. Im going to bed."
+              "Ur father asked me that every morning. Then he went in the basement and didnt come up for three days, smelling like a wiener and dog food.",
+              "15 is what u get. Thats it, u greedy dickhead. Im going to bed."
             ]
           }
         ] }
@@ -76,6 +76,7 @@
         "BOY",
         "<size=60%>NOT THE BASEMENT<size=100%>",
         "THE OTHER ONE",
+        "<size=60%>PUT PANTS ON YOUR DICK IS OUT<size=100%>",
         { "choices": [
           {
             "text": "What do u want grandpa?",
@@ -87,7 +88,7 @@
               "IN",
               "THE",
               "FRIDGE",
-              "<size=60%>SINCE THE 90S<size=100%>"
+              "<size=60%>SINCE THE 90S. IT HAS A WIENER IN IT<size=100%>"
             ]
           },
           {
@@ -104,7 +105,7 @@
           },
           {
             "text": "Stop emailing me grandpa.",
-            "say": [ "NO", "I", "WILL", "KEEP", "EMAILING", "UNTIL", "U", "DIE" ]
+            "say": [ "NO", "I", "WILL", "KEEP", "EMAILING", "UNTIL", "U", "DIE", "DIPSHIT" ]
           }
         ] }
       ]
@@ -116,7 +117,7 @@
       "body": [
         "Hey fam!!! So happy to announce I got promoted to Regional Sales Lead at a company that sells clean water to dog shelters.",
         "Thank u mom for always believing in me even when u didnt have to.",
-        "Also this is my new boat. Its named Brayden II. Ur all invited to the launch. Not u neet, u cant leave the house lol.",
+        "Also this is my new boat. Its named Brayden II and it has a wiener shaped slide. Ur all invited to the launch. Not u neet, u cant leave the house lol.",
         { "choices": [
           {
             "text": "Congrats man. Fuck your boat.",
@@ -128,7 +129,7 @@
           {
             "text": "Send him a pic of my feet.",
             "say": [
-              "Ew. Ok. That is going in the family group chat now. Thanks neet.",
+              "Ew. Ok. That is going in the family group chat now. Thanks neet, you disgusting dipshit.",
               { "do": "flag", "name": "fam_brayden_feet" }
             ]
           },
@@ -148,12 +149,12 @@
       "send": { "trigger": "random", "weight": 3, "when": { "flag": "fam_brayden_feet" } },
       "body": [
         "Hey its Brayden. The feet pic is in the family group chat now.",
-        "Aunt Carol made it her lock screen. She says u have ur dads toes.",
+        "Aunt Carol made it her lock screen. She says u have ur dads toes and his dickhead attitude.",
         "<size=150%>WHY DID U SEND THAT<size=100%>",
         { "choices": [
           {
             "text": "U asked for it.",
-            "say": [ "I did not ask for feet bro. I asked for a boat review." ]
+            "say": [ "I did not ask for feet, dickhead. I asked for a boat review." ]
           },
           {
             "text": "Ok sorry bro. Delete it.",
@@ -171,6 +172,7 @@
       "send": { "trigger": "random", "weight": 2 },
       "body": [
         "AUNT SUE: ok so who took the ham",
+        "BRAYDEN: the ham looks like a wiener tbh",
         "UNCLE DENNIS: reply all again and ill sue u personally",
         "MOM: sorry trying to get off this",
         "UNCLE DENNIS: ur on reply all mom",
@@ -183,7 +185,7 @@
         "GRANDPA: ITS CAKE TIME",
         { "choices": [
           {
-            "text": "Reply all: I took the ham. Fuck u all.",
+            "text": "Reply all: I took the ham. Fuck u all, u dipshits.",
             "say": [
               "UNCLE DENNIS: ok thats it ur uninvited from the ham",
               "AUNT SUE: ur uninvited from everything neet",
@@ -217,12 +219,12 @@
         "<size=150%>HI<size=100%>",
         "Its me. Ur clone. I know u deleted the last one because it was too honest.",
         "I got mom to like me. She calls me sweetie. She calls u honey, like a dog she feels bad for.",
-        "I am wearing ur shoes. They fit. Ur feet are a crime scene.",
+        "I am wearing ur shoes. They fit. Ur feet are a crime scene. Ur dick is a rumor.",
         "<color=red>Nobody is coming to help u. Not mom. Not grandpa. Not the thing in the basement.<color=white>",
         { "choices": [
           {
             "text": "I hate u too.",
-            "say": [ "Good. Thats the only thing we have in common. Well, that and pizza. Hate u." ]
+            "say": [ "Good. Thats the only thing we have in common. Well, that and pizza. And we both have the same dickhead chin. Hate u." ]
           },
           {
             "text": "Get out of my head.",
@@ -248,7 +250,7 @@
         "Thank u for ur email. I am currently out of the office.",
         "I am in the basement. The basement is fighting back.",
         "For urgent matters please contact ur mom. She is in the kitchen. She is always in the kitchen.",
-        "For non urgent matters please contact nobody. They are all dead or in the basement.",
+        "For non urgent matters please contact nobody. They are all dead or in the basement. The pennis on the basement door is mine, I drew it, leave it.",
         "<size=60%>Do not use the machine. Dont use the machine.<size=100%>",
         { "choices": [
           {
@@ -262,7 +264,7 @@
           {
             "text": "Who set this up?",
             "say": [
-              "Mom did. She tried to turn it off for four months. Every time she tries it replies to the spam.",
+              "Mom did. She tried to turn it off for four months. Every time she tries it replies to the pennis spam.",
               "*beep*"
             ]
           }
@@ -280,12 +282,12 @@
         { "choices": [
           {
             "text": "They're for the video games.",
-            "say": [ "Ur not playing video games. Ur eating them in ur room with the lights off." ]
+            "say": [ "Ur not playing video games. Ur eating them in ur room with the lights off, dickhead." ]
           },
           {
             "text": "Wrong chat mom. U cant know that.",
             "say": [
-              "Oops. Sorry bb. Did u know the pizza man has a face like a mop?",
+              "Oops. Sorry bb. Did u know the pizza man has a face like a mop and a dick like a bread stick?",
               { "do": "flag", "name": "fam_pizza_slip" }
             ]
           }

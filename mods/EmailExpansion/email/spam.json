@@ -11,13 +11,13 @@
         "<size=150%>HELO FRIEND<size=100%>",
         "I am Prince Dinklebottom the 3rd of the Kingdum of Gravey. My father the King has died. He fell in a vat of gravy and nobody notice for 4 days.",
         "I have 40,000,000$ in a box at the airport. The airport wants 20$ to open the box. Is only fair.",
-        "I trust u because u have a computer and the face of a man who is lonely.",
+        "I trust u because u have a computer and the face of a man who is lonely. I can tell from ur email your pennis is small. Is ok. Royal pennises are small too.",
         { "choices": [
           {
             "text": "Here is 20$, prince.",
             "if": { "money": 20 },
             "say": [
-              "Thank u friend. Box is open. It has 3 cheese wedges and a note that says sorry.",
+              "Thank u friend. Box is open. It has 3 cheese wedges, a note that says sorry, and a pennis made of cheese.",
               { "do": "money", "amount": -20 },
               { "do": "flag", "name": "spam_prince_paid" },
               { "do": "email", "email": "spam-prince-2", "after": 120 }
@@ -26,7 +26,7 @@
           {
             "text": "I'm a prince too. Pay me 15$.",
             "say": [
-              "Oh. Oh no. A fellow royal. Here is 15$ from my royal sock. Pls dont tell the castle.",
+              "Oh. Oh no. A fellow royal dickhead. Here is 15$ from my royal sock. Pls dont tell the castle about the sock.",
               { "do": "money", "amount": 15 }
             ]
           },
@@ -35,7 +35,7 @@
             "say": "Scam is for poor people. We are royal. Royal people are not allowed to scam, it is in the constitution."
           }
         ] },
-        "Yours in gravy,\nPrince Dinklebottom the 3rd (not a scam)"
+        "Yours in gravy and pennis,\nPrince Dinklebottom the 3rd (not a scam)"
       ]
     },
     {
@@ -43,13 +43,13 @@
       "subject": "RE: THE BOX (URGENT)",
       "body": [
         "Prince here again. The airport man say the box has a bad smell.",
-        "He open it and say the box is full of cat shit. I say that is ROYAL cat shit, is very expensive.",
+        "He open it and say the box is full of cat shit. I say that is ROYAL cat shit, is very expensive. Also a pennis. Is royal pennis.",
         { "choices": [
           {
             "text": "Ok, here is 20$ more.",
             "if": { "money": 20 },
             "say": [
-              "Thank u. Ur loyalty is noted in the royal diary. I send u a box also, it is a free box.",
+              "Thank u. Ur loyalty is noted in the royal diary. I send u a box also, it is a free box. Dont open it in front of ur mom, dickhead.",
               { "do": "money", "amount": -20 },
               { "do": "deliver", "item": "Cardboard_Box", "after": 30 }
             ]
@@ -58,7 +58,7 @@
             "text": "Lol no.",
             "say": [
               "<size=150%>THEN THE KING IS STILL DEAD<size=100%>",
-              "The gravy is 6 days old now. The whole kingdum know. Bye bye.",
+              "The gravy is 6 days old now. The whole kingdum know. Ur a dipshit. Bye bye.",
               { "do": "flag", "name": "spam_prince_lost_box" }
             ]
           }
@@ -71,14 +71,14 @@
       "send": { "trigger": "random", "weight": 2 },
       "body": [
         "<size=200%>CONGRATULATIONS SIR<size=100%>",
-        "U have win the Rail Mail Monthly Lotery! Prize is 1,0000,000$ and one (1) free pizza.",
+        "U have win the Rail Mail Monthly Lotery! Prize is 1,0000,000$ and one (1) free pizza. And a pennis enlarger, the cheap kind.",
         "To claim, pay the 5$ Tax Fee in cash, put it inside a book, and do not tell mom.",
         { "choices": [
           {
             "text": "Ok here is 5$.",
             "if": { "money": 5 },
             "say": [
-              "Thank u winner. The 1,0000,000$ is in the mail. The mail is slow. Ask again in 40 years.",
+              "Thank u winner. The 1,0000,000$ is in the mail. The mail is slow. Ask again in 40 years, dickhead.",
               { "do": "money", "amount": -5 },
               { "do": "flag", "name": "spam_lotto_paid" }
             ]
@@ -86,14 +86,14 @@
           {
             "text": "Is this a scam?",
             "say": [
-              "Scam? We are a LOTERY. Lotery is not a scam. Scam is a LOTERY that you did not win.",
+              "Scam? We are a LOTERY. Lotery is not a scam. Scam is a LOTERY that you did not win. Also ur pennis did not win either.",
               "Pls send the 5$ now. We are very busy winners."
             ]
           },
           {
             "text": "Send me the 1,0000,000$ first.",
             "say": [
-              "HA. Ok. We send u 1 (one) penny for the courage. Thank u for the courage.",
+              "HA. Ok. We send u 1 (one) penny for the courage. Its shaped like a pennis. Thank u for the courage, big guy.",
               { "do": "money", "amount": 1 }
             ]
           }
@@ -106,7 +106,7 @@
       "send": { "trigger": "order", "store": "Normal", "delay": 20 },
       "body": [
         "<size=150%>RAIL MAIL SECURITY ALERT<size=100%>",
-        "Dear Rail Mail user, ur account has been HACKED by a hacker in a hoodie. He is in ur wifi right now.",
+        "Dear Rail Mail user, ur account has been HACKED by a hacker in a hoodie. He is in ur wifi right now. He has seen ur wiener. He says its small.",
         "To stop the hacker, verify ur password here: htps://rail-mail-verifyy.bankoftapioca.kz/logn",
         "Dont tell ur mom. She will be sad that u got hacked again.",
         { "choices": [
@@ -121,11 +121,11 @@
           },
           {
             "text": "I see the .kz. Nice try.",
-            "say": "Shit. Ur not stupid. We will try ur dog next. He is also not stupid, but he is a dog."
+            "say": "Shit. Ur not stupid. We will try ur dog next. He is also not stupid, but he is a dog with a pennis. Bad combo."
           },
           {
             "text": "What is my password again?",
-            "say": "Ur password is ur moms name. Its ok, we know it already. We know everything. We know ur cereal."
+            "say": "Ur password is ur moms name. Its ok, we know it already. We know everything. We know ur cereal. We know ur pennis size. Its ok, its a small one too."
           }
         ] }
       ]
@@ -137,13 +137,13 @@
       "body": [
         "<size=150%>STONK COIN IS GOING TO THE MOON<size=100%>",
         "U slept for 3 days? Good! Ur bed is now a bank. Buy DUMBCOIN and become rich while u sleep.",
-        "Our coin is the best coin. Go to stonk dot kz and click BUY NOW. No job needed. No pants needed.",
+        "Our coin is the best coin. Go to stonk dot kz and click BUY NOW. No job needed. No pants needed. Penis optional.",
         { "choices": [
           {
             "text": "Ok, I buy 50$ of DUMBCOIN.",
             "if": { "money": 50 },
             "say": [
-              "Congrats. Ur coin is now worth 3 cents. It will go up. Probably. Maybe in the afterlife.",
+              "Congrats. Ur coin is now worth 3 cents and it smells like a wiener. It will go up. Probably. Maybe in the afterlife.",
               { "do": "money", "amount": -50 },
               { "do": "flag", "name": "spam_dumbcoin" },
               { "do": "site", "url": "stonk" }
@@ -151,12 +151,12 @@
           },
           {
             "text": "What is DUMBCOIN?",
-            "say": "It is a coin. Its dumb. Thats why its called that. Are u a normal person or a bank."
+            "say": "It is a coin. Its dumb. Thats why its called that. Are u a normal person or a bank, dipshit."
           },
           {
             "text": "I have no money.",
             "say": [
-              "Then sell ur stuff. Sell ur mom's TV. U can look at the TV while u are poor, its free.",
+              "Then sell ur stuff. Sell ur mom's TV. U can look at the TV while u are poor, its free. Sell ur pennis too, its worth more than the coin.",
               { "do": "flag", "name": "spam_crypto_broke" }
             ]
           }
@@ -169,27 +169,27 @@
       "send": { "trigger": "random", "when": { "day": ">= 2" } },
       "body": [
         "Son its me. Ur uncledad. I am at car and oil store again.",
-        "They put a cow in my car by mistake. Now the cow is in the back seat and it wont leave and I need 30$ for the cow fee.",
+        "They put a cow in my car by mistake. Now the cow is in the back seat and it wont leave and I need 30$ for the cow fee. The cow also called me a dickhead.",
         "<size=60%>Dont tell ur mother the cow is my fault.<size=100%>",
         { "choices": [
           {
             "text": "Ok uncle, here is 30$.",
             "if": { "money": 30 },
             "say": [
-              "Good son. Ur my favorite. Ur my favorite nephew. Ur my only nephew. Thank u.",
+              "Good son. Ur my favorite. Ur my favorite nephew. Ur my only nephew. Ur also a dipshit. Thank u.",
               { "do": "money", "amount": -30 },
               { "do": "flag", "name": "spam_uncle_paid" }
             ]
           },
           {
             "text": "Who is this really?",
-            "say": "Its ur uncledad son. Who else would love u this much. Ur real dad is dead. He died of being a dad."
+            "say": "Its ur uncledad son. Who else would love u this much. Ur real dad is dead. He died of being a dad. He also had a small pennis."
           },
           {
             "text": "Buy the cow yourself.",
             "say": [
               "<size=150%>THE COW IS NOT FOR SALE<size=100%>",
-              "Son u are cruel. This is why u are sad and why u sit in the room."
+              "Son u are cruel, dickhead. This is why u are sad and why u sit in the room."
             ]
           }
         ] }
@@ -201,7 +201,7 @@
       "send": { "trigger": "random", "weight": 2 },
       "body": [
         "Hello my dearest sir. I am Tanya from the Rail Mail love group. I saw ur profile. Ur picture is so handsome, the one with the smell.",
-        "I have never felt like this. My heart is like a microwave, it goes ding ding ding.",
+        "I have never felt like this. My heart is like a microwave, it goes ding ding ding. My pennis goes ding ding ding too. Sorry.",
         "My mom is sick and need 2000$ for her teeth. I know u are the one who will save me. Also my teeth.",
         { "choices": [
           {
@@ -226,7 +226,7 @@
             "text": "Ur mom has no teeth. U are a bot.",
             "say": [
               "<size=150%>NO SIR. U ARE THE BOT. I LOVE U STILL.<size=100%>",
-              "Ur my bunny. Ur my bunny forever xx"
+              "Ur my bunny. Ur my bunny forever xx. Ur wiener is my bunny too."
             ]
           }
         ] }
@@ -238,11 +238,11 @@
       "body": [
         "Hello. I am the mother of Tanya. Tanya is my son Gerald. Dont ask me why she is named Tanya.",
         "He is 41. He is lazy and has no job. He has not left the basement since the bad year and he is sending the love to strangers on the computer again.",
-        "Please stop giving him money. He buys video games and anime cards and pizza. He is a bad man but he is my bad man.",
+        "Please stop giving him money. He buys video games and anime cards and pizza. He is a bad man with a small pennis but he is my bad man.",
         { "choices": [
           {
             "text": "Tell him to get a job.",
-            "say": "He say he is working on it. He is working on the job of being a shut in. It is very hard job."
+            "say": "He say he is working on it. He is working on the job of being a shut in. It is very hard job, dickhead. He is very good at the dickhead part."
           },
           {
             "text": "Ur son is lazy. Sounds like me.",
@@ -255,7 +255,7 @@
             "text": "I already gave him 20$.",
             "if": { "flag": "spam_tanya_love" },
             "say": [
-              "Then he has ur 20$ and I am so sorry. Here is 5$ from my purse. Pls go away now.",
+              "Then he has ur 20$ and I am so sorry. Here is 5$ from my purse. Pls go away now, son of a bitch.",
               { "do": "money", "amount": 5 }
             ]
           }
@@ -269,13 +269,13 @@
       "body": [
         "<size=150%>ARE U TIRED? ARE U SAD? ARE U STILL IN BED?<size=100%>",
         "Dr Mike says these 3 miracle pills can fix ur whole life. Just 1 pill a day and u will be out of bed in 9 days!",
-        "Results not typical. Results include: diarhea, more diarhea, and a vision of Jesus in ur fridge.",
+        "Results not typical. Results include: diarhea, more diarhea, a vision of Jesus in ur fridge, and ur pennis turns into a hot dog. Hot dog is not included.",
         { "choices": [
           {
             "text": "Send me 30$ of the pills.",
             "if": { "money": 30 },
             "say": [
-              "Good choice. We send 3 bottles of laxative. U will see God in 4 hours. Enjoy the toilet.",
+              "Good choice. We send 3 bottles of laxative. U will see God in 4 hours. Enjoy the toilet, dickhead. Ur pennis will be a little sad.",
               { "do": "money", "amount": -30 },
               { "do": "deliver", "item": "Pill_Laxative", "count": 3, "after": 30 },
               { "do": "flag", "name": "spam_pills_bought" }
@@ -287,7 +287,7 @@
           },
           {
             "text": "What problems do u mean?",
-            "say": "Ur problem is ur whole life sir. The pill is for that. Take 2 for the sad part."
+            "say": "Ur problem is ur whole life sir. The pill is for that. Take 2 for the sad part. Take 3 for the pennis part. We dont know what the pennis part is. Take 3."
           }
         ] }
       ]

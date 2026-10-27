@@ -9,19 +9,19 @@
       "body": [
         "<size=150%>BROTHER YOU HAVE BEEN CHOSEN<size=100%>",
         "The Low Church of Brown is doing a fire congregation tonite at the old quarry. Bring a lighter and a casserole.",
-        "The Bishop of Brown will be flowing. Its not weird its spiritual.",
+        "The Bishop of Brown will be flowing. Its not weird its spiritual. He wants to see everybody's pennis, for the blessing.",
         { "choices": [
           {
             "text": "I'm in. Where do I sign?",
             "say": [
-              "Sign in ur own blood. Just a little bit. Bishop says a tooth is fine too.",
+              "Sign in ur own blood. Just a little bit. Bishop says a tooth is fine too, or the tip of ur dick, he's not picky.",
               { "do": "flag", "name": "cult_joined" }
             ]
           },
           {
             "text": "Is there food?",
             "say": [
-              "Yes. Brownies. I made them with my special ingredient. Dont ask what it is. U will be so chill u forget ur own name.",
+              "Yes. Brownies. I made them with my special ingredient. Dont ask what it is. U will be so chill u forget ur own name and where ur dick is.",
               { "do": "deliver", "item": "Candy_Bar", "after": 15 }
             ]
           },
@@ -29,7 +29,7 @@
             "text": "Cults are for losers.",
             "say": [
               "<size=150%>OK<size=100%>",
-              "We know ur address. We also know where the fuse box is.",
+              "We know ur address. We also know where the fuse box is, and that ur pennis is tiny.",
               { "do": "flag", "name": "cult_refused" },
               { "do": "power", "on": false, "for": 90 }
             ]
@@ -43,7 +43,7 @@
       "send": { "trigger": "wake", "when": { "flag": "cult_joined" } },
       "body": [
         "Brother. The Bishop noticed ur tithe is late.",
-        "Tithe is 13$ a week. 13 is an unlucky number. That's the point. Dont question it.",
+        "Tithe is 13$ a week. 13 is an unlucky number. That's the point. Dont question it, dickhead.",
         { "choices": [
           {
             "text": "Here. Take it.",
@@ -51,13 +51,13 @@
             "say": [
               { "do": "money", "amount": -13 },
               { "do": "stat", "name": "Soul", "add": 3 },
-              "Blessed be ur wallet. Bishop says ur soul is a little cheaper now. Good job."
+              "Blessed be ur wallet, you limp dick. Bishop says ur soul is a little cheaper now. Good job."
             ]
           },
           {
             "text": "I don't have 13$.",
             "say": [
-              "<color=red>Then pay in something else. We take pennies. We take ur dad's ring. We take ur left nut.",
+              "<color=red>Then pay in something else. We take pennies. We take ur dad's ring. We take ur left nut. We even take the pennis, if it's bigger than a pinky.",
               "The Bishop switched ur lights off as a sign. Dont tell ur mom.",
               { "do": "flag", "name": "cult_tithe_late", "add": 1 },
               { "do": "power", "on": false, "for": 60 }
@@ -67,7 +67,7 @@
             "text": "Fuck the Bishop.",
             "say": [
               "<size=150%><color=red>THAT IS A SIN<size=100%>",
-              "The Bishop has been told. He is sending a deacon. Enjoy ur day.",
+              "The Bishop has been told. He is sending a deacon. He's got a dick like a baseball bat. Enjoy ur day.",
               { "do": "email", "email": "cult-bishop-threat", "after": 120 },
               { "do": "knockout", "seconds": 6 }
             ]
@@ -83,15 +83,15 @@
         "<color=red>yo Satan here who dis?",
         "<color=red>Hope ur doing ok down there in the basement of ur soul lol. Its hot. Bring a fan.",
         "<color=red>This weeks newsletter:",
-        "<color=red>1. Hell is hot. We said it. Wear shorts.",
+        "<color=red>1. Hell is hot. We said it. Wear shorts. Not the tight ones. We've seen ur pennis in them.",
         "<color=red>2. The sinners' wall is finished. Ur name is on it already, I spelled it right this time.",
-        "<color=red>3. Stop saying oh my god. We heard it. Its getting old bro.",
+        "<color=red>3. Stop saying oh my god. We heard it. Its getting old bro, like ur dick.",
         { "choices": [
           {
             "text": "Who is this?",
             "say": [
               "<color=red>Im the guy who owns the place bro. U signed the thing. Page 4, big print.",
-              "<color=red>Ur gonna remember ur signature when ur ass is on fire."
+              "<color=red>Ur gonna remember ur signature when ur ass and ur dick are on fire."
             ]
           },
           {
@@ -106,7 +106,7 @@
             "if": { "stat": "Soul >= 11" },
             "say": [
               "<color=red>Ooh a go-getter. Here, thirty bucks, soul discount applied.",
-              "<color=red>Dont blow it all on Mountain Doo and bad decisions.",
+              "<color=red>Dont blow it all on Mountain Doo, bad decisions and tiny pennis pills.",
               { "do": "stat", "name": "Soul", "add": -10 },
               { "do": "money", "amount": 30 },
               { "do": "flag", "name": "cult_satan_deal", "set": 1 }
@@ -122,12 +122,12 @@
       "body": [
         "Dear employee (soul number 66 is not u, we checked lol)",
         "Congrats on ordering from the Occult Market. This means u are now officially on our payroll.",
-        "Ur first performance review: 3 out of 5 suffering. Needs more screaming. Keep it up.",
+        "Ur first performance review: 3 out of 5 suffering. Needs more screaming. Less dick jokes at the water cooler.",
         { "choices": [
           {
             "text": "What's the pay?",
             "say": [
-              "Pay is 2$ and exposure to bad dreams. Dental is not included.",
+              "Pay is 2$ and exposure to bad dreams. Dental is not included. Neither is ur pennis, we're not that desperate.",
               { "do": "money", "amount": 2 }
             ]
           },
@@ -143,7 +143,7 @@
           {
             "text": "Ok I'll try harder.",
             "say": [
-              "Good. Here is ur welcome kit. Soul sphere. Dont drop it, its heavy and it judges u.",
+              "Good. Here is ur welcome kit. Soul sphere. Dont drop it, its heavy and it judges ur dick size too.",
               { "do": "give", "item": "Soul_Sphere" },
               { "do": "stat", "name": "Soul", "add": -2 }
             ]
@@ -162,7 +162,7 @@
         "1. no more screaming at 3am",
         "2. the toilet seat stays DOWN",
         "3. dont touch my stuff in the attic",
-        "4. stop saying boo. its the 14th time and its not funny",
+        "4. stop saying boo. its the 14th time. ur dick joke about the sheet was not funny",
         { "choices": [
           {
             "text": "Fuck off ghost.",
@@ -175,14 +175,14 @@
           {
             "text": "Rules accepted, ghost.",
             "say": [
-              "good. ill see u at 3am. dont look at the mirror. i said dont",
+              "good. ill see u at 3am. dont look at the mirror. i said dont. ur pennis is ugly anyway",
               { "do": "flag", "name": "cult_ghost_friend", "set": 1 }
             ]
           },
           {
             "text": "What's in it for me?",
             "say": [
-              "i will leave the attic door open. thats all i got. and a candle, i stole it from the church",
+              "i will leave the attic door open. thats all i got. and a candle, i stole it from the church. its shaped like a dick. dont ask",
               { "do": "give", "item": "Candle" }
             ]
           }
@@ -196,7 +196,7 @@
       "body": [
         "Dwayne: ok is the goat ready",
         "Kayla: no the goat ate the candle again",
-        "Dwayne: bro the Bishop said no candles in the goat",
+        "Dwayne: bro the Bishop said no candles in the goat. Or in ur pennis, he was very clear",
         "Kayla: hes not in the goat hes in the freezer",
         "Dwayne: ok so who has the knife",
         "Mrs Pam: i do. and to whoever this is on the cc, we see u. we see ur address",
@@ -211,7 +211,7 @@
           {
             "text": "Can I be the goat?",
             "say": [
-              "Kayla: omg yes. goats dont get a vote lol",
+              "Kayla: omg yes. goats dont get a vote lol and ur pennis stays in ur pants",
               { "do": "flag", "name": "cult_goat", "set": 1 },
               { "do": "give", "item": "Mask_Pumpkin_Angry" }
             ]
@@ -234,7 +234,7 @@
         "<size=150%>SACRIFICE TIPS DIGEST<size=100%>",
         "1. Dont use the good knife. Use the one with the skull handle. Ask the goat about it.",
         "2. Light the candles before the victim arrives. Victims are shy.",
-        "3. Dont sacrifice ur roommates. They dont count. They yell too much anyway.",
+        "3. Dont sacrifice ur roommates. They dont count. They yell too much anyway, and their dicks are gross.",
         "4. Do not put the goat in the microwave. Learned that the hard way, Brenda.",
         { "choices": [
           {
@@ -250,7 +250,7 @@
             "say": [
               { "do": "money", "amount": -10 },
               { "do": "flag", "name": "cult_subscribed", "set": 1 },
-              "Welcome to the digest fam. Ur first issue is a candle. Light it."
+              "Welcome to the digest fam. Ur first issue is a candle. Light it. Not ur dick. Brenda tried that."
             ]
           },
           {
@@ -268,7 +268,7 @@
       "body": [
         "<size=150%>BROTHER<size=100%>",
         "The Bishop of Brown has heard u said fuck him. He is hurt. He cried in front of the whole congregation.",
-        "He says he will come to ur house and smell ur room. In person.",
+        "He says he will come to ur house and smell ur room. And ur pennis. In person.",
         { "choices": [
           {
             "text": "Sorry Bishop.",
@@ -281,7 +281,7 @@
             "text": "Come get me, Bishop.",
             "say": [
               "<size=150%>COOL<size=100%>",
-              "He's on his way. He's not a biker. He's a DEACON.",
+              "He's on his way. He's not a biker. He's a DEACON with a dick tattoo.",
               { "do": "npc", "name": "Biker" }
             ]
           }

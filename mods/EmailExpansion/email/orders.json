@@ -11,7 +11,7 @@
       "body": [
         "<size=150%>THANK U FOR UR ORDER<size=100%>",
         "Ur order is being packed by Gary. Gary has not washed his hands since march.",
-        "Items: 1x Pizza. 1x Candy Bar. 1x whatever u were crying about at 3am.",
+        "Items: 1x Pizza. 1x Candy Bar. 1x Dick Pills, family size. 1x whatever u were crying about at 3am.",
         "We saved ur card 1234-5678-9999-0000 (its ur moms, we know, dont cry).",
         "Ur order will arrive when it arrives. Estimated time: however long mom's car takes.",
         { "choices": [
@@ -19,11 +19,11 @@
             "text": "Why do u have my moms card",
             "say": [
               "Ur mom gave it to us. She said u were a good boy and to make sure u eat.",
-              "She cried on the phone for 40 minutes. We did not hang up. It was nice."
+              "She cried on the phone for 40 minutes. We did not hang up. It was nice. She also asked if we deliver pennis pills. We said yes, its a pizza place."
             ]
           },
           { "text": "Cancel my order.", "say": "Cant cancel. Gary already has it in his hands. Sorry for ur luck." },
-          { "text": "Ok bye.", "say": "<size=60%>ok bye loser<size=100%>" }
+          { "text": "Ok bye.", "say": "<size=60%>ok bye dickhead<size=100%>" }
         ] }
       ]
     },
@@ -35,7 +35,7 @@
         "<size=150%>HI ITS RATE PLS<size=100%>",
         "We have 4 stars and its the only thing keeping us alive.",
         "Our manager Dave says if we dont get 5 stars he will make us eat the pizza.",
-        "Dave is not a real manager. Dave sleeps in the walk in freezer.",
+        "Dave is not a real manager. Dave sleeps in the walk in freezer with his pennis in a pizza box.",
         "Please. We are begging. We are behind the counter on our knees right now.",
         { "choices": [
           {
@@ -48,7 +48,7 @@
           },
           {
             "text": "Fuck ur stars.",
-            "say": [ "Ok. Dave says ur a bad person now. Dave is watching u through the drive thru window." ]
+            "say": [ "Ok. Dave says ur a bad person now, and ur dick is smaller than a breadstick. Dave is watching u through the drive thru window." ]
           }
         ] }
       ]
@@ -60,7 +60,7 @@
       "body": [
         "Hello valued customer of the back alley,",
         "Please take 2 minutes to tell us how u liked ur new order.",
-        "Question 1: Did the thing stop moving before u finished the sentence? Y/N",
+        "Question 1: Did the thing stop moving before u finished the sentence? Was it bigger than ur pennis? Y/N",
         "Question 2: On a scale of 1 to 6 how much did u scream when the man said this wont hurt?",
         "Question 3: Would u recommend us to ur mom? She is going to find out anyway.",
         "Survey complete. Thank u. Coupon: 1 bone, free, if u say u liked it.",
@@ -78,7 +78,7 @@
           },
           {
             "text": "Who is Terry?",
-            "say": "Terry is the guy who did the thing. Terry says hi. Terry says sorry about the blood on ur carpet."
+            "say": "Terry is the guy who did the thing. Terry says hi. Terry says sorry about the blood on ur carpet and the dick in the fish tank."
           }
         ] }
       ]
@@ -90,7 +90,7 @@
       "body": [
         "<size=150%>CONGRATULATIONS<size=100%>",
         "Ur package has been shipped by the Sacred Courier of the Dark Mail. Tracking number: 666. Its the only number we have.",
-        "Ur package is ALIVE. We repeat, ALIVE.",
+        "Ur package is ALIVE. We repeat, ALIVE. It is shaped like a dick, and it is looking at u.",
         "It asked for ur adress. We gave it. It said thanks. It said it will be there soon.",
         "Shipping fee: 20$. Its alive so it costs more. Please dont feed it.",
         { "choices": [
@@ -99,7 +99,7 @@
             "if": { "money": 20 },
             "say": [
               { "do": "money", "amount": -20 },
-              "Ok. Its on ur mat now. It is looking at the door. It is looking at u.",
+              "Ok. Its on ur mat now. It is looking at the door. It is looking at u. It is looking at ur pennis too, dipshit.",
               { "do": "deliver", "item": "Eyeball", "after": 60 }
             ]
           },
@@ -121,7 +121,7 @@
       "body": [
         "Hi its Glen. Ur driver.",
         "I was driving ur order and I got hungry. Sorry.",
-        "I ate 1/3 of the bread. And the cheese. And the lid.",
+        "I ate 1/3 of the bread. And the cheese. And the lid. And the breadstick that looked like a dick. Sorry bro.",
         "We are sending u the 2/3 I didnt eat. Its in the box on ur porch.",
         "Dont tell my boss. Boss is Dave.",
         { "do": "deliver", "item": "Bread_Loaf_2thirds", "after": 60 },
@@ -132,7 +132,7 @@
           },
           {
             "text": "Tell Glen to fuck off.",
-            "say": "Glen says fuck u too. Glen says ur mom says hi and she is sorry about the lid."
+            "say": "Glen says fuck u too, dickhead. Glen says ur mom says hi and she is sorry about the lid."
           },
           {
             "text": "Ok. Keep the bread.",
@@ -155,15 +155,15 @@
           {
             "text": "I never leave. What do I get?",
             "say": [
-              "Gold perk: a free cardboard box with ur name on it. Ur name is spelled wrong.",
+              "Gold perk: a free cardboard box with ur name on it. Ur name is spelled wrong. Its spelled DICKHEAD.",
               { "do": "deliver", "item": "Cardboard_Box", "after": 30 }
             ]
           },
           {
             "text": "I dont want to be gold.",
-            "say": "U are gold now. Gold is forever. Gold is ur whole life now."
+            "say": "U are gold now. Gold is forever. Gold is ur whole life now, like a pennis in a gold ring."
           },
-          { "text": "Ok.", "say": "U r welcome. Stay home." }
+          { "text": "Ok.", "say": "U r welcome. Stay home. Keep ur pennis in ur pants." }
         ] }
       ]
     },
@@ -174,7 +174,7 @@
       "body": [
         "<size=150%>REFUND APPROVED<size=100%>",
         "Ur last order was 6 days late, the pizza had a worm on it, and the bread was half gone. We are very sorry.",
-        "Here is 15$ refund. Its cash. Its real cash. Dont tell accounting.",
+        "Here is 15$ refund. Its cash. Its real cash. Its in an envelope with a dick drawn on it. Dont tell accounting.",
         { "do": "money", "amount": 15 },
         { "choices": [
           {
@@ -183,7 +183,7 @@
           },
           {
             "text": "Where is the worm?",
-            "say": "Worm is part of the refund. Worm is called Kevin. Kevin is a good boy. Kevin is in the garden now."
+            "say": "Worm is part of the refund. Worm is called Kevin. Kevin is a good boy. Kevin has a pennis like a grape. Kevin is in the garden now."
           }
         ] }
       ]
@@ -195,7 +195,7 @@
       "body": [
         "hi this is Warehouse Pete.",
         "we packed ur order wrong. we sent u 1 free Turd.",
-        "its not a turd. its a candle. dont light it. dont look at it. dont ask.",
+        "its not a turd. its a candle shaped like a dick. dont light it. dont look at it. dont ask.",
         "its a free gift so u cant return it. free means free.",
         { "do": "deliver", "item": "Turd1", "after": 30 },
         { "choices": [
@@ -209,7 +209,7 @@
           },
           {
             "text": "Pete you fucking idiot.",
-            "say": "Pete is not sorry. Pete is on his break in the walk in freezer with Dave."
+            "say": "Pete is not sorry. Pete is on his break in the walk in freezer with Dave. Dave says ur a dickhead too."
           }
         ] }
       ]
@@ -222,7 +222,7 @@
         "Get railed by your mail without fail.",
         "This week only: 50% off ur inbox. Less mail, more mail, u decide.",
         "Gamer deals: buy 1 gamer tip, get 1 gamer tip free. Gamer tips are not refundable. Gamer tips are not real.",
-        "Rail Mail GOLD members get the same deal as Rail Mail SILVER members. Its the same deal.",
+        "Rail Mail GOLD members get the same deal as Rail Mail SILVER members. Its the same deal. Ur pennis gets the same deal too.",
         { "choices": [
           {
             "text": "Get railed.",
@@ -234,7 +234,7 @@
           },
           {
             "text": "Stop emailing me you pervert.",
-            "say": "Pervert is a strong word. We are a email. We dont even have a face."
+            "say": "Pervert is a strong word. We are a email. We dont even have a face or a pennis. We are just a bunch of pennis jokes in a trench coat."
           }
         ] }
       ]

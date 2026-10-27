@@ -9,27 +9,27 @@
       "body": [
         "<size=60%>hey.",
         "its me. the thing under the stairs. dont look at the stairs.",
-        "i can see ur feet from down here. ur socks are a crime scene.",
+        "i can see ur feet from down here. ur socks are a crime scene and ur wiener is the murder weapon.",
         { "choices": [
           {
             "text": "Who is this?",
-            "say": [ "ur basement. i live here now. i ate the chicken u didnt thaw", "it was still frozen in my mouth lol" ]
+            "say": [ "ur basement. i live here now. i ate the chicken u didnt thaw", "it was still frozen in my mouth lol. tasted like ur dick" ]
           },
           {
             "text": "Ok I'm coming down.",
             "say": [
               "<color=red>NO. wait. ok. come down.</color>",
               { "do": "power", "on": false, "room": "Basement", "for": 15 },
-              "<size=60%>the light went out. good. now u have to feel ur way down like a little wiener"
+              "<size=60%>the light went out. good. now u have to feel ur way down like a blind little wiener"
             ]
           },
           {
             "text": "Go away.",
             "once": true,
-            "say": [ "<size=60%>ok", "i'll be here. i'm always here. i'm the mold in ur cereal bowl" ]
+            "say": [ "<size=60%>ok", "i'll be here. i'm always here. i'm the mold in ur cereal bowl and the dick cheese under ur desk" ]
           }
         ] },
-        "<i>bring the good flashlight</i>. or dont. i like it dark. i like it when u fall."
+        "<i>bring the good flashlight</i>. or dont. i like it dark. i like it when u fall on ur dumb face."
       ]
     },
     {
@@ -38,8 +38,8 @@
       "send": { "trigger": "order", "store": "OccultMarket", "delay": 30 },
       "body": [
         "<size=150%>DON'T USE THE MACHINE<size=100%>",
-        "<size=60%>u already ordered it. ok. its fine. its not fine.",
-        "The machine wants 3 things. ur name, ur birthday and a little bit of ur pee.",
+        "<size=60%>u already ordered it. ok. its fine. its not fine. u absolute dickhead.",
+        "The machine wants 3 things. ur name, ur birthday and a little bit of ur pee. out of ur wiener. it's very specific.",
         "<color=red>dont give it the pee</color>",
         { "choices": [
           {
@@ -54,7 +54,7 @@
             "once": true,
             "say": [
               "<size=150%>WHY<size=100%>",
-              "now it has ur pee. ur pee is in the machine and the machine is in ur pee.",
+              "now it has ur pee. ur pee is in the machine and the machine is in ur pee. ur wiener is still in the pee.",
               { "do": "deliver", "item": "Eyeball", "after": 30 },
               "its the first one it made. its still looking at u."
             ]
@@ -70,13 +70,13 @@
         "hi. its u.",
         "not the u that sits in the chair. the u that sits in the chair when ur not there.",
         "i sent this from ur account. ur password is still hamsterpoop69 lol. change it. or dont. i need it.",
-        "<size=60%>i think i live in the sent folder now. its very quiet in here. nobody writes back.",
+        "<size=60%>i think i live in the sent folder now. its very quiet in here. nobody writes back. not even ur dick. it tried.",
         { "choices": [
           {
             "text": "I'm not you.",
             "say": [
               "<size=150%>YES U ARE<size=100%>",
-              "u smell like u and u eat cereal with ur hands. only u do that.",
+              "u smell like u and ur wiener smells like the fridge. only u do that.",
               { "do": "flag", "name": "creepmail_you_met" }
             ]
           },
@@ -90,7 +90,7 @@
             "say": [ "bc i need u to open dads old account. go there. i'll tell u the rest when u let me in the basement." ]
           }
         ] },
-        "<color=red>ill be in ur inbox when u sleep.</color>"
+        "<color=red>ill be in ur inbox when u sleep, you son of a bitch.</color>"
       ]
     },
     {
@@ -101,6 +101,7 @@
         "<size=60%>hi son",
         "its dad. i got ur mom's old pc to turn on. its got my account. i never logged out of nothing in my whole life.",
         "im in the garage. the garage is in the wall now. dont go in the wall. the wall is wet and it has dads in it",
+        "u got ur wiener from me. sorry sun. its a little hot dog. a sad little hot dog. ur mom says its a big one. she's lying, she lies about hot dogs too.",
         "<size=150%>I CAN SEE U FROM THE WALL<size=100%>",
         { "choices": [
           {
@@ -118,7 +119,7 @@
             "text": "Send me the password.",
             "once": true,
             "say": [
-              "ok its 1234. same as ur bank and ur bike lock and ur ex",
+              "ok its 1234. same as ur bank and ur bike lock and ur ex. dickhead",
               "the key is taped under the fuse box. ur mom doesnt know about it. take it before she finds it and eats it.",
               { "do": "give", "item": "Fuse" }
             ]
@@ -135,7 +136,7 @@
         "<size=60%>scratch scratch scratch",
         "...hi. its the wall. the wall is fine. u dont have to be scared of the wall.",
         "im behind the outlet by ur desk. number 3. the one that doesnt work. it doesnt work bc im in it.",
-        "im the power now. i eat it. it tastes like copper and ur mom's perfume.",
+        "im the power now. i eat it. it tastes like copper and ur mom's perfume and ur sweaty little dick.",
         { "choices": [
           {
             "text": "Get out of the outlet.",
@@ -151,7 +152,7 @@
           },
           {
             "text": "What do u want?",
-            "say": [ "ur blood. just a little. for the outlets. they get thirsty" ]
+            "say": [ "ur blood. just a little. for the outlets. they get thirsty. and ur dick cheese. outlets love dick cheese" ]
           }
         ] },
         "scratch..."
@@ -164,12 +165,12 @@
       "body": [
         "Here is the photo u paid for. Its ur back.",
         "<size=60%>its from the bathroom. i took it from behind the shower curtain. the curtain was closed. i was not.",
-        "ur back is so white it looks like a fridge with the light off. u need to go outside. u need sun on ur back.",
+        "ur back is so white it looks like a fridge with the light off. u need to go outside. u need sun on ur back. ur dick too, its like a peeled grape.",
         "u have a mole on ur shoulder and its gotten bigger since u started playing the games. its like a little eye.",
         { "choices": [
           {
             "text": "Delete it.",
-            "say": [ "sure. i already sent it to ur mom. she said its a good back." ]
+            "say": [ "sure. i already sent it to ur mom. she said its a good back. she said the dick was smaller than the back." ]
           },
           {
             "text": "Ok I'm turning around.",
@@ -194,13 +195,13 @@
         { "choices": [
           {
             "text": "Why are you naked?",
-            "say": [ "bc its tomorrow and the future is cold and i didnt have pants. i miss ur pants." ]
+            "say": [ "bc its tomorrow and the future is cold and i didnt have pants. i miss ur pants. and the dick they were holding in." ]
           },
           {
             "text": "I don't believe you.",
             "once": true,
             "say": [
-              "good. dont. but u still wont close the curtain tonight, will u. u stubborn little shit. like dad.",
+              "good. dont. but u still wont close the curtain tonight, will u. u stubborn little dickhead. like dad.",
               "<size=60%>the window has a face now. go close it. go close it right now."
             ]
           }
@@ -213,7 +214,7 @@
       "send": { "trigger": "random", "once": true, "when": { "minutes": ">= 40" } },
       "body": [
         "<size=150%>I HAVE THE TAPE<size=100%>",
-        "u know what tape. the one from the dining room. u were naked in front of the window and i was in the bush watching.",
+        "u know what tape. the one from the dining room. u were naked and waving ur wiener at the window and i was in the bush watching.",
         "ur mom has the bush now too. she sat in it for a whole day.",
         "<size=60%>this is not a threat. this is a bill.",
         "20$ or i send it to ur mom and the neighbour with the ladder.",
@@ -231,7 +232,7 @@
             "text": "Send it. Mom's seen worse.",
             "say": [
               "<size=150%>OK<size=100%>",
-              "then ur mom gets to see it at breakfast. we will see what she says to ur face across the table.",
+              "then ur mom gets to see ur wiener at breakfast. we will see what she says to ur face across the table.",
               { "do": "site", "url": "cum" },
               { "do": "ring", "call": "PhoneExpansion/creep-countdown", "after": 20 }
             ]
