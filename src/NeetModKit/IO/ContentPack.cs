@@ -53,6 +53,10 @@ public sealed class ContentPack
     {
         var pack = new ContentPack(owner, story, loadJson, loaded);
         pack._content = ModContent.Watch(owner, folderName, pack.LoadAll, "*.json", "*.ink");
+        // Files compile conditions from other mods; when those come or go, load again.
+        Action changed = pack._content.MarkDirty;
+        Rules.RuleRegistry.Changed += changed;
+        owner.Track(NeetLoader.Runtime.Disposable.Create(() => Rules.RuleRegistry.Changed -= changed));
         return pack;
     }
 

@@ -324,6 +324,8 @@ public override void OnAllLoaded() => _pack.Reload();
 
 The reader gets a `ContentFile`: `Display` (for messages), `ModId`, `Scope` (register what the file adds there; it's removed before the next load), `Read()`, `Items("calls")` (one object, a list, or `{ "calls": [...] }`), `Problem(message)` and `AddInk(source)` for generated Ink. `Problems()` lists every problem with its file, Ink compile errors included.
 
+Conditions are compiled when a file loads, so every pack loads again when a mod registers or removes a condition or action: an email that checks a phone call's `called` keeps working when the phone mod reloads.
+
 ## Saves
 
 Namespace `NeetModKit.Saves`.

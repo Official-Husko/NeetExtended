@@ -38,8 +38,12 @@ public static class RuleConditions
         owner.Track(Disposable.Create(() =>
         {
             if (Known.TryGetValue(name, out var current) && current == info)
+            {
                 Known.Remove(name);
+                RuleRegistry.Raise();
+            }
         }));
+        RuleRegistry.Raise();
     }
 
     internal static Func<IRuleSubject, bool> Compile(string name, JToken value)

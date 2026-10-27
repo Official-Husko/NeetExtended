@@ -41,8 +41,12 @@ public static class RuleActions
         owner.Track(Disposable.Create(() =>
         {
             if (Known.TryGetValue(name, out var current) && current == info)
+            {
                 Known.Remove(name);
+                RuleRegistry.Raise();
+            }
         }));
+        RuleRegistry.Raise();
     }
 
     public static bool Exists(string name) => name != null && Known.ContainsKey(name);
