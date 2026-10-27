@@ -26,6 +26,7 @@ public static class ChangelogBuilder
         ["email"] = "Email Expansion",
         ["patches"] = "Unofficial NEET Patches",
         ["tv"] = "Custom TV Stations",
+        ["mixtapes"] = "Mixtapes",
         ["perf"] = "Performance Fixes",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
