@@ -16,6 +16,9 @@ internal static class ModList
         "DevBridge", "CheatMenu", "PerformanceFixes", "NoFeedback", "OpenSaves", "CoopSteam",
     };
 
+    /// <summary>Whether a mod shapes the shared house (the host decides it), rather than only this game.</summary>
+    public static bool IsShared(string modId) => !LocalOnly.Contains(modId);
+
     /// <summary>"Id@version" of every running mod that shapes the shared house, sorted.</summary>
     public static List<string> Shared() =>
         ModRegistry.Mods

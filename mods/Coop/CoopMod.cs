@@ -59,6 +59,7 @@ public sealed class CoopMod : NeetMod
         Handshake.Init();
         ScenePolicy.Init(this);
         ModBridge.Init(this);
+        ModSync.Init(this);
         JoinLoader.Init(this);
         SnapshotSender.Init();
         PoseSender.Init();

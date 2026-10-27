@@ -8,6 +8,7 @@ The Co-op mod (`mods/Coop`) lets several games share one house over the network.
 - **Join:** **Co-op** tab, type the host's address (`203.0.113.5` or `203.0.113.5:8889`), **JOIN**. You don't need a save of your own; yours are never read or written while you're in someone else's house.
 - **Leave:** **LEAVE**, or go back to the main menu. A client goes back to the main menu when the game ends. When the host leaves, the game ends for everyone.
 - While in co-op you can rest with your eyes shut, but nobody dreams, and the story's scene changes wait (they'd take one player, or the whole house, away from the others).
+- **The host decides the mods:** the mods that shape the shared house (all but Cheat Menu, Performance Fixes, Open Saves, No Feedback, the dev bridge and Co-op over Steam), their features and their shared settings (prices, chances, timings) are the host's. A client's mod menu shows them locked. When the host loads or unloads one of those mods, switches a feature or changes a shared setting, every client follows within a second; leaving gives a client its own setup back (nothing of the host's is saved on the client).
 - The mod menu and the cheat menu don't pause the game in co-op: the house keeps going for everyone while you're in a menu.
 - **The hitman line:** in co-op, call 448-626 on either phone. For $69 the hitman takes a job on any player in the game, yourself included: about a minute later the cop van comes, its agents go straight for that player wherever they are, and they leave once the target is down or dead. One job at a time, and after an order the line won't take another for a while (setting **Hitman line cooldown**, 10 minutes of play by default; the host's setting counts). Outside co-op the line is busy.
 
@@ -36,6 +37,10 @@ The **Co-op over Steam** mod (`mods/CoopSteam`) adds Steam next to direct IP. No
 `Coop.Session.CoopSession` holds the role (`Hosting`, or `Connecting`, `Joining`, `Playing` for a client), the players (slot 0 is the host) and the events everything else listens to: `PlayerArrived`, `PlayerReady`, `PlayerLeft`, `Welcomed`, `WorldReady`, `Resumed`, `Ended`.
 
 Handshake: the client connects and sends Hello (protocol, version, player id, name); the host gives it a slot (Welcome, with the player list) and sends its house; the client loads it and sends Ready; the host tells the others (PlayerJoined) and raises `PlayerReady`, which is where full state goes out.
+
+### Mod setup
+
+`Session/ModSync`: the host sends its setup (ModSetup: the shared mods with versions, their features' states, the `[Shared]` settings) to a player when they're ready, to everyone half a second after something in it changes, and to a client that asks (after joining or a hot reload). A client takes the framework's `ModControl` lock for the shared mods (`ModList.IsShared`), loads and unloads mods to match, and applies the features and settings as overrides (`ModFeatures.Override`, `SharedSettings.Apply`), which are never saved. A shared mod the host runs in a version the client doesn't have gets 10 seconds to catch up (a hot reload reaches every game a moment apart) before the client leaves with the reason. Leaving undoes it all: the lock goes, the overrides are cleared, and mods loaded or unloaded for the host are put back.
 
 ### Joining: the host's house, loaded from memory
 
@@ -128,6 +133,12 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 - Remote players have the default face, and their hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
 - Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Spiders still ignore remote players (they want an enabled Brain), and NPCs only talk to the host. Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.
+
+### Mod setup
+
+- Which mods only change your own game is a fixed list in Co-op (`Session/ModList.cs`), not a mod.json setting.
+- A client can't follow a mod it doesn't have: when the host turns one on, the client leaves with the reason.
+- Only settings marked `[Shared]` follow the host; every other setting stays each player's own.
 
 ### Co-op content
 

@@ -31,6 +31,7 @@ public sealed class CoopConfig
     [Label("Hitman line cooldown (minutes)")]
     [Description("How long after a hit is ordered before the hitman line (448-626) takes another job. The host's setting counts.")]
     [Range(0, 120)]
+    [Shared]
     public int HitmanCooldown = 10;
 
     /// <summary>Identifies this install to hosts, so a player who comes back gets their own body back.</summary>

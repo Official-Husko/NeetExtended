@@ -182,6 +182,7 @@ Play the house together, over the internet or your own network. The host's house
 - **The hitman line**: in co-op, call 448-626. Pay $69, pick a player (or yourself), and about a minute later the van comes: its agents go straight for that player and leave once they're down. One job at a time, then the line waits a while before the next (setting **Hitman line cooldown**, 10 minutes by default).
 - **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and the mod and cheat menus don't pause the game. Going back to the main menu leaves; when the host leaves, the game ends for everyone.
 - Everyone needs the same mods. Mods that only change your own game (Cheat Menu, Performance Fixes, Open Saves and the like) can differ.
+- **The host decides the mods**: the host's mods, their switches and the settings that change the house (prices, chances, timings) count for everyone. Your mod menu shows them locked while you're in someone's game, and you get your own setup back when you leave.
 - Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown** (the host's counts), and **Physics hands on other players** (experimental: other players get the floppy first-person arms you see on yourself, reaching for what they hold, instead of their body's plain arms).
 - Not everything is shared yet (fire, paint made after you join, and more): see [Known limitations](docs/modding/coop.md#known-limitations).
 

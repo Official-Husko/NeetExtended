@@ -15,6 +15,7 @@ public static class MessageIds
     public const ushort Resync = 6;
     public const ushort ModAction = 7;
     public const ushort ModState = 8;
+    public const ushort ModSetup = 9;
 
     // Join
     public const ushort Snapshot = 20;
