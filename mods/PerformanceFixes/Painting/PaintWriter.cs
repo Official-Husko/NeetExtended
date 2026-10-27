@@ -23,6 +23,7 @@ internal sealed class PaintWriter : IDisposable
     private readonly byte[] _chunk = new byte[64 * 1024];
     private readonly Thread _thread;
     private bool _busy;
+    private long _queuedBytes;
     private bool _stopping;
 
     public PaintWriter()
@@ -33,10 +34,30 @@ internal sealed class PaintWriter : IDisposable
 
     /// <summary>Queues a picture. The writer returns <paramref name="pixels"/> to <see cref="PixelBuffers"/> when done.</summary>
     public void Write(string path, int saveId, NativeArray<byte> pixels, GraphicsFormat format, int width, int height) =>
-        Enqueue(new Job { Path = path, SaveId = saveId, Pixels = pixels, Format = format, Width = width, Height = height });
+        Enqueue(new Job { Path = path, SaveId = saveId, Pixels = pixels, Bytes = pixels.Length, Format = format, Width = width, Height = height });
 
     /// <summary>Queues deleting every file in <paramref name="folder"/> that isn't the picture of a surface in <paramref name="keep"/>.</summary>
     public void Prune(string folder, HashSet<int> keep) => Enqueue(new Job { Path = folder, Keep = keep });
+
+    /// <summary>
+    /// Waits until the pictures queued but not written yet hold at most <paramref name="bytes"/> of
+    /// pixels. False if that took longer than <paramref name="timeoutMs"/>.
+    /// </summary>
+    public bool WaitBelow(long bytes, int timeoutMs)
+    {
+        var clock = Stopwatch.StartNew();
+        lock (_lock)
+        {
+            while (_queuedBytes > bytes)
+            {
+                int left = timeoutMs - (int)clock.ElapsedMilliseconds;
+                if (left <= 0)
+                    return false;
+                Monitor.Wait(_lock, left);
+            }
+        }
+        return true;
+    }
 
     /// <summary>Waits until everything queued is on disk. False if that took longer than <paramref name="timeoutMs"/>.</summary>
     public bool Flush(int timeoutMs)
@@ -93,6 +114,8 @@ internal sealed class PaintWriter : IDisposable
         lock (_lock)
         {
             _jobs.Enqueue(job);
+            if (job.Keep == null)
+                _queuedBytes += job.Bytes;
             Monitor.PulseAll(_lock);
         }
     }
@@ -133,6 +156,8 @@ internal sealed class PaintWriter : IDisposable
                 lock (_lock)
                 {
                     _busy = false;
+                    if (job.Keep == null)
+                        _queuedBytes -= job.Bytes;
                     Monitor.PulseAll(_lock);
                 }
             }
@@ -206,6 +231,9 @@ internal sealed class PaintWriter : IDisposable
         public string Path;
         public int SaveId;
         public NativeArray<byte> Pixels;
+
+        // Counted when queued: the buffer is handed back (and may be freed) before the job is done.
+        public long Bytes;
         public GraphicsFormat Format;
         public int Width;
         public int Height;

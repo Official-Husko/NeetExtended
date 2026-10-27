@@ -17,6 +17,11 @@ internal static class PaintSaver
 {
     private const int FlushTimeoutMs = 15000;
 
+    // Pixels waiting for the writer. Without a limit, the first save of a session queued every
+    // painted surface at once (748 in one test house, gigabytes of buffers), and the 32-bit game ran
+    // out of memory and crashed. Past this the save waits for the writer to catch up.
+    private const long MaxQueuedBytes = 64L * 1024 * 1024;
+
     private static readonly HashSet<int> Keep = new HashSet<int>();
     private static readonly HashSet<int> Failed = new HashSet<int>();
     private static readonly List<string> Errors = new List<string>();
@@ -70,6 +75,7 @@ internal static class PaintSaver
             // The game destroys paint textures when it clears paint for a load; nothing to save then.
             if (texture == null)
                 continue;
+            _writer.WaitBelow(MaxQueuedBytes, FlushTimeoutMs);
             var pixels = PaintReadback.Read(texture, out var format);
             _writer.Write(Path.Combine(folder, target.saveId + ".png"), target.saveId, pixels, format, texture.width, texture.height);
             // Splats still queued on the surface land in its texture next frame, so it isn't saved yet.

@@ -125,7 +125,7 @@ What the Performance Fixes mod (each fix a feature that can be switched off), Un
 
 | Fix | Where | Measured |
 | --- | --- | --- |
-| Save only the paint that changed, encode and write it on a background thread | Performance Fixes: `FastPaintSaves` | 619 painted surfaces: 2,500 ms per save before; 276 ms for the first save with the mod (everything once, 3 s in the background), 52 to 65 ms after that. Pictures pixel-identical to the game's own. |
+| Save only the paint that changed, encode and write it on a background thread | Performance Fixes: `FastPaintSaves` | 619 painted surfaces: 2,500 ms per save before; 276 ms for the first save with the mod (everything once, 3 s in the background), 52 to 65 ms after that. Pictures pixel-identical to the game's own. At most 64 MB of pixels wait for the writer: a first save that queued all 748 surfaces of a heavily painted house at once ran the 32-bit game out of memory and crashed it; capped, it takes about 2.8 s and about 50 MB. |
 | Free the paint textures of old houses, reuse the door and copy textures | Performance Fixes: `TextureLeaks` | Render textures stay flat over house loads instead of +2,480 per load. |
 | Peephole camera only near the front door | Performance Fixes: `Peephole` | About 500 draw calls and 0.8 to 1.1 ms a frame. |
 | Shadow presets | Performance Fixes: `Shadows` | Five ceiling lights on: 31.0 ms and 15,300 draw calls as shipped, 25.6 ms and 9,400 with room lights (default), 21.0 ms and 5,200 with none. |
