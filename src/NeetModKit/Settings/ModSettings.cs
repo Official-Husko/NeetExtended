@@ -1,7 +1,9 @@
 using System;
+using System.Reflection;
 using NeetLoader;
 using NeetLoader.Config;
 using NeetModKit.Registry;
+using NeetModKit.Sharing;
 
 namespace NeetModKit.Settings;
 
@@ -12,11 +14,19 @@ public sealed class SettingsSection
     public Func<object> Value { get; }
     public Action Save { get; }
 
-    public SettingsSection(string title, Func<object> value, Action save)
+    /// <summary>The mod it belongs to, or null.</summary>
+    public string OwnerId { get; }
+
+    /// <summary>Tells the mod its values changed without saving them (another game decided them).</summary>
+    public Action Notify { get; }
+
+    public SettingsSection(string title, Func<object> value, Action save, string ownerId = null, Action notify = null)
     {
         Title = title;
         Value = value;
         Save = save;
+        OwnerId = ownerId;
+        Notify = notify;
     }
 }
 
@@ -32,6 +42,20 @@ public static class ModSettings
 
     public static System.Collections.Generic.IReadOnlyList<SettingsSection> Sections => SectionList.Items;
 
-    public static void Register<T>(NeetMod owner, ConfigFile<T> config, string title = null) where T : class, new() =>
-        SectionList.Add(owner, new SettingsSection(title ?? owner.Info.Manifest.DisplayName, () => config.Value, config.Save));
+    public static void Register<T>(NeetMod owner, ConfigFile<T> config, string title = null) where T : class, new()
+    {
+        SettingsSection section = null;
+        Action save = config.Save;
+        section = new SettingsSection(title ?? owner.Info.Manifest.DisplayName, () => config.Value,
+            () => SharedSettings.Save(section, save), owner.Info.Id, Raiser(config));
+        SectionList.Add(owner, section);
+    }
+
+    // ConfigFile only raises Changed when it saves or reloads; values another game decided must not be
+    // saved, so its event is raised directly.
+    private static Action Raiser<T>(ConfigFile<T> config) where T : class, new()
+    {
+        var changed = typeof(ConfigFile<T>).GetField(nameof(ConfigFile<T>.Changed), BindingFlags.Instance | BindingFlags.NonPublic);
+        return () => (changed?.GetValue(config) as Action<T>)?.Invoke(config.Value);
+    }
 }

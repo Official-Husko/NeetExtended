@@ -3,6 +3,7 @@ using System.Linq;
 using NeetLoader.Logging;
 using NeetLoader.Mods;
 using NeetModKit.Features;
+using NeetModKit.Sharing;
 using NeetModKit.Ui.Toolkit;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ internal sealed class ModsPage : MenuPage
     private readonly ModLogView _log = new ModLogView();
     private ModInfo _selected;
     private string _lastResult;
+    private int _builtFor = -1;
 
     private Text _status, _result, _logText, _restartNote, _problems;
 
@@ -25,6 +27,7 @@ internal sealed class ModsPage : MenuPage
 
     public override void Build(UiBuilder ui)
     {
+        _builtFor = ModControl.Version;
         if (_selected == null || !ModRegistry.Mods.Contains(_selected))
             _selected = ModRegistry.Mods.FirstOrDefault();
 
@@ -38,6 +41,13 @@ internal sealed class ModsPage : MenuPage
 
     public override void Refresh()
     {
+        // Another game decided something (co-op host): show it.
+        if (_builtFor != ModControl.Version)
+        {
+            _builtFor = ModControl.Version;
+            Rebuild();
+            return;
+        }
         if (_selected == null)
             return;
         _status.text = "STATUS: " + StateText(_selected);
@@ -85,8 +95,11 @@ internal sealed class ModsPage : MenuPage
             details.Text(mod.Error, MenuPalette.Bad);
 
         var alwaysOn = ModRegistry.AlwaysOnBecause(mod);
+        string locked = ModControl.LockedBecause(mod.Id);
         var actions = details.Row(8f, 26f);
-        if (mod.State == ModState.Loaded)
+        if (locked != null)
+            actions.Text(MenuPalette.Paint(locked, MenuPalette.Warn));
+        else if (mod.State == ModState.Loaded)
         {
             if (mod.CanHotReload)
                 actions.Button("RELOAD", () => ModRegistry.Reload(mod.Id, Report("Reloaded.")));
@@ -98,7 +111,11 @@ internal sealed class ModsPage : MenuPage
             actions.Button("LOAD NOW", () => ModRegistry.Load(mod.Id, Report("Loaded.")));
         }
         actions.Space(10f);
-        if (alwaysOn == null)
+        if (locked != null)
+        {
+            // Nothing to switch here while another game decides.
+        }
+        else if (alwaysOn == null)
             actions.Toggle("Load when the game starts", ModRegistry.IsEnabled(mod.Id), on =>
             {
                 string error = ModRegistry.SetEnabled(mod.Id, on);
@@ -125,10 +142,14 @@ internal sealed class ModsPage : MenuPage
 
         details.SubHeader("FEATURES");
         var panel = details.Panel();
+        string locked = ModControl.LockedBecause(mod.Id);
         foreach (var feature in features)
         {
             var target = feature;
-            panel.Toggle(feature.Name, ModFeatures.IsWanted(feature), on => ModFeatures.SetEnabled(target, on));
+            if (locked != null)
+                panel.Text(feature.Name + ": " + (feature.Enabled ? MenuPalette.Paint("ON", MenuPalette.Good) : MenuPalette.Paint("OFF", MenuPalette.Muted)));
+            else
+                panel.Toggle(feature.Name, ModFeatures.IsWanted(feature), on => ModFeatures.SetEnabled(target, on));
             string note = feature.AppliesWhen != null ? "  " + MenuPalette.Paint("(" + feature.AppliesWhen + ")", MenuPalette.Warn) : "";
             panel.Text(MenuPalette.Paint(feature.Description, MenuPalette.Muted) + note);
         }
@@ -159,12 +180,16 @@ internal sealed class ModsPage : MenuPage
 
     private void BuildFooter(UiBuilder footer)
     {
-        footer.Button("RELOAD ALL", () => ModRegistry.ReloadAll(Report("Reloaded every hot-reload mod.")));
-        footer.Button("FIND NEW MODS", () =>
+        // Reloading everything would reload mods another game decides.
+        if (!ModControl.AnyLocked)
         {
-            _lastResult = $"Found {ModRegistry.Rescan().Count} new mod(s).";
-            Rebuild();
-        }, 160f);
+            footer.Button("RELOAD ALL", () => ModRegistry.ReloadAll(Report("Reloaded every hot-reload mod.")));
+            footer.Button("FIND NEW MODS", () =>
+            {
+                _lastResult = $"Found {ModRegistry.Rescan().Count} new mod(s).";
+                Rebuild();
+            }, 160f);
+        }
         footer.Space(10f);
         footer.Toggle("Reload mods when their files change", ModRegistry.AutoReload, on => ModRegistry.AutoReload = on);
         _restartNote = footer.Text("");

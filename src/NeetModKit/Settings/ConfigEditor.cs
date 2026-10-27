@@ -24,12 +24,19 @@ internal static class ConfigEditor
 
     private static readonly Dictionary<Type, List<FieldView>> Cache = new Dictionary<Type, List<FieldView>>();
 
-    /// <summary>Adds a control per field. <paramref name="changed"/> runs after every edit.</summary>
-    public static void Build(UiBuilder ui, object settings, Action changed)
+    /// <summary>
+    /// Adds a control per field. <paramref name="changed"/> runs after every edit. A field
+    /// <paramref name="lockedBecause"/> gives a reason for is shown, not edited.
+    /// </summary>
+    public static void Build(UiBuilder ui, object settings, Action changed, Func<FieldInfo, string> lockedBecause = null)
     {
         foreach (var view in Views(settings.GetType()))
         {
-            BuildField(ui, view, settings, changed);
+            string locked = lockedBecause?.Invoke(view.Field);
+            if (locked != null)
+                ui.Text(view.Label + ": " + Shown(view.Field.GetValue(settings)) + "  " + MenuPalette.Paint("(" + locked + ")", MenuPalette.Warn));
+            else
+                BuildField(ui, view, settings, changed);
             if (view.Help != null)
                 ui.Text(MenuPalette.Paint(view.Help, MenuPalette.Muted));
         }
@@ -77,6 +84,9 @@ internal static class ConfigEditor
             row.Button(name.ToUpperInvariant(), () => pick(option), 120f, accent: name == current);
         }
     }
+
+    private static string Shown(object value) =>
+        value is bool b ? (b ? "on" : "off") : Convert.ToString(value, CultureInfo.InvariantCulture);
 
     private static bool TryParse(string text, Type type, out object value)
     {

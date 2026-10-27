@@ -11,17 +11,23 @@ namespace NeetModKit.Features;
 
 /// <summary>
 /// Every feature of every loaded mod, with the player's on/off choices saved in
-/// Mods/NeetModKit/features.json (keyed "modId/featureId").
+/// Mods/NeetModKit/features.json (keyed "modId/featureId"). Another game can decide for this one
+/// (a co-op host): <see cref="Override"/> switches a feature without touching the player's choice,
+/// and <see cref="ClearOverrides"/> gives the choices back.
 /// </summary>
 public static class ModFeatures
 {
     private static readonly List<ModFeature> All = new List<ModFeature>();
     private static readonly List<ModFeature> Updating = new List<ModFeature>();
     private static Dictionary<string, bool> _choices = new Dictionary<string, bool>();
+    private static readonly Dictionary<string, bool> Overrides = new Dictionary<string, bool>();
     private static string _path;
     private static ModLogger _log;
 
     public static IReadOnlyList<ModFeature> Features => All;
+
+    /// <summary>After a feature switched on or off, for any reason (a choice, an override, its mod loading).</summary>
+    public static event Action<ModFeature> Changed;
 
     /// <summary>Features of one mod, in registration order.</summary>
     public static List<ModFeature> Of(ModInfo mod) => All.FindAll(f => f.Owner.Info == mod);
@@ -46,14 +52,56 @@ public static class ModFeatures
             Run(feature, feature.Enable, "switching on");
     }
 
-    public static bool IsWanted(ModFeature feature) =>
-        _choices.TryGetValue(Key(feature), out bool on) ? on : feature.EnabledByDefault;
+    public static bool IsWanted(ModFeature feature)
+    {
+        string key = Key(feature);
+        if (Overrides.TryGetValue(key, out bool decided))
+            return decided;
+        return _choices.TryGetValue(key, out bool on) ? on : feature.EnabledByDefault;
+    }
 
-    /// <summary>Switches a feature on or off right now and remembers the choice.</summary>
+    /// <summary>"modId/featureId", the key choices and overrides use.</summary>
+    public static string KeyOf(ModFeature feature) => Key(feature);
+
+    public static bool IsOverridden(ModFeature feature) => Overrides.ContainsKey(Key(feature));
+
+    /// <summary>Switches a feature (by key, loaded or not) the way another game decided, without saving it.</summary>
+    public static void Override(string key, bool on)
+    {
+        if (Overrides.TryGetValue(key, out bool was) && was == on)
+            return;
+        Overrides[key] = on;
+        var feature = All.Find(f => Key(f) == key);
+        if (feature != null)
+            Apply(feature);
+        Sharing.ModControl.Touch();
+    }
+
+    /// <summary>Drops every override; features go back to the player's own choices.</summary>
+    public static void ClearOverrides()
+    {
+        if (Overrides.Count == 0)
+            return;
+        Overrides.Clear();
+        foreach (var feature in All.ToArray())
+            Apply(feature);
+        Sharing.ModControl.Touch();
+    }
+
+    /// <summary>
+    /// Remembers the player's choice and switches the feature now, unless another game decides it
+    /// for the moment (then the choice counts once that ends).
+    /// </summary>
     public static void SetEnabled(ModFeature feature, bool on)
     {
         _choices[Key(feature)] = on;
         Save();
+        Apply(feature);
+    }
+
+    private static void Apply(ModFeature feature)
+    {
+        bool on = IsWanted(feature);
         if (on && !feature.Enabled)
             Run(feature, feature.Enable, "switching on");
         else if (!on && feature.Enabled)
@@ -100,6 +148,7 @@ public static class ModFeatures
                 try { feature.Disable(); } catch { }
             }
         }
+        Changed?.Invoke(feature);
     }
 
     private static string Key(ModFeature f) => f.Owner.Info.Id + "/" + f.Id;

@@ -132,6 +132,14 @@ The box falls in at `HouseManager.packageDropOffPoint` and is sized to its conte
 
 `WorldRole.IsShared` is true while other players are in this game's house or this game is in theirs (a co-op mod holds `WorldRole.ShareWorld(owner)` for the session). Nothing should stop time then, or it stops for everyone: the framework's windows don't pause the game (`UiInputLock`). `WorldRole.Changed` fires when either flips.
 
+### Who decides the mod setup
+
+`NeetModKit.Sharing`. Normally the player decides which mods run, their features and their settings. A co-op client follows the host for the mods that shape the shared house, so the framework lets another mod take over that decision:
+
+- `ModControl.HandOver(owner, reason, covers)` locks the mods `covers(modId)` says yes to until the handle is disposed; `ModControl.LockedBecause(modId)` gives the reason or null. The Mods page shows locked mods without their load and unload buttons and their features as ON or OFF, and hides RELOAD ALL and FIND NEW MODS while anything is locked. `ModControl.Version` and `Changed` move whenever a page should redraw.
+- `ModFeatures.Override(key, on)` switches a feature (key `modId/featureId`, loaded or not) the way another game decided, without saving; `ClearOverrides()` goes back to the player's own choices. `ModFeatures.Changed` fires after any feature switches.
+- `[Shared]` on a config field marks a setting that shapes the shared house (prices, chances, timings). `SharedSettings.Capture()` gives every such value as JSON; `Apply(json)` takes another game's values for locked mods, in memory only (the mod hears `Changed` as usual), and `Restore()` puts the player's own back. Saving a section while another game's values are in still writes the player's own. `SharedSettings.Saved` fires when a section with shared settings is saved.
+
 ### HostActions and SharedState
 
 For player actions and state that have to be the same for every co-op player. In single player both simply work here.
@@ -662,6 +670,7 @@ Attributes on fields:
 - `[Label("text")]` (`LabelAttribute`): replaces the prettified field name ("PauseWhileOpen" becomes "Pause while open").
 - `[Description("text")]` (`DescriptionAttribute`, from System.ComponentModel): help text under the control.
 - `[Hidden]` (`HiddenAttribute`): leaves the field off the page.
+- `[Shared]` (`SharedAttribute`): the setting shapes the shared house; in co-op the host's value counts and clients see it read-only (see "Who decides the mod setup").
 
 Properties are not shown. Use public fields.
 

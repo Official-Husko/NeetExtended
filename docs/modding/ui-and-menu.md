@@ -456,6 +456,7 @@ Attributes (all in `NeetModKit.Settings`, except `DescriptionAttribute`):
 | `[Label("text")]` | Replaces the label. Without it, the label is the field name split at capitals and sentence-cased (`PauseWhileOpen` becomes "Pause while open"). |
 | `[Description("text")]` | Muted help text under the control. This is `System.ComponentModel.DescriptionAttribute`, so add `using System.ComponentModel;`. |
 | `[Hidden]` | Leaves the field off the page. The field is still saved. |
+| `[Shared]` | The setting shapes the shared house: in co-op the host's value counts, and while another game decides it the page shows it read-only with the reason. |
 
 Labels of sliders, text boxes and enum headings are shown in capitals; toggle labels are not. Put the wording you want in `[Label]` and it will be capitalised where the control does that.
 
