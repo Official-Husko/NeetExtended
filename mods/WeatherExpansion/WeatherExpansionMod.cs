@@ -35,6 +35,7 @@ public sealed class WeatherExpansionMod : NeetMod
         ModFeatures.Register(this, new TvStaticFeature());
         ModFeatures.Register(this, new RadioCrackleFeature());
         ModFeatures.Register(this, new PhoneStaticFeature());
+        ModFeatures.Register(this, new FusePopFeature());
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 

@@ -3,7 +3,7 @@ using NeetModKit.Settings;
 
 namespace WeatherExpansion;
 
-/// <summary>Stored in Mods/WeatherExpansion/config.json and shown in the mod menu. The looks and the TV, radio and phone effects are about your own game.</summary>
+/// <summary>Stored in Mods/WeatherExpansion/config.json and shown in the mod menu. The looks and the TV, radio and phone effects are about your own game; the fuse pop changes the house.</summary>
 public sealed class WeatherExpansionConfig
 {
     [Label("Fog thickness")]
@@ -49,4 +49,9 @@ public sealed class WeatherExpansionConfig
     [Label("Static in phone calls")]
     [Description("A call in progress gets a burst of static from the phone after a strike (the screens always garble). The call is never cut.")]
     public bool PhoneCallStatic = true;
+
+    [Label("Fuse pop chance")]
+    [Range(0f, 1f)]
+    [Description("The chance that a strike trips a breaker in the fuse box while \"Lightning pops a fuse\" is on (it is off by default). 0.1 is one strike in ten.")]
+    public float FusePopChance = 0.1f;
 }

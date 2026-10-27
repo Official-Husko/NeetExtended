@@ -202,6 +202,7 @@ Changes how the storm outside looks. Each look is its own switch on the Mods pag
 - **Lightning static on the TV**: a lightning strike flicks a TV that's on to static for about a second, then it's back to what it was showing (a video keeps its place). **TV static time** in Mod Settings.
 - **Lightning crackle on the radio**: a strike makes a playing radio crackle with static and cuts the music in and out for a moment. **Radio crackle** in Mod Settings.
 - **Lightning on the phones**: a strike garbles the phone screens for a moment, and a call in progress gets a burst of static (never cut off). **Static in phone calls** in Mod Settings.
+- **Lightning pops a fuse** (off until you switch it on): a strike can trip a breaker in the fuse box and cut a room's power until you flip it back. **Fuse pop chance** in Mod Settings. In co-op the host's game does it and everybody sees the breaker go.
 
 ## Randomizer
 
