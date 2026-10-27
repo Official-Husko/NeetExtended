@@ -87,5 +87,6 @@ public static class MessageIds
     public const ushort WorldBreakRequest = 150;
     public const ushort WorldBreak = 151;
     public const ushort WorldBreakSnapshot = 152;
+    public const ushort WorldNpcEffect = 155;
     public const ushort WorldNpcUndress = 156;
 }

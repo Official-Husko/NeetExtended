@@ -37,6 +37,7 @@ internal static class WorldSync
         ManifestReader.Init();
         StateSync.Init();
         NpcClothes.Init();
+        NpcEffects.Init();
         EconomySync.Init();
         FireSync.Init();
         CopVanSync.Init();

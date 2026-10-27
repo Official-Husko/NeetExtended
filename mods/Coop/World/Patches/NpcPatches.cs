@@ -9,8 +9,9 @@ namespace Coop.World.Patches;
 /// What an NPC rig does that the animator doesn't carry, caught on the host (one hook is a client's:
 /// stripping a corpse goes to the host's NPC). A kick bumps the rig's counter, which travels with its
 /// pose (<see cref="NpcPose"/>); dressing and undressing go out as the rig's clothes
-/// (<see cref="NpcClothes"/>). The rigs run the player's own scripts, so these are the player's methods,
-/// filtered to the ones that belong to a shared NPC.
+/// (<see cref="NpcClothes"/>); skeletonizing and obliterating send their blood (<see cref="NpcEffects"/>).
+/// The rigs run the player's own scripts, so these are the player's methods, filtered to the ones that
+/// belong to a shared NPC.
 /// </summary>
 [HarmonyPatchCategory(WorldPatches.World)]
 [HarmonyPatch]
@@ -68,5 +69,21 @@ internal static class NpcPatches
     {
         if (Hosting)
             NpcClothes.Changed(__instance);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.SkeletonizeAccessor))]
+    private static void Skeletonized(Player_Abilities __instance)
+    {
+        if (Hosting && NetObjects.Find(__instance.gameObject)?.Rig != null)
+            NpcEffects.Send(NpcEffects.Wind, __instance);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.Obliterate))]
+    private static void Obliterated(Player_Abilities __instance)
+    {
+        if (Hosting && NetObjects.Find(__instance.gameObject)?.Rig != null)
+            NpcEffects.Send(NpcEffects.Burst, __instance);
     }
 }
