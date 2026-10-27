@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using WeatherExpansion.Storm;
 using WeatherExpansion.Fog;
+using WeatherExpansion.Lightning;
 using WeatherExpansion.Windows;
 
 namespace WeatherExpansion;
@@ -31,6 +32,9 @@ public sealed class WeatherExpansionMod : NeetMod
         ModFeatures.Register(this, new LightningGlowFeature());
         ModFeatures.Register(this, new MistBanksFeature());
         ModFeatures.Register(this, new RainOnGlassFeature());
+        ModFeatures.Register(this, new TvStaticFeature());
+        ModFeatures.Register(this, new RadioCrackleFeature());
+        ModFeatures.Register(this, new PhoneStaticFeature());
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
@@ -43,6 +47,7 @@ public sealed class WeatherExpansionMod : NeetMod
     public override void OnUnload()
     {
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        CrackleClip.Release();
         Instance = null;
     }
 

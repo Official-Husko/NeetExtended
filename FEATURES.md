@@ -193,12 +193,15 @@ Tells you when a newer version is out. Always on; switch off **Check for updates
 
 ## Weather Expansion (experimental)
 
-Changes how the storm outside looks. Each look is its own switch on the Mods page, and the amounts are in Mod Settings under "Weather Expansion". It's all drawn by your own game, so in co-op everybody sees their own.
+Changes how the storm outside looks. Each look is its own switch on the Mods page, and the amounts are in Mod Settings under "Weather Expansion". The looks and the TV, radio and phone effects are done by your own game, so in co-op everybody sees and hears their own copy at the same strike.
 
 - **Stormy fog**: the night's fog is a dark blue-grey instead of pure black, so the house and the trees show as shapes in the haze, and it slowly thickens and thins. It follows the weather: thinner in a drizzle, thicker in a storm. **Fog thickness** and **Fog brightness** in Mod Settings.
 - **Lightning glow**: a lightning flash lights up the fog and the sky as well as the things near you, so the sky shows the landscape behind the yard for a moment. **Lightning glow** in Mod Settings.
 - **Mist in the yards**: banks of mist drift over the front and back yard and light up with the lightning. More in a storm, less in a drizzle. **Mist** in Mod Settings.
 - **Rain on the windows**: drops sit on the windows and run down them, bending the view outside, and you can see them in the dark through a thin haze on the glass. Broken windows lose their drops. Fewer, slower drops in a drizzle, more and faster in a storm. **Rain on the windows** (how many) and **Window haze** in Mod Settings.
+- **Lightning static on the TV**: a lightning strike flicks a TV that's on to static for about a second, then it's back to what it was showing (a video keeps its place). **TV static time** in Mod Settings.
+- **Lightning crackle on the radio**: a strike makes a playing radio crackle with static and cuts the music in and out for a moment. **Radio crackle** in Mod Settings.
+- **Lightning on the phones**: a strike garbles the phone screens for a moment, and a call in progress gets a burst of static (never cut off). **Static in phone calls** in Mod Settings.
 
 ## Randomizer
 

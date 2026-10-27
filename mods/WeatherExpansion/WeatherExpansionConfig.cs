@@ -3,7 +3,7 @@ using NeetModKit.Settings;
 
 namespace WeatherExpansion;
 
-/// <summary>Stored in Mods/WeatherExpansion/config.json and shown in the mod menu. All of it is about how your own game looks.</summary>
+/// <summary>Stored in Mods/WeatherExpansion/config.json and shown in the mod menu. The looks and the TV, radio and phone effects are about your own game.</summary>
 public sealed class WeatherExpansionConfig
 {
     [Label("Fog thickness")]
@@ -35,4 +35,18 @@ public sealed class WeatherExpansionConfig
     [Range(0f, 0.4f)]
     [Description("How fogged up the glass is, so the drops show at night too. 0 is clear glass.")]
     public float WindowHaze = 0.15f;
+
+    [Label("TV static time")]
+    [Range(0f, 3f)]
+    [Description("How many seconds the TV shows static after a lightning strike while \"Lightning static on the TV\" is on. 0 is none.")]
+    public float TvStaticSeconds = 1f;
+
+    [Label("Radio crackle")]
+    [Range(0f, 1f)]
+    [Description("How loud the static is and how far the music drops out after a strike while \"Lightning crackle on the radio\" is on. 0 is none.")]
+    public float RadioCrackle = 0.7f;
+
+    [Label("Static in phone calls")]
+    [Description("A call in progress gets a burst of static from the phone after a strike (the screens always garble). The call is never cut.")]
+    public bool PhoneCallStatic = true;
 }

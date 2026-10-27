@@ -4,9 +4,11 @@ The Weather Expansion mod (`mods/WeatherExpansion`, id `WeatherExpansion`) chang
 
 It only uses what the game already ships: no custom shader and no extra download. What that rules out is under [Known limitations](#known-limitations).
 
+Lightning also has consequences: the TV, the radio and the phones react to every strike. Those are features too, described under [Lightning effects](#lightning-effects).
+
 ## What's local in co-op
 
-All of it. Every game draws its own looks from its own scene: nothing is sent over the network and no setting is `[Shared]`. The looks that follow lightning read the moon light's intensity (the game's own flash) in the local game, so they light up whenever that game's moon does; whether a client's moon flashes along with the host's is up to the co-op world sync, not this mod. The weather state (`Sky.Weather`: drizzle, rain, storm) is the framework's; this mod only reads it, so the looks follow whatever mod drives it (see [Following the weather](#following-the-weather)).
+All of it. Every game draws its own looks (and runs its own lightning effects on the TV, radio and phones) from its own scene: nothing is sent over the network and no setting is `[Shared]`. The looks that follow lightning read the moon light's intensity (the game's own flash) in the local game, so they light up whenever that game's moon does; whether a client's moon flashes along with the host's is up to the co-op world sync, not this mod. The weather state (`Sky.Weather`: drizzle, rain, storm) is the framework's; this mod only reads it, so the looks follow whatever mod drives it (see [Following the weather](#following-the-weather)). The lightning effects follow `Sky.OnStrike`, which every game raises at the moment of the flash (a client replays the host's strikes), so they happen together without any message of their own, and how hard a strike hits comes from the weather every game shares, so they last as long everywhere.
 
 ## Looks and settings
 
@@ -18,6 +20,9 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 | Lightning glow (`LightningGlow`) | In a flash the fog turns bright blue-white and the sky's tint comes up, so the night landscape in the sky cubemap shows behind the yard. | Lightning glow (1, 0 to 2) |
 | Mist in the yards (`MistBanks`) | Two banks of mist drift over the front and the back yard, tinted like the fog and brighter in a flash. | Mist (1, 0 to 2) |
 | Rain on the windows (`RainOnGlass`) | Drops sit on every window and some run down it, bending what you see through the glass. A broken pane loses its drops. | Rain on the windows (0.5, 0 to 1), Window haze (0.15, 0 to 0.4) |
+| Lightning static on the TV (`TvStatic`) | A strike flicks a TV that's on to static for about a second. | TV static time (1 s, 0 to 3) |
+| Lightning crackle on the radio (`RadioCrackle`) | A radio that's playing crackles and its music cuts in and out for a moment. | Radio crackle (0.7, 0 to 1) |
+| Lightning on the phones (`PhoneStatic`) | The handset screens garble for a moment; a call in progress gets a burst of static. | Static in phone calls (on) |
 
 ## How the fog looks work
 
@@ -57,6 +62,16 @@ Wetness (the setting times the weather's wetness, see below) sets how fast new d
 
 Intensity 1 is the kind's usual strength; wetness is also multiplied by it, and fog and speed by `0.8 + 0.2 x intensity`. Nothing else in the mod reads the weather. The mod doesn't set the weather, rain amount, storm volume or thunder timer; whatever drives `Sky.Weather` does.
 
+## Lightning effects
+
+`Lightning/` holds three features on a common base, `StrikeFeature`: it subscribes to `Sky.OnStrike` while the feature is on and hands `Strike(power)` the strength of that strike. The Sky API doesn't say how far away or how hard a strike is, so a strike's strength is the weather's intensity (kept between 0.5 and 1.5): a heavy storm hits harder than a light one, and since every game has the same weather, every game's effects last as long. Nothing runs between strikes: the effects that last a moment tick from `OnUpdate` and that returns at once when none is running. Every effect puts what it touched back when it ends, when its feature is switched off and when the mod unloads (all three were tested mid-effect).
+
+`Lightning/CrackleClip.cs` makes the one sound they share: 1.4 s of low-passed noise with pops that thin out, generated once at run time (22 kHz mono, about 120 KB) and destroyed with the mod.
+
+- **TV static** (`TvStaticFeature`). On a strike with the TV on, a copy of the game's own `Channel1_Static` picture (an `Image` with a noise sprite) is laid over the screen as the last child of the TV's canvas, minus its `ScreenModule` so the TV doesn't know about it, and shuffled every 45 ms (flipped on each axis and tinted a random grey, which is what makes the noise crawl). The channel underneath keeps running and the TV's state doesn't change, so a video keeps its place and Co-op's TV sync has nothing to do (checked: the host and the client's video times stay within 0.05 s through the effect). It also plays the crackle on the TV's speaker, ends early if the TV is switched off, and goes when the house unloads.
+- **Radio crackle** (`RadioCrackleFeature`). On a strike every radio whose music is playing gets the crackle from its click speaker and its music volume pushed down in random 70 ms chunks (down to about 35% at the default setting), fewer of them as it dies down over about 1.1 s, then back to the volume it had. Only the volume moves: the clip keeps playing, so a tape keeps its place and the Co-op radio sync isn't disturbed. Radios are found with one `FindObjectsOfType` per strike.
+- **Phones** (`PhoneStaticFeature`). The phone reads its screen text to dial and to know it's idle, so that text is never changed. A copy of the text object is laid over it showing a scramble (about half the real characters, the rest noise, now and then blanking) while the real one is hidden by its canvas renderer's alpha, for about 0.9 s. With "Static in phone calls" on, a phone with a call in progress (`talking`) also plays the crackle from its handset. The conversation is never touched: a call keeps going through a strike (tested with a call to 411).
+
 ## Files
 
 | File | What it does |
@@ -72,6 +87,8 @@ Intensity 1 is the kind's usual strength; wetness is also multiplied by it, and 
 | `Windows/GlassMaterial.cs`, `QuadMesh.cs` | The material and the quad. |
 | `Windows/DropSimulation.cs`, `DropField.cs` | The water as numbers (drops, trails), and drawing it as the normal map. |
 | `Windows/DropShape.cs` | The game's own drop picture turned into a table of normals. |
+| `Lightning/StrikeFeature.cs`, `CrackleClip.cs` | The base of the strike effects (strike strength, subscription, clean-up) and the shared crackle sound. |
+| `Lightning/TvStaticFeature.cs`, `RadioCrackleFeature.cs`, `PhoneStaticFeature.cs` | The three strike effects. |
 
 ## Testing
 
@@ -87,6 +104,8 @@ neet call sky.set reset=true             # back to the default rain
 
 A real strike is `neet call sky.strike`. Dark scenes need a brightened copy of a screenshot to judge; the game really is that dark.
 
+Strike effects: `neet call sky.strike` (the effects start when the flash peaks, a few tenths of a second later). For the radio, spawn a `Radio`, a `Fuse` and a `Cassette_Walk`, then `obj.set` the radio's `Fuse`, call `InsertCassette` and `MusicSwitch`. For the phones dial a number with `Phone_Interface.ComposeNumber` (digits, then -1 to call).
+
 ## Known limitations
 
 - Nothing here is saved with the game. The looks follow `Sky.Weather` but only the three kinds (drizzle, rain, storm); there is no clear spell, and nothing in this mod changes the weather.
@@ -97,3 +116,6 @@ A real strike is `neet call sky.strike`. Dark scenes need a brightened copy of a
 - The glass needs the game's `Glass/DiffuseBumped` material; if a game update renames it, the look logs a warning and stays off.
 - Each pane in view adds a draw and a screen grab (the shader bends the picture behind it); in the house that is one or two panes at a time.
 - A custom shader (drops and trails drawn on the graphics card, height fog, wet surfaces) would need an asset bundle built in the Unity editor, which needs the editor installed and an account to activate it. None of that is in the repo.
+- TV static covers the whole screen picture, whatever the channel shows, and the crackle on the TV's speaker plays on top of the channel's own sound (the channel keeps playing under it).
+- The phone scramble only covers the handset's screen; the dialogue box a call shows is left alone, and the static in a call is a sound from the handset, so it's quiet when you're far from the phone.
+- The radio crackle changes the radio's music volume for about a second; a mod that sets that volume at the same moment would be put back to what it was when the crackle began.
