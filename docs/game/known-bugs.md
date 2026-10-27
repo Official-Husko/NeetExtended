@@ -28,6 +28,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | The money platinum medal reads another medal's progress | `MoneyMedal` |
 | Picking up the thief's beanie throws and leaves a broken hand | `WigPickup` |
 | Characters pick up things that belong to switched-off objects | `HiddenPickups` |
+| No autosave after loading a save | `AutosaveAfterLoad` |
 
 ## Saving fails with a dead house spider around
 
@@ -243,6 +244,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a prefix on `BrainNeetAI.PickupTargetObj` gives up on a target that is not active in the scene and removes it from the rooms' lists, so the character picks something else next time. The player's own pickup is not touched (it can only reach what it can see), and neither is loading a save, where a switched-off character gets its held items back through the same call.
 
 **Reproduce:** take the dev bridge's object list for `Bad_Thief` (inactive), put its beanie in a room's `usables` and give an NPC `pickupTgt` the beanie: without `HiddenPickups` the NPC holds it afterwards, with it the NPC's hands stay empty.
+
+## No autosave after loading a save
+
+**What happens:** after a save was loaded, the game never autosaves again that session (it still does in a game that started without a save).
+
+**Cause:** `SaveLoadHandler.Update` autosaves when `timeToLastSave < 0`, the player is in the bedroom and `timeToLastLoad <= 0f` (`SaveLoadHandler.cs:80`). `LoadAll` sets `timeToLastLoad = Time.time` (`:151`) and nothing ever clears it, so the last check is false for good. The check can only mean "not just after a load".
+
+**Fix:** a transpiler turns the read of `timeToLastLoad` in `Update` into a call that gives the real value for two seconds after a load and 0 after that. The five-minute timer (`timeToLastSave`, 300 s) and the bedroom rule are as before.
+
+**Reproduce:** start the game with a save present, set `SaveLoadHandler.timeToLastSave` to 1, go to the bedroom and wait: with `AutosaveAfterLoad` on a new `neetSave_*.json` appears, off it doesn't.
 
 ## Not bugs
 
