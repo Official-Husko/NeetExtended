@@ -1,0 +1,55 @@
+# Keeps the README's "game compatibility" badge current: compares the game build the mods were
+# tested with (compat/game.json) with Steam's latest public build and writes the badge as a
+# shields.io endpoint file to the "badges" branch. Steam's build comes from api.steamcmd.net,
+# a public mirror of Steam's app info.
+name: Game compatibility
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  push:
+    branches: [main]
+    paths:
+      - compat/game.json
+      - .github/workflows/game-compat.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  badge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare the tested build with Steam's
+        run: |
+          app=$(jq -r .appId compat/game.json)
+          tested=$(jq -r .buildId compat/game.json)
+          latest=$(curl -fsS -m 30 "https://api.steamcmd.net/v1/info/$app" \
+            | jq -r --arg app "$app" '.data[$app].depots.branches.public.buildid // empty') || latest=""
+
+          if [ -z "$latest" ]; then
+            message="tested with build $tested"; color="lightgrey"
+          elif [ "$latest" = "$tested" ]; then
+            message="build $latest tested"; color="brightgreen"
+          else
+            message="build $latest not tested yet"; color="orange"
+          fi
+          echo "Tested: $tested, latest: ${latest:-unknown} -> $message" >> "$GITHUB_STEP_SUMMARY"
+
+          mkdir -p badge
+          jq -n --arg message "$message" --arg color "$color" \
+            '{schemaVersion: 1, label: "game compatibility", message: $message, color: $color, namedLogo: "steam"}' \
+            > badge/compat.json
+
+      - name: Publish the badge
+        run: |
+          cd badge
+          git init -q -b badges
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add compat.json
+          git commit -q -m "Update the game compatibility badge"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" badges
