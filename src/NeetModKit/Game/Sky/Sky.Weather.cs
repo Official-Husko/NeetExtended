@@ -2,6 +2,7 @@ using System;
 using NeetLoader;
 using NeetLoader.Runtime;
 using NeetModKit.Events;
+using NeetModKit.Features;
 
 namespace NeetModKit.Game;
 
@@ -17,8 +18,15 @@ public static partial class Sky
     /// <summary>Raised with the new state whenever <see cref="Weather"/> changes.</summary>
     public static readonly GameEvent<WeatherState> WeatherChanged = new GameEvent<WeatherState>(nameof(WeatherChanged));
 
-    /// <summary>Id of the mod that last set the weather, or null for the default.</summary>
-    public static string WeatherOwner => (_weatherOwner as NeetMod)?.Info.Id;
+    /// <summary>
+    /// Id of the mod that last set the weather (a feature counts as its mod), or null for the default.
+    /// </summary>
+    public static string WeatherOwner => _weatherOwner switch
+    {
+        NeetMod mod => mod.Info.Id,
+        ModFeature feature => feature.Owner?.Info.Id,
+        _ => null,
+    };
 
     /// <summary>
     /// Sets the weather. This is for the mod that drives it (the Weather mod on the host, Co-op on a client
