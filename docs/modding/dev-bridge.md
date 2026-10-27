@@ -223,6 +223,7 @@ These work on any loaded type, not only on scene objects. Type names follow the 
 
 | Method | Parameters | Description and result |
 | ------ | ---------- | ---------------------- |
+| `items.banks` | `filter?`: bank name | Every `PickupBank` (the game's item lists: the main one, each store, the custom shops) with its items and the components on each. |
 | `assets.texts` | none | Every loaded `TextAsset` with its name and length. The game's Ink stories are `Master`, `Master_Email` and `Thoughts`. |
 | `assets.text` | `name`, `path` | Write a `TextAsset` to a file. The game sees Windows paths: `Z:` is the Linux root under Proton (`Z:/tmp/Master.json`). Returns `path` and `chars`. |
 

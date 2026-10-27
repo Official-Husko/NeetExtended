@@ -25,6 +25,32 @@ internal static class AssetCommands
         catch (Exception) { return -1; }
     }
 
+    [BridgeCommand("items.banks", "Every PickupBank (the game's item lists: the main one, each store, the custom shops) with its items and their components.",
+        Params = new[] { "filter?: bank name substring" })]
+    private static object Banks(JObject p)
+    {
+        string filter = p.Value<string>("filter");
+        var result = new JArray();
+        foreach (var bank in Resources.FindObjectsOfTypeAll<PickupBank>().OrderBy(b => b.name))
+        {
+            if (filter != null && bank.name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0)
+                continue;
+            var items = new JArray();
+            foreach (var pickup in bank.pickups ?? new System.Collections.Generic.List<Spawnable>())
+            {
+                if (pickup.obj == null)
+                    continue;
+                var components = pickup.obj.GetComponentsInChildren<MonoBehaviour>(true)
+                    .Where(c => c != null)
+                    .Select(c => c.GetType().Name)
+                    .Distinct();
+                items.Add(new JObject { ["name"] = pickup.obj.name, ["components"] = new JArray(components.Cast<object>().ToArray()) });
+            }
+            result.Add(new JObject { ["bank"] = bank.name, ["type"] = bank.pickupBankType.ToString(), ["items"] = items });
+        }
+        return result;
+    }
+
     [BridgeCommand("assets.text", "Write a loaded TextAsset to a file (a Windows or Z: path inside Proton).",
         Params = new[] { "name", "path" })]
     private static object Text(JObject p)
