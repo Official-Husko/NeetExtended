@@ -4,7 +4,8 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 
 ## Planned mods
 
-- [ ] **Co-op**: 2 to 4 players in one house. Research done, see [docs/research/coop.md](docs/research/coop.md) (LiteNetLib over UDP, host-authoritative, remote players as player rigs driven by intents).
+- [ ] **Co-op**: 2 to 4 players in one house (`mods/Coop`, [docs/modding/coop.md](docs/modding/coop.md)). Done: direct-IP host and join, the house sent from memory, player bodies with poses and clothes, hot reload mid-session. In progress: world sync. Everything still missing is listed under [Known limitations](docs/modding/coop.md#known-limitations); keep that list current.
+  - [ ] Steam (`mods/CoopSteam`, built, never run): probe the Steam API in the game, test with a second account, then lobbies, invites, rich presence, auth tickets, 64-bit `steam_api64.dll`.
 - [ ] **Twitch Integration**: chat commands and channel point rewards that act in the game. Can reuse Phone Expansion's actions and conditions as the command set ("chat rings the phone", "chat pops the fuses").
 - [x] **Randomizer**: shuffle night visitors, store prices, dream layouts and the like. (Dreams are already random in the game; visitors, prices, deliveries, the house and needs are done.)
 - [x] **Performance Fixes** (experimental): `mods/PerformanceFixes`, results in [docs/research/performance.md](docs/research/performance.md#whats-fixed).

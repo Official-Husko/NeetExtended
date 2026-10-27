@@ -6,7 +6,7 @@ A Steam transport for the Co-op mod, next to the direct-IP one: Steam's relay so
 
 | Topic | Choice |
 | --- | --- |
-| Library | Steamworks.NET 2025.164.1 (MIT, Steamworks SDK 1.64): `Windows-x86/Steamworks.NET.dll` and the `steam_api.dll` from the same zip. Facepunch.Steamworks 2.5.2 also has a 32-bit build, but an older SDK and its own API style. |
+| Library | Steamworks.NET 2024.8.0 (MIT, Steamworks SDK 1.60): `Windows-x86/Steamworks.NET.dll` and the `steam_api.dll` from the same zip. Facepunch.Steamworks 2.5.2 also has a 32-bit build, but its own API style. The newer 2025.164.1 (SDK 1.64) was tried first and doesn't start under GE-Proton 10-34: that Proton's Steam bridge lacks `STEAMAPPS_INTERFACE_VERSION009` and `STEAMREMOTEPLAY_INTERFACE_VERSION004`, which only SDK 1.64 asks for. SDK 1.60 asks for nothing that bridge lacks, and newer Protons keep the old versions. |
 | Shipping | Its own optional mod (CoopSteam, depends on Coop). `Steamworks.NET.dll` can ship. `steam_api.dll` is not committed or put in the release zip; `neet` downloads the pinned zip on request, as it does for the 64-bit player. |
 | Native load | `steam_api.dll` next to `Steamworks.NET.dll` in the mod folder, and loaded by full path with `LoadLibraryW` before the first Steamworks call. |
 | App id | Nothing to set: Steam, and `neet launch --direct`, start the game with `SteamAppId`/`SteamGameId` 2054460. No `steam_appid.txt`, never `RestartAppIfNecessary`. |
@@ -19,7 +19,7 @@ The biggest unknown is whether `SteamAPI_Init` succeeds in this 32-bit process u
 
 ## Library and loading
 
-- Steamworks.NET's init is `SteamAPI.InitEx(out string errMsg)`, returning `ESteamAPIInitResult` with a readable error (log it). Its interface versions (`SteamNetworkingSockets012`, `SteamUser023`, ...) match the `steam_api.dll` in the same zip, so use that one.
+- Steamworks.NET's init is `SteamAPI.InitEx(out string errMsg)`, returning `ESteamAPIInitResult` with a readable error (log it). Its interface versions (`SteamNetworkingSockets012`, `SteamUser023`, ...) match the `steam_api.dll` in the same zip, so use that one. If `InitEx` fails with "Failed to initialize CSteamAPIContext", the Steam bridge lacks one of the versions; CoopSteam asks for each one separately (`Native/InterfaceCheck.cs`) and names the missing ones.
 - Callbacks use manual dispatch, pumped by `SteamAPI.RunCallbacks()` on the main thread every frame.
 - Unity's Mono looks for a `DllImport("steam_api")` in the calling assembly's folder, and the loader loads extra DLLs with `Assembly.LoadFrom`, so `steam_api.dll` beside `Steamworks.NET.dll` should be found (guess). Loading it first by full path with a kernel32 `LoadLibraryW` P/Invoke (as `CleanExit.cs` already calls kernel32) removes the doubt.
 - Hot reload: `Steamworks.NET.dll` is a library the loader never reloads (the mod lists only its own DLL), so its static state survives. Dispose `Callback<T>` objects on unload and register again on load; park socket, connection and poll-group handles in `ReloadState` like the LiteNetLib manager; never call `SteamAPI.Shutdown` on unload.

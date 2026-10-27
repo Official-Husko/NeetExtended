@@ -1,6 +1,6 @@
 # Co-op multiplayer: feasibility and plan
 
-Design note for a future mod: 2 to 4 players online, sharing one house. Nothing here has been built or run yet.
+Design note written before the Co-op mod was built: 2 to 4 players online, sharing one house. The mod follows most of it; where it doesn't (each player runs their own interactions and the results are shared, instead of the host running everyone's), [docs/modding/coop.md](../modding/coop.md) describes what was built.
 
 Conventions:
 
