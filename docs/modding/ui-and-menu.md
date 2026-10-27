@@ -246,6 +246,20 @@ Creates a `ScreenSpaceOverlay` canvas with a `CanvasScaler` (copied from the pau
 - The version tag in the bottom left corner has a small API of its own: `VersionTag.AddNote(owner, text)` adds a note after the pack's version and returns an `IDisposable` that takes it back (see [framework.md](framework.md#pack-name-and-version)).
 - `referenceResolution` scales the canvas on its own (scale with screen size, matching width and height equally) instead of like the game's menus.
 
+## Notices
+
+Short messages in the bottom right corner of every screen, over the game and the mod menu, in the pause menu's look (dark panel, orange stripe, the orange display font for the title, an orange bar). They never take clicks. Namespace `NeetModKit.Ui.Notifications`.
+
+```csharp
+var notice = Notices.Show(this, "Receiving clip.webm", "from the host");   // up until closed
+notice.Progress = 0.4f;          // 0 to 1 shows a bar; null hides it
+notice.Title = "Received clip.webm";
+notice.Close(2.5f);              // fades out after 2.5 s (Close() now)
+Notices.Show(this, "Bob joined", "2 players in the house", seconds: 4f);
+```
+
+Changes show on the next frame. Notices stack with the newest at the bottom, fade in, and fade out once closed; they go with their owner when it unloads. `IsOpen` is false once a notice has been closed, `KeepOpen()` takes back a delayed close. Co-op uses them for file transfers and for players coming and going.
+
 ## `UiCloning`
 
 Helpers for working with the game's own objects. Used by the toolkit, the computer helpers and the pause menu integration. Anything created with a `ITracker` owner is destroyed when that owner unloads.
