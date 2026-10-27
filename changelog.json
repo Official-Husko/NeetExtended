@@ -1,9 +1,9 @@
 {
   "releases": [
     {
-      "version": "Unreleased",
+      "version": "0.2.0",
       "date": "2026-10-27",
-      "released": false,
+      "released": true,
       "added": [
         {
           "text": "About 50 new calls that ring in: telemarketers, creepy callers, wrong numbers, kids prank calling you, the neighbours, people from your old life, a radio show and surveys.",
@@ -14,7 +14,7 @@
           "area": "Phone Expansion"
         },
         {
-          "text": "Email Expansion: new emails in the computer's inbox that you can reply to. Replies can pay you, cost you money, send things to your door and more.",
+          "text": "New emails in the computer's inbox that you can reply to. Replies can pay you, cost you money, send things to your door and more.",
           "area": "Email Expansion"
         },
         {
@@ -22,7 +22,7 @@
           "area": "Email Expansion"
         },
         {
-          "text": "Mixtapes: your own music on cassettes for the radio. Buy them in the store or find them in the house.",
+          "text": "Your own music on cassettes for the radio. Buy them in the store or find them in the house.",
           "area": "Mixtapes"
         },
         {
@@ -30,7 +30,7 @@
           "area": "Mixtapes"
         },
         {
-          "text": "Randomizer: a seed per save that shuffles who knocks at night, store prices, deliveries, the house on a new game and how fast you get hungry.",
+          "text": "A seed per save that shuffles who knocks at night, store prices, deliveries, the house on a new game and how fast you get hungry.",
           "area": "Randomizer"
         },
         {
@@ -278,7 +278,7 @@
           "area": "Mod menu"
         },
         {
-          "text": "Pumpkin Smash: a whack-a-pumpkin game on the in-game computer that pays a little cash.",
+          "text": "A whack-a-pumpkin game on the in-game computer that pays a little cash.",
           "area": "Pumpkin Smash"
         },
         {
