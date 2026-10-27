@@ -38,6 +38,8 @@ internal static class StateTypes
         new GunState(),
         new WearableState(),
         new DustBallState(),
+        new HeatState(),
+        new LaserState(),
     };
 
     static StateTypes()

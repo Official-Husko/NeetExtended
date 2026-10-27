@@ -1,4 +1,5 @@
 using Coop.World.State;
+using Coop.World.State.Types;
 using HarmonyLib;
 
 namespace Coop.World.Patches;
@@ -96,4 +97,17 @@ internal static class StateHintPatches
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SmokeDetector), "OnCollisionEnter")]
     private static void DetectorFilled(SmokeDetector __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(LaserPointer), nameof(LaserPointer.Toggled), MethodType.Setter)]
+    private static void LaserSwitched(LaserPointer __instance)
+    {
+        if (!LaserState.Restoring)
+            StateSync.MarkDirty(__instance);
+    }
+
+    // Its Start switches it off; a state that arrived before it is put back after.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(LaserPointer), "Start")]
+    private static void LaserStarted(LaserPointer __instance) => LaserState.Started(__instance);
 }

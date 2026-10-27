@@ -1,7 +1,7 @@
 {
   "id": "Coop",
   "name": "Co-op",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "pawbeans",
   "description": "Play the house together over the internet or your own network. Everyone shares the host's house, items and money, and keeps their own health, needs and clothes.",
   "assemblies": [ "Coop.dll" ],

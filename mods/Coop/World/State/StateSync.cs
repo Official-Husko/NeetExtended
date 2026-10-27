@@ -38,6 +38,7 @@ internal static class StateSync
     {
         Types.ItemMarks.Clear();
         Types.SinkState.Clear();
+        Types.LaserState.Clear();
         Changed.Clear();
         Marked.Clear();
         _cursor = 0;
