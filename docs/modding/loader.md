@@ -39,6 +39,7 @@ Public constant `Loader.Version` is `"0.2.0"`.
 | --- | --- |
 | `<game>/NEET_Data/Managed/NeetLoader.dll`, `0Harmony.dll`, `Mono.Cecil.dll` | The loader and its dependencies. Unity loads them from here. |
 | `<game>/Mods/<folder>/` | One mod per folder. Any folder with a `mod.json` counts. |
+| `<game>/Mods/<folder>/x86/`, `x64/` | Libraries built for the 32-bit or the 64-bit player; see `assemblies` below. |
 | `<game>/Mods/<folder>/config.json` | Default location for `LoadConfig<T>()`. |
 | `<game>/NeetLoader/settings.json` | Loader settings, see [Settings file](#settings-file). |
 | `<game>/NeetLoader/logs/latest.log` | This session's log. |
@@ -60,7 +61,7 @@ Public constant `Loader.Version` is `"0.2.0"`.
 | `version` | string | `"0.0.0"` | Compared against `dependencies`. Loose SemVer: `1.2`, `1.2.3` and `1.2.3-beta` all parse. Pre-release tags are ignored. |
 | `author` | string | `null` | Shown on the Mods page. |
 | `description` | string | `null` | Shown on the Mods page. |
-| `assemblies` | string[] | `[]` | DLLs to load, relative to the mod folder. Empty means every `*.dll` in the folder root. Subfolders are not searched. With a list, other DLLs in the folder root are libraries: they load the first time something uses them and are never hot reloaded, so objects made from them (a network connection, say) can be handed to the next copy of the mod through `ReloadState`. |
+| `assemblies` | string[] | `[]` | DLLs to load, relative to the mod folder. Empty means every `*.dll` in the folder root. Subfolders are not searched. With a list, other DLLs in the folder root are libraries: they load the first time something uses them and are never hot reloaded, so objects made from them (a network connection, say) can be handed to the next copy of the mod through `ReloadState`. DLLs in an `x86/` or `x64/` subfolder are libraries too, built for one player: only the folder that matches the running game counts, and its DLLs stand in for root DLLs of the same name (Co-op over Steam keeps the 64-bit Steamworks.NET in its root and the 32-bit one in `x86/`). |
 | `dependencies` | object | `{}` | Required mods, as `"id": "minimum version"`. `"*"` accepts any version. A leading `>=` is allowed and ignored, so `">=1.2"` means `1.2` or newer. |
 | `loadAfter` | string[] | `[]` | Mods to load before this one if they are present. Not required. |
 | `autoPatch` | bool | `true` | Apply Harmony patches for every class in the mod's assemblies. See [Harmony patching](#harmony-patching). |
