@@ -326,6 +326,10 @@ The reader gets a `ContentFile`: `Display` (for messages), `ModId`, `Scope` (reg
 
 Conditions are compiled when a file loads, so every pack loads again when a mod registers or removes a condition or action: an email that checks a phone call's `called` keeps working when the phone mod reloads.
 
+## Media folders
+
+`NeetModKit.IO.MediaFolder.Read(folder, extensions, listFile, listKey, problems, out list)` reads a `ModContent` folder of media files (Custom TV Stations' videos, Mixtapes' songs): every file of the given types, sub folders included, as `MediaFile`s (`Path`, `Source`, `Name`, and `Entry`, the file's object from the optional list file). Files the list names come first in its order, the rest follow by file name; list problems (bad JSON, a missing file) go into `problems`. `list` is the whole list file, for anything else in it (the TV's `hide`).
+
 ## Saves
 
 Namespace `NeetModKit.Saves`.
@@ -419,13 +423,13 @@ Namespace `NeetModKit.Items`. A modded item is a copy of an existing item (`Base
 ### ItemRegistry
 
 ```csharp
-public static void Register(NeetMod owner, ItemDefinition def);   // owner-tracked
+public static void Register(ITracker owner, ItemDefinition def);   // removed when owner cleans up (a mod, or a Scope)
 public static bool IsModded(string name);
 public static GameObject Template(string name);   // the template copies are made from, once built
 public static IEnumerable<string> Names { get; }
 ```
 
-`Register` throws if `Name` or `BasedOn` is empty, or if a modded item with that name is already registered. The item is removed when the owner unloads.
+`Register` throws if `Name` or `BasedOn` is empty, or if a modded item with that name is already registered. The item is removed when the owner cleans up: the mod unloading, or a `Scope` for items made from files, which is disposed before the files load again (Mixtapes does this).
 
 ```csharp
 public override void OnLoad()

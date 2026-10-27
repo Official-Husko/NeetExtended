@@ -32,7 +32,8 @@ public static class ItemRegistry
     /// <summary>The template copies are made from, once built (inside the house).</summary>
     public static GameObject Template(string name) => Entries.TryGetValue(name, out var e) ? e.Template : null;
 
-    public static void Register(NeetMod owner, ItemDefinition def)
+    /// <summary>Adds an item until <paramref name="owner"/> cleans up (a mod, or a Scope for items from files that load again).</summary>
+    public static void Register(ITracker owner, ItemDefinition def)
     {
         if (string.IsNullOrEmpty(def.Name) || string.IsNullOrEmpty(def.BasedOn))
             throw new ArgumentException("An item needs a Name and a BasedOn item.");
