@@ -16,6 +16,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Put-out fires and replaced fuses stay in the save | `GhostSaves` |
 | One object that can't be saved stops all saving | `SaveCrashes` |
 | Frame rate and vsync settings don't stick | `FrameRateSettings` |
+| The inbox is empty after loading a save | `LostInbox` |
 
 ## Saving fails with a dead house spider around
 
@@ -113,6 +114,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a transpiler on `CameraControl.Start` keeps the game's values only for players who never picked anything: with a saved `VerticalSync` that value is used, and with a saved `Framerate` the frame rate the menu applied is left alone.
 
 **Reproduce:** turn vsync on in the settings, then check `QualitySettings.vSyncCount` after the house loads (`type.get`), or call `Start` on `Player/Main Camera`'s `CameraControl`.
+
+## The inbox is empty after loading a save
+
+**What happens:** after loading a save, the computer's email app shows no emails, only ones that arrive afterwards. The emails are still in the save and in `EmailHandler.deliveredEmails`.
+
+**Cause:** `EmailApp` rebuilds the inbox in `CreateAllDelivered`, which it subscribes to `EmailHandler.OnPostLoad` in its own `Start` (`EmailApp.cs:14-22`). The save is loaded from `SaveLoadHandler.Start`, which runs before `EmailApp.Start`, so `OnPostLoad` has no subscriber when `EmailHandler.Load` raises it.
+
+**Fix:** a postfix on `EmailApp.Start` calls `CreateAllDelivered` when there are delivered emails but no inbox buttons yet, and `UpdateInbox` for emails still pending.
+
+**Reproduce:** with `LostInbox` off, get a few emails, save, and load the save (or `scene.load NEET_House`); the inbox is empty while `email.lists` shows them as delivered.
 
 ## Not bugs
 
