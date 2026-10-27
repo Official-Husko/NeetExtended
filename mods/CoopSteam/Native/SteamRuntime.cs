@@ -110,11 +110,11 @@ internal static class SteamRuntime
         }
         catch (BadImageFormatException)
         {
-            return "steam_api.dll is the wrong kind (this game is 32-bit). Run 'neet steam' again.";
+            return SteamLibrary.FileName + " doesn't fit this " + SteamLibrary.Bits + "-bit game. Run 'neet steam' again.";
         }
         catch (EntryPointNotFoundException e)
         {
-            return "steam_api.dll is too old for this mod (" + e.Message + "). Run 'neet steam' again.";
+            return SteamLibrary.FileName + " is too old for this mod (" + e.Message + "). Run 'neet steam' again.";
         }
         catch (Exception e)
         {

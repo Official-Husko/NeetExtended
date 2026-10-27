@@ -21,16 +21,23 @@
   </ItemGroup>
 
   <!--
-    Steamworks.NET (MIT) is kept in lib/ as the Windows-x86 build of release 2024.8.0 (Steamworks SDK
-    1.60), the same release 'neet steam' downloads steam_api.dll from, so the two always match. SDK 1.60
-    on purpose: the Steam bridge of older Proton builds (GE-Proton 10) lacks interface versions that
-    1.64 asks for, while newer ones keep the old ones. The NuGet package of that version is netstandard2.1
-    without an x86 build and has no steam_api.dll. It ships in the mod folder and, being outside the
-    assemblies list in mod.json, loads once and is never hot reloaded. steam_api.dll itself is Valve's and
-    is never part of the repo or the release package.
+    Steamworks.NET (MIT) is kept in lib/ in both Windows builds of release 2024.8.0 (Steamworks SDK 1.60),
+    the same release 'neet steam' downloads steam_api.dll and steam_api64.dll from, so they always match.
+    The builds differ only in the Steam DLL they call. lib/x64 ships in the mod folder and lib/x86 in x86/,
+    which the loader uses instead on the 32-bit player (see "assemblies" in docs/modding/loader.md).
+    SDK 1.60 on purpose: the Steam bridge of older Proton builds (GE-Proton 10) lacks interface versions
+    that 1.64 asks for, while newer ones keep the old ones. The NuGet package of that version is
+    netstandard2.1 without an x86 build and has no Steam DLLs. Being outside the assemblies list in
+    mod.json, it loads once and is never hot reloaded. Valve's steam_api*.dll is never part of the repo or
+    the release package.
   -->
+  <PropertyGroup>
+    <!-- Both builds are platform specific; the loader picks the one for the running player. -->
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Steamworks.NET" HintPath="lib/Steamworks.NET.dll" Private="true" />
+    <Reference Include="Steamworks.NET" HintPath="lib/x64/Steamworks.NET.dll" Private="true" />
+    <None Include="lib/x86/Steamworks.NET.dll" Link="x86/Steamworks.NET.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     <None Include="lib/Steamworks.NET.LICENSE.txt" Link="Steamworks.NET.LICENSE.txt" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 </Project>
