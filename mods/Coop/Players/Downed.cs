@@ -7,15 +7,20 @@ using UnityEngine;
 namespace Coop.Players;
 
 /// <summary>
-/// Co-op: a player whose health runs out goes down instead of dying. They fall like a slip and stay
-/// there; for <see cref="BleedOutSeconds"/> anyone can bring them back by using food on them, and after
-/// that the game's own death and respawn happen. Only a game's own player goes down; each game tells
-/// the others, so their bodies show it and enemies can leave them alone (<see cref="IsDown"/>).
+/// Co-op: a player who would die goes down instead, whatever kills them (health running out, a story
+/// kill, a skeletonizer, an explosion's gibbing: see <see cref="Ending"/>). They fall like a slip and
+/// stay there; for <see cref="BleedOutSeconds"/> anyone can bring them back (see <see cref="Reviving"/>),
+/// and after that the death that put them down happens as the game does it, with its own effects and
+/// respawn. Only a game's own player goes down; each game tells the others, so their bodies show it and
+/// enemies can leave them alone (<see cref="IsDown"/>).
+///
+/// Revive (to the player's game, via the host): slot, health to stand up with (optional, else
+/// <see cref="ReviveHealth"/>).
 /// </summary>
 internal static class Downed
 {
     public const float BleedOutSeconds = 15f;
-    private const float ReviveHealth = 30f;
+    public const float ReviveHealth = 30f;
     private const string DeadPose = "isDead";
 
     private static readonly HashSet<byte> Down = new HashSet<byte>();
@@ -24,7 +29,9 @@ internal static class Downed
     private static CameraControl _camera;
     private static bool _wasInvincible;
     private static float _until;
-    private static bool _dying;
+    private static Ending _ending;
+    // The body whose death has been let through, so the hooks leave it alone.
+    private static GameObject _committed;
 
     public static bool LocalDown => _player != null;
 
@@ -40,14 +47,21 @@ internal static class Downed
         CoopLoop.Unloading += Clear;
     }
 
-    /// <summary>From the death hook: true when this death became going down.</summary>
-    public static bool TryGoDown(Player_Abilities rig)
+    /// <summary>From a death hook: true when this death became going down (<paramref name="ending"/> is what happens later).</summary>
+    public static bool TryGoDown(Player_Abilities rig, Ending ending)
     {
-        if (_dying || !CoopSession.InWorld || HouseManager._ == null || rig.gameObject != HouseManager._.player)
+        if (!CoopSession.InWorld || HouseManager._ == null || rig.gameObject != HouseManager._.player
+            || (_committed != null && rig.gameObject == _committed))
             return false;
         if (LocalDown)
-            return true; // Already down: more damage changes nothing.
+        {
+            // Already down: more damage changes nothing, but a worse death replaces a milder one.
+            if (ending > _ending)
+                _ending = ending;
+            return true;
+        }
 
+        _ending = ending;
         _player = rig.gameObject;
         _until = Time.time + BleedOutSeconds;
         // Down, not dead: no death screen, and nothing hurts while waiting for help.
@@ -71,16 +85,17 @@ internal static class Downed
         return true;
     }
 
-    /// <summary>Someone used food on the player in <paramref name="slot"/>.</summary>
-    public static void Revive(byte slot)
+    /// <summary>Someone brought the player in <paramref name="slot"/> back (food, a drink, a pumped chest).</summary>
+    public static void Revive(byte slot, float health = ReviveHealth)
     {
         if (slot == CoopSession.Local?.Slot)
         {
-            StandUp();
+            StandUp(health);
             return;
         }
         var message = Outbox.Begin(MessageIds.Revive);
         message.Put(slot);
+        message.Put((byte)Mathf.Clamp(Mathf.RoundToInt(health), 1, 100));
         if (CoopSession.IsHost)
             Outbox.ToSlot(slot, message, Channel.Events);
         else
@@ -91,7 +106,7 @@ internal static class Downed
     {
         if (!LocalDown)
             return;
-        // Respawned or died some other way (gibbed, a story death) in the meantime.
+        // Respawned or died some other way (a kill method that destroys the body) in the meantime.
         if (HouseManager._ == null || HouseManager._.player != _player || !_player.TryGetComponent(out Player_Abilities rig) || rig.dead)
         {
             Clear();
@@ -113,21 +128,16 @@ internal static class Downed
             _camera.eyesForcedShut = false;
     }
 
+    // Time's up: the death that put the player down happens now, as the game does it.
     private static void BleedOut(Player_Abilities rig)
     {
+        var ending = _ending;
         Clear();
-        _dying = true;
-        try
-        {
-            rig.DieAccessor(false);
-        }
-        finally
-        {
-            _dying = false;
-        }
+        _committed = rig.gameObject;
+        Endings.Run(rig, ending);
     }
 
-    private static void StandUp()
+    private static void StandUp(float health)
     {
         if (!LocalDown)
             return;
@@ -135,17 +145,18 @@ internal static class Downed
         var stats = _stats;
         Clear();
         if (stats != null)
-            stats.health.ForceSetVal(ReviveHealth);
+            stats.health.ForceSetVal(health);
         if (player.TryGetComponent(out Player_Movement movement))
         {
             movement.neetAC.SetBool(DeadPose, false);
             movement.SlipRecoverAccessor();
         }
-        CoopMod.Log.Info("Someone fed you back up.");
+        CoopMod.Log.Info("Someone brought you back up.");
     }
 
     private static void Clear()
     {
+        _committed = null;
         if (_player != null && CoopSession.Local != null)
             Announce(false);
         if (_stats != null)
@@ -186,10 +197,11 @@ internal static class Downed
     private static void OnRevive(in Sender from, NetDataReader reader)
     {
         byte slot = reader.GetByte();
+        float health = reader.AvailableBytes > 0 ? reader.GetByte() : ReviveHealth;
         if (slot == CoopSession.Local?.Slot)
-            StandUp();
+            StandUp(health);
         else if (CoopSession.IsHost)
-            Revive(slot);
+            Revive(slot, health);
     }
 
     private static void Set(byte slot, bool down)

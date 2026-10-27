@@ -5,8 +5,9 @@ using UnityEngine;
 namespace Coop.Players;
 
 /// <summary>
-/// The two hooks downed players need: dying becomes going down (for this game's own player, in a
-/// co-op game), and using food while looking at a downed player feeds it to them instead of you.
+/// The hooks downed players need: every way the game kills the local player (its death, being
+/// skeletonized, being gibbed) becomes going down first, and the death happens later if nobody helps
+/// (<see cref="Downed"/>); and using food while looking at a downed player feeds it to them instead of you.
 /// </summary>
 [HarmonyPatch]
 internal static class DownedPatches
@@ -18,9 +19,19 @@ internal static class DownedPatches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.DieAccessor), typeof(bool))]
-    private static bool GoDownInstead(Player_Abilities __instance, bool noEffects, bool __runOriginal) =>
+    private static bool GoDownInsteadOfDying(Player_Abilities __instance, bool noEffects, bool __runOriginal) =>
         // Something else (god mode) already stopped this death.
-        __runOriginal && (noEffects || !Downed.TryGoDown(__instance));
+        __runOriginal && (noEffects || !Downed.TryGoDown(__instance, Ending.Death));
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.SkeletonizeAccessor), typeof(bool))]
+    private static bool GoDownInsteadOfSkeletonizing(Player_Abilities __instance, bool noSkeleton, bool __runOriginal) =>
+        __runOriginal && !Downed.TryGoDown(__instance, noSkeleton ? Ending.Hollow : Ending.Skeleton);
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.Obliterate))]
+    private static bool GoDownInsteadOfGibbing(Player_Abilities __instance, bool __runOriginal) =>
+        __runOriginal && !Downed.TryGoDown(__instance, Ending.Gibbed);
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Food), nameof(Food.Use))]
