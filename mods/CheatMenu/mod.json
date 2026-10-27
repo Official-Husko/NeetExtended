@@ -1,9 +1,9 @@
 {
   "id": "CheatMenu",
   "name": "Cheat Menu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "pawbeans",
   "description": "Press Insert for cheats: god mode, frozen needs, speed, teleport, money, crystals, spawning items and people, fire, power, doors and game speed.",
-  "dependencies": { "NeetModKit": "0.1.0" },
+  "dependencies": { "NeetModKit": "0.3.0" },
   "hotReload": true
 }

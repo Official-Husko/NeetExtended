@@ -29,8 +29,16 @@ internal sealed class WorldPage : CheatPage
 
         var time = ui.Panel();
         time.Header("TIME");
-        time.Slider("GAME SPEED", Time.timeScale, 0.1f, 4f, v => Time.timeScale = v);
-        time.Text("1 is normal speed.");
+        if (WorldRole.IsShared)
+        {
+            // The others' games keep their own speed; a faster house here would drift away from them.
+            time.Text("The game runs at normal speed while the house is shared in co-op.");
+        }
+        else
+        {
+            time.Slider("GAME SPEED", Time.timeScale, 0.1f, 4f, v => Time.timeScale = v);
+            time.Text("1 is normal speed.");
+        }
     }
 
     protected override void RefreshPage()
