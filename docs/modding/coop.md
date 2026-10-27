@@ -8,6 +8,7 @@ The Co-op mod (`mods/Coop`) lets several games share one house over the network.
 - **Join:** **Co-op** tab, type the host's address (`203.0.113.5` or `203.0.113.5:8889`), **JOIN**. You don't need a save of your own; yours are never read or written while you're in someone else's house.
 - **Leave:** **LEAVE**, or go back to the main menu. A client goes back to the main menu when the game ends. When the host leaves, the game ends for everyone.
 - While in co-op you can rest with your eyes shut, but nobody dreams, and the story's scene changes wait (they'd take one player, or the whole house, away from the others).
+- The mod menu and the cheat menu don't pause the game in co-op: the house keeps going for everyone while you're in a menu.
 
 Settings (Mods page, Co-op): **Your name** (shown over your head), **Port**, **Max players** (2 to 4).
 
