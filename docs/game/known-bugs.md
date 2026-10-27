@@ -384,6 +384,16 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 
 **Reproduce:** turn `ThunderLoop` off, wait for a strike (or `sky.set thunderMin=5 thunderMax=8` on the bridge), run `sky.strike story=true`, and count strikes: none after. With it on, they carry on.
 
+## The moon never comes back after lightning
+
+**What happens:** after the first strike the moonlight is off for the rest of the session, so the yard is darker than in the first minutes and the moon's shadows are gone.
+
+**Cause:** `Thunder` flashes the Moon (`mainDirectionalLight`, intensity 0.2), fades it, and sets its intensity to `0f` (`HouseManager.cs:515`). Nothing sets it back: the scripts that would (`SunRotation`) are disabled in the house.
+
+**Fix:** the `0f` is replaced by the intensity the scene started with, which the framework's `Sky` remembers for each house load (`Sky.MoonBaseIntensity`, 0.2). The moon's shadows come back with it; they cost 12-15% more draw calls (see "Weather & sky" in `world-environment.md`), so Performance Fixes' moon shadow option is the way to keep them off.
+
+**Reproduce:** `sky.strike measure=true` and read `moonNow` (0 with `MoonRestore` off, 0.2 with it on).
+
 ## Not bugs
 
 - `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.

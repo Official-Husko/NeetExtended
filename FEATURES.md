@@ -79,6 +79,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Custom shirts show when you wear them**: a shirt from the custom shop showed your picture in your hand, but was plain once you put it on, until you saved and loaded. It shows the picture right away.
 - **Pans cool down after food burns in them**: a frying pan that had food burn in it stayed hot for good, even long after the stove was off. It cools down like any other pan.
 - **Thunder keeps going**: once the story had set off its own lightning there was no thunder again until you restarted the game. Thunder now carries on at random.
+- **The moon comes back after lightning**: the first flash switched the moonlight off for good. It goes back to its usual light when the flash is over.
 
 ## Performance Fixes (experimental)
 
