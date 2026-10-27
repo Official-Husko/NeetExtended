@@ -40,7 +40,7 @@ internal static class WorldSync
         CopVanSync.Init();
         Forwarder.Init();
         HealthReport.Init();
-        TalkSync.Init();
+        TalkSync.Init(mod);
 
         CoopSession.Started += () => WorldPatches.Apply(CoopSession.IsClient);
         CoopSession.WorldReady += () => Start(resumed: false);

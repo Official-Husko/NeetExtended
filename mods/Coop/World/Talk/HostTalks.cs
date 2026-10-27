@@ -67,8 +67,7 @@ internal static class HostTalks
         {
             var speaker = SpeakerRef.Read(r);
             byte how = r.GetByte();
-            string held = r.GetString();
-            string body = r.GetString();
+            PlayerMasks.Read(r, from.Slot, out string held, out string body);
             StartFor(from.Slot, speaker, how, held, body);
             return;
         }
@@ -81,8 +80,7 @@ internal static class HostTalks
             return;
         }
         int index = kind == TalkProtocol.Choose ? r.GetByte() : -1;
-        c.Held = r.GetString();
-        c.Body = r.GetString();
+        PlayerMasks.Read(r, from.Slot, out c.Held, out c.Body);
         if (kind == TalkProtocol.Choose)
             TalkRunner.Pick(c, index);
         else if (c.More)

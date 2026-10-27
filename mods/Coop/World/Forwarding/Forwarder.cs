@@ -3,6 +3,7 @@ using Coop.Players;
 using Coop.Session;
 using Coop.World.Objects;
 using LiteNetLib.Utils;
+using NeetModKit.Rules;
 using UnityEngine;
 
 namespace Coop.World.Forwarding;
@@ -22,7 +23,8 @@ namespace Coop.World.Forwarding;
 /// - Blast: centre, radius (an explosion's push);
 /// - NpcDamage (to the host): NPC ref, position, amount, damage kind, force (optional);
 /// - Possess: the skeleton parasite that got the player (its mask goes on their face);
-/// - Kill, Skeletonize, Knockout (seconds): the story did it to the player it was talking to.
+/// - Kill, Skeletonize, Knockout (seconds): the story did it to the player it was talking to;
+/// - Stat: name, set (else add), value: a rule changed a stat of the player it was about.
 /// </summary>
 internal static class Forwarder
 {
@@ -33,6 +35,7 @@ internal static class Forwarder
     private const byte Kill = 4;
     private const byte Skeletonize = 5;
     private const byte Knockout = 6;
+    private const byte Stat = 7;
 
     // What the game's explosions push bodies with (Commons.ExplosionDamage).
     private const float BlastForce = 100f;
@@ -75,6 +78,18 @@ internal static class Forwarder
     public static void StorySkeletonized(byte slot) => SendStory(slot, Skeletonize, 0f);
 
     public static void StoryKnockedOut(byte slot, float seconds) => SendStory(slot, Knockout, seconds);
+
+    /// <summary>Host: a rule in a remote player's conversation set or changed one of their stats.</summary>
+    public static void StoryStat(byte slot, string name, bool set, float value)
+    {
+        if (!WorldSide.Running || !WorldSide.IsHost)
+            return;
+        var w = Begin(slot, Stat);
+        w.Put(name);
+        w.Put(set);
+        w.Put(value);
+        Send(slot, w);
+    }
 
     private static void SendStory(byte slot, byte kind, float amount)
     {
@@ -155,6 +170,9 @@ internal static class Forwarder
             case Knockout:
                 FromStory(kind, reader.GetFloat());
                 break;
+            case Stat:
+                ChangeStat(reader.GetString(), reader.GetBool(), reader.GetFloat());
+                break;
         }
     }
 
@@ -192,6 +210,23 @@ internal static class Forwarder
         }
         if (mask != null)
             Object.Instantiate(mask, Vector3.up * 100f, Quaternion.identity).GetComponent<MaskFace>()?.PutOnMask(player, notHeld: true);
+    }
+
+    private static void ChangeStat(string name, bool set, float value)
+    {
+        if (WorldSide.LocalPlayer == null)
+            return;
+        try
+        {
+            if (set)
+                RulePlayer.Local.SetStat(name, value);
+            else
+                RulePlayer.Local.AddStat(name, value);
+        }
+        catch (System.ArgumentException e)
+        {
+            CoopMod.Log.Warn($"A conversation changed a stat this game doesn't have: {e.Message}");
+        }
     }
 
     // What Dialogue's KillPlayer, SkeletonizePlayer and KnockoutPlayer do, to this game's player.

@@ -1,12 +1,14 @@
 using Coop.Net;
+using NeetLoader;
 
 namespace Coop.World.Talk;
 
 /// <summary>Conversations and phones as one part of world sync (see <see cref="TalkProtocol"/>).</summary>
 internal static class TalkSync
 {
-    public static void Init()
+    public static void Init(NeetMod mod)
     {
+        TalkerRules.Init(mod);
         Messages.On(MessageIds.WorldTalk, HostTalks.OnRequest);
         Messages.On(MessageIds.WorldTalkView, ClientTalk.OnView);
         PhoneRequests.Init();
@@ -42,7 +44,11 @@ internal static class TalkSync
 
     public static void PlayerReady() => PhoneScreens.SendAgain();
 
-    public static void PlayerLeft(byte slot) => HostTalks.PlayerLeft(slot);
+    public static void PlayerLeft(byte slot)
+    {
+        HostTalks.PlayerLeft(slot);
+        TalkerFacts.Forget(slot);
+    }
 
     private static void Clear()
     {
@@ -52,5 +58,6 @@ internal static class TalkSync
         PhoneScreens.Clear();
         Speakers.Clear();
         TalkView.Clear();
+        TalkerFacts.Clear();
     }
 }
