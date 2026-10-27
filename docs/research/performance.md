@@ -119,6 +119,32 @@ Whether the player collects garbage incrementally is a build setting, written in
 
 Unity's player binaries can't be shipped with a mod (Unity's licence covers shipping them with your own game), so `neet install` downloads Unity's module from Unity on the player's machine and does the swap in place, keeping the 32-bit files to switch back (`--32bit`, the package's `use-32bit` scripts, or Steam's "verify files"). The 64-bit player started as an opt-in (`--64bit`) and is now what every install sets up. `--incremental-gc` adds the `boot.config` line; the release package's install scripts ask about it. Details in [tools.md](../modding/tools.md#install).
 
+### Moon shadows
+
+The Moon ("Directional light Moon", intensity 0.2, soft shadows) is the house's only directional light and the only light outside besides lamps. Its shadow map is rendered for the whole scene, and it reaches nothing indoors, so for most of the game it costs frame time and shows nothing. The `MoonShadows` feature has a setting (Mod Settings, Performance Fixes, **Moon shadows**): On (the game's own), Only outdoors (default) or Off.
+
+- **Only outdoors**: while the local player is in the front or back yard (`Location.FrontYard`/`Backyard`, the same list as `Commons.ExteriorLocations`; the shed counts as indoors) the moon keeps its shadows. Anywhere else the light is switched off. A shadowless moon can't just stay on: with shadows off it shines through walls (the living room's side wall and floor lit up blue-grey in a screenshot). Indoors the light contributes nothing with shadows on, so switching it off looks the same.
+- **Off**: no moon shadows in the yards either, the moon stays on there; indoors it is off like above.
+- **Lightning**: the game pushes the moon's intensity to 14-22 for a flash. During that (intensity above 1) the moon is on with its shadows with every setting, because a flash without shadows floods the whole house white (screenshot, living room). The feature reads one float per frame to see it; nothing else polls. The game's thunder leaves the moon at intensity 0 afterwards, which costs nothing either way.
+- The setting is local: Performance Fixes is one of the mods that may differ between co-op players, and it only changes the player's own view.
+
+Measured on rig 2 (64-bit player, GE-Proton, 1600x900 windowed, `perf.frames` uncapped, 4 s windows, moon reset to 0.2 before each, a window with a lightning strike discarded; the `Shadows` preset on room lights; the house had five shadow-casting lights and few lamps on). `On` and `Off` alternated 10 times per spot, the median is shown; Only outdoors is by construction the same as Off indoors and the same as On in the yards (checked in a 5-round run: 770 vs 784 draw calls indoors, 1,386 vs 1,386 in the yard).
+
+| Spot | Moon shadows | Median frame | Draw calls | Shadow casters |
+| --- | --- | --- | --- | --- |
+| Living room (4.09, 0.885, -11.6, facing the TV) | On | 10.4 ms | 879 | 448 |
+| | Off / only outdoors | 9.9 ms (-5%) | 755 (-14%) | 305 (-32%) |
+| Backyard (17.44, 0.85, -6.5, facing -Z) | On / only outdoors | 12.2 ms | 1,402 | 912 |
+| | Off | 11.4 ms (-7%) | 830 (-41%) | 165 (-82%) |
+
+Three other game instances (other test rigs) ran on the same PC during all of this (load average 20 to 27), so the frame times are noisy and the gain is probably bigger on a quiet PC; draw calls and casters don't depend on load and are the numbers to trust. They match the earlier measurement in the weather notes (12 to 15% more draw calls with the moon's shadows in a busier house).
+
+What players lose, from screenshots with the game paused (`game.timescale 0`) so On and Off show the same frame:
+
+- Indoors, **Only outdoors** is the same picture as On except for moonlight coming through an open door or window (the entrance floor with the front door open, a few levels of brightness at most).
+- In the yards, **Only outdoors** is pixel-identical to On (mean difference 0.1 of 255, the noise floor).
+- **Off** in the yards lights places the house would shadow: the back yard behind the house, dark in the original, shows its gravel and rocks. The mean difference to On is only 1 to 2 of 255 (the moon is dim), but boosted it is plainly a different mood, so Off is the opt-in.
+
 ## What's fixed
 
 What the Performance Fixes mod (each fix a feature that can be switched off), Unofficial NEET Patches, the loader and the installer do now, with what was measured. Numbers from the living room unless noted; the house in the later measurements was much busier (more lights on, a dozen characters) than in the first ones.
@@ -129,6 +155,7 @@ What the Performance Fixes mod (each fix a feature that can be switched off), Un
 | Free the paint textures of old houses, reuse the door and copy textures | Performance Fixes: `TextureLeaks` | Render textures stay flat over house loads instead of +2,480 per load. |
 | Peephole camera only near the front door | Performance Fixes: `Peephole` | About 500 draw calls and 0.8 to 1.1 ms a frame. |
 | Shadow presets | Performance Fixes: `Shadows` | Five ceiling lights on: 31.0 ms and 15,300 draw calls as shipped, 25.6 ms and 9,400 with room lights (default), 21.0 ms and 5,200 with none. |
+| Moon shadows only outdoors (or off) | Performance Fixes: `MoonShadows` | Living room: 879 draw calls and 448 shadow casters with the moon's shadows, 755 and 305 without (median frame 10.4 vs 9.9 ms). Backyard: 1,402 and 912 with, 830 and 165 without (12.2 vs 11.4 ms). Details in [Moon shadows](#moon-shadows). |
 | No velocity writes to kinematic bodies, no "restinput", no stack traces for logs and warnings | Performance Fixes: `LogSpam` | 233 warnings in 4 s while kinematic before, none after. |
 | Idle paint surfaces skip their update | Performance Fixes: `IdlePaint` | `PaintTarget.Update` (0.31 ms, 1,238 calls a frame) gone. |
 | Characters plan their path only when the target moves | Performance Fixes: `PathRequests` | `BrainTrickOrTreater.Update` 172 to 2.4 us a call (0.69 ms a frame with four at the door). |

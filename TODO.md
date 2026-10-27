@@ -52,9 +52,9 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 ## Follow-ups for existing mods
 
 - [ ] **Unofficial NEET Patches**: thunder stops for the rest of the session after the story's strike (`HouseManager.cs:345-352` stops the loop, an instant strike never schedules the next, `:520`). Measured: 8 strikes, then none.
-- [ ] **Unofficial NEET Patches**: the Moon stays at intensity 0 after the first strike (`HouseManager.cs:515`). Do the moon shadow switch below first: restoring it brings its shadow cost back.
+- [ ] **Unofficial NEET Patches**: the Moon stays at intensity 0 after the first strike (`HouseManager.cs:515`). Restoring it brings the moon's shadow cost back, which Performance Fixes' Moon shadows setting (on by default: only outdoors) now takes care of.
 - [ ] **Unofficial NEET Patches**: the lightning flash and lamp flicker are per-frame lerps, so they're shorter at high frame rates (`HouseManager.cs:500-514`, `LightSwitch.cs:155-175`).
-- [ ] **Performance Fixes**: a moon shadow option (off, on, only outdoors). Measured 12-15% fewer draw calls with them off; the moon at 0.2 is almost invisible. `ShadowControl` skips directional lights today.
+- [x] **Performance Fixes**: a moon shadow option (on, off, only outdoors), the `MoonShadows` feature. Results in [docs/research/performance.md](docs/research/performance.md#whats-fixed).
 - [ ] **Framework**: a small `Sky` API (moon/sun, `Strike()`, an `OnStrike` event that survives house loads, the storm volume) and a `weather` rule condition plus `{{weather}}` text for content files (the framework and phone guides already use `Weather.Raining` as an example that doesn't exist).
 - [ ] **Dev Bridge**: `sky.get`, `sky.strike`, `sky.set`, `rain.set` (today a strike needs `obj.call ... TriggerSequence ["Execute","Thunder"]`).
 - [ ] **Cheat Menu**: strike lightning now, rain and thunder on or off, on the World page.

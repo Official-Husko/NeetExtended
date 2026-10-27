@@ -27,6 +27,7 @@ public sealed class PerformanceFixesMod : NeetMod
         ModFeatures.Register(this, new TextureLeaksFeature());
         ModFeatures.Register(this, new PeepholeFeature());
         ModFeatures.Register(this, new ShadowsFeature());
+        ModFeatures.Register(this, new MoonShadowsFeature());
         ModFeatures.Register(this, new LogSpamFeature());
         ModFeatures.Register(this, new IdlePaintFeature());
         ModFeatures.Register(this, new PathRequestsFeature());

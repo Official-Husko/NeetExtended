@@ -270,7 +270,7 @@ Bugs (not fixed yet, see TODO.md):
 
 - **A story strike ends the thunder for the session.** The sequence stops `thunderCorout` and starts `Thunder(instant: true)`, and an instant strike never schedules the next one (`if (!instant)` at `:520`). The loop started in `Start` isn't stored, so it only bites once the first random strike has happened. Measured at 5x speed: 8 strikes in 750 game seconds before, none in 850 after.
 - **The Moon never comes back after a strike**: `Thunder` ends with `intensity = 0` and nothing restores 0.2 (a running `SunRotation` would, but it's off in the house). Hard to see; it does make the moon's shadows free by accident.
-- **Moon shadows are costly**: with the Moon at 0.2 and soft shadows, the living room had 12% more draw calls (5,203 vs 4,586) and the backyard 15% more (18,571 vs 15,814) than with them off, for a light that is almost invisible. `PerformanceFixes` `ShadowControl` leaves directional lights alone.
+- **Moon shadows are costly**: with the Moon at 0.2 and soft shadows, the living room had 12% more draw calls (5,203 vs 4,586) and the backyard 15% more (18,571 vs 15,814) than with them off, for a light that is almost invisible. Performance Fixes' `MoonShadows` feature now handles it (Moon shadows setting: on, only outdoors by default, off; numbers in [performance.md](../research/performance.md#moon-shadows)).
 
 ---
 

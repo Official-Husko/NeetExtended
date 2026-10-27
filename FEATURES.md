@@ -86,7 +86,8 @@ Makes the game smoother. Each fix is its own switch.
 - **Faster saves**: saving no longer freezes the game. Only the paint (blood, dirt, water...) that changed since the last save is saved, in the background. In a messy house a save went from 2.5 seconds to well under a tenth of a second.
 - **Free unused textures**: the game no longer keeps using more video memory every time the house loads (after dying or sleeping); that was about 1.5 GB per load in a messy house.
 - **Peephole camera only near the door**: the front door's peephole only films the porch while you're close enough to look through it, which saves about a sixth of each frame everywhere else.
-- **Fewer shadows**: choose which lights cast shadows in Mod Settings, under **Shadows**: room lights (default: lights you switch on and off, the flashlight and the moon), none (fastest), or all lights like the original game.
+- **Fewer shadows**: choose which lights cast shadows in Mod Settings, under **Shadows**: room lights (default: lights you switch on and off and the flashlight), none (fastest), or all lights like the original game.
+- **Fewer moon shadows**: the moon's shadows cost a lot of each frame and hardly show. Pick **Moon shadows** in Mod Settings: only outdoors (default: shadows in the front and back yard, none inside, where the moon doesn't reach anyway), off, or on like the original game. Lightning flashes keep their shadows with every choice, so storms look the same. It's your own setting, so in co-op everyone picks theirs.
 - **Less log spam**: no more tens of thousands of warnings in the log while you're dead or hanging.
 - **Idle paint surfaces rest**: surfaces only do work when something lands on them.
 - **Characters plan their walk once**: trick-or-treaters, the cat, rats and others don't recalculate their path every frame.
