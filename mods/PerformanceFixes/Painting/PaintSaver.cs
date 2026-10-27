@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using NeetModKit.Game;
 using UnityEngine.SceneManagement;
 
 namespace PerformanceFixes.Painting;
@@ -65,7 +66,7 @@ internal static class PaintSaver
             if (PaintTracker.IsSaved(target) && !Failed.Contains(target.saveId))
                 continue;
 
-            var texture = PaintReadback.Latest(target);
+            var texture = PaintSurfaces.Latest(target);
             // The game destroys paint textures when it clears paint for a load; nothing to save then.
             if (texture == null)
                 continue;
