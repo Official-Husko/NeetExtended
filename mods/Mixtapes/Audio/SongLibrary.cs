@@ -36,6 +36,13 @@ internal static class SongLibrary
     /// <summary>Calls <paramref name="done"/> with the song's clip once it's loaded (right away if it is), or null if it can't be.</summary>
     public static void Get(string file, Action<AudioClip> done)
     {
+        // Not there yet (co-op is still fetching the host's song): no clip, and no error kept, so
+        // the next load tries again.
+        if (!Songs.ContainsKey(file) && !File.Exists(file))
+        {
+            done(null);
+            return;
+        }
         if (!Songs.TryGetValue(file, out var song))
             Songs[file] = song = new Song();
         if (song.Clip != null || song.Error != null)

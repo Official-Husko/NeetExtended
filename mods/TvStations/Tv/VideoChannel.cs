@@ -77,6 +77,10 @@ internal sealed class VideoChannel
     {
         _audio.volume = _tvSpeaker.volume * Station.Volume * volume;
         _object.SetActive(true);
+        // Not there yet (co-op is still fetching the host's video): a black screen until the list
+        // is loaded again with it, rather than an error.
+        if (!System.IO.File.Exists(Station.File))
+            return;
         _player.Play();
     }
 
