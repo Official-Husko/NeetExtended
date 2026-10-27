@@ -6,13 +6,13 @@
       "callerId": "KIDS",
       "incoming": { "weight": 2, "cooldown": 30, "when": { "not": { "flag": "kids_scared_off" } } },
       "say": [
-        "Yo is this the creepy house? Dwayne says a hermit lives here and he eats his own toenails.",
-        "<size=150%>DWAYNE SAY THE THING.<size=100%>\nCome on. Say the fuckin thing, Dwayne!",
+        "Yo is this the creepy house? Dwayne says a hermit lives here and he eats his own toenails out of a Prangles can.",
+        "<size=150%>DWAYNE SAY THE THING.<size=100%>\nCome on. Say the fuckin thing, Dwayne, you dickhead!",
         { "choices": [
           {
             "text": "Who the fuck is this?",
             "say": [
-              "Uh, nobody, wrong number, sorry. Dwayne hang up you dumbass.",
+              "Uh, nobody, wrong number, sorry. Dwayne hang up you dumbass dickhead.",
               "Dwayne I said HANG UP. He's still on the line. He's breathing like a fat dog in a bag."
             ]
           },
@@ -20,7 +20,7 @@
             "text": "Yes. I'm a hermit. I haven't showered since 2019.",
             "say": [
               "<size=150%>OH MY GOD HE SAID YES. HE'S A REAL HERMIT.<size=100%>",
-              "Dwayne's gonna be so mad he didn't get to scream first. He owes me a Dorito."
+              "Dwayne's gonna be so mad he didn't get to scream first. He owes me a Dorrito and he's being a bitch about it."
             ]
           },
           {
@@ -28,14 +28,14 @@
             "once": true,
             "say": [
               "Oh no he's coming out he's coming out!",
-              "RUN RUN RUN RUN RUN. DWAYNE YOUR SHOES ARE ON THE WRONG FEET, RUN",
+              "RUN RUN RUN RUN RUN. DWAYNE YOUR SHOES ARE ON THE WRONG FEET, RUN, you fucking bitch",
               { "do": "flag", "name": "kids_scared_off" }
             ]
           }
         ] },
         { "random": [
-          "Dwayne you owe me five dollars, you said he'd never pick up, you lying piece of shit.",
-          "Okay Dwayne is still breathing really loud. Smells like farts through the phone."
+          "Dwayne you owe me five dollars, you said he'd never pick up, you lying piece of shit dickhead.",
+          "Okay Dwayne is still breathing really loud. Smells like farts and Cheesy Poofs through the phone. Gross, Dwayne, gross."
         ] }
       ]
     },
@@ -44,12 +44,12 @@
       "callerId": "SLEEPOVER",
       "incoming": { "weight": 1, "cooldown": 45, "when": { "not": { "flag": "kids_scared_off" } } },
       "say": [
-        "Hi, we're on speaker, so everybody shut up and don't say anything weird.",
+        "Hi, we're on speaker, so everybody shut up and don't say anything weird, dickheads.",
         "<size=60%>Shhh! Somebody picked up! Say something creepy, quick!<size=100%>",
         "Hi, is this the house? You got a ghost in there or what?",
         { "random": [
-          "Kayla says it's a ghost. Kayla is dumb as a bag of hammers, it's a rat and we all know it.",
-          "Tyler says the ghost lives in the basement. Tyler will not go in the basement. Tyler shit his pants at the dentist.",
+          "Kayla says it's a ghost. Kayla is dumb as a bag of hammers, bitch, it's a rat and we all know it.",
+          "Tyler says the ghost lives in the basement. Tyler will not go in the basement. Tyler shit his pants at the dentist, the dumbass.",
           "Priya says you smell like old socks and wet dog. Priya is sorry, she's just nervous and she farted in the sleeping bag."
         ] },
         { "choices": [
@@ -59,14 +59,14 @@
           },
           {
             "text": "Stop breathing into the phone, weirdo.",
-            "say": [ "We're not breathing, YOU'RE breathing! Everybody stop breathing!", "Priya's mom is coming up the stairs. Hang up hang up. Priya, did you fart again?" ]
+            "say": [ "We're not breathing, YOU'RE breathing, you creep bitch! Everybody stop breathing!", "Priya's mom is coming up the stairs. Hang up hang up. Priya, did you fart again?" ]
           },
           {
             "text": "Who wants to know?",
             "say": [ "Everybody wants to know. Kayla is crying a little bit now.", "Okay we're hanging up now, bye bye bye!" ]
           }
         ] },
-        "Okay bye house. Tyler, stop farting in the tent, we're hanging up."
+        "Okay bye house. Tyler, stop farting in the tent, you dickhead, we're hanging up."
       ]
     },
     {
@@ -76,7 +76,7 @@
       "say": [
         "Hi. Um. It's Mikey. Are you the one who lives in the house?",
         "Don't tell anybody I called. I'm not supposed to have a phone after nine, okay?",
-        "We dared each other. I'm the only one who actually did it. Dwayne's a chicken shit.",
+        "We dared each other. I'm the only one who actually did it. Dwayne's a chicken shit dickhead.",
         "<size=60%>I'm really scared right now.<size=100%> Please don't be mean to me, I'm gonna cry and my nose runs.",
         { "choices": [
           {
@@ -94,10 +94,10 @@
           },
           {
             "text": "Then hang up and go to bed, kid.",
-            "say": [ "Okay. Sorry. I'm really sorry I called you. I kinda shit my pants a little." ]
+            "say": [ "Okay. Sorry. I'm really sorry I called you. I kinda shit my pants a little, dickhead." ]
           }
         ] },
-        "Okay, bye. Please don't tell Dwayne I called you, he'll put it on the internet."
+        "Okay, bye. Please don't tell Dwayne I called you, he'll put it on the internet, the little dick."
       ]
     },
     {
@@ -107,7 +107,7 @@
       "say": [
         "Trick or treat! Wait. We're on the phone. Does that still count?",
         "Dylan says if nobody answers the door we get to egg the whole house.",
-        "I said we're not egging anything Dylan! I said NO EGGS, you got egg on my shoe!",
+        "I said we're not egging anything Dylan! I said NO EGGS, you got egg on my shoe, you dick!",
         "Okay we're not coming up to the door. The door is scary and it smells like a dead raccoon.",
         { "choices": [
           {
@@ -123,12 +123,12 @@
             "once": true,
             "say": [
               "Dylan, he said he'll actually do it this time! Get the eggs!",
-              "Okay no eggs. Dylan says just a pumpkin then. He's a fucking moron but pumpkins are fine."
+              "Okay no eggs. Dylan says just a pumpkin then. He's a fucking moron dickhead but pumpkins are fine."
             ]
           },
           {
             "text": "Go away. I'm busy being creepy.",
-            "say": [ "Okay, Mr. Creepy. Happy Halloween anyway, you weirdo.", "Dylan says you're the best house on the whole street. He's such a suck up." ]
+            "say": [ "Okay, Mr. Creepy. Happy Halloween anyway, you weirdo bitch.", "Dylan says you're the best house on the whole street. He's such a suck up." ]
           }
         ] }
       ]
@@ -147,9 +147,9 @@
       },
       "say": [
         { "random": [
-          "Knock knock. Who's there? Poop. Poop who? Poop, you're still in the house, loser!",
+          "Knock knock. Who's there? Poop. Poop who? Poop, you're still in the house, dickhead loser!",
           "Why did the ghost cross the road? Cause it was dead. DEAD. Get it? It's a dead joke. HA!",
-          "What do you call a skeleton who never goes outside? A bone-a-fide shut-in! Like you! You're a shut-in!"
+          "What do you call a skeleton who never goes outside? A bone-a-fide shut-in! Like you! You're a shut-in, you dick!"
         ] },
         { "choices": [
           {
@@ -162,7 +162,7 @@
           },
           {
             "text": "Stop calling me, you little dick.",
-            "say": [ "Fine. I'll call you back tomorrow then.", "Bye. I'm gonna bring a better one. A fucking good one." ]
+            "say": [ "Fine. I'll call you back tomorrow then, bitch.", "Bye. I'm gonna bring a better one. A fucking good one." ]
           }
         ] }
       ]
@@ -173,7 +173,7 @@
       "incoming": { "weight": 1, "cooldown": 90, "once": true },
       "say": [
         "Is this the house with the lady in the upstairs window?",
-        "Okay we're gonna prank you. Your house smells like old socks and cat pee.",
+        "Okay we're gonna prank you, dickhead. Your house smells like old socks and cat pee.",
         { "choices": [
           {
             "text": "Tyler, your mom's in the kitchen. She heard all of that.",
@@ -184,7 +184,7 @@
           },
           {
             "text": "Yeah, they're my socks. Got a problem with that?",
-            "say": [ "No. Sorry about your socks, mister.", "Dwayne says the socks are the scariest part of the whole prank. Dwayne is a liar, the socks are gross." ]
+            "say": [ "No. Sorry about your socks, mister.", "Dwayne says the socks are the scariest part of the whole prank. Dwayne is a liar and a dickhead, the socks are gross." ]
           },
           {
             "text": "Hang up before your dad finds out.",
@@ -192,7 +192,7 @@
           }
         ] },
         { "random": [
-          "Okay we're grounded. Mom says we're grounded forever now. No more video games.",
+          "Okay we're grounded. Mom says we're grounded forever now. No more video games, you bitch.",
           "Mom says it's not funny and she's coming to get the phone. She's so pissed."
         ] }
       ]
@@ -206,19 +206,19 @@
       "otherwise": [ "Hotline's closed. Dwayne got grounded for this one, the shit head." ],
       "say": [
         "Hotline? Hotline?? Oh my god, you actually called the number.",
-        "We said you wouldn't. Dwayne owes Priya five bucks for this.",
+        "We said you wouldn't. Dwayne owes Priya five bucks for this, the dumb dickhead.",
         { "choices": [
           {
             "text": "What do you want?",
             "say": [
               "Nothing! That's the dare. Stay on the line for thirty seconds.",
               "Twenty-nine. Twenty-eight. Don't hang up on us you big chicken shit.",
-              "Okay, that's it. You're the bravest hermit in the whole fucking town."
+              "Okay, that's it. You're the bravest hermit in the whole fucking town, dickhead."
             ]
           },
           {
             "text": "Can I hang up now?",
-            "say": [ "No! Dwayne she's trying to hang up!", "...Fine. Bye. Bye hermit, go wash your ass." ]
+            "say": [ "No! Dwayne she's trying to hang up!", "...Fine. Bye. Bye hermit, go wash your ass, dickhead." ]
           },
           {
             "text": "Tell Mikey I said hi.",

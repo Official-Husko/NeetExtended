@@ -6,14 +6,14 @@
   "incoming": { "trigger": "order", "delay": 25, "cooldown": 20 },
   "say": [
     "Hello! This is FedUp automated package tracking. Your shit has arrived, you spoiled brat.",
-    "Your package has been delivered from a great fucking height.",
+    "Your package has been delivered from a great fucking height. The box is shaped like a dick. We don't know why.",
     { "random": [
-      "If it's broken, that's how it shipped. Don't yell at the guy, he's got a cough.",
+      "If it's broken, that's how it shipped. Don't yell at the guy, he's got a cough and a pennis like a pinky.",
       "Please do not stand under your order while it's being delivered. The last guy did. He's still in a bed, and he's smiling.",
       "Thank you for choosing FedUp. We drop everything for you, including your mom's casserole."
     ] },
     { "choices": [
-      { "text": "Talk to a human.", "say": [ "All of our humans are busy, you prick.", "Your call is very important to us. We keep it forever.", "Goodbye." ] },
+      { "text": "Talk to a human.", "say": [ "All of our humans are busy, you dickhead.", "Your call is very important to us. We keep it forever.", "Goodbye." ] },
       { "text": "Hang up.", "say": { "end": true } }
     ] }
   ]

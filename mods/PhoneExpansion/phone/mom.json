@@ -6,17 +6,17 @@
   "incoming": { "weight": 3, "cooldown": 30, "when": { "stat": "Hunger < 25" } },
   "say": [
     "Sweetie? Its mom.",
-    "I just had this feeling u havent eaten anything today. Dont lie, I can smell ur room from the stairs.",
+    "I just had this feeling u havent eaten anything today. Dont lie, I can smell ur room from the stairs. Its like a wet pennis in a pizza box.",
     { "choices": [
       {
         "text": "I'm fine, mom.",
-        "say": [ "You always say that. U look like a raisin that got sad.", "I ordered u something anyway. Its at the front door. Eat it. Pls.", { "do": "deliver", "item": "Pizza", "after": 20 } ]
+        "say": [ "You always say that. U look like a raisin that got sad. Did u get a wiener tattoo on ur arm? I thought I saw one.", "I ordered u something anyway. Its at the front door. Eat it. Pls.", { "do": "deliver", "item": "Pizza", "after": 20 } ]
       },
       {
         "text": "I'm starving.",
-        "say": [ "I KNEW it. I KNEW IT.", "Food is on the way. And theres chicken in the basement freezer, remember? Dont eat it raw.", { "do": "deliver", "item": "Chicken_Nugget_Box", "after": 20 } ]
+        "say": [ "I KNEW it. I KNEW IT.", "Food is on the way. And theres chicken in the basement freezer, remember? Dont eat it raw, it looks like a little wiener and it smells worse.", { "do": "deliver", "item": "Chicken_Nugget_Box", "after": 20 } ]
       }
     ] },
-    "Love u. Get yourself sugary snacks, then u dont even need to leave ur room. Shower sometime bb. Its not a suggestion."
+    "Love u. Get yourself sugary snacks, then u dont even need to leave ur room. Shower sometime bb, ur room is growing a mold. Its shaped like a pennis. Its not a suggestion."
   ]
 }

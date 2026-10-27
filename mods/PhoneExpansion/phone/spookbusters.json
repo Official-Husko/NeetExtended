@@ -7,12 +7,12 @@
   "callerId": "SPOOKBUST",
   "when": { "dialed": ">= 1" },
   "say": [
-    "<size=150%>SPOOKBUSTERS!<size=100%> We're back in business, you lazy fuck. What's haunting your ass?",
+    "<size=150%>SPOOKBUSTERS!<size=100%> We're back in business, you lazy fuck. What's haunting your sorry ass, dickhead?",
     { "choices": [
       {
         "text": "There's a black door in the basement I can't open.",
         "say": [
-          "The black door. Yeah. We know that house. It smells like a wet dog's dream in there.",
+          "The black door. Yeah. We know that house. It smells like a wet dog's dream in there, and somebody's dead wiener in the corner.",
           "We can open it from here. Don't ask how. Thirty bucks, cash, no fucking cards.",
           { "choices": [
             {
@@ -25,7 +25,7 @@
                 "Don't call us about it. We're not insured for that shit."
               ]
             },
-            { "text": "Thirty bucks? No way.", "say": [ "Then enjoy your door, you cheap shit." ] }
+            { "text": "Thirty bucks? No way.", "say": [ "Then enjoy your door, you cheap dickhead. Your dick's probably in there too." ] }
           ] }
         ]
       },
@@ -35,13 +35,13 @@
           "That's not really a ghost thing, buddy.",
           "...Fine, we'll make an exception. <size=60%>Hang on.<size=100%>",
           { "do": "fireout" },
-          "Fire's out. You're welcome. Buy an extinguisher, you dumb pyromaniac."
+          "Fire's out. You're welcome. Buy an extinguisher, you dumb pyromaniac dipshit."
         ]
       },
       {
         "text": "The lights keep going out.",
         "say": [
-          "Check your fuse box. Basement. There's probably a spider in there the size of your hand.",
+          "Check your fuse box. Basement. There's probably a spider in there the size of your hand. Bigger than your wiener, probably.",
           "If the fuses are lying on the floor, that's not a ghost either. That's just your house being a shithole."
         ]
       },

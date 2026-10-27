@@ -8,11 +8,11 @@
       "incoming": { "trigger": "random", "weight": 2, "cooldown": 40 },
       "say": [
         "Hello yes this is courtesy call about ur car warranty",
-        "It expire today. Or yesterday. Either way its URGENT sir",
+        "It expire today. Or yesterday. Either way its URGENT sir. Urgent like a pennis at a wedding",
         { "choices": [
           {
             "text": "I don't own a car.",
-            "say": [ "...Most people do bro.", "Warranty is for the car u gonna buy. Or steal. We dont check." ]
+            "say": [ "...Most people do bro.", "Warranty is for the car u gonna buy. Or steal. We dont check.", "Then ur pennis is the car. Also expired. Thats what the warranty is for, dickhead." ]
           },
           {
             "text": "What car?",
@@ -23,12 +23,12 @@
             "once": true,
             "say": [
               "U cant cancel warranty on car u dont have, genius.",
-              "I cancelled it anyway. Now u are cancelled too. Congratulation.",
+              "I cancelled it anyway. Now u are cancelled too. Congratulation, dickhead.",
               { "do": "flag", "name": "tm_told_off" }
             ]
           }
         ] },
-        "Pls hold. Ur call is important to us. We keep it forever. Thank u"
+        "Pls hold. Ur call is important to us. We keep it forever like a bad wiener. Thank u"
       ]
     },
     {
@@ -52,11 +52,11 @@
           },
           {
             "text": "Hello?",
-            "say": [ "This message is for the homeowner. Pls press one to continue.", "I can hear u breathing. Press one." ]
+            "say": [ "This message is for the homeowner. Pls press one to continue.", "I can hear u breathing like a dickhead on a phone. Press one." ]
           },
           {
             "text": "Press two.",
-            "say": [ "This message is for the homeowner. This message is for the homeowner, dumbass." ]
+            "say": [ "This message is for the homeowner's pennis. Ur pennis is overdue. Press two again, dipshit." ]
           }
         ] },
         "Thank u for ur time. Goodbye. Goodbye. Goodb"
@@ -70,7 +70,7 @@
       "otherwise": "Evergreen Memorial Gardens. We're all booked up. Permanently. Fuck off.",
       "say": [
         "Evergreen Memorial Gardens, how can we bring u peace today",
-        "Im calling about ur plot. The one under ur name in our files",
+        "Im calling about ur plot. The one under ur name in our files. It says Dickhead Plot on the card. Thats not a real name, we checked.",
         { "choices": [
           {
             "text": "I don't have a plot.",
@@ -78,11 +78,11 @@
           },
           {
             "text": "How much?",
-            "say": [ "Forty dollars for the deed. The plot is free.", "Free to lie in. Forty dollars to own the paper about lying in it." ]
+            "say": [ "Forty dollars for the deed. The plot is free.", "Free to lie in. Forty dollars to own the paper about lying in it. Plus a pennis-shaped headstone, its extra." ]
           },
           {
             "text": "Is it near the house?",
-            "say": [ "Its like four steps from ur house sir.", "We are sorry. We get alot of complaints from the dead ones." ]
+            "say": [ "Its like four steps from ur house sir.", "We are sorry. We get alot of complaints from the dead ones. And one guy who wants his wiener buried separate." ]
           },
           {
             "text": "I'll take it.",
@@ -110,11 +110,11 @@
         { "choices": [
           {
             "text": "What knife set?",
-            "say": [ "The big one. 8 knives. One is a cleaver and it is VERY persuasive.", "Pls say yes. My manager is standing right behind me.", "...He isnt. He went home an hour ago and took my car." ]
+            "say": [ "The big one. 8 knives. One is a cleaver and it is VERY persuasive.", "Pls say yes. My manager is standing right behind me.", "...He isnt. He went home an hour ago and took my car. And my wiener jokes, he said they were stupid." ]
           },
           {
             "text": "No.",
-            "say": [ "Ok no problem. Have a nice night you fucking loser.", "...Or whatever it is u do in there. Eat a sandwich." ]
+            "say": [ "Ok no problem. Have a nice night you fucking loser, dickhead.", "...Or whatever it is u do in there. Eat a sandwich." ]
           },
           {
             "text": "Fine. I'll take the knife set.",
@@ -124,7 +124,7 @@
               { "do": "money", "amount": -25 },
               "Oh my god. Thank u. U dont know what this means for my life.",
               { "do": "give", "item": "Knife_Chef" },
-              "Only cut vegetables with it. Pls. Im begging u. Dont cut the dog."
+              "Only cut vegetables with it. Pls. Im begging u. Dont cut the dog. Dont cut ur wiener either, dipshit."
             ]
           }
         ] },
@@ -142,11 +142,11 @@
         { "choices": [
           {
             "text": "Does it work on people?",
-            "say": [ "It works on everything sir. EVERYTHING.", "Pls dont test that. Our lawyers are so tired." ]
+            "say": [ "It works on everything sir. EVERYTHING. Even ur pennis. Especially ur pennis.", "Pls dont test that. Our lawyers are so tired." ]
           },
           {
             "text": "I don't clean.",
-            "say": [ "Then u need Glow Gel more than anybody in the whole country.", "Keep ur house. Keep ur stains. Keep ur stink." ]
+            "say": [ "Then u need Glow Gel more than anybody in the whole country.", "Keep ur house. Keep ur stains. Keep ur stink. Ur wiener has a stain too, we can hear it.", "Dickhead." ]
           },
           {
             "text": "I'll take two.",
@@ -154,7 +154,7 @@
             "once": true,
             "say": [
               { "do": "money", "amount": -20 },
-              "Excellent. Wipe twice. Dont look at the cloth. Dont lick the cloth.",
+              "Excellent. Wipe twice. Dont look at the cloth. Dont lick the cloth. Dont lick the wiener.",
               { "do": "give", "item": "SprayBottle_Cleaner", "count": 2 },
               { "do": "flag", "name": "tm_miracle_bought" }
             ]
@@ -170,15 +170,15 @@
       "incoming": { "trigger": "random", "weight": 1, "cooldown": 60 },
       "say": [
         "CONGRATULATIONS!! U have been selected for a FREE week at a lakeside getaway",
-        "Theres a small fee. Dont worry about the fee. Everybodys fee is small. Yours is very small.",
+        "Theres a small fee. Dont worry about the fee. Everybodys fee is small. Yours is very small. Like ur pennis, we heard.",
         { "choices": [
           {
             "text": "What's the fee?",
-            "say": [ "Four thousand dollars a month. Forever. Its a timeshare sir.", "U own a share of the time. Of the lake. Of the week. Of ur life." ]
+            "say": [ "Four thousand dollars a month. Forever. Its a timeshare sir.", "U own a share of the time. Of the lake. Of the week. Of ur life. Ur wiener gets a share too, its in the fine print." ]
           },
           {
             "text": "I can't leave the house.",
-            "say": [ "Oh thats perfect. The lake doesnt move. Neither will u. Ur mom told us." ]
+            "say": [ "Oh thats perfect. The lake doesnt move. Neither will u. Ur mom told us. She says u have a small wiener but a big heart." ]
           },
           {
             "text": "Stop calling me.",
@@ -189,7 +189,7 @@
             ]
           }
         ] },
-        "Enjoy ur week. Enjoy it real hard."
+        "Enjoy ur week. Enjoy it real hard, dickhead."
       ]
     },
     {
@@ -198,7 +198,7 @@
       "callerId": "GARY",
       "incoming": { "trigger": "random", "weight": 3, "once": true, "when": { "flag": "tm_told_off" } },
       "say": [
-        "Remember me? U hung up on me. Nobody hangs up on Gary.",
+        "Remember me? U hung up on me. Nobody hangs up on Gary. Nobody. Not even ur mom.",
         "...Im calling from the Warranty Department. And the Timeshare Department. Im the whole department bro",
         { "choices": [
           {
@@ -210,7 +210,7 @@
           },
           {
             "text": "I'm still not interested.",
-            "say": [ "Then ill call u every day sir. Every single day.", "Thats not a threat. Its a warranty." ]
+            "say": [ "Then ill call u every day sir. Every single day. Ur a son of a bitch for hanging up, btw.", "Thats not a threat. Its a warranty." ]
           }
         ] },
         "Have a nice day. U wont."

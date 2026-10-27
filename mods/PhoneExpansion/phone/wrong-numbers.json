@@ -7,13 +7,14 @@
       "callerId": "DOREEN",
       "incoming": { "weight": 1, "cooldown": 45, "once": true },
       "say": [
-        "<size=150%>KEVIN.<size=100%> Is Kevin there? It's Doreen. Tell him it's fucking Doreen.",
+        "<size=150%>KEVIN.<size=100%> Is Kevin there? It's Doreen. Tell him it's fucking Doreen, and tell him his pennis is still in my plastic tub.",
         { "choices": [
           {
             "text": "There's no Kevin here.",
             "say": [
               "Don't lie to me Kevin. I can hear the microwave going.",
-              "Lasagna AGAIN? You put it on for four minutes and forget it every time, you dumb son of a bitch."
+              "Lasagna AGAIN? You put it on for four minutes and forget it every time, you dumb son of a bitch.",
+              "And stop microwaving your wiener in my plastic tub. Nobody asked for a wiener lasagna, Kevin."
             ]
           },
           {
@@ -21,13 +22,14 @@
             "say": [
               "Oh, so he finally did it. Good for him, honestly.",
               "Tell him he can keep the blender. That thing screams, I never want to see it again.",
+              "Also there are two balls in the blender. Those are his too. Don't ask, he'll know.",
               { "do": "flag", "name": "wrong_kevin_moved" }
             ]
           },
           {
             "text": "Yeah, it's me.",
             "say": [
-              "Oh thank God. You're alive. Your mom has been calling me all week crying into the phone.",
+              "Oh thank God. You're alive. Your mom has been calling me all week crying into the phone. Something about a pizza shaped like a dick. I stopped listening at dick.",
               "You still owe me twenty bucks, you little shit. I'm sending it anyway, so don't be weird about it.",
               { "do": "money", "amount": 20 },
               { "do": "flag", "name": "wrong_kevin_me" }
@@ -37,14 +39,14 @@
             "text": "Who's Kevin?",
             "say": [
               "<size=150%>KEVIN.<size=100%> Kevin, stop being a child and pick up the fucking phone.",
-              "...Is this not 40 Hollis Road? Oh. Oh god, I'm so sorry."
+              "...Is this not 40 Hollis Road? Oh. Oh god, I'm so sorry. I just asked a stranger if they still had Kevin's dick in the freezer."
             ]
           }
         ] },
         { "random": [
           "Right. Well. I'll tell Kevin you said hi, you lucky bastard.",
           "Call your mom back, Kevin. She's really worried about the car.",
-          "She says it looks like a sad hot dog now. I don't know what that means either."
+          "She says the car smells like a sad wiener now. I don't know what that means either."
         ] }
       ]
     },
@@ -54,7 +56,7 @@
       "callerId": "GRAN",
       "incoming": { "weight": 1, "cooldown": 45, "once": true },
       "say": [
-        "Danny? Danny, is that you? You sound fucking terrible, sweetheart.",
+        "Danny? Danny, is that you? You sound fucking terrible, sweetheart. Like a dickhead with a cold.",
         { "choices": [
           {
             "text": "Yeah, it's me, Gran.",
@@ -69,7 +71,7 @@
             "text": "Wrong number, Gran.",
             "say": [
               "Don't be silly, I'd know that voice anywhere, Danny. You sound like a wet sock.",
-              "Then why'd you pick up? Hm? Just say hello to your gran for once in your miserable life."
+              "Then why'd you pick up? Hm? Just say hello to your gran for once in your miserable life, you dickhead."
             ]
           },
           {
@@ -81,7 +83,7 @@
           }
         ] },
         { "random": [
-          "Love you, Danny. Put some shoes on, the floor is cold and so is your soul.",
+          "Love you, Danny. Put some shoes on, the floor is cold and so is your soul. And stop wiping your wiener on the curtains.",
           "Your uncle says hello. He doesn't, but he would if he knew you were still in there with the blinds shut."
         ] }
       ]
@@ -93,13 +95,13 @@
       "incoming": { "weight": 1, "cooldown": 60 },
       "say": [
         "Hi, is this 14 Marlow Close? It's the plumber, I'm running late as shit.",
-        "Ring road's a fucking nightmare. Somebody said there's a lorry on fire.",
+        "Ring road's a fucking nightmare. Somebody said there's a lorry on fire, full of hot dogs. Some dickhead's wiener supply, I bet.",
         { "choices": [
           {
             "text": "This is the wrong house.",
             "say": [
               "What? Oh no. That's the third one today. Sorry mate, my van smells like a dead fox.",
-              "I'll try the house with the blue door. That'll be the Pattersons. They're horrible."
+              "I'll try the house with the blue door. That'll be the Pattersons. They're horrible. Their kid's got a dick like a garden gnome, so good luck."
             ]
           },
           {
@@ -107,7 +109,7 @@
             "say": [
               "Brilliant. Twenty minutes tops. Go easy on the stairs, I can hear them creaking like a dying whale.",
               "And there's a bit of water in the basement. Well, quite a lot of water.",
-              "It's shit water, mate. It's probably fine. Don't worry about the water."
+              "It's shit water, mate. It's probably fine. Don't worry about the water. The balls floating in it aren't mine, I swear."
             ]
           },
           {
@@ -120,7 +122,7 @@
         ] },
         { "random": [
           "Right, I'm parking up now. Is that a hedge or a man by the gate?",
-          "Right, I'm parking up. Don't come out, it's windy and I'm not stopping. I've got a dump to take."
+          "Right, I'm parking up. Don't come out, it's windy and I'm not stopping. I've got a dump to take, the big one, don't ask."
         ] }
       ]
     },
@@ -131,12 +133,12 @@
       "incoming": { "weight": 1, "cooldown": 60 },
       "say": [
         "Hi, is this Gerald's? I'd like to put in a delivery order, please.",
-        "The usual. Two lo mein, one chicken leg, and extra of the red sauce. Don't fuck it up.",
+        "The usual. Two lo mein, one chicken leg, and extra of the red sauce. Don't fuck it up, and don't put your wiener in it like last time.",
         { "choices": [
           {
             "text": "Gerald's closed years ago.",
             "say": [
-              "What? It's been open since I was a kid, you're lying, you little prick.",
+              "What? It's been open since I was a kid, you're lying, you little prick, you dipshit.",
               "Oh. Oh, that's sad. Gerald did the good sauce, the one in the squeezy bottle that made my bowels sing."
             ]
           },
@@ -146,14 +148,14 @@
             "say": [
               { "do": "money", "amount": -12 },
               { "do": "deliver", "item": "Chicken_Leg", "after": 60 },
-              "Great. The driver's already out front. He won't talk about it, he just keeps sniffing his hands."
+              "Great. The driver's already out front. He won't talk about it, he just keeps sniffing his fingers and whispering pennis."
             ]
           },
           {
             "text": "Who is this?",
             "say": [
               "It's Gerald's, who else would it be? Are you the new girl with the bad knee?",
-              "Well, you're the new girl now. Congrats on the job. It's a shitty job."
+              "Well, you're the new girl now. Congrats on the job. You're on the hot dog cart now. It's a shitty job, and you'll smell like wiener water."
             ]
           }
         ] },
@@ -183,19 +185,19 @@
             "text": "Who is this?",
             "say": [
               "Don't do this to me today. It's Dean. Dean from the car, Dean with the cold fries.",
-              "Are you outside, or are you still in the bath with the lights off?"
+              "Are you outside, or are you still in the bath with the lights off, waving your wiener at the ducks?"
             ]
           },
           {
             "text": "Yes, I'm outside.",
             "say": [
-              "Good. Stay where you are, I'll come round the back. Don't let anyone see you in that shirt.",
+              "Good. Stay where you are, I'll come round the back. Don't let anyone see you in that shirt, the one with the cartoon wiener.",
               "Oh, and bring the bag with the sandwiches. The one you forgot last time. It's still on the seat."
             ]
           }
         ] },
         { "random": [
-          "Ok, I'm coming. I'm literally coming now, so don't fucking hang up.",
+          "Ok, I'm coming. I'm literally coming now, so don't fucking hang up, dickhead.",
           "Hanging up now. I'll see you in a minute. Stay put, Dean. Don't touch the radio."
         ] }
       ]
@@ -206,14 +208,14 @@
       "callerId": "NO SIGNAL",
       "incoming": { "weight": 1, "cooldown": 60 },
       "say": [
-        "Hello? Hello, is anyone there? I'm lost out here. I've been screaming for an hour.",
+        "Hello? Hello, is anyone there? I'm lost out here. I've been screaming for an hour. My balls are chafed from this backpack.",
         "I've been walking for hours. I think there's a house. Is that you? Please say it's you.",
         { "choices": [
           {
             "text": "Go left at the shed.",
             "say": [
               "The shed. Okay. Left at the shed, got it. Thank you so much, you beautiful bastard.",
-              "Oh, there's a shed. There's actually a fucking shed! Thank you, stranger."
+              "Oh, there's a shed. There's actually a fucking shed! Thank you, stranger, you handsome dipshit."
             ]
           },
           {
@@ -232,7 +234,7 @@
           }
         ] },
         { "random": [
-          "My phone is at four percent. If I don't call back, send help. Or a map, whatever.",
+          "My phone is at four percent. If I don't call back, send help. Or a map. Or wet wipes, I'm chafed like a dick in a dryer.",
           "Battery's dying. Tell whoever's out there the trail goes up, not down. Down is where the bears are."
         ] }
       ]
@@ -254,7 +256,7 @@
             "text": "Tell her I'm not coming.",
             "say": [
               "She'll cry. She cries when you skip the gravy, Kevin, you fucking coward.",
-              "Fine. I'll tell her you're busy. You're always busy. Busy with your dick and a bag of Dorritoes.",
+              "Fine. I'll tell her you're busy. You're always busy, you dipshit. Busy with your dick and a bag of Dorritoes.",
               { "do": "flag", "name": "wrong_kevin_skipped" }
             ]
           },
@@ -270,7 +272,7 @@
             "text": "Who's Kevin?",
             "say": [
               "Oh, not again. Tell whoever you are to stop answering his phone.",
-              "He's been dead to me since the blender incident, and that was a whole thing."
+              "He's been dead to me since the blender incident, and yes, there was a wiener involved, and yes, it was a whole thing."
             ]
           }
         ] }

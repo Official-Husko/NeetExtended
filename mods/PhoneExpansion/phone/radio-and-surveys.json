@@ -11,10 +11,10 @@
         "You're caller number nine. Nine gets the BIG QUESTION.",
         "What do you hear through the walls at three in the morning?",
         { "choices": [
-          { "text": "Nothing.", "say": [ "Bullshit. Nine, you can keep that lie. Nobody else wanted it." ] },
+          { "text": "Nothing.", "say": [ "Bullshit. That's your pennis slapping the drywall, nine. Keep it down, the ratings are on air." ] },
           { "text": "Breathing.", "say": [ "Good. Keep breathing for us, the ratings are dogshit this week." ] },
           { "text": "Me. I'm the one walking around up there.", "say": [
-            "Then the walls are in good hands. Enjoy the show, psycho.",
+            "Then the walls are in good hands, and your balls are in the hallway. Enjoy the show, psycho.",
             "<size=60%>Get the sound guy, he's upstairs again<size=100%>"
           ] }
         ] },
@@ -33,10 +33,10 @@
         { "choices": [
           { "text": "Mercury, obviously.", "say": [
             { "if": { "not": { "flag": "radio_trivia_won" } },
-              "then": [ "Correct. Twenty-five dollars, mailed to your mom's house. She'll be thrilled.", { "do": "money", "amount": 25 }, { "do": "flag", "name": "radio_trivia_won" } ],
+              "then": [ "Correct. Twenty-five dollars, mailed to your mom's house. She'll be thrilled, and she'll ask what you did with your dick to get it.", { "do": "money", "amount": 25 }, { "do": "flag", "name": "radio_trivia_won" } ],
               "else": [ "Correct again, greedy. You already got paid for that one, you fucking hog." ] }
           ] },
-          { "text": "Venus, duh.", "say": [ "Wrong. Venus is the hot one. Hot doesn't make it closer, dipshit." ] },
+          { "text": "Venus, duh.", "say": [ "Wrong. Venus is the hot one, like a hot dog left in a car. Hot doesn't make it closer, dipshit." ] },
           { "text": "The sun, fuck it.", "say": [ "The sun is a star, not a planet. Did you skip school to lick a window?" ] }
         ] },
         "Thanks for playing the trivia line. Don't call back to argue, we'll hang up and laugh at you."
@@ -51,18 +51,18 @@
         "Hello, this is Hollis Opinion Group. This call is recorded for quality, and for my own sick enjoyment.",
         "Please answer honestly. Question one. Do you feel the house is watching you while you shit?",
         { "choices": [
-          { "text": "Yes.", "say": [ "Noted. Everybody says yes, then they start yelling at the vent." ] },
+          { "text": "Yes.", "say": [ "Noted. Everybody says yes, then they start yelling at the vent and waving their pennis at it." ] },
           { "text": "No.", "say": [ "Thank you. Most people say no right before they say yes, the little liars." ] }
         ] },
         "Question two. Has anything in your house been using your name to order shit online?",
         { "choices": [
-          { "text": "Only the cat.", "say": [ "The cat is on the list. The cat has always been on the list, the fat fuck." ] },
+          { "text": "Only the cat.", "say": [ "The cat is on the list. The cat has always been on the list, the fat fuck. Its dick is smaller than a grape and it knows." ] },
           { "text": "Yes.", "say": [ "Please hold while we process that. The hold music is just somebody breathing through a straw." ] }
         ] },
         "Final question. If you stopped leaving the room, who would notice first? Be honest, you sack of shit.",
         { "choices": [
-          { "text": "Mom.", "say": [ "Mom is already on our form. She fills it out every morning, sometimes twice." ] },
-          { "text": "Nobody.", "say": [ "We'll note that as a yes. Thanks for your fucking time." ] }
+          { "text": "Mom.", "say": [ "Mom is already on our form. She fills it out every morning, sometimes twice, and asks about your dick every time." ] },
+          { "text": "Nobody.", "say": [ "We'll note that as a yes. Thanks for your fucking time, dickhead." ] }
         ] },
         { "do": "flag", "name": "radio_survey_done" },
         "We will be in touch. We are always in touch. We can see your thermostat."
@@ -78,13 +78,13 @@
         "How many people live at this address? Count the ghosts too, we count those now.",
         { "choices": [
           { "text": "Just me.", "say": [ "Are you sure? The form has a box for the others. It's a big fucking box, you can't miss it." ] },
-          { "text": "Me and the cat.", "say": [ "Cats don't count, dumbass. I'm putting you down as a household of one." ] },
+          { "text": "Me and the cat.", "say": [ "Cats don't count, dumbass. I'm putting you down as a household of one, and a dick." ] },
           { "text": "None of your business.", "say": [ "That's fine. I'm writing down that you said that. Underlined. Twice." ] }
         ] },
-        "Do you share the house with anybody who never comes out of their room? Be honest, they stink.",
+        "Do you share the house with anybody who never comes out of their room? Be honest, they stink like a wet pennis in a sock.",
         { "choices": [
           { "text": "Yes.", "say": [ "Thank you. Do they have a name, or should I just write down the smell?" ] },
-          { "text": "No.", "say": [ "Okay. Then who has been using the bathroom at four in the morning?" ] }
+          { "text": "No.", "say": [ "Okay. Then who has been washing their balls in the bathroom sink at four in the morning?" ] }
         ] },
         { "do": "flag", "name": "radio_census_done" },
         "Thank you for your time. Keep the door shut. The form gets sensitive when it smells like that."
@@ -100,12 +100,12 @@
         { "choices": [
           { "text": "I didn't ask for advice.", "say": [ "Nobody asks. They call, and then they listen anyway, like a dog at a door." ] },
           { "text": "My life is a mess.", "say": [ "Most lives are, honey. Start by picking up the sock in the corner." ] },
-          { "text": "Can you hang up for me?", "say": [ "I can't hang up on you, sweetheart. You're already in my ear, and you smell like a basement." ] }
+          { "text": "Can you hang up for me?", "say": [ "I can't hang up on you, sweetheart. You're already in my ear, and you smell like a basement and an unwashed wiener." ] }
         ] },
         { "random": [
           "Open a window. The house will survive a little draught, and so will you, probably.",
           "Get out of the chair once an hour. The chair will not miss you. Ask it.",
-          "Eat something that didn't come out of a can. Anything counts, even yesterday's pizza off the box."
+          "Wash your wiener once a week. All of it. The chair has seen things."
         ] },
         "That's all the time we have. Good luck with the mess, you filthy little goblin, and call again."
       ]
@@ -119,7 +119,7 @@
         "<size=150%>CONGRATULATIONS, DICKHEAD! YOU'RE TODAY'S WINNER!<size=100%>",
         { "choices": [
           { "text": "Is this a scam?", "say": [ "Usually. This time the prize is real, and it's already on the way, so shut up." ] },
-          { "text": "What did I win?", "say": [ "A bag of candy. Small, but real. That's the surprise, you greedy shit." ] },
+          { "text": "What did I win?", "say": [ "A bag of candy. Small, but real. The candy is shaped like a dick, you greedy shit." ] },
           { "text": "Hang up.", "say": [ "Fine, be a dick. It's still yours. The driver will leave it on the step." ] }
         ] },
         { "do": "deliver", "item": "Candy_Bag_S", "after": 30 },
@@ -136,9 +136,9 @@
         "Well, well. Caller nine. Still in the house, dipshit?",
         { "choices": [
           { "text": "Yes.", "say": [ "Good. The walls told me all about you. Let's see how long your sorry ass lasts." ] },
-          { "text": "Who is this?", "say": [ "The guy who asked you the big question. You gave a decent answer for a fucking hermit." ] }
+          { "text": "Who is this?", "say": [ "The guy who asked you the big question. You gave a decent answer for a fucking hermit, and a dickhead." ] }
         ] },
-        "This one goes out to nine. It's a song about staying put, and it's fucking awful.",
+        "This one goes out to nine. It's a song about staying put, and it's fucking awful. The sax solo sounds like a pennis being stepped on.",
         { "do": "flag", "name": "radio_dj_callback" },
         "Same time next week, nine. Don't make me send someone to get you."
       ]

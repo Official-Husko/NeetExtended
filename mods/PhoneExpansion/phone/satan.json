@@ -6,7 +6,7 @@
   "callerId": "666",
   "when": { "dialed": ">= 1" },
   "say": [
-    "<color=red>yo, it's you again. Bro. What's good.",
+    "<color=red>yo, it's you again. Bro. What's good, dickhead.",
     "<color=red>Nobody calls this number twice. I respect the hustle, my boi. Let's make a deal.",
     { "label": "offer" },
     { "choices": [
@@ -14,18 +14,18 @@
         "text": "I want money.",
         "say": [
           { "if": { "stat": "Soul < 20" },
-            "then": [ "<color=red>With that soul? Bro, there's barely anything left to pawn. Pick again.", { "goto": "offer" } ] },
-          "<color=red>Six hundred and sixty-six bucks. For a little piece of your soul. It's nothing, it's like a booger.",
+            "then": [ "<color=red>With that soul? Bro, there's barely anything left to pawn. Pick again, you soulless pennis.", { "goto": "offer" } ] },
+          "<color=red>Six hundred and sixty-six bucks. For a little piece of your soul. It's nothing, it's like the crust on a pennis.",
           { "choices": [
             {
               "text": "Deal.",
               "say": [
                 { "do": "stat", "name": "Soul", "add": -20 },
                 { "do": "money", "amount": 666 },
-                "<color=red>Pleasure doing business, my boi. Don't blow it all on Mountain Doo and bad decisions."
+                "<color=red>Pleasure doing business, my boi. Don't blow it all on Mountain Doo and bad decisions. Or on your dick, that's worse."
               ]
             },
-            { "text": "No.", "say": [ "<color=red>Suit yourself, loser." ] }
+            { "text": "No.", "say": [ "<color=red>Suit yourself, pennis." ] }
           ] }
         ]
       },
@@ -34,15 +34,15 @@
         "say": [
           { "if": { "stat": "Soul < 21" },
             "then": [ "<color=red>Friends cost soul, and you're out, broke ass.", { "goto": "offer" } ] },
-          "<color=red>A friend. Exactly like you. Look next to your phone, he's already ugly.",
+          "<color=red>A friend. Exactly like you. Look next to your phone, he's already ugly, and he's got your dick. Lucky him.",
           // One of the game's own dialogue functions: a copy of you appears next to the speaker.
           { "ink": "~ TradeSoulForClone()" },
-          "<color=red>No refunds, dude."
+          "<color=red>No refunds, dude. Your clone is a dickhead too."
         ]
       },
       {
         "text": "What are you doing for Halloween?",
-        "say": [ "<color=red>Same as every year. Watching people dress up as me. Honestly it's flattering. Also they all look like shit.", { "goto": "offer" } ]
+        "say": [ "<color=red>Same as every year. Watching people dress up as me. Honestly it's flattering. Also half of them look like a dick with horns. Fair.", { "goto": "offer" } ]
       },
       { "text": "Nothing, bye.", "say": [ "<color=red>cya later ha ha" ] }
     ] }

@@ -13,12 +13,13 @@
       "say": [
         "Hi, it's the neighbor. The one on your left. The one who can hear you breathing.",
         "Something in your house smells like a raccoon died in the fridge and then died again.",
-        "I got my kitchen window open. In THIS heat. My eyes are watering, the cat's in the dryer.",
+        "I got my kitchen window open. In THIS heat. My eyes are watering, the cat's in the dryer, and my wiener is sweating in my shorts.",
         { "choices": [
           {
             "text": "Sorry. I'll shower soon.",
             "say": [
               "Soon. Sure, sure. Like a normal fucking person. I left a spray on your step for the smell.",
+              "Use it on your balls, dickhead. Then on your pennis. In that order.",
               { "do": "deliver", "item": "SprayBottle_Cleaner", "after": 60 },
               { "do": "flag", "name": "neighbor_smell_sorry" }
             ]
@@ -26,13 +27,13 @@
           {
             "text": "It's my house. It can smell how it likes.",
             "say": [
-              "Wow. Okay. Have fun in there with your raccoon, you smelly little goblin.",
+              "Wow. Okay. Have fun in there with your raccoon and your dick, you smelly little goblin.",
               { "do": "flag", "name": "neighbor_smell_argued" }
             ]
           },
           {
             "text": "...",
-            "say": [ "Your silence is a no and your house is a shithole. Got it." ]
+            "say": [ "Your silence is a no, your house is a shithole, and your dick is a crime against the nose. Got it." ]
           }
         ] }
       ]
@@ -49,26 +50,26 @@
       "say": [
         "It's me again. Your upstairs light was on at three in the morning.",
         "Also the TV. Also somebody was laughing. Was that you laughing?",
-        "Because it sounded like a goat getting its nuts stepped on.",
+        "Because it sounded like a goat getting its nuts stepped on. Then the goat laughed too.",
         { "choices": [
           {
             "text": "Sorry, I'll keep it down.",
             "say": [
-              "Thank you. The baby's asleep now. Well, the baby's asleep. Don't ask about the baby.",
+              "Thank you. The baby's asleep now. Well, the baby's asleep. The baby says you're a dickhead. Don't ask about the baby.",
               { "do": "flag", "name": "neighbor_quiet_promise" }
             ]
           },
           {
             "text": "I don't sleep. I'm not built for it.",
             "say": [
-              "Everybody's built for sleep, son. Worms sleep. You're worse than a worm.",
+              "Everybody's built for sleep, son. Worms sleep. You're worse than a worm, dipshit.",
               { "do": "flag", "name": "neighbor_warned" }
             ]
           },
           {
             "text": "Come round and check for yourself.",
             "say": [
-              "No thank you. I've seen your front step. I'd need a tetanus shot and a priest.",
+              "No thank you. I've seen your front step. I'd need a tetanus shot, a priest and a hazmat suit for my wiener.",
               { "do": "flag", "name": "neighbor_warned" }
             ]
           }
@@ -87,13 +88,13 @@
       "say": [
         "Morning. Or evening. Or whatever time it is in your cave. You still have my ladder.",
         "The tall aluminium one. It's been on your side since spring, leaning on your shed.",
-        "Every time I look over it looks more ashamed of you.",
+        "Every time I look over it looks more ashamed of you. It looks more ashamed than my dick does on a Monday.",
         { "choices": [
           {
             "text": "What ladder?",
             "say": [
               "THE LADDER. Don't you fucking play with me, you little shit.",
-              "I can see the top of it from my bedroom window. There's a sock on it."
+              "I can see the top of it from my bedroom window. There's a sock on it. Your sock. I know that dick-stained sock anywhere."
             ]
           },
           {
@@ -107,7 +108,7 @@
             "text": "Keep it. It's better up there.",
             "say": [
               "Up where?",
-              "...Never mind. I'm calling the council. Then I'm calling the fucking news.",
+              "...Never mind. I'm calling the council. Then I'm calling the fucking news. Son of a bitch.",
               { "do": "flag", "name": "neighbor_ladder_fight" }
             ]
           }
@@ -126,11 +127,11 @@
       "say": [
         "Neighborhood Watch, just checking in. How are we doing in there?",
         "We've had reports. Lights. Bins. A man with no shoes at the bus stop.",
-        "I'm not saying it was you. I'm saying I'm not saying it wasn't. Put pants on, sir.",
+        "I'm not saying it was you. I'm saying I'm not saying it wasn't. Put pants on, sir. Your wiener was on the camera again.",
         { "choices": [
           {
             "text": "We're fine. Thanks for checking.",
-            "say": [ "Good. Keep the blinds down. People are looking. The pigeons are looking too, and they've got a union." ]
+            "say": [ "Good. Keep the blinds down. People are looking. The pigeons are looking too, and they've got a union and a dick-measuring contest going." ]
           },
           {
             "text": "Who gave you this number?",
@@ -145,7 +146,7 @@
             "say": [
               { "do": "money", "amount": -20 },
               "The fund thanks you. We spent it on a sign. It says WATCH.",
-              "Just WATCH. Nothing else. We couldn't afford the rest of the words.",
+              "We ordered DICK WATCH. The sign guy said that was a lot to say on a Tuesday. So: just WATCH.",
               { "do": "flag", "name": "neighbor_watch_donor" }
             ]
           }
@@ -160,17 +161,17 @@
       "when": { "not": { "flag": "neighbor_sugar_settled" } },
       "otherwise": [
         "Dot here. You still owe me the sugar, you lazy little prick.",
-        "Ten years. I'm not angry. I'm keeping a list and you're on it three times."
+        "Ten years. I'm not angry. I'm keeping a list and you're on it three times. Once for the sugar and twice for your dick."
       ],
       "say": [
         "Oh, it's you. Dot from next door. Your mom gave me this number.",
         "You still have my sugar. The blue cup. You borrowed it ten years ago and never fucking gave it back.",
-        "Your mom says you don't come out much. I say I can see your blinds move. There's an eye in there.",
+        "Your mom says you don't come out much. I say I can see your blinds move. There's an eye in there, and it's a shitty eye.",
         { "choices": [
           {
             "text": "I never borrowed any sugar.",
             "say": [
-              "You did. I was there. You had a cardigan on and you were licking the spoon.",
+              "You did. I was there. You had a cardigan on, your dick was out the whole time, and you were licking the spoon.",
               { "do": "flag", "name": "neighbor_sugar_argued" }
             ]
           },
@@ -179,7 +180,7 @@
             "if": { "money": 10 },
             "say": [
               { "do": "money", "amount": -10 },
-              "Ten bucks. That's not sugar money. That's a bribe, you little shit. I'll take it.",
+              "Ten bucks. That's not sugar money. That's a bribe, you little dickhead. I'll take it.",
               { "do": "flag", "name": "neighbor_sugar_settled" }
             ]
           },
@@ -188,7 +189,7 @@
             "say": [
               { "do": "deliver", "item": "FlourBag", "after": 30 },
               "It's flour. Close enough. I won't ask what you did with the sugar.",
-              "I can smell the answer from here.",
+              "I can smell the answer from here. It smells like your wiener and regret.",
               { "do": "flag", "name": "neighbor_sugar_settled" }
             ]
           },
@@ -213,7 +214,7 @@
       },
       "say": [
         "I saw someone in your yard last night. Digging by the fence.",
-        "The big shovel. Was that you? Because it was either you or a very short man with a grudge.",
+        "The big shovel. Was that you? Because it was either you or a very short man with a grudge and a dick like a pencil eraser.",
         { "choices": [
           {
             "text": "Wasn't me.",
@@ -234,7 +235,7 @@
             "if": { "money": 40 },
             "say": [
               "Forty dollars. I never looked out the window.",
-              "I did not see a hole. I did not see a shovel. I did not see your face.",
+              "I did not see a hole. I did not see a shovel. I did not see your face. I did not see your dick either, and believe me, I looked.",
               { "do": "money", "amount": -40 },
               "Pleasure doing business. Mind the hole.",
               { "do": "flag", "name": "neighbor_yard_bribe" }
@@ -256,10 +257,10 @@
         ] }
       },
       "say": [
-        "It's the bins again. I found a pumpkin in mine. Carved, with teeth.",
+        "It's the bins again. I found a pumpkin in mine. Carved, with teeth. Carved in the shape of a wiener, honestly.",
         "I think it's yours. I think everything in that yard is yours, honestly. It's a shrine to your bad decisions.",
         { "do": "deliver", "item": "Pumpkin", "after": 20 },
-        "Enjoy. Don't dig near it. It's looking at me."
+        "Enjoy. Don't dig near it. It's looking at me like your dick looks at the fridge."
       ]
     }
   ]

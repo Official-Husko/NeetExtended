@@ -7,13 +7,13 @@
   "incoming": { "weight": 2, "once": true, "when": { "minutes": ">= 15" } },
   "say": [
     "...",
-    "I can see you, you know. Nice pajamas. Are those the ones with the skidmarks or the other ones?",
+    "I can see you, you know. Nice pajamas. Are those the ones with the skidmarks or the ones with the dick stains?",
     { "choices": [
-      { "text": "Who is this?", "say": [ "Look out the window. No, the other one. Yeah. Hi." ] },
-      { "text": "I'm calling the cops.", "say": [ "Go ahead. It's 911. They're real good at sitting on their asses, like you." ] },
-      { "text": "Wrong number, creep.", "say": [ "Is it? Then why'd you pick up, you lonely fuck?" ] }
+      { "text": "Who is this?", "say": [ "Look out the window. No, the other one. Yeah. Hi. Wave your dick at me." ] },
+      { "text": "I'm calling the cops.", "say": [ "Go ahead. It's 911. They're real good at sitting on their asses, like your dick is sitting on yours." ] },
+      { "text": "Wrong number, creep.", "say": [ "Is it? Then why'd you pick up, you lonely fuck? Your balls are sweating through the couch." ] }
     ] },
-    "<color=red>Lights out, you fucking gremlin.</color>",
+    "<color=red>Lights out, you fucking dickhead gremlin.</color>",
     { "do": "fuses" },
     "*click*"
   ]

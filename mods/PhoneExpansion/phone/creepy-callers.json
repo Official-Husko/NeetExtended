@@ -9,20 +9,20 @@
       "say": [
         "...",
         "<size=60%>hhhhhh... hhhhhh...",
-        "Your mom said you'd pick up. She also said you smell like a dead hamster. I didn't ask.",
+        "Your mom said you'd pick up. She also said you smell like a dead hamster and your dick is the size of a Prangle. I didn't ask.",
         { "choices": [
           {
             "text": "Who is this?",
-            "say": [ "...", "Keep breathing. I can hear you doing it. Nice and slow, like you're sniffing your own socks." ]
+            "say": [ "...", "Keep breathing. I can hear you doing it. Nice and slow, like you're sniffing your own socks. Or your dick. Mostly your dick." ]
           },
           {
             "text": "Mom?",
             "once": true,
-            "say": [ "No. She's downstairs eating the last of the Prangles and crying about you.", { "do": "flag", "name": "creep_breath_heard" } ]
+            "say": [ "No. She's downstairs eating the last of the Prangles and crying about your wiener. She says it's a wet Prangle.", { "do": "flag", "name": "creep_breath_heard" } ]
           }
         ] },
         "...",
-        "<color=red>Go back to sleep, you disgusting little goblin.</color>"
+        "<color=red>Go back to sleep, you disgusting little dickhead goblin.</color>"
       ]
     },
     {
@@ -33,7 +33,7 @@
       "say": [
         "Ninety-nine.",
         "Ninety-eight.",
-        "<size=60%>...still with me? You're breathing so loud, bro.",
+        "<size=60%>...still with me? You're breathing so loud, bro. Your balls must be sweating through the chair.",
         "You can stop me whenever you like.",
         { "choices": [
           {
@@ -49,7 +49,7 @@
         "One.",
         "Zero.",
         { "do": "power", "on": false, "for": 4 },
-        "Lights are back on. See? Nothing happened. Also I shat in your laundry basket."
+        "Lights are back on. See? Nothing happened. Also I shat in your laundry basket and wiped my dick on your good hoodie, you son of a bitch."
       ]
     },
     {
@@ -60,7 +60,7 @@
       "say": [
         "Hey.",
         "It's me.",
-        "Stop sitting in the dark. It's bad for your eyes. Also your room smells like a Taco Hell bathroom.",
+        "Stop sitting in the dark. It's bad for your eyes. Also your room smells like a Taco Hell bathroom and your dick smells like the room.",
         { "choices": [
           {
             "text": "Who is this?",
@@ -68,10 +68,10 @@
           },
           {
             "text": "That's not me.",
-            "say": [ "Yes it is.", "Check the mirror. Ew, not that one. The other one with the crust.", { "do": "flag", "name": "creep_own_voice" } ]
+            "say": [ "Yes it is. Your dick is me too, you pennis.", "Check the mirror. Ew, not that one. The other one with the crust.", { "do": "flag", "name": "creep_own_voice" } ]
           }
         ] },
-        "You should sleep. Go to bed, you're gross. I'll keep the lights on for you.",
+        "You should sleep, dipshit. Go to bed, you're gross. I'll keep the lights on for you.",
         { "do": "knockout", "seconds": 4 }
       ]
     },
@@ -82,19 +82,19 @@
       "incoming": { "weight": 1, "once": true, "when": { "room": [ "Kitchen", "Diningroom", "Livingroom" ] } },
       "say": [
         "I'm in the house.",
-        "Not the one you're thinking of. The one you're standing in. Yeah, the one that smells like cat piss.",
+        "Not the one you're thinking of. The one you're standing in. Yeah, the one that smells like cat piss and your dick cheese.",
         { "choices": [
           {
             "text": "Where are you?",
-            "say": [ "Two rooms over, behind the fridge, eating the chicken you didn't thaw.", "Keep talking. I like hearing you waddle around like a sad hamster." ]
+            "say": [ "Two rooms over, behind the fridge, eating the chicken you didn't thaw.", "Keep talking. I like hearing you waddle around like a sad hamster with a tiny dick." ]
           },
           {
             "text": "Get out of my house.",
             "once": true,
-            "say": [ "Your house. Sure. Mom's house, actually, and she's gonna kill you too.", { "do": "power", "on": false, "for": 5 }, "Bet you can't find the switch in the dark, you useless fuck." ]
+            "say": [ "Your house. Sure. Mom's house, actually, and she's gonna kill your dickhead ass too.", { "do": "power", "on": false, "for": 5 }, "Bet you can't find the switch in the dark, you useless fuck." ]
           }
         ] },
-        "I'll be right where you left me. Under the bed. With your socks.",
+        "I'll be right where you left me. Under the bed. With your socks and your dick.",
         "*click*"
       ]
     },
@@ -104,12 +104,12 @@
       "callerId": "PORCH",
       "incoming": { "weight": 1, "once": true, "when": { "minutes": ">= 20" } },
       "say": [
-        "It's cold out here. My nuts are basically frozen to the railing.",
+        "It's cold out here. My nuts are basically frozen to the railing like a dick in a freezer.",
         "The porch light's still on. You left it on for me, right?",
         { "choices": [
           {
             "text": "Who is this?",
-            "say": [ "Someone who's been on your porch a while.", "<size=60%>...pick your nose if you want, I can't see you. Yet." ]
+            "say": [ "Someone who's been on your porch a while.", "<size=60%>...pick your nose and your dick if you want, I can't see you. Yet." ]
           },
           {
             "text": "I'm not opening the door.",
@@ -122,7 +122,7 @@
             "say": [
               "Good. Don't open it until I'm gone.",
               { "do": "deliver", "item": "Candle", "after": 40 },
-              "Light it only if you're gonna watch it, you coward."
+              "Light it only if you're gonna watch it, you dick-shaped coward."
             ]
           }
         ] },
@@ -137,9 +137,9 @@
       "say": [
         "...",
         "*static*",
-        "Did you leave the TV on? Your mom's gonna kill you.",
+        "Did you leave the TV on, dipshit? Your mom's gonna kill you.",
         "It's showing the kitchen. Your fridge is open. Nobody's been in there for like a week, bro.",
-        "Your chair is still warm and it's wet, dude.",
+        "Your chair is still warm and it's wet, dude. Dick-wet, probably.",
         "...",
         "*click*"
       ]
@@ -150,9 +150,9 @@
       "callerId": "MESSAGE",
       "incoming": { "weight": 1, "once": true, "when": { "minutes": ">= 15" } },
       "say": [
-        "Write this down, dumbass.",
+        "Write this down, dickhead.",
         "Five, five, five. Oh, two, three, one.",
-        "Call it when the house is quiet. Mom's snoring doesn't count.",
+        "Call it when the house is quiet. Mom's snoring doesn't count, and neither does your little dick.",
         "Not before.",
         { "do": "flag", "name": "creep_number_left" },
         "*click*"
@@ -164,11 +164,11 @@
       "name": "Still here",
       "callerId": "STILL HERE",
       "when": { "flag": "creep_number_left" },
-      "otherwise": [ "...", "Nobody here yet. Go back to your Dorritoes, you pig." ],
+      "otherwise": [ "...", "Nobody here yet. Go back to your Dorritoes, you pig, and wash your dick." ],
       "say": [
-        "You called. Dumbass.",
+        "You called, dickhead.",
         "...",
-        "Are you alone? Be honest, I can smell the Dorritoes.",
+        "Are you alone? Be honest, I can smell the Dorritoes and the dick cheese from here.",
         { "choices": [
           {
             "text": "Yes.",
@@ -181,7 +181,7 @@
           {
             "text": "Who was breathing?",
             "if": { "flag": "creep_breath_heard" },
-            "say": [ "Ask your mom. She knows all about heavy breathing, loser." ]
+            "say": [ "Ask your mom. She knows all about heavy breathing and dicks, son of a bitch." ]
           }
         ] },
         { "if": { "flag": "creep_waiting" }, "then": [ "You didn't open the door for me. Thank you. Good boy." ] },

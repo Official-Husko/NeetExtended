@@ -16,7 +16,7 @@
 
       // What's said, top to bottom. Plain text is the caller talking; the game's rich text works.
       "say": [
-        "Phone company test line. If u can hear this ur phone works. Congratulation.",
+        "Phone company test line. If u can hear this ur phone works. Congratulation, ur pennis works too.",
 
         // A line said by the player instead.
         { "player": "Uh, hello?" },
@@ -24,8 +24,8 @@
         // Branches on a condition. "then" and "else" take a line or a list of steps.
         {
           "if": { "called": "test-line-callback" },
-          "then": "Oh its u again. We called u back remember? Ur phone is fine. Stop calling.",
-          "else": "U want to test something or u just lonely?"
+          "then": "Oh its u again. We called u back remember? Ur phone is fine. Stop calling, dickhead.",
+          "else": "U want to test something or u just lonely with ur dick in ur hand?"
         },
 
         // A place to jump back to with "goto".
@@ -37,7 +37,7 @@
             {
               "text": "Test the ringer.",
               "say": [
-                "Hang up. We call u back in ten second. Dont go nowhere, not that u ever do.",
+                "Hang up. We call u back in ten second. Dont go nowhere, not that u ever do. Dont go nowhere with ur dick out.",
                 // Actions make things happen. This one rings the call below.
                 { "do": "ring", "call": "test-line-callback", "after": 10 },
                 // Ends the call right here.
@@ -65,14 +65,14 @@
               "text": "Got any candy?",
               // Only offered while this holds.
               "if": { "flag": "asked_about_flags" },
-              "say": [ "For asking dumb question. Look next to the phone, fatass.", { "do": "give", "item": "Candy_Bar" } ]
+              "say": [ "For asking dumb question. Look next to the phone, fatass. Its shaped like a pennis.", { "do": "give", "item": "Candy_Bar" } ]
             },
             { "text": "Bye." }
           ]
         },
 
         // One of these, picked at random each time.
-        { "random": [ "Thank u for testing with us. Goodbye.", "Ur phone is in excellent condition. Ur house smell like a foot." ] }
+        { "random": [ "Thank u for testing with us. Goodbye.", "Ur phone is in excellent condition. Ur house smell like a foot and a dick." ] }
       ]
     },
     {
@@ -81,7 +81,7 @@
       "callerId": "TEST",
       // No number: this call only rings in. "manual" means only when something rings it.
       "incoming": { "trigger": "manual" },
-      "say": [ "<size=150%>RING RING MOTHERFUCKER", "<size=100%>Is ur callback. Ringer work. Have a spooky night." ]
+      "say": [ "<size=150%>RING RING MOTHERFUCKER", "<size=100%>Is ur callback. Ringer work. Have a spooky night, dickhead." ]
     }
   ]
 }

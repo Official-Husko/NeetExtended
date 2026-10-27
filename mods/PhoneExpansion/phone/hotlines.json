@@ -13,7 +13,7 @@
       ],
       "say": [
         { "if": { "times": "= 0" },
-          "then": [ "Hello. I've been expecting you. The first one's free like the ad said, you sad sack of shit." ],
+          "then": [ "Hello. I've been expecting you. The first one's free like the ad said, you sad sack of shit with a pennis like a Tic Tac." ],
           "else": [
             { "do": "money", "amount": -5 },
             "Five bucks. Thank you. I already spent it on your future. It was a Gamerade."
@@ -21,12 +21,12 @@
         },
         { "if": { "stat": "Hunger < 25" },
           "then": [ "You're hungry. Your stomach is chewing on your spine right now. Gross." ],
-          "else": [ "You ate something recently. Good for you. Wipe your mouth, sicko." ]
+          "else": [ "You ate something recently. Good for you. Wipe your mouth, sicko. Wipe your dick too, I can see it through the phone." ]
         },
         { "random": [
-          [ "I see a man in your house. He's been standing on the stairs since Tuesday with his dick out.", "Don't turn around. Seriously, don't." ],
+          [ "I see a man in your house. He's been standing on the stairs since Tuesday with his dick out.", "Don't turn around. Seriously, don't. His dick is bigger than your whole future." ],
           [ "I see a fridge. It's mostly empty. Just mustard and one sad onion. The fridge is crying and so am I." ],
-          [ "I see a pumpkin on your shelf. It knows what you did in the bathroom. It's disgusted." ],
+          [ "I see a pumpkin on your shelf. It knows what you did in the bathroom. It's disgusted. It's seen your dick too." ],
           [ "You will clean something this week. It will not stay clean. Nothing you touch stays clean, you filthy nugget." ]
         ] },
         { "choices": [
@@ -34,17 +34,17 @@
             "text": "How do you know that?",
             "say": [
               "I'm psychic. Nobody gets past five bucks without being psychic, dumbass.",
-              "...Also you leave the fridge door open. I can hear it. It's a sad little beep."
+              "...Also you leave the fridge door open. I can hear it. It's a sad little beep, like your dick."
             ]
           },
           {
             "text": "Is that a real man?",
             "say": [
-              "Yes. Don't turn around.",
+              "Yes. Don't turn around. He's got a pennis like a wet breadstick.",
               { "do": "flag", "name": "hotline_psychic_warned" }
             ]
           },
-          { "text": "Hang up.", "say": [ "You can't. You paid for the whole minute, you cheap little freak." ] }
+          { "text": "Hang up.", "say": [ "You can't. You paid for the whole minute, you cheap little dickhead." ] }
         ] }
       ]
     },
@@ -71,7 +71,8 @@
           [ "What's a ghost's favourite food?", "BOOOO-ritos. Ha. Ha. Your mom gets it." ],
           [ "Why did the toilet paper go to the party?", "Cuz it was tired of sitting on the shitter all day and wanted to get a little crumpled." ],
           [ "What's a cat's favourite dessert?", "Mice-cream. Okay that's it, I'm gonna cry." ],
-          [ "Why did the dad go to the shed?", "To find his dignity. He's still in there. Mom says he's not coming out." ]
+          [ "Why did the dad go to the shed?", "To find his dignity. He's still in there. Mom says he's not coming out." ],
+          [ "What's a dick's favourite therapy?", "Phone therapy. It has a lot of hang-ups. Your mom's laughing at it right now." ]
         ] },
         { "choices": [
           {
@@ -79,7 +80,8 @@
             "say": [ { "random": [
               [ "Why don't skeletons fight each other?", "They don't have the guts. Neither do you, bum." ],
               [ "What did the sandwich say to the therapist?", "I got too much bread on my mind and my mayo is expired." ],
-              [ "What do you call a rat with a hat?", "Ratty Hatty. My mom's favourite. She isn't here anymore. The rat was involved." ]
+              [ "What do you call a rat with a hat?", "Ratty Hatty. My mom's favourite. She isn't here anymore. The rat was involved." ],
+              [ "Why did the penis get a job?", "It wanted to stop living in your pants. It's still in your pants, dumbass." ]
             ] } ]
           },
           {
@@ -102,7 +104,7 @@
       "incoming": { "trigger": "random", "once": true },
       "say": [
         "Bored? Dial 555-0262 for a joke. A new one every time, you lazy fuck.",
-        "Some of them are good. Most of them are about a dad."
+        "Some of them are good. Most of them are about a dad and his dick."
       ]
     },
     {
@@ -117,7 +119,7 @@
             "I've got six people on hold. One of them is my supervisor. He's calling about me. Probably."
           ],
           "else": [
-            "Crisis line, it's Gary again. The sandwich didn't work out. Mayo everywhere.",
+            "Crisis line, it's Gary again. The sandwich didn't work out. Mayo everywhere. I look like a dick that got dipped in ranch.",
             "Still no supervisor. He's on hold, so that's something."
           ]
         },
@@ -137,7 +139,7 @@
           {
             "text": "What should I do?",
             "say": [
-              "Drink some water. Stand up. Look at a wall that isn't a screen. Lick the wall if you want.",
+              "Drink some water. Stand up. Look at a wall that isn't a screen. Lick the wall if you want, dickhead.",
               "I'm not qualified for that. Nobody checked. Nobody even read my file."
             ]
           },
@@ -152,7 +154,7 @@
       "callerId": "TECH HELP",
       "say": [
         { "if": { "times": "= 0" },
-          "then": [ "PC Help Desk, this is Doug. Is your computer on? Is it actually a computer or a pizza box with a sticker on it?" ],
+          "then": [ "PC Help Desk, this is Doug. Is your computer on? Is it actually a computer or a pizza box with a sticker on it? Did you put your pennis on the keyboard again?" ],
           "else": [ "PC Help Desk, Doug again. Is it on now? Did you spill Mountain Doo in the keyboard again, you pig?" ]
         },
         { "choices": [
@@ -160,7 +162,7 @@
             "text": "The screen is flickering.",
             "say": [
               "Have you tried turning the screen off and on again?",
-              "Don't answer that. I can hear you hitting it with a spoon."
+              "Don't answer that. I can hear you hitting it with a spoon. Stop waving your dick at the screen, it doesn't turn on."
             ]
           },
           {
@@ -174,7 +176,7 @@
             "text": "Can you open the browser for me?",
             "once": true,
             "say": [
-              "Sure. Opening metscape. Don't read the comments, they're all about the ass guy.",
+              "Sure. Opening metscape. Don't read the comments, they're all about the ass guy and his pennis.",
               { "do": "site", "url": "metscape" },
               { "do": "flag", "name": "hotline_tech_helped" },
               "There. You're welcome. Don't call back, you lonely loser."
@@ -199,7 +201,7 @@
           "else": [ "Lonely Hearts. Welcome back, Nobody. Your match is still sitting in her car crying, same as last time." ]
         },
         { "random": [
-          [ "Your match today is a woman named Marjorie. She likes long walks to the fridge and she has a mustache better than yours." ],
+          [ "Your match today is a woman named Marjorie. She likes long walks to the fridge and she has a mustache better than yours, dickhead." ],
           [ "Your match is a man who says he's a doctor. He's a doctor of nothing. But he's very sure, and he smells like a dog that got lost in a parking lot." ],
           [ "Your match is a lovely person who also never leaves home. You two would get along.", "Please don't meet. I beg you. Please." ]
         ] },
@@ -215,9 +217,9 @@
           },
           {
             "text": "Who else is on here?",
-            "say": [ "Other lonely people. Mostly a guy who only calls to listen to the hold music. Don't ask." ]
+            "say": [ "Other lonely people. Mostly a guy who only calls to listen to the hold music while his pennis does the dance. Don't ask." ]
           },
-          { "text": "Hang up.", "say": [ "Hang up gently. Tell your match you're sorry. Tell her you're a shitty hugger." ] }
+          { "text": "Hang up.", "say": [ "Hang up gently. Tell your match you're sorry. Tell her you're a shitty hugger with a dick like a wet sock." ] }
         ] }
       ]
     },
@@ -251,11 +253,11 @@
           },
           {
             "text": "Your store smells like feet.",
-            "say": [ "Thank you for your feedback. It has been sent to a department that does not exist and smells worse than you said." ]
+            "say": [ "Thank you for your feedback. It has been sent to a department that does not exist and smells worse than you said, and worse than your pennis." ]
           },
           {
             "text": "I want to speak to a manager.",
-            "say": [ "A manager is not available. He's on the same hold as you. He's been on there since Christmas.", "Please hold." ]
+            "say": [ "A manager is not available. He's on the same hold as you. He's been on there since Christmas, playing with his pennis out of boredom.", "Please hold." ]
           },
           { "text": "Hang up.", "say": [ "Your call is important to us. Goodbye, dickhead." ] }
         ] }

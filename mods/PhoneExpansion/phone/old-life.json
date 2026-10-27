@@ -8,14 +8,14 @@
       "incoming": { "weight": 2, "once": true },
       "say": [
         "Hi, is this the number for the Hollow Creek High class of 2009?",
-        "It's Denise. Denise Mott. We sat behind each other in chemistry, you ate paste off my desk, dude.",
-        "Anyway it's the reunion. Saturday. The gym. Warm punch, a slideshow, and Doug.",
-        "<size=60%>Doug still wears the prom jacket. He smells like the prom.<size=100%>",
+        "It's Denise. Denise Mott. Chemistry, row three. You ate paste off my desk and tried to show me your wiener in the bathroom, you little freak.",
+        "Anyway it's the reunion. Saturday. The gym. Warm punch, a slideshow, and Doug. Doug is doing a slideshow about his dick. It's called Penis Through the Years. It's forty minutes.",
+        "<size=60%>Doug still wears the prom jacket. He smells like the prom. There's a dick drawn on the back in Sharpie. He's proud of it.<size=100%>",
         { "choices": [
           {
             "text": "I'll think about it.",
             "say": [
-              "That's what you said at graduation, dumbass.",
+              "That's what you said at graduation, dumbass. Your dick wrote it in the yearbook too.",
               "Okay. I'm putting you down as maybe, with a little star.",
               { "do": "flag", "name": "past_reunion_maybe" }
             ]
@@ -23,15 +23,15 @@
           {
             "text": "Sure, I'll come.",
             "say": [
-              "Holy shit, really? Doug is going to lose his fucking mind.",
-              "Saturday, seven o'clock. Wear something that isn't a hoodie with crust on it.",
+              "Holy shit, really? Doug is going to piss his pants right there by the punch.",
+              "Saturday, seven o'clock. Wear something that isn't a hoodie with crust on it. And leave the wiener at home, nobody asked for the wiener.",
               { "do": "flag", "name": "past_reunion_yes" }
             ]
           },
           {
             "text": "Fuck off, Denise. No.",
             "say": [
-              "Fine. Honestly it's a gym full of people who all peaked at the same dance.",
+              "Fine. Honestly it's a gym full of dickheads who all peaked at the same dance.",
               { "do": "flag", "name": "past_reunion_no" }
             ]
           }
@@ -49,13 +49,13 @@
       },
       "say": [
         "Denise again. You said yes. Saturday came and went, and so did the punch.",
-        "Doug sat by the door for three hours. Then he cried in the parking lot. In his car. Dome light on.",
+        "Doug sat by the door for three hours. Then he cried in the parking lot with his pants around his ankles for some reason. Dome light on. Dick out. Crying.",
         "<size=150%>SO WHY THE FUCK DIDN'T YOU COME?<size=100%>",
         { "choices": [
           {
             "text": "Nobody told me where it was.",
             "say": [
-              "I put it in the group chat. You're not in the group chat. You got kicked out in 2010.",
+              "I put it in the group chat. You're not in the group chat. You got kicked out in 2010 for sending your dick to the whole thread.",
               "Ugh. Okay. We'll say it was the venue's fault. The venue is always at fault."
             ]
           },
@@ -63,13 +63,13 @@
             "text": "I was busy.",
             "say": [
               "Doing what?",
-              "...Okay. Okay. Next time, though, you hermit."
+              "...Okay. Okay. Next time, though, you hermit dickhead."
             ]
           },
           {
             "text": "I didn't want to.",
             "say": [
-              "Honest. I respect that. Doug does not. Doug has been posting about you.",
+              "Honest. I respect that. Doug does not. Doug has been posting your yearbook photo with the caption ASSHOLE OF THE CLASS.",
               { "do": "flag", "name": "past_reunion_followup" }
             ]
           }
@@ -84,7 +84,7 @@
       "say": [
         "Hi, this is Lorraine from the dental office on Cedar Street. The one with the sad fish tank.",
         "We're calling about your cleaning. Four years ago. March. You ghosted your own teeth.",
-        "You're still on the books as a patient. Your molars sent us a letter. It was a hate letter.",
+        "You're still on the books as a patient. Your molars sent us a letter. It was a hate letter. It said fuck this guy eleven times and had a dick drawn on the envelope.",
         { "choices": [
           {
             "text": "Do I owe you anything?",
@@ -92,21 +92,21 @@
             "say": [
               "Twenty-five bucks. Missed appointment fee. Sorry, it's policy, and policy is a dick.",
               { "do": "money", "amount": -25 },
-              "Thanks. Floss, if you can. Nobody can. Your gums are filing a complaint."
+              "Thanks. Floss, if you can. Nobody can. Your gums are filing a complaint, dipshit."
             ]
           },
           {
             "text": "I'm not coming back.",
             "say": [
-              "Good. Your molars already left. They're in Florida now.",
-              "Have a good day, you grimy bastard."
+              "Good. Your molars already left. They're in Florida now, and they're happier than you.",
+              "Have a good day, you grimy dickhead."
             ]
           },
           {
             "text": "Can I come in now?",
             "once": true,
             "say": [
-              "It's four years later. We got a new chair. The old one still has some guy's dried drool on it.",
+              "It's four years later. We got a new chair. The old one still has some guy's dried drool on it, and a little dick sticker. Don't ask.",
               "Sure. Come in. Don't look at the waiting room. Same chairs, same magazine, same sweaty dad.",
               { "do": "flag", "name": "past_dentist_asked" }
             ]
@@ -121,9 +121,9 @@
       "callerId": "COLLECTOR",
       "incoming": { "weight": 2, "once": true },
       "say": [
-        "Hello, this message is for the account holder of Tallow Creek Fitness. Don't hang up. We can hear you breathing.",
+        "Hello, this message is for the account holder of Tallow Creek Fitness. Don't hang up. We can hear you breathing. Put some pants on, sir.",
         "Your membership was cancelled. Nobody told the cancellation desk. Nobody tells the cancellation desk anything.",
-        "Our records show the Platinum tier. Eleven years of it. You never once went in. We checked the door sensor.",
+        "Our records show the Platinum tier. Eleven years of it. You never once went in. We checked the door sensor. It has never even seen your dick, and it's a motion sensor.",
         "The balance is due in full, plus some fees with names I won't read out, because they're gross as fuck.",
         { "choices": [
           {
@@ -138,7 +138,7 @@
           {
             "text": "I never signed up for Platinum.",
             "say": [
-              "Nobody does, sir. It's a lifestyle. Your lifestyle is the couch.",
+              "Nobody does, sir. It's a lifestyle. Your lifestyle is the couch and a dick-shaped pile of chip bags.",
               "I'm putting you down as in denial. Denial is also a fee."
             ]
           },
@@ -159,14 +159,14 @@
       "callerId": "OFFICE",
       "incoming": { "weight": 1, "cooldown": 60, "once": true },
       "say": [
-        "Hey, it's Gary. From accounts. Your old desk is next to my desk now and it smells like chips and regret.",
+        "Hey, it's Gary. From accounts. Your old desk is next to my desk now and it smells like chips and regret and a hot dog somebody microwaved in a dick-shaped mug.",
         "Sorry, it's a weird call. But the stapler is still missing.",
-        "The red one. It was in your drawer when you left. Three years ago. You took it like a raccoon.",
+        "The red one. It was in your drawer when you left. Three years ago. You took it like a raccoon with a stapler fetish, you weirdo.",
         { "choices": [
           {
             "text": "I don't have it.",
             "say": [
-              "Okay. It's still on the form, though. The form says you have it.",
+              "Okay. It's still on the form, though. The form says you have it. The form has a dick doodled in the margin, and I think that's your handwriting.",
               "I'm not mad. I just filed a form. I filed four forms."
             ]
           },
@@ -181,7 +181,7 @@
             "text": "I'm keeping it.",
             "say": [
               "Okay. I'll note that you're keeping the company stapler, you thieving dipshit.",
-              "Gary's thrilled, by the way. Gary is always thrilled. It's a medical thing.",
+              "Gary's thrilled, by the way. Gary is always thrilled. It's a medical thing. He's on a pill and it makes him weirdly horny for paperclips.",
               { "do": "flag", "name": "past_stapler_kept" }
             ]
           }
@@ -195,8 +195,8 @@
       "incoming": { "weight": 1, "cooldown": 90, "once": true },
       "say": [
         "Hey, is this Rob?",
-        "Oh. Sorry. I meant to call my ex. Same area code and I was crying into a frozen burrito.",
-        "Anyway I'm not calling about us. Never mind. Fuck Rob.",
+        "Oh. Sorry. I meant to call my ex. Same area code and I was crying into a frozen burrito. It had more substance than Rob's wiener, honestly.",
+        "Anyway I'm not calling about us. Never mind. Fuck Rob. Fuck his tiny dick too.",
         { "choices": [
           {
             "text": "I'm not Rob.",
@@ -209,7 +209,7 @@
             "text": "Are you okay?",
             "say": [
               "No. But I'm getting there. Slowly, like a stain that won't come out of a couch.",
-              "Tell Rob I said nothing. He'll know what that means. He won't, he's stupid."
+              "Tell Rob I said nothing. He'll know what that means. He won't, he's a dickhead."
             ]
           },
           {
@@ -232,8 +232,8 @@
       "incoming": { "weight": 1, "once": true },
       "say": [
         "Good afternoon, Hollow Creek branch library, calling about a book.",
-        "It's a book about a lighthouse. Due back the summer you turned nine. You licked the cover. We know. Cameras.",
-        "The late fee has reached a number we don't say over the phone, because it's obscene.",
+        "It's a book about a lighthouse. Due back the summer you turned nine. You licked the cover. We know. Cameras. You also drew a dick on page forty. It's a good dick. It's still a dick.",
+        "The late fee has reached a number we don't say over the phone, because it's obscene. Like the dick.",
         { "choices": [
           {
             "text": "I'll bring it back.",
@@ -248,14 +248,14 @@
             "if": { "money": 12 },
             "say": [
               { "do": "money", "amount": -12 },
-              "Twelve bucks. Lost book fee. Holy shit, a payment. Somebody call the mayor.",
+              "Twelve bucks. Lost book fee. Holy shit, a payment. Somebody call the mayor, and tell him the dick's still on page forty.",
               "Your card's still valid, somehow. Don't tell anyone. Gerald will cry."
             ]
           },
           {
             "text": "Just keep the book.",
             "say": [
-              "Okay. We'll mark it lost. Lost is cheaper for us, you lighthouse thief.",
+              "Okay. We'll mark it lost. Lost is cheaper for us, you lighthouse-stealing dipshit.",
               "Hope the lighthouse is doing fine out there. Probably not."
             ]
           }
@@ -268,15 +268,15 @@
       "callerId": "RECRUIT",
       "incoming": { "weight": 1, "cooldown": 45, "once": true },
       "say": [
-        "Hi, I'm calling from a staffing agency. Is this the candidate? Please say yes, I have a quota.",
+        "Hi, I'm calling from a staffing agency. Is this the candidate? Please say yes, I have a quota. My manager is a dickhead and I need a body.",
         "Your resume came up in our system. The one from 2008. The one written in crayon.",
-        "It's very thorough. You list a skill called fax. And hygiene, with a question mark.",
+        "It's very thorough. You list a skill called fax. And hygiene, with a question mark. And a second skill called dick, underlined, with a drawing.",
         { "choices": [
           {
             "text": "I'm not looking for work.",
             "say": [
               "That's what people say right before they get a job. Or die.",
-              "We'll keep it on file. Forever. Our file system is a shoebox in a dumpster."
+              "We'll keep it on file. Forever. Our file system is a shoebox in a dumpster, next to a dick-shaped rock."
             ]
           },
           {
@@ -290,7 +290,7 @@
           {
             "text": "Send me the details.",
             "say": [
-              "They'll arrive at your front door. Physically, on paper, carried by a guy who hates you.",
+              "They'll arrive at your front door. Physically, on paper, carried by a guy who hates you and has a dick sticker on his hard hat.",
               { "do": "deliver", "item": "Envelope_Closed", "after": 60 },
               "Good luck. I mean that. Shower first."
             ]
