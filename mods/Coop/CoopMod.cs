@@ -68,6 +68,7 @@ public sealed class CoopMod : NeetMod
         BodySender.Init();
         Downed.Init();
         World.WorldSync.Init(this);
+        World.Ownership.HoldRepair.Init();
         ModMenu.AddPage(this, new CoopPage());
     }
 

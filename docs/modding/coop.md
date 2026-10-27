@@ -119,7 +119,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### Watch list
 
-- After a long session with dozens of hot reloads, doors stopped reacting to clicks in both games, and restarting both fixed it. The likely cause: the game refuses to pick up anything whose `Usable.player` is still set, and a drag that ends without the game's own release (a reload mid-drag, a forced hand-back) leaves it set. If it comes back, `obj.inspect` the door's `Usable` (`player`) on the stuck game; `CoopApi.LookAt`, `RayAll`, `LayerOf` and `Patched` help too.
+- Seen once, after a long session with dozens of hot reloads: doors stopped taking clicks in both games until both restarted. The game marks what a hand grabs with `Usable.player` (always together with `Player_Abilities.pickups`) and refuses to pick up anything whose `player` is still set, so a drag that ends without the game's own release (a reload mid-drag, a forced hand-back) leaves a door nobody can grab. `HoldRepair` now releases such holds (checked once a second, released the game's way after two checks, logged once per object); tested with a faked stuck door, and a real hold isn't touched. If doors or items stop taking clicks again, `CoopApi.LookAt`, `RayAll`, `LayerOf` and `Patched` show what the click meets.
 
 ### Scenes and story
 
