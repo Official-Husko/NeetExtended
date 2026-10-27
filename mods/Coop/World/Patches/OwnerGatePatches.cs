@@ -46,7 +46,8 @@ internal static class OwnerGatePatches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BreakOnImpact), "OnCollisionEnter")]
-    private static bool Breaking(BreakOnImpact __instance) => Simulates(__instance.gameObject);
+    private static bool Breaking(BreakOnImpact __instance) =>
+        Simulates(__instance.gameObject) || Breakables.SceneBreakers.IdOf(__instance) != 0; // The house's own go to the host (BreakPatches).
 
     // Water reaching food turns it into its soaked version.
     [HarmonyPrefix]

@@ -48,6 +48,7 @@ internal static class WorldSync
         HealthReport.Init();
         TalkSync.Init();
         PaintSync.Init();
+        Breakables.BreakNet.Init();
         RemoteRules.Init(mod);
 
         CoopSession.Started += () => WorldPatches.Apply(CoopSession.IsClient);
@@ -91,6 +92,7 @@ internal static class WorldSync
         SceneScan.Rebuild();
         StateTrackers.Rebuild();
         PaintSync.Start();
+        Breakables.SceneBreakers.Rebuild();
         Ambience.RadioPlayback.Rescan();
         int carried = resumed ? OwnershipParking.Restore() : 0;
         if (!resumed)
@@ -126,6 +128,7 @@ internal static class WorldSync
             return;
         ManifestWriter.Send(player);
         EconomySync.SendTo(player.Slot);
+        Breakables.BreakNet.SendSnapshot(player.Slot);
         FireSync.SendAgain();
         CopVanSync.SendAgain();
         NpcPoseSender.SendAllAgain();
@@ -160,6 +163,7 @@ internal static class WorldSync
         Ambience.TvPlayback.Clear();
         Ambience.RadioPlayback.Clear();
         PaintSync.Clear();
+        Breakables.SceneBreakers.Clear();
         RemoteNeeds.Clear();
         HealthReport.Clear();
         SpawnSender.Clear();
