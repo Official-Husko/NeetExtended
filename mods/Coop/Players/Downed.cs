@@ -16,6 +16,7 @@ internal static class Downed
 {
     public const float BleedOutSeconds = 15f;
     private const float ReviveHealth = 30f;
+    private const string DeadPose = "isDead";
 
     private static readonly HashSet<byte> Down = new HashSet<byte>();
     private static GameObject _player;
@@ -60,7 +61,11 @@ internal static class Downed
         }
         KeepEyesOpen();
         if (rig.TryGetComponent(out Player_Movement movement))
+        {
             movement.SlipAccessorNoRecov(true);
+            // The death pose; bodies on other screens copy the animator's switches.
+            movement.neetAC.SetBool(DeadPose, true);
+        }
         Announce(true);
         CoopMod.Log.Info("You went down.");
         return true;
@@ -132,7 +137,10 @@ internal static class Downed
         if (stats != null)
             stats.health.ForceSetVal(ReviveHealth);
         if (player.TryGetComponent(out Player_Movement movement))
+        {
+            movement.neetAC.SetBool(DeadPose, false);
             movement.SlipRecoverAccessor();
+        }
         CoopMod.Log.Info("Someone fed you back up.");
     }
 
