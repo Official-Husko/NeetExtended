@@ -32,6 +32,7 @@ public static class ChangelogBuilder
         ["randomizer"] = "Randomizer",
         ["perf"] = "Performance Fixes",
         ["updates"] = "Update Checker",
+        ["weather"] = "Weather Expansion",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
         ["ui"] = "Interface",
