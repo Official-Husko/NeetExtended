@@ -32,6 +32,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new KnotNamesFix());
         ModFeatures.Register(this, new SegmentLinesFix());
         ModFeatures.Register(this, new FailedOrderCopsFix());
+        ModFeatures.Register(this, new CassettePriceFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);

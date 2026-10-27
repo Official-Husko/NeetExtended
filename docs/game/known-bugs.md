@@ -23,6 +23,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Poopman never says his hurt and disgusted lines | `KnotNames` |
 | Grandpa is sent to a routine he doesn't have | `SegmentLines` |
 | Market orders that don't go through can still bring the cops | `FailedOrderCops` |
+| Custom cassettes cost 10$ more than shown | `CassettePrice` |
 
 ## Saving fails with a dead house spider around
 
@@ -190,6 +191,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** during `OrderItem`, a prefix on `HouseManager.SpawnCopVan` holds the van back; a postfix calls it if the order went through.
 
 **Reproduce:** set `HouseManager.copVan` to null and `demoMode` to true, then place black market orders (`CacheItemToOrder` and the confirm button). With `FailedOrderCops` off, a van comes within a few; with it on, none.
+
+## Custom cassettes cost 10$ more than shown
+
+**What happens:** the cassette site's custom tape shop shows the tape's price (75$) and charges 85$.
+
+**Cause:** `CustomItemShop.CacheItemToOrder` adds 10$ to the shown price for custom pictures (type 0) and nothing for tapes (type 1), but both buy buttons order with `priceOffset` 10 (`CustomItemShop.cs:77-92`).
+
+**Fix:** a postfix sets the tape's buy button up again with `priceOffset` 0, keeping the game's callback that puts the song on the tape.
+
+**Reproduce:** order a custom tape and compare the money before and after with the label.
 
 ## Not bugs
 
