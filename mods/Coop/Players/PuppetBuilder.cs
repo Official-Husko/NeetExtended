@@ -35,6 +35,11 @@ internal static class PuppetBuilder
         body.isKinematic = true;
         body.interpolation = RigidbodyInterpolation.Interpolate;
 
+        // On the players' layer, with stand-in stats: NPCs, cops, punches and explosions find this
+        // body like a player's, and what hits it goes to that player's own game (World/Forwarding).
+        root.layer = LayerMask.NameToLayer("Player");
+        root.AddComponent<World.Forwarding.RemoteActor>().Init(slot);
+
         var copy = Object.Instantiate(model.gameObject, root.transform, false);
         copy.name = BodyChild;
         copy.transform.localPosition = model.localPosition;

@@ -44,4 +44,6 @@ public static class MessageIds
     public const ushort WorldFire = 118;
     public const ushort WorldFireOut = 119;
     public const ushort WorldCopVan = 120;
+    public const ushort WorldForward = 121;
+    public const ushort WorldHealth = 122;
 }

@@ -1,5 +1,6 @@
 using Coop.Session;
 using Coop.World.Economy;
+using Coop.World.Forwarding;
 using Coop.World.Hazards;
 using Coop.World.Manifest;
 using Coop.World.Npcs;
@@ -36,6 +37,8 @@ internal static class WorldSync
         EconomySync.Init();
         FireSync.Init();
         CopVanSync.Init();
+        Forwarder.Init();
+        HealthReport.Init();
 
         CoopSession.Started += () => WorldPatches.Apply(CoopSession.IsClient);
         CoopSession.WorldReady += () => Start(resumed: false);
@@ -133,6 +136,7 @@ internal static class WorldSync
         FireSync.Clear();
         CopVanSync.Clear();
         RemoteNeeds.Clear();
+        HealthReport.Clear();
         SpawnSender.Clear();
         SpawnContext.Reset();
         OwnershipNet.Clear();
@@ -179,6 +183,7 @@ internal static class WorldSync
         }
         else
             NpcPoseReceiver.LateTick();
+        HealthReport.Tick();
         SpawnSender.FlushSpawns();
         OwnershipNet.Flush();
         StateSync.LateTick();

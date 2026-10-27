@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Coop.World.Forwarding;
 using Coop.World.Objects;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,15 +8,16 @@ namespace Coop.World.Npcs;
 
 /// <summary>
 /// Client: NPCs only think on the host. Here every brain is switched off and its body becomes a
-/// puppet the host's stream moves: no brain, no walking or hand logic, no needs, no damage, kinematic
-/// bodies. Everything is plain component state, so doing it again (after a hot reload) is harmless.
+/// puppet the host's stream moves: no brain, no walking or hand logic, no needs, kinematic bodies.
+/// Hits on it don't hurt it here but go to the host's real NPC. Everything is plain component state, so doing it again (after a hot reload) is harmless.
 /// The parts that need the components' own Start to have run wait a frame.
 /// </summary>
 internal static class NpcPuppets
 {
     private static readonly List<NetObject> Later = new List<NetObject>();
-    private static readonly Dictionary<Stat, Stat.EffectManager> Damage = new Dictionary<Stat, Stat.EffectManager>();
-    private static readonly Stat.EffectManager NoDamage = (pos, initVal, potency, type, force, source) => 0f;
+    // Each NPC's health: its own damage handling, and the one standing in for it here.
+    private static readonly Dictionary<Stat, (Stat.EffectManager Own, Stat.EffectManager Ours)> Damage =
+        new Dictionary<Stat, (Stat.EffectManager, Stat.EffectManager)>();
 
     public static void Puppetize(NetObject o)
     {
@@ -90,28 +92,35 @@ internal static class NpcPuppets
         if (go.TryGetComponent(out CatStats cat))
             cat.enabled = false;
         if (go.TryGetComponent(out ActorStats actor))
-            BlockDamage(actor);
+            PassOnDamage(actor, o.Ref);
         o.Brain.enabled = false;
     }
 
-    // Knives, traps, fire and punches here must not kill the host's NPC on this screen only.
-    private static void BlockDamage(ActorStats actor)
+    // Punches, knives and explosions here must not kill the host's NPC on this screen only: the hit
+    // goes to the host, and the NPC's death comes back from there.
+    private static void PassOnDamage(ActorStats actor, NetRef npc)
     {
         if (actor.stats == null || !actor.stats.TryGetValue(typeof(Health), out var health) || health == null)
             return;
-        if (health.manageEffect == NoDamage)
+        if (Damage.ContainsKey(health))
             return;
-        Damage[health] = health.manageEffect;
-        health.manageEffect = NoDamage;
+        // Stat.Affect passes (position, potency, starting value, kind, force, source).
+        Stat.EffectManager ours = (position, potency, start, kind, force, source) =>
+        {
+            Forwarder.HitNpc(npc, position, potency, kind, force);
+            return 0f;
+        };
+        Damage[health] = (health.manageEffect, ours);
+        health.manageEffect = ours;
     }
 
-    /// <summary>Puts the NPCs' own damage handling back (the mod unloads; the next copy blocks it again).</summary>
+    /// <summary>Puts the NPCs' own damage handling back (the mod unloads; the next copy takes over again).</summary>
     public static void RestoreDamage()
     {
         foreach (var pair in Damage)
         {
-            if (pair.Key != null && pair.Key.manageEffect == NoDamage)
-                pair.Key.manageEffect = pair.Value;
+            if (pair.Key != null && pair.Key.manageEffect == pair.Value.Ours)
+                pair.Key.manageEffect = pair.Value.Own;
         }
         Damage.Clear();
         Later.Clear();

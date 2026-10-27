@@ -30,6 +30,20 @@ internal static class OwnerGatePatches
         return false;
     }
 
+    // Knives, flying things and snapping traps hurt where they're simulated; hits on other players'
+    // bodies go to their games from there (World/Forwarding), so nobody is hurt twice.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Cutter), "OnCollisionEnter")]
+    private static bool Cuts(Cutter __instance) => Simulates(__instance.gameObject);
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Impacter), "OnCollisionEnter")]
+    private static bool Hits(Impacter __instance) => Simulates(__instance.gameObject);
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Mouse_Trap), "OnCollisionEnter")]
+    private static bool TrapSnaps(Mouse_Trap __instance) => Simulates(__instance.gameObject);
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BreakOnImpact), "OnCollisionEnter")]
     private static bool Breaking(BreakOnImpact __instance) => Simulates(__instance.gameObject);

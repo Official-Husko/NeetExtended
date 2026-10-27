@@ -110,7 +110,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 ### Players
 
 - Remote players have the default face, and their hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
-- Remote bodies are on the Default layer: NPCs don't see them, talk to them or hurt them; explosions, kicks and teleports don't reach a remote player's real body. (world, M2: forwarding)
+- Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Spiders still ignore remote players (they want an enabled Brain), and NPCs only talk to the host. Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.
 
 ### Scenes and story
@@ -151,7 +151,8 @@ Picking things up and pushing them:
 NPCs:
 
 - NPCs think only on the host. Clients see their position and rotation (corpses included), the walking, sitting, crouching and death animations, dancing, speed and raised hands. They don't see crouch height, kicks, or an NPC taking clothes off (dressing is shared, undressing isn't). Skeletonizing and gibbing should come through as the spawns and destroys they are; untested.
-- NPC punches, bites and cop shots can't hurt a remote player, and a client can't hurt an NPC (the NPC copies on clients take no damage).
+- What hurts a player hurts their real body, whoever's game it happened in: NPC punches, cop shots, player punches and kicks, knives, guns, traps and explosions (with their push). Burns come from each game's own copy of the fire. A client's hits on an NPC go to the host's real NPC.
+- Not passed on yet: spiders only go after NPCs and the host's player; a rat held by a client doesn't bite; NPCs and cops can't knock things out of a remote player's hands; the skeleton parasite only goes after the host's player.
 
 Money and the computer:
 

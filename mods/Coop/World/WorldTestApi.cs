@@ -56,6 +56,33 @@ public static class WorldTestApi
         return $"Used {o} ({used} parts).";
     }
 
+    /// <summary>Hits another player's body here the way a punch does (through its stats).</summary>
+    public static string HitPlayer(int slot, float amount)
+    {
+        var body = Coop.Players.RemotePlayers.Find((byte)slot);
+        if (body == null || !body.TryGetComponent(out ActorStats stats))
+            return $"No body for slot {slot} here.";
+        stats.stats[typeof(Health)].Affect(body.transform.position, -amount, EffectType.Impact);
+        return $"Hit slot {slot} for {amount}; it shows {stats.stats[typeof(Health)].GetVal():0} health here.";
+    }
+
+    /// <summary>Hits an NPC here the way a punch does (on a client, its copy).</summary>
+    public static string HitNpc(int npcId, float amount)
+    {
+        var o = Find(npcId);
+        if (o == null || !o.Go.TryGetComponent(out ActorStats stats) || !stats.stats.ContainsKey(typeof(Health)))
+            return $"No NPC {npcId} with health here.";
+        stats.stats[typeof(Health)].Affect(o.Tf.position, -amount, EffectType.Impact);
+        return $"Hit {o} for {amount}; {stats.stats[typeof(Health)].GetVal():0} health here.";
+    }
+
+    /// <summary>This game's player's health.</summary>
+    public static string MyHealth()
+    {
+        var player = WorldSide.LocalPlayer;
+        return player != null && player.TryGetComponent(out PlayerStats stats) ? stats.health.GetVal().ToString("0.0") : "No player.";
+    }
+
     /// <summary>Where a shared thing is here, who simulates it and whether it's a replica.</summary>
     public static string Where(int itemId)
     {
