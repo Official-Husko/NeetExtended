@@ -11,6 +11,7 @@ internal static class TalkSync
         Messages.On(MessageIds.WorldTalkView, ClientTalk.OnView);
         PhoneRequests.Init();
         PhoneScreens.Init();
+        SoulTrade.Init();
     }
 
     public static void Start(bool host)

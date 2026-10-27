@@ -10,10 +10,11 @@ namespace Coop.World.Talk;
 
 /// <summary>
 /// Host: the story's functions that act on "the player" (KillPlayer, SkeletonizePlayer and
-/// KnockoutPlayer, which the game points at the speaker's playerRef) act on the talking player when
-/// the step is a remote player's: the effect goes to their game and happens to their real body there.
+/// KnockoutPlayer, which the game points at the speaker's playerRef, and TradeSoulForClone, which
+/// uses the host's player) act on the talking player when the step is a remote player's: the effect
+/// goes to their game and happens to their real body there (see <see cref="SoulTrade"/>).
 /// In the host's own conversations they're the game's functions, untouched. The story keeps its
-/// functions in a table; World swaps these three in it and puts the game's back when it stops.
+/// functions in a table; World swaps these in it and puts the game's back when it stops.
 /// </summary>
 internal static class TalkExternals
 {
@@ -33,6 +34,7 @@ internal static class TalkExternals
         Wrap("KillPlayer", (c, args) => Forwarder.StoryKilled(c.Slot));
         Wrap("SkeletonizePlayer", (c, args) => Forwarder.StorySkeletonized(c.Slot));
         Wrap("KnockoutPlayer", (c, args) => Forwarder.StoryKnockedOut(c.Slot, args.Length > 0 ? Convert.ToSingle(args[0]) : 0f));
+        Wrap("TradeSoulForClone", (c, args) => SoulTrade.Request(c));
     }
 
     public static void Uninstall()

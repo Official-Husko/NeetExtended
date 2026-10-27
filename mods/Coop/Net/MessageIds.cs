@@ -59,4 +59,5 @@ public static class MessageIds
     public const ushort WorldTalkView = 129;
     public const ushort WorldPhoneButton = 130;
     public const ushort WorldPhones = 131;
+    public const ushort WorldSoulTrade = 132;
 }
