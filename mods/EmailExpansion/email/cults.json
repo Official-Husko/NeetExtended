@@ -1,0 +1,292 @@
+// Cults, Satan and the occult: the Low Church of Brown, Satan's newsletter, Hell HR, a ghost with
+// roommate rules, a sacrifice group chat, and a sacrifice tips digest. Flags are cult_ prefixed.
+{
+  "emails": [
+    {
+      "id": "cult-brown-invite",
+      "subject": "Fire congregation tonite!!",
+      "send": { "trigger": "random", "weight": 2 },
+      "body": [
+        "<size=150%>BROTHER YOU HAVE BEEN CHOSEN<size=100%>",
+        "The Low Church of Brown is doing a fire congregation tonite at the old quarry. Bring a lighter and a casserole.",
+        "The Bishop of Brown will be flowing. Its not weird its spiritual.",
+        { "choices": [
+          {
+            "text": "I'm in. Where do I sign?",
+            "say": [
+              "Sign in ur own blood. Just a little bit. Bishop says a tooth is fine too.",
+              { "do": "flag", "name": "cult_joined" }
+            ]
+          },
+          {
+            "text": "Is there food?",
+            "say": [
+              "Yes. Brownies. I made them with my special ingredient. Dont ask what it is. U will be so chill u forget ur own name.",
+              { "do": "deliver", "item": "Candy_Bar", "after": 15 }
+            ]
+          },
+          {
+            "text": "Cults are for losers.",
+            "say": [
+              "<size=150%>OK<size=100%>",
+              "We know ur address. We also know where the fuse box is.",
+              { "do": "flag", "name": "cult_refused" },
+              { "do": "power", "on": false, "for": 90 }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "cult-tithe-bill",
+      "subject": "TITHE NOTICE: 13$ DUE",
+      "send": { "trigger": "wake", "when": { "flag": "cult_joined" } },
+      "body": [
+        "Brother. The Bishop noticed ur tithe is late.",
+        "Tithe is 13$ a week. 13 is an unlucky number. That's the point. Dont question it.",
+        { "choices": [
+          {
+            "text": "Here. Take it.",
+            "if": { "money": 13 },
+            "say": [
+              { "do": "money", "amount": -13 },
+              { "do": "stat", "name": "Soul", "add": 3 },
+              "Blessed be ur wallet. Bishop says ur soul is a little cheaper now. Good job."
+            ]
+          },
+          {
+            "text": "I don't have 13$.",
+            "say": [
+              "<color=red>Then pay in something else. We take pennies. We take ur dad's ring. We take ur left nut.",
+              "The Bishop switched ur lights off as a sign. Dont tell ur mom.",
+              { "do": "flag", "name": "cult_tithe_late", "add": 1 },
+              { "do": "power", "on": false, "for": 60 }
+            ]
+          },
+          {
+            "text": "Fuck the Bishop.",
+            "say": [
+              "<size=150%><color=red>THAT IS A SIN<size=100%>",
+              "The Bishop has been told. He is sending a deacon. Enjoy ur day.",
+              { "do": "email", "email": "cult-bishop-threat", "after": 120 },
+              { "do": "knockout", "seconds": 6 }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "cult-satan-newsletter",
+      "subject": "Satan's Newsletter Vol. 666",
+      "send": { "trigger": "random", "weight": 2 },
+      "body": [
+        "<color=red>yo Satan here who dis?",
+        "<color=red>Hope ur doing ok down there in the basement of ur soul lol. Its hot. Bring a fan.",
+        "<color=red>This weeks newsletter:",
+        "<color=red>1. Hell is hot. We said it. Wear shorts.",
+        "<color=red>2. The sinners' wall is finished. Ur name is on it already, I spelled it right this time.",
+        "<color=red>3. Stop saying oh my god. We heard it. Its getting old bro.",
+        { "choices": [
+          {
+            "text": "Who is this?",
+            "say": [
+              "<color=red>Im the guy who owns the place bro. U signed the thing. Page 4, big print.",
+              "<color=red>Ur gonna remember ur signature when ur ass is on fire."
+            ]
+          },
+          {
+            "text": "Unsubscribe me.",
+            "say": [
+              "<color=red>Cant unsubscribe. Its in the contract. Page 4 again.",
+              { "do": "flag", "name": "cult_satan_sub" }
+            ]
+          },
+          {
+            "text": "Hook me up with the deal.",
+            "if": { "stat": "Soul >= 11" },
+            "say": [
+              "<color=red>Ooh a go-getter. Here, thirty bucks, soul discount applied.",
+              "<color=red>Dont blow it all on Mountain Doo and bad decisions.",
+              { "do": "stat", "name": "Soul", "add": -10 },
+              { "do": "money", "amount": 30 },
+              { "do": "flag", "name": "cult_satan_deal", "set": 1 }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "cult-hr-demons",
+      "subject": "Welcome to Hell HR!!",
+      "send": { "trigger": "order", "store": "OccultMarket", "delay": 30 },
+      "body": [
+        "Dear employee (soul number 66 is not u, we checked lol)",
+        "Congrats on ordering from the Occult Market. This means u are now officially on our payroll.",
+        "Ur first performance review: 3 out of 5 suffering. Needs more screaming. Keep it up.",
+        { "choices": [
+          {
+            "text": "What's the pay?",
+            "say": [
+              "Pay is 2$ and exposure to bad dreams. Dental is not included.",
+              { "do": "money", "amount": 2 }
+            ]
+          },
+          {
+            "text": "I quit.",
+            "say": [
+              "<size=150%>U CANT QUIT<size=100%>",
+              "Quitting is a mortal sin under section 6. U have been moved to Floor 3. Lights are out while we audit ur file.",
+              { "do": "flag", "name": "cult_quit", "set": 1 },
+              { "do": "power", "on": false, "for": 120 }
+            ]
+          },
+          {
+            "text": "Ok I'll try harder.",
+            "say": [
+              "Good. Here is ur welcome kit. Soul sphere. Dont drop it, its heavy and it judges u.",
+              { "do": "give", "item": "Soul_Sphere" },
+              { "do": "stat", "name": "Soul", "add": -2 }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "cult-ghost-rules",
+      "subject": "new house rules (from the ghost)",
+      "send": { "trigger": "random", "weight": 1 },
+      "body": [
+        "hey. its me. the ghost. i live in the attic now. ur mom said its fine",
+        "<size=60%>i know u cant see me. thats the first rule. u dont look up there<size=100%>",
+        "new rules for the house:",
+        "1. no more screaming at 3am",
+        "2. the toilet seat stays DOWN",
+        "3. dont touch my stuff in the attic",
+        "4. stop saying boo. its the 14th time and its not funny",
+        { "choices": [
+          {
+            "text": "Fuck off ghost.",
+            "say": [
+              "<size=150%>ok.<size=100%>",
+              "the attic is cold tonite",
+              { "do": "power", "on": false, "for": 45 }
+            ]
+          },
+          {
+            "text": "Rules accepted, ghost.",
+            "say": [
+              "good. ill see u at 3am. dont look at the mirror. i said dont",
+              { "do": "flag", "name": "cult_ghost_friend", "set": 1 }
+            ]
+          },
+          {
+            "text": "What's in it for me?",
+            "say": [
+              "i will leave the attic door open. thats all i got. and a candle, i stole it from the church",
+              { "do": "give", "item": "Candle" }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "cult-group-chat",
+      "subject": "RE: RE: the goat",
+      "send": { "trigger": "random", "weight": 2 },
+      "body": [
+        "Dwayne: ok is the goat ready",
+        "Kayla: no the goat ate the candle again",
+        "Dwayne: bro the Bishop said no candles in the goat",
+        "Kayla: hes not in the goat hes in the freezer",
+        "Dwayne: ok so who has the knife",
+        "Mrs Pam: i do. and to whoever this is on the cc, we see u. we see ur address",
+        { "choices": [
+          {
+            "text": "I'm in the wrong chat.",
+            "say": [
+              "Dwayne: lol he thinks hes not in the cult",
+              "Mrs Pam: DONT TELL HIM ITS A GROUP CHAT"
+            ]
+          },
+          {
+            "text": "Can I be the goat?",
+            "say": [
+              "Kayla: omg yes. goats dont get a vote lol",
+              { "do": "flag", "name": "cult_goat", "set": 1 },
+              { "do": "give", "item": "Mask_Pumpkin_Angry" }
+            ]
+          },
+          {
+            "text": "Remove me from this chat.",
+            "say": [
+              "Mrs Pam: we cant. u are the sacrifice now hon",
+              { "do": "knockout", "seconds": 10 }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "cult-sacrifice-digest",
+      "subject": "Sacrifice Tips Digest #34",
+      "send": { "trigger": "random", "weight": 1 },
+      "body": [
+        "<size=150%>SACRIFICE TIPS DIGEST<size=100%>",
+        "1. Dont use the good knife. Use the one with the skull handle. Ask the goat about it.",
+        "2. Light the candles before the victim arrives. Victims are shy.",
+        "3. Dont sacrifice ur roommates. They dont count. They yell too much anyway.",
+        "4. Do not put the goat in the microwave. Learned that the hard way, Brenda.",
+        { "choices": [
+          {
+            "text": "Who is Brenda?",
+            "say": [
+              "Brenda was our secretary. She is in the cellar now. Dont go in the cellar.",
+              "<size=60%>...she is still knocking<size=100%>"
+            ]
+          },
+          {
+            "text": "Subscribe (10$).",
+            "if": { "money": 10 },
+            "say": [
+              { "do": "money", "amount": -10 },
+              { "do": "flag", "name": "cult_subscribed", "set": 1 },
+              "Welcome to the digest fam. Ur first issue is a candle. Light it."
+            ]
+          },
+          {
+            "text": "Unsubscribe.",
+            "say": [
+              "Brenda says u cant. She reads the mail too."
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "cult-bishop-threat",
+      "subject": "BROTHER. WE NEED TO TALK.",
+      "body": [
+        "<size=150%>BROTHER<size=100%>",
+        "The Bishop of Brown has heard u said fuck him. He is hurt. He cried in front of the whole congregation.",
+        "He says he will come to ur house and smell ur room. In person.",
+        { "choices": [
+          {
+            "text": "Sorry Bishop.",
+            "say": [
+              "Ok. The Bishop forgives u. Bring 13$ anyway. Thats the rule.",
+              { "do": "flag", "name": "cult_apologized", "set": 1 }
+            ]
+          },
+          {
+            "text": "Come get me, Bishop.",
+            "say": [
+              "<size=150%>COOL<size=100%>",
+              "He's on his way. He's not a biker. He's a DEACON.",
+              { "do": "npc", "name": "Biker" }
+            ]
+          }
+        ] }
+      ]
+    }
+  ]
+}

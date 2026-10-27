@@ -106,7 +106,16 @@ Modders can add calls as JSON or Ink files in any mod's `phone` folder.
 
 ## Email Expansion
 
-New emails in the computer's inbox (Rail Mail), and you can answer them: replies are buttons under the email, and what you pick changes what happens next. It comes with Rail Mail's welcome email (free money, maybe) and mom sending snack money.
+New emails in the computer's inbox (Rail Mail), and you can answer them: replies are buttons under the email, and what you pick changes what happens next. About 70 of them, as crude as the game's own spam:
+
+- **Scams**: a prince stuck in gravy, the Rail Lotery, a crypto coin for people in bed, the uncledad and his cow, a scammer who falls in love with you (and her mom).
+- **Family**: mom forwarding shower articles and sending snack money, grandpa in all caps, a cousin with a boat, a reply-all ham disaster, your clone, and dad's out-of-office reply.
+- **Store orders**: confirmations that overshare, a black market satisfaction survey, a package from the occult market that's alive, a courier who ate your bread.
+- **Cults and Satan**: the Low Church of Brown, tithes, Satan's newsletter, Hell's HR department, a ghost's house rules.
+- **Online life**: the 1337 gamer squad, forum flame wars, a dating site for shut-ins, a streamer with two viewers, someone who found your fanfic.
+- **Bills and authorities**: C.U.M. taxes and late fees, the power company, a court summons, jury duty, the census, the HOA about the face in your lawn.
+- **Creepy**: emails from the basement, the machine, your own account, dad's old account, the walls, and the future.
+- **The neighbourhood**: Dot's list, smell complaints, Pumpkin Pizza, the Spookbusters invoice, Doug from the reunion. These follow up on what happened in your phone calls.
 
 Emails can pay you, charge you, send stuff to the front door, cut the power, send someone over or make the phone ring. Some only come after another email, a reply, a phone call, a store order, or the morning after you slept.
 

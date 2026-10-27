@@ -12,6 +12,19 @@ Emails are plain files. Any mod can ship them in an `email` folder; no code need
 | RE: ur free money | The morning after you took the money | Rail Mail wants it back. |
 | money on ur card | Now and then, at most every 45 minutes | Mom sends snack money. Written in Ink by hand (`email/from-mom.ink`). |
 
+And about 70 more, one file per kind, most of them arriving at random and some only after another email, a reply, a phone call, a store order or a night's sleep:
+
+| File | What's in it |
+| --- | --- |
+| `spam.json` | A prince stuck in gravy, the Rail Lotery, phishing, a crypto coin, the uncledad's cow, a scammer in love and her mom, miracle pills. |
+| `family.json` | Mom's shower articles and snack money, grandpa in all caps, the cousin with a boat, a reply-all ham thread, your clone, dad's out-of-office. |
+| `orders.json` | After store orders: confirmations, a pizza review, the black market survey, a live occult package, a courier who ate your bread, refunds, Rail Mail's newsletter. |
+| `cults.json` | The Low Church of Brown, tithes, Satan's newsletter, Hell's HR, a ghost's house rules, a cult group chat, the Bishop. |
+| `online.json` | The 1337 gamer squad, a forum flame war, a dating site, the anime card game, a streamer, a guild kick, a virus pop-up, your fanfic. |
+| `authorities.json` | C.U.M. taxes and late fees, the power company, a court summons, jury duty, the census, an inspection, the water department, the HOA. |
+| `creepy.json` | The basement, the machine, your own account, dad's account, the walls, a photo of your back, your future self, a blackmail tape. |
+| `neighbourhood.json` | Follow-ups to the phone calls: Dot's list, smell complaints, Pumpkin Pizza, the Spookbusters invoice, the reunion, the stapler, a job rejection. |
+
 Switch on the Mods page (F1): **New emails arrive**. In Settings, **Fewest/Most minutes between emails** set how often a random new email shows up (4 to 10 minutes by default).
 
 The **Email** tab in the mod menu lists every email with a SEND NOW button, any problems in email files, and RELOAD EMAILS.

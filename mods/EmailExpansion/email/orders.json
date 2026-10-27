@@ -1,0 +1,243 @@
+// Store and order emails. Ordering from a computer store can bring one of these: the confirmation,
+// the review that begs, the black market survey, the occult shipping notice, the courier who ate
+// part of the order, the refund, the mistake, and the loyalty program. Rail Mail's own promo
+// newsletter is in here too.
+{
+  "emails": [
+    {
+      "id": "order-confirm",
+      "subject": "ORDER CONFIRMED!!! #0000420",
+      "send": { "trigger": "order", "store": "Normal", "delay": 20 },
+      "body": [
+        "<size=150%>THANK U FOR UR ORDER<size=100%>",
+        "Ur order is being packed by Gary. Gary has not washed his hands since march.",
+        "Items: 1x Pizza. 1x Candy Bar. 1x whatever u were crying about at 3am.",
+        "We saved ur card 1234-5678-9999-0000 (its ur moms, we know, dont cry).",
+        "Ur order will arrive when it arrives. Estimated time: however long mom's car takes.",
+        { "choices": [
+          {
+            "text": "Why do u have my moms card",
+            "say": [
+              "Ur mom gave it to us. She said u were a good boy and to make sure u eat.",
+              "She cried on the phone for 40 minutes. We did not hang up. It was nice."
+            ]
+          },
+          { "text": "Cancel my order.", "say": "Cant cancel. Gary already has it in his hands. Sorry for ur luck." },
+          { "text": "Ok bye.", "say": "<size=60%>ok bye loser<size=100%>" }
+        ] }
+      ]
+    },
+    {
+      "id": "order-review",
+      "subject": "pls rate ur pizza",
+      "send": { "trigger": "order", "store": "Normal", "delay": 600 },
+      "body": [
+        "<size=150%>HI ITS RATE PLS<size=100%>",
+        "We have 4 stars and its the only thing keeping us alive.",
+        "Our manager Dave says if we dont get 5 stars he will make us eat the pizza.",
+        "Dave is not a real manager. Dave sleeps in the walk in freezer.",
+        "Please. We are begging. We are behind the counter on our knees right now.",
+        { "choices": [
+          {
+            "text": "5 stars. Dont cry.",
+            "say": [ "<size=60%>ok thank u<size=100%>", { "do": "flag", "name": "order_five_star" } ]
+          },
+          {
+            "text": "1 star. It was cold.",
+            "say": [ "It was cold because u were cold. Ur house is cold sir. We can smell it from here." ]
+          },
+          {
+            "text": "Fuck ur stars.",
+            "say": [ "Ok. Dave says ur a bad person now. Dave is watching u through the drive thru window." ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "order-black-survey",
+      "subject": "Customer satisfaction survey",
+      "send": { "trigger": "order", "store": "BlackMarket", "delay": 240 },
+      "body": [
+        "Hello valued customer of the back alley,",
+        "Please take 2 minutes to tell us how u liked ur new order.",
+        "Question 1: Did the thing stop moving before u finished the sentence? Y/N",
+        "Question 2: On a scale of 1 to 6 how much did u scream when the man said this wont hurt?",
+        "Question 3: Would u recommend us to ur mom? She is going to find out anyway.",
+        "Survey complete. Thank u. Coupon: 1 bone, free, if u say u liked it.",
+        { "choices": [
+          {
+            "text": "Yes. 10/10. Would scream again.",
+            "say": [
+              "Thank u. The bone is in the mail. Dont ask what bone. Its a bone.",
+              { "do": "deliver", "item": "Bone_Humerus", "after": 40 }
+            ]
+          },
+          {
+            "text": "It was shit. I want a refund.",
+            "say": "Refund is a 4 hour wait and a sad man named Terry. Terry is on his way."
+          },
+          {
+            "text": "Who is Terry?",
+            "say": "Terry is the guy who did the thing. Terry says hi. Terry says sorry about the blood on ur carpet."
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "order-occult-shipping",
+      "subject": "UR PACKAGE IS ALIVE",
+      "send": { "trigger": "order", "store": "OccultMarket", "delay": 120 },
+      "body": [
+        "<size=150%>CONGRATULATIONS<size=100%>",
+        "Ur package has been shipped by the Sacred Courier of the Dark Mail. Tracking number: 666. Its the only number we have.",
+        "Ur package is ALIVE. We repeat, ALIVE.",
+        "It asked for ur adress. We gave it. It said thanks. It said it will be there soon.",
+        "Shipping fee: 20$. Its alive so it costs more. Please dont feed it.",
+        { "choices": [
+          {
+            "text": "Pay 20$ and send it.",
+            "if": { "money": 20 },
+            "say": [
+              { "do": "money", "amount": -20 },
+              "Ok. Its on ur mat now. It is looking at the door. It is looking at u.",
+              { "do": "deliver", "item": "Eyeball", "after": 60 }
+            ]
+          },
+          {
+            "text": "Cant pay. Send it back.",
+            "say": "No returns. It knows where u live. It knows what u had for breakfast."
+          },
+          {
+            "text": "Is it dangerous?",
+            "say": "<color=red>Yes.<color=black> Its the most dangerous thing u will ever get. Thats why its cheap."
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "order-courier",
+      "subject": "Ur order had a incident",
+      "send": { "trigger": "order", "store": "Normal", "delay": 90 },
+      "body": [
+        "Hi its Glen. Ur driver.",
+        "I was driving ur order and I got hungry. Sorry.",
+        "I ate 1/3 of the bread. And the cheese. And the lid.",
+        "We are sending u the 2/3 I didnt eat. Its in the box on ur porch.",
+        "Dont tell my boss. Boss is Dave.",
+        { "do": "deliver", "item": "Bread_Loaf_2thirds", "after": 60 },
+        { "choices": [
+          {
+            "text": "Where is the rest of the bread?",
+            "say": "It is in Glen. Glen is in the van. Glen is asleep. Dont wake Glen."
+          },
+          {
+            "text": "Tell Glen to fuck off.",
+            "say": "Glen says fuck u too. Glen says ur mom says hi and she is sorry about the lid."
+          },
+          {
+            "text": "Ok. Keep the bread.",
+            "say": "Thats what Glen said u would say."
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "order-loyalty",
+      "subject": "U are GOLD now!!",
+      "send": { "trigger": "random", "when": { "day": ">= 2" } },
+      "body": [
+        "<size=150%>WELCOME TO THE GOLD CLUB<size=100%>",
+        "U have been selected for the Rail Mail Loyalty Program. U are now GOLD member.",
+        "Gold members get 1 point every time u leave the house.",
+        "U have 0 points.",
+        "Pls do not check the app to see if this is correct. We know it is not correct.",
+        { "choices": [
+          {
+            "text": "I never leave. What do I get?",
+            "say": [
+              "Gold perk: a free cardboard box with ur name on it. Ur name is spelled wrong.",
+              { "do": "deliver", "item": "Cardboard_Box", "after": 30 }
+            ]
+          },
+          {
+            "text": "I dont want to be gold.",
+            "say": "U are gold now. Gold is forever. Gold is ur whole life now."
+          },
+          { "text": "Ok.", "say": "U r welcome. Stay home." }
+        ] }
+      ]
+    },
+    {
+      "id": "order-refund",
+      "subject": "ur refund is here (maybe)",
+      "send": { "trigger": "order", "store": "Normal", "delay": 900 },
+      "body": [
+        "<size=150%>REFUND APPROVED<size=100%>",
+        "Ur last order was 6 days late, the pizza had a worm on it, and the bread was half gone. We are very sorry.",
+        "Here is 15$ refund. Its cash. Its real cash. Dont tell accounting.",
+        { "do": "money", "amount": 15 },
+        { "choices": [
+          {
+            "text": "Thanks. Dont do it again.",
+            "say": "We will do it again. Its the job."
+          },
+          {
+            "text": "Where is the worm?",
+            "say": "Worm is part of the refund. Worm is called Kevin. Kevin is a good boy. Kevin is in the garden now."
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "order-mistake",
+      "subject": "OOPS sorry",
+      "send": { "trigger": "order", "store": "Normal", "delay": 300 },
+      "body": [
+        "hi this is Warehouse Pete.",
+        "we packed ur order wrong. we sent u 1 free Turd.",
+        "its not a turd. its a candle. dont light it. dont look at it. dont ask.",
+        "its a free gift so u cant return it. free means free.",
+        { "do": "deliver", "item": "Turd1", "after": 30 },
+        { "choices": [
+          {
+            "text": "What do I do with a turd?",
+            "say": "Its a candle. U wrote candles on the feedback form. We read it. We read all of it."
+          },
+          {
+            "text": "Ok. I light it.",
+            "say": "Pete says u lit it. Pete is sorry about ur eyebrows. Pete is not sorry about the smell."
+          },
+          {
+            "text": "Pete you fucking idiot.",
+            "say": "Pete is not sorry. Pete is on his break in the walk in freezer with Dave."
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "railmail-promo",
+      "subject": "RAIL MAIL DEALS 4 U ONLY",
+      "send": { "trigger": "random", "weight": 2 },
+      "body": [
+        "Get railed by your mail without fail.",
+        "This week only: 50% off ur inbox. Less mail, more mail, u decide.",
+        "Gamer deals: buy 1 gamer tip, get 1 gamer tip free. Gamer tips are not refundable. Gamer tips are not real.",
+        "Rail Mail GOLD members get the same deal as Rail Mail SILVER members. Its the same deal.",
+        { "choices": [
+          {
+            "text": "Get railed.",
+            "say": [ "<size=150%>YES!!!<size=100%>", "Thank u. We will rail u daily now. Its not a threat. Its a promise." ]
+          },
+          {
+            "text": "Unsubscribe.",
+            "say": "We dont have unsubscribe. We have unsubscribing, which is the same thing but slower."
+          },
+          {
+            "text": "Stop emailing me you pervert.",
+            "say": "Pervert is a strong word. We are a email. We dont even have a face."
+          }
+        ] }
+      ]
+    }
+  ]
+}

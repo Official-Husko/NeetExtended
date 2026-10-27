@@ -1,0 +1,166 @@
+// Neighbourhood and the player's past: the emails that follow the next door, pizza, Spookbusters,
+// reunion, old job and recruiter calls. Most of them only arrive after one of those calls.
+{
+  "emails": [
+    {
+      "id": "town-dot-list",
+      "subject": "THE LIST (updated)",
+      "send": { "trigger": "wake", "when": { "any": [ { "flag": "neighbor_sugar_argued" }, { "flag": "neighbor_sugar_settled" } ] } },
+      "body": [
+        "Dot here. Ur mom gave me ur email too. She gave it to me over the bins.",
+        { "if": { "flag": "neighbor_sugar_settled" },
+          "then": [
+            "U paid me 10 bucks for the sugar. TEN BUCKS. I am not ur sugar daddy you little goblin.",
+            "Ok. U are off the list. U are on the OTHER list now. The one with the people who owe me a cup."
+          ],
+          "else": [
+            "U still owe me the sugar. U said u never borrowed it. Liar. Cardigan boy.",
+            "<size=150%>THAT IS FOUR TIMES NOW<size=100%>",
+            "I am counting the emails too. I have a blue cup and a list and the list has a cup on it."
+          ]
+        },
+        { "choices": [
+          { "text": "Here's 10 bucks for the cup.", "if": { "money": 10 }, "say": [ { "do": "money", "amount": -10 }, "Ten bucks for a cup. I have been robbed by a shut-in. I'm framing it." ] },
+          { "text": "Ten years is a long time, Dot.", "say": [ "It is. U smelled the whole time. The whole ten years." ] },
+          { "text": "I'm not reading this.", "say": [ "<size=60%>I can see u reading it. I can see u through the blinds.<size=100%>" ] }
+        ] }
+      ]
+    },
+    {
+      "id": "town-smell-complaint",
+      "subject": "HYGIENE COMPLAINT #4",
+      "send": { "trigger": "random", "once": true, "when": { "any": [ { "flag": "neighbor_smell_argued" }, { "flag": "neighbor_smell_sorry" } ] } },
+      "body": [
+        "<size=150%>FORMAL COMPLAINT<size=100%>",
+        "Dear the house on the left. This is ur neighbor. The one with the kitchen window open. Again.",
+        { "if": { "flag": "neighbor_smell_argued" },
+          "then": [
+            "I filed complaint number four with the council. Numbers one to three were filed with my nose. The council does not take noses.",
+            "They sent an inspector. He stood on ur step for 2 minutes and then ran. He's at the clinic now with his face in a bucket of ice.",
+            "The council votes on smell on Tuesday. U have till Tuesday."
+          ],
+          "else": [
+            "The lemon spray is on ur step. It smells like a lemon that died in a church.",
+            "Ur house still smells like a raccoon with a grudge. But now I can taste the lemon too and I hate that more."
+          ]
+        },
+        { "choices": [
+          { "text": "I'll shower on Tuesday.", "say": [ "Shower or the council comes with a hose. Not a joke. Blaine went in with the hose and came out with a new hobby.", { "do": "flag", "name": "town_shower_promise" } ] },
+          { "text": "I'm not showering for a council.", "say": [ "Then the council showers u. With the hose. Enjoy." ] },
+          { "text": "Is this a lemon or a threat?", "say": [ "Yes." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "town-pizza-points",
+      "subject": "Pumpkin Points!!",
+      "send": { "trigger": "random", "once": true, "when": { "all": [ { "called": "PhoneExpansion/pizza" }, { "not": { "flag": "pizza_list" } } ] } },
+      "body": [
+        "<size=150%>THANK U FOR CALLING PUMPKIN PIZZA!!<size=100%>",
+        "U have earned 1 (ONE) Pumpkin Point. Collect 10 Points and get a FREE medium pizza with a free ugly pumpkin on top.",
+        "Points are non refundable. Points are non transferable. Points are a feeling.",
+        "<size=60%>Points expire when u die. U will die. Probably soon. Who knows.<size=100%>",
+        { "choices": [
+          { "text": "Cash in my points.", "say": [ "U have 1 point. U need 10. Math is hard for a guy in a basement. We get it.", "Here is one more point. Now u have two. Go away." ] },
+          { "text": "Where's my pizza?", "say": [ "Points are a feeling, we said. Here is a feeling: we are calling u back to sell u a bigger pizza.", { "do": "ring", "call": "PhoneExpansion/pizza", "after": 60 } ] },
+          { "text": "Unsubscribe.", "say": [ "U cant. Unsubscribe is a phone call. U already did it. U are in the system with a pumpkin on ur name." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "town-pizza-list",
+      "subject": "YOU ARE ON THE LIST",
+      "send": { "trigger": "random", "once": true, "when": { "flag": "pizza_list" } },
+      "body": [
+        "<size=150%>PUMPKIN PIZZA MEMBER STATUS<size=100%>",
+        "Hello. Status for ur account: <color=red>ON THE LIST<color=black>.",
+        "The list is a drawer. The drawer is in the back. Dwayne is in the back too. Dwayne has the good knife for the cheese.",
+        "To get off the list u apologise. U apologise on the PHONE like a grown man. We do not read sorry in emails. We have a drawer for emails too. It's the same drawer.",
+        { "choices": [
+          { "text": "I'm sorry.", "say": [ "Sorry is a phone thing. Dwayne says hi. Dwayne says he can hear u breathing." ] },
+          { "text": "Who is Dwayne?", "say": [ "Dwayne is the list. Dwayne was a pizza once. He's still mad about it." ] },
+          { "text": "Ok bye.", "say": [ "<size=60%>one day u will be hungry and we will not come<size=100%>" ] }
+        ] }
+      ]
+    },
+    {
+      "id": "town-spook-invoice",
+      "subject": "INVOICE 0666 - GHOST",
+      "send": { "trigger": "random", "once": true, "when": { "called": "PhoneExpansion/spookbusters" } },
+      "body": [
+        "SPOOKBUSTERS. Invoice 0666. Thank u for ur business, u lazy fuck.",
+        "Opening a black door from a phone: 30$",
+        "Telling u not to call about the thing: 0$, we are generous",
+        "Ghost fee: 0$. The ghost is already in ur basement. It doesn't need paying. It needs feeding.",
+        "<size=150%>TOTAL DUE: 30$<size=100%>",
+        "We don't take cards from the dead. Cash only. Put it in the basket by the front door, not the basement basket.",
+        { "choices": [
+          { "text": "Here's 30 bucks. Leave me alone.", "if": { "money": 30 }, "say": [ { "do": "money", "amount": -30 }, "Paid. We will call u valued customer in the file. We have never said that to anybody." ] },
+          { "text": "I'm not paying a ghost.", "say": [ "We're not ghosts. We're BUSTERS. Ghosts pay us, u cheap little shit. The ghost is still in ur basement and it's paying anyway." ] },
+          { "text": "Is this a scam?", "say": [ "Yes. It's also a bill. Both are true, dumbass." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "town-reunion-yes",
+      "subject": "REUNION REMINDER",
+      "send": { "trigger": "random", "once": true, "when": { "flag": "past_reunion_yes" } },
+      "body": [
+        "Hey it's Denise!! Reminder: the reunion is Saturday. The gym. Seven o'clock. Warm punch is ready. It's the same punch as 2009. Nobody checked.",
+        "Doug made you a name tag. It says THE GUY. He spelled guy with a g and then drew a sad face next to it.",
+        "<size=60%>Doug is going to hold your hand for the slideshow. He practiced. He's been practicing on the fire door.<size=100%>",
+        { "choices": [
+          { "text": "I'm coming.", "say": [ "Wear pants that aren't pajamas. Wear shoes that aren't the ones from graduation. I can smell them from here.", { "do": "flag", "name": "town_reunion_going" } ] },
+          { "text": "Maybe.", "say": [ "U said maybe last time, u hermit crab. Doug has the name tag in his pocket. He's stroking it." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "town-reunion-no",
+      "subject": "Doug made a group",
+      "send": { "trigger": "random", "once": true, "when": { "flag": "past_reunion_no" } },
+      "body": [
+        "Doug made a group chat called WHERE IS THE GUY. The guy is u. U don't get a name in the group. U are a pronoun now.",
+        "41 people from the class of 2009 have joined. Most of them just wrote lol.",
+        "<size=150%>Somebody wrote is he dead.<size=100%>",
+        "Doug wrote no he lives in a house with a fire. There's no fire. Doug has been wrong about u since chemistry.",
+        { "choices": [
+          { "text": "Tell Doug I'm dead.", "say": [ "Doug cried. Then he asked ur mom if the funeral has a buffet. Ur mom said yes. Nobody has ever asked her anything before.", { "do": "flag", "name": "town_doug_thinks_dead" } ] },
+          { "text": "Leave the group.", "say": [ "U cant. Denise made it a permanent group. Denise has the admin rights to u." ] },
+          { "text": "Who is the guy?", "say": [ "U are, dipshit. Doug has been calling u the guy since 2008. It's the only nickname u ever got." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "town-stapler-notice",
+      "subject": "FORMAL STAPLER NOTICE",
+      "send": { "trigger": "random", "once": true, "when": { "called": "PhoneExpansion/past-stapler" } },
+      "body": [
+        "<size=150%>FORMAL NOTICE<size=100%>",
+        "Re: the red stapler. Company property. Last seen in the drawer of a desk u no longer sit at.",
+        "Please return the stapler to accounts within 5 business days or it will be considered a gift from u to us.",
+        "We do not want a gift. We have four staplers. None of them can staple. Gary tried. Gary cried.",
+        { "choices": [
+          { "text": "I threw it in the river.", "say": [ "River is where paper goes to die, and that's not a company problem. We're filing a form for the river too.", { "do": "flag", "name": "town_stapler_river" } ] },
+          { "text": "Staplers have no feelings.", "say": [ "Gary has feelings about the stapler. Gary wrote them down. The notes are 40 pages. It's the only time he's been happy." ] },
+          { "text": "Ok I'll mail it.", "say": [ "Mail it to accounts. Accounts is a room. Nobody goes in the room. U would be mailing it to a room of nobody." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "town-job-rejection",
+      "subject": "Your application",
+      "send": { "trigger": "random", "once": true, "when": { "called": "PhoneExpansion/past-recruiter" } },
+      "body": [
+        "Dear candidate. Thank u for applying for the position of Night Shift Warehouse Associate.",
+        "After careful review we regret to inform u that u have not been selected.",
+        "<size=60%>u did not apply<size=100%>",
+        "We have ur application anyway. It arrived in crayon. It is very thorough. It lists fax as a skill. We are sorry about the fax.",
+        { "choices": [
+          { "text": "I never applied.", "say": [ "Our records say u did. On a Tuesday, at 3am, from a computer that smells like a sandwich. We are sorry for ur loss." ] },
+          { "text": "Can I reapply?", "say": [ "Shower, then reapply. Shower, then reapply. Shower first. This is not a no. This is a not yet, you pale fuck." ] }
+        ] }
+      ]
+    }
+  ]
+}

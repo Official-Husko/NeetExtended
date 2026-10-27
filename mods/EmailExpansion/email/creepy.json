@@ -1,0 +1,243 @@
+// Creepy emails: the basement, the machine, your own address, dad's old account, the walls, a photo of your back,
+// a message from tomorrow and a bill from somebody who has the tape. Some come by themselves, some after the creepy calls.
+{
+  "emails": [
+    {
+      "id": "creep-basement",
+      "subject": "hey its from the basement",
+      "send": { "trigger": "random", "when": { "minutes": ">= 10" } },
+      "body": [
+        "<size=60%>hey.",
+        "its me. the thing under the stairs. dont look at the stairs.",
+        "i can see ur feet from down here. ur socks are a crime scene.",
+        { "choices": [
+          {
+            "text": "Who is this?",
+            "say": [ "ur basement. i live here now. i ate the chicken u didnt thaw", "it was still frozen in my mouth lol" ]
+          },
+          {
+            "text": "Ok I'm coming down.",
+            "say": [
+              "<color=red>NO. wait. ok. come down.</color>",
+              { "do": "power", "on": false, "room": "Basement", "for": 15 },
+              "<size=60%>the light went out. good. now u have to feel ur way down like a little wiener"
+            ]
+          },
+          {
+            "text": "Go away.",
+            "once": true,
+            "say": [ "<size=60%>ok", "i'll be here. i'm always here. i'm the mold in ur cereal bowl" ]
+          }
+        ] },
+        "<i>bring the good flashlight</i>. or dont. i like it dark. i like it when u fall."
+      ]
+    },
+    {
+      "id": "creep-machine",
+      "subject": "DON'T USE THE MACHINE",
+      "send": { "trigger": "order", "store": "OccultMarket", "delay": 30 },
+      "body": [
+        "<size=150%>DON'T USE THE MACHINE<size=100%>",
+        "<size=60%>u already ordered it. ok. its fine. its not fine.",
+        "The machine wants 3 things. ur name, ur birthday and a little bit of ur pee.",
+        "<color=red>dont give it the pee</color>",
+        { "choices": [
+          {
+            "text": "What's the machine?",
+            "say": [
+              "its in ur basement behind the furnace. it hums. the hum is ur dad saying ur name over and over. he's bad at saying it",
+              "<i>Don't use the machine.</i>"
+            ]
+          },
+          {
+            "text": "Ok I used it.",
+            "once": true,
+            "say": [
+              "<size=150%>WHY<size=100%>",
+              "now it has ur pee. ur pee is in the machine and the machine is in ur pee.",
+              { "do": "deliver", "item": "Eyeball", "after": 30 },
+              "its the first one it made. its still looking at u."
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "creep-you",
+      "subject": "Re: Re: me (its me)",
+      "send": { "trigger": "random", "when": { "minutes": ">= 25" } },
+      "body": [
+        "hi. its u.",
+        "not the u that sits in the chair. the u that sits in the chair when ur not there.",
+        "i sent this from ur account. ur password is still hamsterpoop69 lol. change it. or dont. i need it.",
+        "<size=60%>i think i live in the sent folder now. its very quiet in here. nobody writes back.",
+        { "choices": [
+          {
+            "text": "I'm not you.",
+            "say": [
+              "<size=150%>YES U ARE<size=100%>",
+              "u smell like u and u eat cereal with ur hands. only u do that.",
+              { "do": "flag", "name": "creepmail_you_met" }
+            ]
+          },
+          {
+            "text": "Delete ur account.",
+            "say": [ "cant. i already deleted u. ur the draft now.", "<i>draft</i> lol" ]
+          },
+          {
+            "text": "Why are you writing me?",
+            "once": true,
+            "say": [ "bc i need u to open dads old account. go there. i'll tell u the rest when u let me in the basement." ]
+          }
+        ] },
+        "<color=red>ill be in ur inbox when u sleep.</color>"
+      ]
+    },
+    {
+      "id": "creep-dad",
+      "subject": "Dad's old account (dont read)",
+      "send": { "trigger": "random", "when": { "called": "PhoneExpansion/creep-callback" } },
+      "body": [
+        "<size=60%>hi son",
+        "its dad. i got ur mom's old pc to turn on. its got my account. i never logged out of nothing in my whole life.",
+        "im in the garage. the garage is in the wall now. dont go in the wall. the wall is wet and it has dads in it",
+        "<size=150%>I CAN SEE U FROM THE WALL<size=100%>",
+        { "choices": [
+          {
+            "text": "Dad?",
+            "say": [
+              "yes sun",
+              "u were supposed to come to my funeral. ur mom says the funeral was yesterday. she's lying. she lies about hot dogs too."
+            ]
+          },
+          {
+            "text": "You're dead, dad.",
+            "say": [ "i know that. im dead and im not dead. its a 3 day thing.", "<size=60%>ur dog is dead too. sorry bud." ]
+          },
+          {
+            "text": "Send me the password.",
+            "once": true,
+            "say": [
+              "ok its 1234. same as ur bank and ur bike lock and ur ex",
+              "the key is taped under the fuse box. ur mom doesnt know about it. take it before she finds it and eats it.",
+              { "do": "give", "item": "Fuse" }
+            ]
+          }
+        ] },
+        "love u sun. dont call me back. the phone is the same wall."
+      ]
+    },
+    {
+      "id": "creep-walls",
+      "subject": "scratch scratch scratch",
+      "send": { "trigger": "random", "when": { "read": "creep-basement" } },
+      "body": [
+        "<size=60%>scratch scratch scratch",
+        "...hi. its the wall. the wall is fine. u dont have to be scared of the wall.",
+        "im behind the outlet by ur desk. number 3. the one that doesnt work. it doesnt work bc im in it.",
+        "im the power now. i eat it. it tastes like copper and ur mom's perfume.",
+        { "choices": [
+          {
+            "text": "Get out of the outlet.",
+            "say": [
+              "lol no",
+              { "do": "fuses" },
+              "<size=150%>THERE. NOW WE ARE BOTH IN THE DARK<size=100%>"
+            ]
+          },
+          {
+            "text": "Hi wall.",
+            "say": [ "hi. i like u. u have such a nice ceiling", "<size=60%>dont tell ur mom i said that" ]
+          },
+          {
+            "text": "What do u want?",
+            "say": [ "ur blood. just a little. for the outlets. they get thirsty" ]
+          }
+        ] },
+        "scratch..."
+      ]
+    },
+    {
+      "id": "creep-photo",
+      "subject": "[photo attached] ur back",
+      "send": { "trigger": "random", "when": { "flag": "creepmail_paid" } },
+      "body": [
+        "Here is the photo u paid for. Its ur back.",
+        "<size=60%>its from the bathroom. i took it from behind the shower curtain. the curtain was closed. i was not.",
+        "ur back is so white it looks like a fridge with the light off. u need to go outside. u need sun on ur back.",
+        "u have a mole on ur shoulder and its gotten bigger since u started playing the games. its like a little eye.",
+        { "choices": [
+          {
+            "text": "Delete it.",
+            "say": [ "sure. i already sent it to ur mom. she said its a good back." ]
+          },
+          {
+            "text": "Ok I'm turning around.",
+            "say": [
+              "<color=red>ha. no. ur still facing the desk. i can see ur whole face in the monitor.</color>",
+              { "do": "knockout", "seconds": 4 }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "creep-future",
+      "subject": "from tomorrow, dont open",
+      "send": { "trigger": "wake" },
+      "body": [
+        "<size=60%>hi its u. from tomorrow.",
+        "dont go near the dining room window tonight. i went. i took off all my clothes in front of it and the thing outside took them.",
+        "<size=150%>IT TOOK MY BOXERS<size=100%>",
+        "now im cold and naked and something is sitting on my chest like a fat cat that hates me. its u. or the other u.",
+        "if u see a cat with a nose like a turnip, say no. say no three times. dont say yes to the cat.",
+        { "choices": [
+          {
+            "text": "Why are you naked?",
+            "say": [ "bc its tomorrow and the future is cold and i didnt have pants. i miss ur pants." ]
+          },
+          {
+            "text": "I don't believe you.",
+            "once": true,
+            "say": [
+              "good. dont. but u still wont close the curtain tonight, will u. u stubborn little shit. like dad.",
+              "<size=60%>the window has a face now. go close it. go close it right now."
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "creep-tape",
+      "subject": "I HAVE THE TAPE. PAY UP.",
+      "send": { "trigger": "random", "once": true, "when": { "minutes": ">= 40" } },
+      "body": [
+        "<size=150%>I HAVE THE TAPE<size=100%>",
+        "u know what tape. the one from the dining room. u were naked in front of the window and i was in the bush watching.",
+        "ur mom has the bush now too. she sat in it for a whole day.",
+        "<size=60%>this is not a threat. this is a bill.",
+        "20$ or i send it to ur mom and the neighbour with the ladder.",
+        { "choices": [
+          {
+            "text": "Pay the 20$.",
+            "if": { "money": 20 },
+            "say": [
+              { "do": "money", "amount": -20 },
+              { "do": "flag", "name": "creepmail_paid" },
+              "thank u sir. the tape is ur now. the bush is still mine. good bush."
+            ]
+          },
+          {
+            "text": "Send it. Mom's seen worse.",
+            "say": [
+              "<size=150%>OK<size=100%>",
+              "then ur mom gets to see it at breakfast. we will see what she says to ur face across the table.",
+              { "do": "site", "url": "cum" },
+              { "do": "ring", "call": "PhoneExpansion/creep-countdown", "after": 20 }
+            ]
+          }
+        ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+// Bills and authorities: the Minister's tax men, the court, the power company, the HOA, jury duty,
+// the census, the inspector and the water department. Flags start with gov_.
+{
+  "emails": [
+    {
+      "id": "gov-cum",
+      "subject": "TAX NOTICE FROM C.U.M.",
+      "send": { "trigger": "random", "weight": 2 },
+      "body": [
+        "<size=150%>FINAL NOTICE<size=100%>",
+        "Dear wage slave and or entrepreneur. You owe 20$ in tax to the Collections and Usury Minister.",
+        "Pay at CUM.com. The Minister has no concept of deferred or late payment interest.",
+        "Your buttholes will be auditted. Thanks!",
+        { "choices": [
+          { "text": "Pay the 20$ tax.", "if": { "money": 20 }, "say": [
+            "Thank u wage slave. Minister is pleased. He is not pleased with u generally.",
+            { "do": "money", "amount": -20 },
+            { "do": "flag", "name": "gov_cum_paid" }
+          ] },
+          { "text": "CUM.com is a scam.", "say": [
+            "<size=150%>SCAM?<size=100%>",
+            "The Minister has been informed of ur opinion. He is writing it in the big book of hate.",
+            { "do": "flag", "name": "gov_cum_owes" }
+          ] },
+          { "text": "Can I pay in pizza?", "say": [
+            "Pizza is not legal tender. Pizza is a cheese crime. The Minister eats pizza with his hands.",
+            { "do": "flag", "name": "gov_cum_owes" }
+          ] }
+        ] }
+      ]
+    },
+    {
+      "id": "gov-cum-late",
+      "subject": "LATE FEE: 60$ (INTEREST)",
+      "send": { "trigger": "wake", "delay": 20, "when": { "flag": "gov_cum_owes" } },
+      "body": [
+        "<size=150%>LATE<size=100%>",
+        "Our records say u did not pay the tax. The Minister has no concept of deferred or late payment interest.",
+        "The interest is 60$. It is also a feeling. The feeling is disappointment.",
+        { "choices": [
+          { "text": "Pay the 60$.", "if": { "money": 60 }, "say": [
+            "Ok. Minister is pacified. For now.",
+            { "do": "money", "amount": -60 }
+          ] },
+          { "text": "Sue me.", "say": [
+            "<size=150%>SUE?<size=100%>",
+            "We will sue u. In court. Under penalty of sterilization. A man is coming to the yard to say hi.",
+            { "do": "npc", "name": "AgentCop", "room": "FrontYard" }
+          ] },
+          { "text": "I have 0$.", "say": [
+            "Then we take it from ur grandpa. He has money in his teeth.",
+            { "do": "npc", "name": "Grandpa_NPC" }
+          ] }
+        ] }
+      ]
+    },
+    {
+      "id": "gov-power",
+      "subject": "POWER DISCONNECTION NOTICE",
+      "send": { "trigger": "random", "when": { "flag": "gov_cum_owes" } },
+      "body": [
+        "Dear customer. Ur electric is linked to ur tax account. The Minister is unhappy so we are unhappy.",
+        "Please pay 25$ or we turn off the power for a while. We love ur business. Its the only thing we love.",
+        { "choices": [
+          { "text": "Pay the 25$.", "if": { "money": 25 }, "say": [
+            "Power company is happy. Power company is never happy.",
+            { "do": "money", "amount": -25 }
+          ] },
+          { "text": "Cut it. I like the dark.", "say": [
+            "<size=150%>OK<size=100%>",
+            "Your power is cut. Enjoy the dark bro. Its free for u.",
+            { "do": "power", "on": false, "for": 90 }
+          ] },
+          { "text": "Use my dads generator.", "say": [
+            "Dads generator is in the yard. Dad is not in the yard. Dad is in the ground.",
+            "Power is off for 60 seconds. Dad says sorry.",
+            { "do": "power", "on": false, "for": 60 }
+          ] }
+        ] }
+      ]
+    },
+    {
+      "id": "gov-court",
+      "subject": "COURT SUMMONS (URGENT)",
+      "send": { "trigger": "random" },
+      "body": [
+        "Good sir of the house,",
+        "<size=150%>COURT SUMMONS<size=100%>",
+        "You will be summoned to appear in court on Tuesday under penalty of sterilization without appeal if you do not comply with the following directives.",
+        "Directive 1: Come to court. Directive 2: No sandwiches. Directive 3: Wear pants.",
+        { "choices": [
+          { "text": "I'll be there.", "say": "Good. The judge is a dog. Dont be weird to the dog." },
+          { "text": "Here's 30$ for the judge.", "if": { "money": 30 }, "say": [
+            "Judge says ok. Judge says the sterilization is cancelled. Judge says he has a new boat now.",
+            { "do": "money", "amount": -30 },
+            { "do": "flag", "name": "gov_court_bribed" }
+          ] },
+          { "text": "Court is for losers.", "say": [
+            "<size=150%>YOU ARE IN CONTEMPT<size=100%>",
+            "Judge has decided. Sterilization is now. A man is coming to do it.",
+            { "do": "flag", "name": "gov_court_refused" },
+            { "do": "npc", "name": "AgentCop", "room": "FrontYard" }
+          ] }
+        ] }
+      ]
+    },
+    {
+      "id": "gov-jury",
+      "subject": "JURY DUTY: YOU ARE CHOSEN",
+      "send": { "trigger": "wake", "delay": 30, "when": { "flag": "gov_court_refused" } },
+      "body": [
+        "You have been picked for jury duty. Report to the courthouse at 8 AM Monday with a pen and photo ID.",
+        "Failure to report is contempt. Contempt is sterilization. We know u wont leave the house.",
+        "We checked. U have not left since 2019 and the lawn has a sad smell.",
+        { "choices": [
+          { "text": "I can't leave my room.", "say": [
+            "Then we bring the court to u. The bailiff is in ur living room now. He is very tired.",
+            { "do": "npc", "name": "AgentCop", "room": "Livingroom" }
+          ] },
+          { "text": "Ill go in my underwear.", "say": [
+            "Court is fine with underwear. Judge says that is fine. Judge is sick.",
+            "Bring a pen."
+          ] },
+          { "text": "Can a ghost serve?", "say": [
+            "Ghosts are allowed. Ghosts cannot touch the jury. Ghosts can touch the bailiff. Bailiff is the cat."
+          ] }
+        ] }
+      ]
+    },
+    {
+      "id": "gov-census",
+      "subject": "2026 HOUSEHOLD CENSUS (MANDATORY)",
+      "send": { "trigger": "random", "once": true },
+      "body": [
+        "Please list every person living in your household. Include children, pets, roommates and any ghosts.",
+        "Ghosts count. We counted them last year. They were not happy about it. We are not happy about it.",
+        { "choices": [
+          { "text": "Me, the cat and 3 ghosts.", "say": [
+            "Thank u. Ghost count updated. The ghosts have requested a tiny hat.",
+            { "do": "flag", "name": "gov_census_ghosts" }
+          ] },
+          { "text": "Just me.", "say": [
+            "Ghosts have been counted anyway. They are angry u didnt put them down on the form.",
+            { "do": "flag", "name": "gov_census_ghosts_angry" }
+          ] },
+          { "text": "Ghost is not a person.", "say": [
+            "Ghost is a person. Ghost is in ur bathroom right now. Ghost says hi."
+          ] }
+        ] }
+      ]
+    },
+    {
+      "id": "gov-inspection",
+      "subject": "MANDATORY HOUSE INSPECTION",
+      "send": { "trigger": "random", "when": { "day": ">= 2" } },
+      "body": [
+        "Mandatory house inspection is forthcoming. The inspector will check ur fridge, ur bathroom and ur pennis.",
+        "Make preperations.",
+        { "choices": [
+          { "text": "Clean the bathroom.", "say": [
+            "Smell is better. Toilet is still a crime scene but its better.",
+            { "do": "stat", "name": "Hygiene", "add": 30 }
+          ] },
+          { "text": "Hide the dead bodies.", "say": [
+            "Dead bodies are not on the inspection list. Yet.",
+            { "do": "flag", "name": "gov_inspect_bodies" }
+          ] },
+          { "text": "Bribe the inspector 20$.", "if": { "money": 20 }, "say": [
+            "Inspector loves the money. Inspector also loves ur fridge now. Thank u.",
+            { "do": "money", "amount": -20 }
+          ] }
+        ] }
+      ]
+    },
+    {
+      "id": "gov-water",
+      "subject": "WATER DEPT: USAGE REVIEW",
+      "send": { "trigger": "wake", "delay": 20, "when": { "stat": { "Hygiene": "< 40" } } },
+      "body": [
+        "Our meter shows u use 0 gallons of water per month. This is not possible for a human.",
+        "Please explain. Are u a rock? Rocks pay the rock rate.",
+        { "choices": [
+          { "text": "I drink it.", "say": [
+            "Drinking is not washing. We know this. Ur stomach is fine and ur hands are a crime scene.",
+            { "do": "flag", "name": "gov_water_drinker" }
+          ] },
+          { "text": "I'm a rock.", "if": { "money": 10 }, "say": [
+            "Rock rate is 10$. Thank u rock.",
+            { "do": "money", "amount": -10 }
+          ] },
+          { "text": "I wash with body spray.", "say": [
+            "Body spray is not water. Body spray is a fire hazard. Ur meter is crying.",
+            { "do": "flag", "name": "gov_water_sprayer" }
+          ] }
+        ] }
+      ]
+    },
+    {
+      "id": "gov-hoa",
+      "subject": "HOA: YOUR LAWN HAS A FACE",
+      "send": { "trigger": "random" },
+      "body": [
+        "Your lawn is 4 feet tall and has been shaped into what the board describes as a face.",
+        "Please remove the face. Fines are 15$ per day. The board has voted and the board is angry.",
+        { "choices": [
+          { "text": "The face is my dad.", "say": [
+            "Dad is not a lawn feature. Dad must also be removed.",
+            { "do": "flag", "name": "gov_hoa_dad" }
+          ] },
+          { "text": "I'll mow it.", "say": [
+            "Thank u neighbour. Board is so proud. Board cries a little.",
+            { "do": "stat", "name": "Energy", "add": -10 }
+          ] },
+          { "text": "Fuck the HOA.", "say": [
+            "<size=150%>FINE!!<size=100%>",
+            "Board sent a man. He is called Poopman. He does not have a clipboard. He has something else.",
+            { "do": "npc", "name": "Poopman", "room": "FrontYard" }
+          ] }
+        ] }
+      ]
+    }
+  ]
+}
