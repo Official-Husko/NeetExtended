@@ -130,6 +130,14 @@ The box falls in at `HouseManager.packageDropOffPoint` and is sized to its conte
 
 `WorldRole.RunsWorld` is false while this game shows a house another game runs (a co-op client). Anything that happens on its own, like timed calls, emails or random events, should check it, or it happens once per player. `WorldRole.ShowOtherWorld(owner)` turns it off until the handle is disposed or the owner unloads; `WorldRole.Changed` fires when it flips.
 
+### HostActions and SharedState
+
+For player actions and state that have to be the same for every co-op player. In single player both simply work here.
+
+- `HostActions.Register(owner, "MyMod.Thing", (args, player) => ...)` and `HostActions.Run("MyMod.Thing", args)`: the action runs where the house runs. On a co-op client the Co-op mod sends it to the host, which runs it with that player's slot (`player` is 0 for this game's own player).
+- `SharedState.Publish(key, value)` where the house runs, `SharedState.TryGet(key, out value)` anywhere, and `SharedState.Changed` for every change (published here or arriving from the host). The Co-op mod passes values on and fills in a joining player. Values belong to the house: loading a scene clears them. Name keys after your mod.
+- Email Expansion uses both: opening and replying are actions, and where each conversation stands is shared state, so every player sees the same emails and anyone can answer.
+
 ### Spawning
 
 Items come from `PickupBank.pickupsDict`, NPCs from `BrainBank.brainsDict`. Both are filled only inside the house.
