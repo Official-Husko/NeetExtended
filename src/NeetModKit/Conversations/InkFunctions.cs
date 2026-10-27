@@ -12,9 +12,9 @@ using NeetLoader.Runtime;
 namespace NeetModKit.Conversations;
 
 /// <summary>
-/// Functions that dialogue can call, like the game's own GiveItem or KnockoutPlayer. Registered
-/// functions are bound to every story the game creates and declared for <see cref="InkScripts"/>
-/// automatically, so scripts just call them: <c>~ MyFunction("x", 2)</c>.
+/// Functions Ink scripts can call, like the game's own GiveItem or KnockoutPlayer. Registered
+/// functions are bound to every copy of every game story (<see cref="InkStory"/>) and declared for
+/// <see cref="InkScripts"/> automatically, so scripts just call them: <c>~ MyFunction("x", 2)</c>.
 /// </summary>
 public static class InkFunctions
 {
@@ -48,21 +48,26 @@ public static class InkFunctions
 
         var entry = new Entry { Name = name, Parameters = parameters ?? new string[0], Body = body, LookaheadSafe = lookaheadSafe };
         Registered[name] = entry;
-        Bind(GameStory.Current, entry);
+        foreach (var story in InkStory.All)
+            Bind(story.Current, entry);
 
         owner.Track(Disposable.Create(() =>
         {
             if (!Registered.TryGetValue(name, out var current) || current != entry)
                 return;
             Registered.Remove(name);
-            BindStub(GameStory.Current, name);
+            foreach (var story in InkStory.All)
+                BindStub(story.Current, name);
         }));
     }
 
-    /// <summary>Every function scripts can call: the game's and the registered ones, with parameter names.</summary>
-    public static IEnumerable<KeyValuePair<string, string[]>> Declarations()
+    /// <summary>Every function dialogue scripts can call: the game's and the registered ones, with parameter names.</summary>
+    public static IEnumerable<KeyValuePair<string, string[]>> Declarations() => Declarations(InkStory.Dialogue);
+
+    /// <summary>Every function scripts in <paramref name="story"/> can call: the ones the game binds to it and the registered ones.</summary>
+    public static IEnumerable<KeyValuePair<string, string[]>> Declarations(InkStory story)
     {
-        foreach (var pair in GameInkFunctions.All)
+        foreach (var pair in story.GameFunctions)
             yield return pair;
         foreach (var entry in Registered.Values)
             yield return new KeyValuePair<string, string[]>(entry.Name, entry.Parameters);
@@ -71,7 +76,8 @@ public static class InkFunctions
     internal static void Init(NeetMod kit)
     {
         _log = kit.Log;
-        GameStory.WhenCreated(kit, BindAll);
+        foreach (var story in InkStory.All)
+            story.WhenCreated(kit, BindAll);
     }
 
     private static void BindAll(Story story)

@@ -10,8 +10,8 @@ namespace NeetModKit.Conversations;
 
 /// <summary>
 /// Compiles mod scripts with the Ink compiler the game ships. Each script gets a hidden header that
-/// declares the game's lists, global variables and every known function, so scripts can use them
-/// without declaring anything themselves.
+/// declares its story's lists, global variables and every function bound to that story, so scripts
+/// can use them without declaring anything themselves.
 /// </summary>
 internal static class InkCompiler
 {
@@ -24,9 +24,9 @@ internal static class InkCompiler
         public bool Ok => Json != null;
     }
 
-    public static Result Compile(Story story, string name, string source)
+    public static Result Compile(InkStory target, Story story, string name, string source)
     {
-        string header = Header(story);
+        string header = Header(target, story);
         int headerLines = CountLines(header);
         var result = new Result();
         bool hadError = false;
@@ -59,7 +59,7 @@ internal static class InkCompiler
         return result;
     }
 
-    private static string Header(Story story)
+    private static string Header(InkStory target, Story story)
     {
         var sb = new StringBuilder();
         var listNames = new HashSet<string>();
@@ -88,7 +88,7 @@ internal static class InkCompiler
                 sb.Append("VAR ").Append(variable).Append(" = ").Append(literal).Append('\n');
         }
 
-        foreach (var function in InkFunctions.Declarations())
+        foreach (var function in InkFunctions.Declarations(target))
             sb.Append("EXTERNAL ").Append(function.Key).Append('(').Append(string.Join(", ", function.Value)).Append(")\n");
         return sb.ToString();
     }

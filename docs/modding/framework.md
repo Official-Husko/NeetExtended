@@ -218,13 +218,18 @@ Commands are removed by delegate, so a same-named command from another mod or th
 
 ## Dialogue
 
-Namespace `NeetModKit.Conversations`. The game keeps all its dialogue in one Ink story, `Dialogue._.masterStory`: NPC conversations, phone calls, everything the dialogue box shows. These helpers add to that story, so modded lines play in the game's own dialogue box with its choices, tags, voices and text effects.
+Namespace `NeetModKit.Conversations`. The game keeps all its dialogue in one Ink story, `Dialogue._.masterStory`: NPC conversations, phone calls, everything the dialogue box shows. Emails have a second story of their own, `EmailHandler._.masterStory`. These helpers add to those stories, so modded lines play in the game's own dialogue box (or inbox) with its choices, tags, voices and text effects.
 
-### GameStory
+### InkStory
 
-- `Story Current`: the live story, or `null` in scenes without dialogue.
-- `GameEvent<Story> Created`: raised when the game builds a new story (every scene with dialogue gets one), before it runs and before a save is loaded into it.
+One of the game's Ink stories: `InkStory.Dialogue` or `InkStory.Email` (`InkStory.All` has both).
+
+- `Story Current`: the live story, or `null` in scenes without it.
+- `GameEvent<Story> Created`: raised when the game builds a new story (every house load builds both), before it runs and before a save is loaded into it.
 - `WhenCreated(owner, Action<Story>)`: subscribes and runs right away for the current story.
+- `GameFunctions`: the game's own external functions for that story (the email story has none).
+
+`GameStory` is the same for the dialogue story (`GameStory.Current`, `GameStory.Created`, `GameStory.WhenCreated`).
 
 ### InkScripts
 
@@ -233,11 +238,12 @@ var script = InkScripts.Add(this, "hello.ink", "=== MyMod_Hello ===\nHi there!\n
 Dialogue._.InitCharacterDialogue(speaker, "MyMod", "MyMod_Hello");
 ```
 
-- `InkScript Add(owner, string name, string inkSource)`: compiles the source with the Ink compiler the game ships and adds its knots and functions to the story. They're removed when the owner cleans up, and added again to every new story.
+- `InkScript Add(owner, string name, string inkSource)`: compiles the source with the Ink compiler the game ships and adds its knots and functions to the dialogue story. They're removed when the owner cleans up, and added again to every new story.
+- `InkScript Add(owner, InkStory target, string name, string inkSource)`: the same for another story, e.g. `InkStory.Email`.
 - `InkScript` has `Name`, `Source`, `Knots` (top-level names it added), `Problems` (compiler errors and warnings, with line numbers counted in your source) and `Failed`.
-- `bool IsModKnot(string knot)`, `bool IsModPath(string path)`: whether something came from a mod script.
+- `bool IsModKnot(string knot)`, `bool IsModKnot(InkStory story, string knot)`, `bool IsModPath(string path)`: whether something came from a mod script.
 
-Scripts compile when the game first creates its story (right away if one exists), once per script. They can use the game's lists (`OfferingStates`, `PlayerStates`), global variables (`nightId`, `playerBody`, ...) and every function in `InkFunctions` without declaring them: a hidden header declares them for the compiler.
+Scripts compile when the game first creates their story (right away if one exists), once per script. Dialogue scripts can use the game's lists (`OfferingStates`, `PlayerStates`), global variables (`nightId`, `playerBody`, ...) and every function in `InkFunctions` without declaring them: a hidden header declares them for the compiler. Email scripts get the functions only; the game's email story has no lists or variables.
 
 Rules:
 
@@ -255,7 +261,7 @@ InkFunctions.Register(this, "MyMod_Cash", new[] { "amount" }, args => { Money.Ad
 // In Ink: ~ MyMod_Cash(20)
 ```
 
-- `Register(owner, name, string[] parameters, Func<object[], object> body, bool lookaheadSafe = false)`. Return a value for functions used in expressions, `null` for statements. Leave `lookaheadSafe` off for anything with side effects: Ink may call lookahead-safe functions early, and more than once.
+- `Register(owner, name, string[] parameters, Func<object[], object> body, bool lookaheadSafe = false)`. The function is bound in every story (dialogue and email). Return a value for functions used in expressions, `null` for statements. Leave `lookaheadSafe` off for anything with side effects: Ink may call lookahead-safe functions early, and more than once.
 - `InkValues.Str/Num/Int/Bool(args, index)` read arguments whatever type Ink passed.
 - `GameInkFunctions.All` lists the game's own 23 functions with their parameter names.
 
@@ -684,7 +690,8 @@ The framework's patches live in `src/NeetModKit/Patches/`. Each one is an applie
 | `Player_Abilities.DieAccessor`, `Obliterate`, `SkeletonizeAccessor` (pre) | `GodModePatches` | Blocks death while god mode is on |
 | `CameraControl.Update` (post) | `MenuCursorPatch` | Keeps the cursor free while the mod menu is open |
 | `Computer_Browser_Addresser.AddressWrapper` (pre) | `BrowserPatches` | Lets the framework choose the page for a URL (see the desktop guide) |
-| `Dialogue.Awake` (post) | `DialoguePatches` | Raises `GameStory.Created`, so mod scripts and functions are in the story before a save loads into it |
+| `Dialogue.Awake` (post) | `DialoguePatches` | Raises `InkStory.Dialogue.Created`, so mod scripts and functions are in the story before a save loads into it |
+| `EmailHandler.Start` (post) | `DialoguePatches` | Raises `InkStory.Email.Created` once the email story is built |
 
 ### Reasons for the less obvious ones
 
