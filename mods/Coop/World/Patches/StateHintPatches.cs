@@ -56,4 +56,12 @@ internal static class StateHintPatches
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Lighter_BBQ), "Toggle")]
     private static void Lighter(Lighter_BBQ __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(SmokeDetector), nameof(SmokeDetector.RemoveBattery))]
+    private static void DetectorEmptied(SmokeDetector __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(SmokeDetector), "OnCollisionEnter")]
+    private static void DetectorFilled(SmokeDetector __instance) => StateSync.MarkDirty(__instance);
 }

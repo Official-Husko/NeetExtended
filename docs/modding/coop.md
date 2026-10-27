@@ -128,22 +128,22 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### World
 
-Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, the money, door locks, light switches, the fuse box (breakers, and which fuse sits in which slot), the TV, taps, stove knobs, flashlights and BBQ lighters. The lines below are what isn't, or only partly.
+Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, taps, stove knobs, flashlights, BBQ lighters, room fires, the cop van, and on the computer the money, stock market, tax bills and the anime card game. The lines below are what isn't, or only partly.
 
 State of things:
 
-- Other item state (cooked, filled, box opened, battery level, burning) is only sent when the item spawns; later changes stay on the machine that made them.
-- Not shared at all yet: smoke detectors and their alarms, the radio, fuse battery levels. The stove's knob is shared, but what the gas does afterwards (lighting, exploding) happens on each machine on its own.
+- Other item state (cooked, filled, box opened, burning) is only sent when the item spawns; later changes stay on the machine that made them.
+- Not shared yet: the radio. The stove's knob is shared, but what the gas does afterwards (lighting, exploding) happens on each machine on its own.
 - Boxes: things frozen inside a closed box only stay attached on the machine that closed it. When someone else later moves the box, its contents stay behind on the other machines.
-- Fire isn't shared: a room fire on the host doesn't show on clients, and fire never spreads on a client.
-- Clients' copies of the stock market, the anime card game, spam email and prank calls are frozen. These only run on the host, and nothing shows their results on a client yet.
+- Fire: the host spreads it and clients get its flames once a second, so a client sees a growing fire in steps. A flame a client puts out goes out on the host too (the nearest one). Candles and other flames a fire lights on a client stay lit only there.
+- Spam email and prank calls only happen on the host; clients don't get them.
 
 Picking things up and pushing them:
 
 - Clients can't pick up anything with a brain: rats, the cat, corpses.
-- A client takes over what their own body walks into, so they can push it. Things a client knocks with a held or thrown item only move once the host's copy moves (a short delay, and thrown things bounce off them on the client).
+- A player takes over what their body, what they hold, or (on a client) what they threw runs into, so it can be pushed. Things only knocked on by other knocked things move on the host first and reach the others a moment later.
 - The client that throws a plate breaks it. Scene windows and other breakables that aren't items only break on the host, so a client throwing something at a window doesn't break it.
-- Item logic that replaces or uses up the item runs only on the machine that simulates it: food spoiling, cooking and soaking, breaking, ice melting, glasses tipping and filling, fuse and lighter explosions, fuses snapping into the fuse box, the cat bowl, the piggy bank and baths soaking things. Not yet: liquid bombs, dust balls merging.
+- Item logic that replaces, wears down or uses up the item runs only on the machine that simulates it: damage (burns, cuts, hits), food spoiling, cooking and soaking, breaking, ice melting, glasses tipping and filling, fuse and lighter explosions, fuses snapping into the fuse box or a smoke detector, the cat bowl, the piggy bank and baths soaking things. Not yet: liquid bombs, dust balls merging.
 - The toilet handle doesn't show moving for the others, but what a flush takes away is gone everywhere.
 - Things with a body but no item name (some made at runtime) aren't shared. The log names each kind once ("has no item name").
 
@@ -152,18 +152,18 @@ NPCs:
 - NPCs think only on the host. Clients see their position and rotation (corpses included), the walking, sitting, crouching and death animations, dancing, speed and raised hands. They don't see crouch height, kicks, or an NPC taking clothes off (dressing is shared, undressing isn't). Skeletonizing and gibbing should come through as the spawns and destroys they are; untested.
 - NPC punches, bites and cop shots can't hurt a remote player, and a client can't hurt an NPC (the NPC copies on clients take no damage).
 
-Money and shopping:
+Money and the computer:
 
 - One shared wallet, kept by the host. A client's spend shows at once, but two quick purchases on a client can both pass the "enough money" check before the host's total comes back.
-- Things bought on a client that the host should keep track of aren't shared yet: a tax bill paid on a client is still due on the host (and can still bring the cops), and stocks bought on a client aren't in the host's portfolio.
-- Ordering black-market goods on a client never calls the cops.
+- Buying and selling stocks, paying tax bills, the card game's buttons and the cop van's roll on a client are requests the host carries out. A stock trade or card upgrade the host turns down still played its "done" sound on the client, and the card game shows a client's clicks and upgrades at once, then the host's numbers half a second later.
+- Card game experience and crystals come from the host twice a second, so the bars move in small steps on clients.
 
 Other:
 
 - The sun and moon drift apart between machines (the game turns them a fixed step per frame), and thunder flickers at different times in each game.
 - During a hot reload of the Co-op mod (about 0.2 s), changes aren't sent. The resync afterwards fixes items, but something a client used up or destroyed during its own reload comes back.
 - A few scene objects with no id of their own are matched by their place in the scene. A mod that changes the scene differently on two machines would break that match.
-- Some worn clothes in older saves aren't kinematic and keep falling below the house forever (a game quirk). World stops sending things once they're 1 km below the house.
+- Some worn clothes in older saves aren't kinematic and keep falling below the house forever (a game quirk, fixed for new saves by Unofficial NEET Patches). World stops sending things once they're 1 km below the house.
 
 ## Testing with two games on one machine
 

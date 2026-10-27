@@ -34,9 +34,12 @@ internal static class ReplicaBody
         ReplicaDriver.Stop(o);
         if (o.Body != null)
         {
-            // No game body uses interpolation; the game's kinematic wish comes back.
+            // No game body uses interpolation; the game's kinematic wish comes back. A replica is
+            // always kinematic, so a dynamic one means the game has just freed it (taking clothes
+            // off, a fuse popping out) on its way into a hand: that stands.
             o.Body.interpolation = RigidbodyInterpolation.None;
-            o.Body.isKinematic = o.GameKinematic;
+            if (o.Body.isKinematic)
+                o.Body.isKinematic = o.GameKinematic;
         }
         o.SentPosition = o.Tf.position;
         o.SentRotation = o.Tf.rotation;

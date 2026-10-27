@@ -54,6 +54,52 @@ public static class WorldApi
         return text.Length == 0 ? "Everything is the host's." : text.ToString();
     }
 
+    /// <summary>Money, the first stocks (price and holding), tax bills and the card game, to compare between games.</summary>
+    public static string Economy()
+    {
+        var text = new StringBuilder();
+        var computer = HouseManager._?.mainComputer;
+        text.Append("money ").Append(computer != null ? computer.Money : 0f);
+        var market = StockMarket._;
+        if (market?.stocks != null)
+        {
+            text.Append("\nstocks");
+            int shown = 0;
+            foreach (var stock in market.stocks.Values)
+            {
+                if (shown++ == 5)
+                    break;
+                text.Append(' ').Append(stock.ticker).Append(' ').Append(stock.currentPrice.ToString("0.00")).Append('x').Append(stock.quantityOwned);
+            }
+        }
+        var taxes = HouseManager._ != null ? HouseManager._.GetComponent<TaxHandler>() : null;
+        if (taxes != null)
+        {
+            text.Append("\ntax bills");
+            foreach (var bill in taxes.taxBills)
+                text.Append(' ').Append(bill.amount.ToString("0")).Append('/').Append(bill.stage);
+        }
+        var cards = computer != null ? computer.animeCardGenerator : null;
+        if (cards != null)
+            text.Append("\ncrystals ").Append(Mathf.Round(cards.Crystals)).Append(", unlocked ").Append(cards.maxCardUnlocked);
+        return text.ToString();
+    }
+
+    /// <summary>Every shared component's current state bytes, one per line (diff between games).</summary>
+    public static string States()
+    {
+        var text = new StringBuilder();
+        foreach (var t in Coop.World.State.StateTrackers.All)
+        {
+            Coop.World.State.StateSync.Capture(t);
+            text.Append(t.Type.GetType().Name).Append(' ').Append(t.Ref).Append(' ');
+            foreach (byte b in t.Last)
+                text.Append(b.ToString("x2"));
+            text.Append('\n');
+        }
+        return text.ToString();
+    }
+
     /// <summary>Client: anything that should be switched off but runs.</summary>
     public static string Leaks() => WorldSide.IsClient ? ClientSwitches.Leaks() : "Not a client.";
 

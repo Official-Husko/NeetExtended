@@ -19,6 +19,17 @@ internal static class OwnerGatePatches
     [HarmonyPatch(typeof(Food), "Update")]
     private static bool FoodTimers(Food __instance) => Simulates(__instance.gameObject);
 
+    // Burns, cuts and hits wear an item down (and can burn it away) only where it's simulated.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Usable), nameof(Usable.Damage))]
+    private static bool Damaged(Usable __instance, ref float __result)
+    {
+        if (Simulates(__instance.gameObject))
+            return true;
+        __result = __instance.damage;
+        return false;
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BreakOnImpact), "OnCollisionEnter")]
     private static bool Breaking(BreakOnImpact __instance) => Simulates(__instance.gameObject);
@@ -54,6 +65,11 @@ internal static class OwnerGatePatches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(FuseBox_Slot), "OnTriggerEnter")]
     private static bool FuseSnaps(Collider other) => SimulatesBodyOf(other);
+
+    // A fuse bumped into a smoke detector becomes its battery; only where the fuse is simulated.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(SmokeDetector), "OnCollisionEnter")]
+    private static bool DetectorTakesFuse(Collision other) => SimulatesBodyOf(other.collider);
 
     // A gib dropped in the cat's bowl becomes food; a coin dropped in the piggy bank becomes savings.
     [HarmonyPrefix]

@@ -35,4 +35,13 @@ public static class MessageIds
     public const ushort MoneyDelta = 109;
     public const ushort MoneyTotal = 110;
     public const ushort WorldManifest = 111;
+    public const ushort WorldStocks = 112;
+    public const ushort WorldStockOrder = 113;
+    public const ushort WorldTaxes = 114;
+    public const ushort WorldTaxPay = 115;
+    public const ushort WorldCards = 116;
+    public const ushort WorldCardAction = 117;
+    public const ushort WorldFire = 118;
+    public const ushort WorldFireOut = 119;
+    public const ushort WorldCopVan = 120;
 }

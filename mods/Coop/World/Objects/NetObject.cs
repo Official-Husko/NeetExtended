@@ -16,6 +16,9 @@ internal sealed class NetObject
 
     public Usable Usable;
     public Brain Brain;
+
+    /// <summary>Its main collider, looked up the first time something needs it.</summary>
+    public Collider Collider;
     public Door Door;
 
     /// <summary>The PickupBank or BrainBank name it can be spawned from; empty for scene objects.</summary>

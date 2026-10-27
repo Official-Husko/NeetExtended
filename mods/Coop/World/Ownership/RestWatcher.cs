@@ -52,9 +52,12 @@ internal static class RestWatcher
         }
     }
 
+    // Worn by someone (a mask on a head) or frozen into something (a box, a stack). Doors hang in
+    // their frames too, but those don't move them.
     private static bool RidesOnSomething(NetObject o)
     {
-        if (o.Tf.parent != null)
+        var parent = o.Tf.parent;
+        if (parent != null && parent.GetComponentInParent<Brain>() != null)
             return true;
         var constraint = o.Go.GetComponent<ParentConstraint>();
         return constraint != null && constraint.constraintActive;

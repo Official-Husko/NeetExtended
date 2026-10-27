@@ -5,14 +5,16 @@ namespace Coop.World.Ownership;
 
 /// <summary>
 /// A replica is kinematic, so walking into one would be walking into a wall. Each physics step this
-/// looks around the local player's capsule; a replica it's moving into is taken over on the spot and
-/// becomes pushable one step later. Touching also stops a body from being handed back while leaned on.
+/// looks around the local player's capsule, and around what the player holds or (on a client) threw;
+/// a replica they move into is taken over on the spot and becomes pushable one step later. Touching
+/// also stops a body from being handed back while leaned on.
 /// </summary>
 internal static class ContactClaims
 {
     private const float Skin = 0.03f;
     private const float MinSpeedSq = 0.2f * 0.2f;
     private const int ClaimsPerSecond = 10;
+    private const float ThrownSpeedSq = 1f;
 
     private static readonly Collider[] Hits = new Collider[32];
     private static GameObject _player;
@@ -50,13 +52,41 @@ internal static class ContactClaims
         var up = t.up * half;
         int count = Physics.OverlapCapsuleNonAlloc(center + up, center - up, radius, Hits, ~0, QueryTriggerInteraction.Ignore);
 
-        bool moving = _body.velocity.sqrMagnitude > MinSpeedSq;
         float now = Time.time;
+        Touch(count, null, _body.velocity.sqrMagnitude > MinSpeedSq, now);
+        CarriedTouches(now);
+    }
+
+    // What this game's player holds pushes too, and so does what a client threw (still flying).
+    private static void CarriedTouches(float now)
+    {
+        byte me = WorldSide.LocalSlot;
+        bool host = WorldSide.IsHost;
+        var all = NetObjects.All;
+        for (int i = 0; i < all.Count; i++)
+        {
+            var o = all[i];
+            if (o.IsReplica || o.Owner != me || o.Body == null || o.Body.isKinematic || !o.Alive)
+                continue;
+            bool held = o.Holder == me;
+            if (!held && (host || o.Body.velocity.sqrMagnitude < ThrownSpeedSq))
+                continue;
+            var collider = o.Collider != null ? o.Collider : o.Collider = o.Go.GetComponent<Collider>();
+            if (collider == null)
+                continue;
+            var bounds = collider.bounds;
+            int count = Physics.OverlapBoxNonAlloc(bounds.center, bounds.extents + Vector3.one * Skin, Hits, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+            Touch(count, o, true, now);
+        }
+    }
+
+    private static void Touch(int count, NetObject toucher, bool moving, float now)
+    {
         for (int i = 0; i < count; i++)
         {
             var o = NetObjects.FindBody(Hits[i].attachedRigidbody);
             Hits[i] = null;
-            if (o == null || o.Body == _body)
+            if (o == null || o == toucher || o.Body == _body)
                 continue;
             o.LastTouched = now;
             if (moving && Claimable(o) && UnderLimit(now))

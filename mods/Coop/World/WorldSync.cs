@@ -1,5 +1,6 @@
 using Coop.Session;
 using Coop.World.Economy;
+using Coop.World.Hazards;
 using Coop.World.Manifest;
 using Coop.World.Npcs;
 using Coop.World.Objects;
@@ -29,10 +30,12 @@ internal static class WorldSync
         OwnershipNet.Init();
         BodyReceiver.Init();
         NpcPoseReceiver.Init();
-        MoneySync.Init();
         ManifestReader.Init();
         StateSync.Init();
         NpcClothes.Init();
+        EconomySync.Init();
+        FireSync.Init();
+        CopVanSync.Init();
 
         CoopSession.Started += () => WorldPatches.Apply(CoopSession.IsClient);
         CoopSession.WorldReady += () => Start(resumed: false);
@@ -68,7 +71,6 @@ internal static class WorldSync
             return;
         }
         Stop();
-        MoneySync.Reset();
         WorldPatches.Apply(CoopSession.IsClient);
         _hosting = CoopSession.IsHost;
         SceneScan.Rebuild();
@@ -105,7 +107,9 @@ internal static class WorldSync
         if (!WorldSide.Running || !WorldSide.IsHost)
             return;
         ManifestWriter.Send(player);
-        MoneySync.SendTo(player.Slot);
+        EconomySync.SendTo(player.Slot);
+        FireSync.SendAgain();
+        CopVanSync.SendAgain();
         NpcPoseSender.SendAllAgain();
         NpcClothes.SendAllAgain();
     }
@@ -116,7 +120,6 @@ internal static class WorldSync
             Departures.TakeEverythingBack();
         Stop();
         WorldPatches.Remove();
-        MoneySync.Reset();
         OwnershipParking.Forget();
     }
 
@@ -126,6 +129,10 @@ internal static class WorldSync
         NetObjects.Clear();
         StateTrackers.Clear();
         StateSync.Clear();
+        EconomySync.Clear();
+        FireSync.Clear();
+        CopVanSync.Clear();
+        RemoteNeeds.Clear();
         SpawnSender.Clear();
         SpawnContext.Reset();
         OwnershipNet.Clear();
@@ -141,7 +148,7 @@ internal static class WorldSync
             return;
         SpawnSender.ProcessStartedBrains();
         NpcPuppets.ProcessLater();
-        MoneySync.Check();
+        EconomySync.Update();
     }
 
     private static void FixedUpdate()
@@ -165,6 +172,10 @@ internal static class WorldSync
         {
             NpcPoseSender.LateTick();
             NpcClothes.Tick();
+            EconomySync.HostLateUpdate();
+            FireSync.HostTick();
+            CopVanSync.HostTick();
+            RemoteNeeds.HostTick();
         }
         else
             NpcPoseReceiver.LateTick();

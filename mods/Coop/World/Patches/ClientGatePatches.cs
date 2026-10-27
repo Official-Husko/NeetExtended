@@ -16,13 +16,14 @@ internal static class ClientGatePatches
 {
     private static bool RunsWorld => WorldRole.RunsWorld;
 
-    // Ordering black-market goods, box values and overdue taxes roll for the cop van.
+    // Ordering black-market goods, box values and overdue taxes roll for the cop van: the host sends it.
     [HarmonyPrefix]
     [HarmonyPatch(typeof(HouseManager), nameof(HouseManager.SpawnCopVan))]
     private static bool CopVan(ref GameObject __result)
     {
         if (RunsWorld)
             return true;
+        Coop.World.Hazards.CopVanSync.RequestFromHost();
         __result = null;
         return false;
     }
