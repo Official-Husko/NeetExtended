@@ -37,6 +37,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Camera photos replace each other and come back blank | `CameraPhotos` |
 | Paint loaded from a save doesn't show | `LoadedPaint` |
 | A TV that was on comes back dark after loading | `TvAfterLoad` |
+| A custom shirt looks plain once it's worn | `CustomShirts` |
 
 ## Saving fails with a dead house spider around
 
@@ -360,3 +361,13 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 - `KnotList must be instantiated using the ScriptableObject.CreateInstance method` in the log after every load: the save loader rebuilds the spam list with `new`. Unity warns, but the list works.
 
 - A locked card's medal is reset to 0 on load: the `Locked` setter (`AnimeCard.cs:147-166`) does that on purpose; unlocked cards keep their medal.
+
+## A custom shirt looks plain once it's worn
+
+**What happens:** a shirt bought in the custom shop shows its picture while it is in your hand or on the floor, but when you put it on the body wears the plain shirt (the print is missing on the body and the hands). After saving and loading it shows.
+
+**Cause:** `CustomItemShop.CustomizeItem` (`CustomItemShop.cs:114-128`) sets the picture through a `MaterialPropertyBlock` on the item's first renderer. `Player_Abilities.PutOnClothes` (`:1428-1460`) copies `GetComponent<MeshRenderer>().material` onto the body and hands, and a material doesn't contain its renderer's property block. A saved item gets its picture on the material itself (`CustomTextureSaveLoader.Load`, `CustomizeItem(GameObject, string)`), so loading fixes it. Every shirt has a `CustomTextureSaveLoader`, but only `Shirt_White` is sold in the custom shop.
+
+**Fix:** a postfix on `CustomItemShop.CustomizeItem` sets the shop's picture on the material of a customized `Wearable` as well. The property block stays, so the item looks the same as before.
+
+**Reproduce:** unpack a custom shirt (or call `CustomizeItem` on a spawned `Shirt_White` with the shop's preview picture set), put it on, and read `neetRend.materials[2].mainTexture`: none with `CustomShirts` off, the picture with it on.
