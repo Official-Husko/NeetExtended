@@ -7,8 +7,9 @@ namespace NeetModKit.Ui.Toolkit;
 
 /// <summary>
 /// Takes the game's controls away while a window is open: player input off, cursor free and,
-/// if any holder asks for it, the game paused. Several windows can hold it at once (the mod menu
-/// and the cheat menu, say); everything comes back when the last one lets go.
+/// if any holder asks for it, the game paused (never in a shared house, see
+/// <see cref="WorldRole.IsShared"/>: it would stop for everyone). Several windows can hold it at
+/// once (the mod menu and the cheat menu, say); everything comes back when the last one lets go.
 /// </summary>
 public static class UiInputLock
 {
@@ -24,6 +25,9 @@ public static class UiInputLock
     private static bool _inputDisabled;
 
     public static bool Active => Holds.Count > 0;
+
+    // A house that becomes shared while paused starts again.
+    static UiInputLock() => WorldRole.Changed += Apply;
 
     /// <summary>Locks input until the returned handle is disposed.</summary>
     public static IDisposable Acquire(bool pause)
@@ -66,8 +70,11 @@ public static class UiInputLock
     {
         bool active = Holds.Count > 0;
         bool pause = false;
-        foreach (var hold in Holds)
-            pause |= hold.Pause;
+        if (!WorldRole.IsShared)
+        {
+            foreach (var hold in Holds)
+                pause |= hold.Pause;
+        }
 
         var input = GameRefs.House != null ? GameRefs.House.inputAsset : null;
         if (active && input != null && input.enabled)

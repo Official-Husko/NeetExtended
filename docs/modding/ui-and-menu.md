@@ -217,7 +217,7 @@ public void PagesChanged();    // call when the page list changes
 
 ## `UiInputLock`
 
-`UiInputLock.Acquire(bool pause)` takes the game's controls away while a window is open: player input off, cursor free, and the game paused if asked. It returns an `IDisposable`; dispose it on close. Several windows can hold it at once (the mod menu and the cheat menu together, say) and everything comes back when the last one lets go, including the time scale from before the pause.
+`UiInputLock.Acquire(bool pause)` takes the game's controls away while a window is open: player input off, cursor free, and the game paused if asked (never in a shared house, `WorldRole.IsShared`: in co-op it would stop for everyone, so the game keeps running behind the window). It returns an `IDisposable`; dispose it on close. Several windows can hold it at once (the mod menu and the cheat menu together, say) and everything comes back when the last one lets go, including the time scale from before the pause.
 
 ## `Hotkey`
 

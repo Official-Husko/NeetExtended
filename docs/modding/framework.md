@@ -128,7 +128,9 @@ The box falls in at `HouseManager.packageDropOffPoint` and is sized to its conte
 
 ### WorldRole
 
-`WorldRole.RunsWorld` is false while this game shows a house another game runs (a co-op client). Anything that happens on its own, like timed calls, emails or random events, should check it, or it happens once per player. `WorldRole.ShowOtherWorld(owner)` turns it off until the handle is disposed or the owner unloads; `WorldRole.Changed` fires when it flips.
+`WorldRole.RunsWorld` is false while this game shows a house another game runs (a co-op client). Anything that happens on its own, like timed calls, emails or random events, should check it, or it happens once per player. `WorldRole.ShowOtherWorld(owner)` turns it off until the handle is disposed or the owner unloads.
+
+`WorldRole.IsShared` is true while other players are in this game's house or this game is in theirs (a co-op mod holds `WorldRole.ShareWorld(owner)` for the session). Nothing should stop time then, or it stops for everyone: the framework's windows don't pause the game (`UiInputLock`). `WorldRole.Changed` fires when either flips.
 
 ### HostActions and SharedState
 
