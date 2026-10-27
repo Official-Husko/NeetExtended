@@ -35,13 +35,18 @@ public sealed class UiTabbedWindow
     /// <summary>Call when pages were added or removed.</summary>
     public void PagesChanged() => _tabsDirty = true;
 
-    public void Select(string title)
+    /// <summary>Shows the page called <paramref name="title"/>; false when there's none.</summary>
+    public bool Select(string title)
     {
         foreach (var page in _pages())
         {
             if (page.Title == title)
+            {
                 Show(page);
+                return true;
+            }
         }
+        return false;
     }
 
     public void Open()

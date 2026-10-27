@@ -14,7 +14,7 @@ Each part is a switch on the Mods page (all on by default):
 | **Shuffled house** | On a new game, loose items in the rooms you can reach from the start swap places. Keys, notes, things fixed to walls or plugged in, and anything heavier than 30 kg stay put, and nothing moves into or out of the basement backroom, the attic, the pantry, the shed or the yard, so the game can still be finished. Only for games started with it on. |
 | **Random needs** | Hunger, energy, bladder and hygiene each drain up to the needs range (Settings, 30%) faster or slower than the game's. |
 
-The **Randomizer** tab in the mod menu shows the save's seed, the visitors in the order they'll come and how fast each need drains, with ROLL AGAIN for a new seed (prices, needs and the visitors still to come change; the house stays).
+The **Randomizer** page (mod menu, Mod Settings, Randomizer) shows the save's seed, the visitors in the order they'll come and how fast each need drains, with ROLL AGAIN for a new seed (prices, needs and the visitors still to come change; the house stays).
 
 **Seed for new games** in Settings: leave it empty for a random seed, or put in any text or number to play a seed someone shared. It's read when a save gets its seed: a new game, or a save from before the mod was installed (those keep their house as it is).
 

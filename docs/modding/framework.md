@@ -38,7 +38,7 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 
 `KitMod` is the framework's own mod. Its `OnLoad` sets up in this order: the config file (`Mods/NeetModKit/config.json`, type `KitConfig`), `GameEvents`, `ModSaveData`, `ItemRegistry`, the dialogue helpers (`GameStory`, `InkFunctions`, `InkScripts`), the mod menu, its pages, the settings section, the version tag, `ModFeatures`, the computer apps, and the built-in "Mods" feature in the pause menu. It also restores store state after a reload.
 
-`KitConfig` fields (edited on the Settings page):
+`KitConfig` fields (edited on Mod Settings, under Framework):
 
 | Field | Default | Meaning |
 | --- | --- | --- |
@@ -63,7 +63,7 @@ IDisposable note = VersionTag.AddNote(this, "update available (v0.3.0)");
 note.Dispose();
 ```
 
-The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
+The What's New page uses `PackInfo.Name` for the pack's own section, and so does the framework's settings section.
 
 ## Game
 
@@ -659,7 +659,7 @@ Namespace `NeetModKit.Settings`.
 ModSettings.Register<T>(NeetMod owner, ConfigFile<T> config, string title = null) where T : class, new();
 ```
 
-This adds a section to the mod menu's Settings page. The page builds one control per public instance field of the config class. It writes the config a moment after the last edit.
+This adds a section to the mod's entry on the mod menu's Mod Settings tab (its SETTINGS view). The page builds one control per public instance field of the config class. It writes the config a moment after the last edit.
 
 ### Field types and controls
 

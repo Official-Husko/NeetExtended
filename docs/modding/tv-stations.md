@@ -42,7 +42,7 @@ To put a station on one of the six buttons, show it **in place of** a game chann
 | Field | Meaning |
 | --- | --- |
 | `stations[].file` | The video, relative to the folder. |
-| `stations[].name` | Shown in the TV tab. Defaults to the file name. |
+| `stations[].name` | Shown in the TV page. Defaults to the file name. |
 | `stations[].volume` | 0 to 1, on top of the TV's volume and the mod's setting. |
 | `stations[].replace` | A game channel by name (Static, Bingo, Snail, Church, Sports, Rap) or number (1 to 6). The station takes its button. |
 | `hide` | Game channels to take off the TV, by name or number. |

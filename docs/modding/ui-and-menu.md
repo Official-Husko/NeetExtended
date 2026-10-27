@@ -304,27 +304,28 @@ The menu is `ModMenu`:
 
 ```csharp
 public static void AddPage(NeetMod owner, MenuPage page)
+public static void AddTab(NeetMod owner, MenuPage page)
 public static void Open(string pageTitle = null)
 public static void Close()
 public static void Toggle()
 public static bool IsOpen { get; }
-public static IReadOnlyList<MenuPage> Pages { get; }
+public static IReadOnlyList<MenuPage> Pages { get; }   // the tabs along the top
 ```
 
-- `AddPage` adds a tab. Tabs are sorted by `Order`, then `Title`. A page is removed when its owner unloads, and the tab bar updates.
-- `Open(title)` opens the menu on the page with that title. With no title it keeps the current page, or shows the first tab. The menu can only open once the pause menu is loaded; otherwise it logs a warning.
+- `AddPage` adds a page to the **Mod Settings** tab, listed under the owner mod's name next to its settings (`ModSettings.Register`). A mod with more than one view (its pages, plus SETTINGS if it has settings) gets a row of buttons to switch them. Pages are built into the right-hand column the same way a tab is built into the window, so a page works in either place. A page is removed when its owner unloads.
+- `AddTab` adds a tab along the top, sorted by `Order`, then `Title`. Keep these few: the bar has room for about six. Co-op adds one, since hosting and joining are used every session.
+- `Open(title)` opens the menu on the tab with that title, or on Mod Settings with the mod page of that title selected. With no title it keeps the current page, or shows the first tab. The menu can only open once the pause menu is loaded; otherwise it logs a warning.
 
 The built-in tabs and their `Order`:
 
 | Title | `Order` | Purpose |
 |---|---|---|
 | Mods | 0 | Installed mods, load/unload, features, logs |
+| Mod Settings | 5 | Every mod's pages and settings, listed per mod |
 | What's New | 10 | Changelog |
-| PC Apps | 20 | Computer app URLs (see [computer-apps.md](computer-apps.md)) |
-| Settings | 30 | Every registered settings object |
 | Errors | 40 | The error report (below) |
 
-Phone Expansion adds a Phone tab (30).
+The framework's own PC Apps page (computer app URLs, see [computer-apps.md](computer-apps.md)) is on Mod Settings under Framework, with the framework's settings. Co-op adds a Co-op tab (36); Phone Expansion, Email Expansion, Custom TV Stations, Mixtapes, Randomizer and Update Checker add pages.
 
 ### Errors tab
 
@@ -422,7 +423,7 @@ The page's controls are destroyed and rebuilt by `Build`, so do not keep referen
 
 ## Settings pages
 
-Settings are shown on the Settings tab. Register a config object with `ModSettings`:
+Settings are shown on the Mod Settings tab, under the mod's name (its SETTINGS view when it also has a page). Register a config object with `ModSettings`:
 
 ```csharp
 public static void Register<T>(NeetMod owner, ConfigFile<T> config, string title = null) where T : class, new()
@@ -483,7 +484,7 @@ public sealed class CardExpansionConfig
 ### Save timing
 
 - An edit changes the object at once, so other code sees the new value immediately.
-- The file is written 0.5 seconds after the last edit, or when the user changes to another section, or when the Settings tab is left (including by closing the menu).
+- The file is written 0.5 seconds after the last edit, or when the user picks another mod or view, or when the Mod Settings tab is left (including by closing the menu).
 - Saving writes the config file in the mod's folder.
 
 Mods do not need to call `Save` after the menu changes a value.

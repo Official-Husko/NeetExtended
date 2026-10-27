@@ -37,11 +37,11 @@ public sealed class KitMod : NeetMod
         GameEvents.ItemsRegistering.Subscribe(this, Items.ItemRegistry.RegisterAll);
         ModMenu.Init(this);
 
-        ModMenu.AddPage(this, new ModsPage());
-        ModMenu.AddPage(this, new WhatsNewPage());
+        ModMenu.AddTab(this, new ModsPage());
+        ModMenu.AddTab(this, new ModSettingsPage());
+        ModMenu.AddTab(this, new WhatsNewPage());
+        ModMenu.AddTab(this, new ErrorsPage());
         ModMenu.AddPage(this, new PcAppsPage());
-        ModMenu.AddPage(this, new SettingsPage());
-        ModMenu.AddPage(this, new ErrorsPage());
         ModSettings.Register(this, Config, About.PackInfo.Name);
         About.GameCompat.Check(this);
         Ui.VersionTag.Create(this, Config.Value.ShowVersion);

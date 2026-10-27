@@ -8,26 +8,36 @@ Everything NeetExtended adds to NEET Demo, for players. Each mod can be switched
   - **Switch to 64-bit?** Downloads Unity's 64-bit version of the game's engine from Unity (about 180 MB) and swaps it in. The game runs a little faster and can use more memory. You can switch back at any time.
   - **Incremental garbage collection?** The game cleans up memory in small steps instead of freezing for a moment every so often. Recommended.
 - **Uninstalling**: run `uninstall.sh` or `uninstall.bat`. It puts the original game files back. Your saves and mod settings stay.
-- **Version in the corner**: the bottom left corner shows the pack's name, version and build (for example `NeetExtended v0.1.0 (1a2b3c4)`), so you can see the mods are running and screenshots show which build you have. Hide it in Settings.
+- **Version in the corner**: the bottom left corner shows the pack's name, version and build (for example `NeetExtended v0.1.0 (1a2b3c4)`), so you can see the mods are running and screenshots show which build you have. Hide it in Mod Settings.
 - **Game version check**: every release is tested with a specific build of NEET Demo. If your game is a different build (after a Steam update, say), the corner adds "game build not tested". Most things usually still work; report anything that doesn't.
 
 ## Mod menu
 
-Press **F1**, or pick **MODS** in the pause menu (where the feedback form used to be). The game pauses while it's open (you can turn that off in Settings).
+Press **F1**, or pick **MODS** in the pause menu (where the feedback form used to be). The game pauses while it's open (you can turn that off in Mod Settings).
 
-| Page | What's on it |
+Tabs along the top:
+
+| Tab | What's on it |
 | --- | --- |
 | **Mods** | Every installed mod: switch it on or off, load or unload it while playing, and switch its features. The Framework, No Feedback and Update Checker are always on. |
+| **Mod Settings** | A list of mods like on the Mods tab. Pick one to see its page and its settings (a PAGE / SETTINGS switch at the top when it has both). |
 | **What's New** | The changes in each version. Opens by itself after an update (you can turn that off). |
-| **PC Apps** | The addresses of the apps on the in-game computer; change them to whatever you like. |
-| **Settings** | Every mod's settings in one place. |
+| **Co-op** | Host, join and who's playing (Co-op). |
 | **Errors** | Anything that went wrong this session, newest first: red for errors, amber for problems a mod caught and handled. **COPY REPORT** copies it for a bug report; it's also saved as `NeetLoader/logs/errors.log`. |
-| **Phone** | Every new phone call, with a button to make it ring now (Phone Expansion). |
-| **Email** | Every new email, with a button to send it now (Email Expansion). |
-| **TV** | Your TV stations (Custom TV Stations). |
-| **Mixtapes** | Your tapes, with a button to get one (Mixtapes). |
-| **Updates** | The version you have, the newest one found, the release page, and a button to check now (Update Checker). |
-| **Randomizer** | This save's seed, the visitors in the order they'll come and how fast your needs drain, with a button to roll again (Randomizer). |
+
+The mods' own pages on **Mod Settings**:
+
+| Mod | Its page |
+| --- | --- |
+| **Framework** | **PC Apps**: the addresses of the apps on the in-game computer; change them to whatever you like. Its settings are the menu's own (key, size, pause, What's New). |
+| **Phone Expansion** | **Phone**: every new phone call, with a button to make it ring now. |
+| **Email Expansion** | **Email**: every new email, with a button to send it now. |
+| **Custom TV Stations** | **TV**: your TV stations. |
+| **Mixtapes** | **Mixtapes**: your tapes, with a button to get one. |
+| **Randomizer** | **Randomizer**: this save's seed, the visitors in the order they'll come and how fast your needs drain, with a button to roll again. |
+| **Update Checker** | **Updates**: the version you have, the newest one found, the release page, and a button to check now. |
+
+Every other mod with settings is in the list too.
 
 ## Unofficial NEET Patches
 
@@ -69,7 +79,7 @@ Makes the game smoother. Each fix is its own switch.
 - **Faster saves**: saving no longer freezes the game. Only the paint (blood, dirt, water...) that changed since the last save is saved, in the background. In a messy house a save went from 2.5 seconds to well under a tenth of a second.
 - **Free unused textures**: the game no longer keeps using more video memory every time the house loads (after dying or sleeping); that was about 1.5 GB per load in a messy house.
 - **Peephole camera only near the door**: the front door's peephole only films the porch while you're close enough to look through it, which saves about a sixth of each frame everywhere else.
-- **Fewer shadows**: choose which lights cast shadows in Settings, under **Shadows**: room lights (default: lights you switch on and off, the flashlight and the moon), none (fastest), or all lights like the original game.
+- **Fewer shadows**: choose which lights cast shadows in Mod Settings, under **Shadows**: room lights (default: lights you switch on and off, the flashlight and the moon), none (fastest), or all lights like the original game.
 - **Less log spam**: no more tens of thousands of warnings in the log while you're dead or hanging.
 - **Idle paint surfaces rest**: surfaces only do work when something lands on them.
 - **Characters plan their walk once**: trick-or-treaters, the cat, rats and others don't recalculate their path every frame.
@@ -77,7 +87,7 @@ Makes the game smoother. Each fix is its own switch.
 ## Open Saves
 
 - **Compressed saves**: saves are about 16 times smaller (`.nsav` files, an open format). Old saves still load. Turn it off to save plain JSON like the original game.
-- **Save cleanup**: keeps only the newest saves (25 by default, see Settings) instead of a new file piling up every time the game saves.
+- **Save cleanup**: keeps only the newest saves (25 by default, see Mod Settings) instead of a new file piling up every time the game saves.
 
 ## Open House
 
@@ -116,7 +126,7 @@ New numbers to call and new calls that ring in, with choices and consequences.
 
 About 50 calls ring in by themselves, in place of the game's own prank calls: telemarketers and robocalls, creepy callers (one cuts the power, one sounds like you), wrong numbers, kids daring each other, the neighbours complaining about the smell, people from your old life, a shock-jock radio show, surveys, plus a mysterious **PRIVATE** caller (once per save), **MOM** when you're starving (sends food), **FEDUP** after you order something, and the **PIZZA** driver. Some only call after something else happened, and some pay you or send stuff to the door. They're as crude as the game's own calls.
 
-- **New calls ring in**: how often a random call is a new one instead of one of the game's prank calls is set in Settings (**New call chance**, 50% by default).
+- **New calls ring in**: how often a random call is a new one instead of one of the game's prank calls is set in Mod Settings (**New call chance**, 50% by default).
 - **Caller ID**: the phone's screen shows who's calling; the game's prank calls show UNKNOWN.
 
 Modders can add calls as JSON or Ink files in any mod's `phone` folder.
@@ -138,7 +148,7 @@ It also sends the three emails the game has but never sends: mom's "love u bb" s
 
 Emails can pay you, charge you, send stuff to the front door, cut the power, send someone over or make the phone ring. Some only come after another email, a reply, a phone call, a store order, or the morning after you slept.
 
-- **New emails arrive**: new emails show up every few minutes while you play, after store orders, when you get home and when you wake up. How often is in Settings (**Fewest/Most minutes between emails**, 4 to 10 by default).
+- **New emails arrive**: new emails show up every few minutes while you play, after store orders, when you get home and when you wake up. How often is in Mod Settings (**Fewest/Most minutes between emails**, 4 to 10 by default).
 
 Modders can add emails as JSON or Ink files in any mod's `email` folder.
 
@@ -147,37 +157,37 @@ Modders can add emails as JSON or Ink files in any mod's `email` folder.
 Your own videos on the living room TV. Put MP4 or WebM files into a mod's `tv` folder (there's an example station in `Mods/TvStations/tv`) and they show up as stations, next to the game's channels.
 
 - **Keep the game's channels**: switch off to watch only your own stations. Single channels can be hidden with a `stations.jsonc` in the `tv` folder.
-- **Station volume** in Settings.
+- **Station volume** in Mod Settings.
 
 ## Mixtapes
 
 Your own music on cassettes for the radio. Put OGG, MP3 or WAV files into a mod's `mixtapes` folder (there's an example tape, Pumpkin Mix, in `Mods/Mixtapes/mixtapes`) and each one is a tape: sold in the computer's store, and if you want, left lying in a room of the house. Put it in the radio like the game's own tapes.
 
 - **Mixtape radio**: with no tape in, the radio plays your songs one after another, shuffled, like a station. It still needs a fuse and the music button.
-- **Tape price** in Settings. Names, prices, colours and the room a tape is left in go in a `tapes.jsonc` in the `mixtapes` folder.
+- **Tape price** in Mod Settings. Names, prices, colours and the room a tape is left in go in a `tapes.jsonc` in the `mixtapes` folder.
 
 ## Update Checker
 
-Tells you when a newer version is out. Always on; switch off **Check for updates** in Settings to keep it from going online.
+Tells you when a newer version is out. Always on; switch off **Check for updates** in Mod Settings to keep it from going online.
 
 - **The check**: when the game starts and then every hour, the mod asks GitHub (`github.com/Official-Husko/NeetExtended`) for the newest release. It sends nothing about you or your game. If you're offline or GitHub doesn't answer, nothing happens and nothing is shown.
 - **In the corner**: while a newer version is out, the version label in the bottom left says `update available (v0.3.0)`.
 - **In the game**: while a newer version is out, the game sends you one email and rings your phone up to twice per save, about once an hour of play. They're rude about it, like everything else in the game. In co-op only the host gets them.
-- **Updates tab** in the mod menu: the version you have, the newest one found, the release page, CHECK NOW and COPY LINK. The mod never updates anything by itself; you get the new release the same way you got this one.
-- **Check for updates** in Settings (on by default). Off: the mod never goes online.
-- **Tell me in the game** in Settings (on by default). Off: only the note in the corner.
+- **Updates page** in the mod menu (Mod Settings): the version you have, the newest one found, the release page, CHECK NOW and COPY LINK. The mod never updates anything by itself; you get the new release the same way you got this one.
+- **Check for updates** in Mod Settings (on by default). Off: the mod never goes online.
+- **Tell me in the game** in Mod Settings (on by default). Off: only the note in the corner.
 
 ## Randomizer
 
 Every game is a little different. Each save gets a seed that decides:
 
 - **Shuffled visitors**: who knocks at night comes in a different order.
-- **Random prices**: the store charges more or less for everything (how much in Settings). Money keeps its value.
-- **Mystery deliveries**: sometimes an order brings something else from the same store, for what you paid (how often in Settings).
+- **Random prices**: the store charges more or less for everything (how much in Mod Settings). Money keeps its value.
+- **Mystery deliveries**: sometimes an order brings something else from the same store, for what you paid (how often in Mod Settings).
 - **Shuffled house**: on a new game, loose things in the house swap places. Keys and notes stay, and nothing ends up somewhere you can't reach.
-- **Random needs**: hunger, energy, bladder and hygiene drain faster or slower (how much in Settings).
+- **Random needs**: hunger, energy, bladder and hygiene drain faster or slower (how much in Mod Settings).
 
-Each part can be switched off. **Seed for new games** in Settings lets you play a seed someone shared; the **Randomizer** tab shows yours.
+Each part can be switched off. **Seed for new games** in Mod Settings lets you play a seed someone shared; the **Randomizer** page on Mod Settings shows yours.
 
 ## Co-op
 
@@ -205,24 +215,24 @@ More for the computer's anime card game.
 - **Spooky card set**: twelve Halloween cards after the game's 66.
 - **Summons**: a Summon button that spends crystals (500 by default) on a random card payout, or a shiny card with free levels.
 - **Auto-clicker**: buy it once with crystals (5,000 by default) and it clicks every unlocked card for you.
-- **Better crystal exchange**: converting crystals pays $5 per 10K instead of $3 (set it in Settings).
+- **Better crystal exchange**: converting crystals pays $5 per 10K instead of $3 (set it in Mod Settings).
 
-Costs, chances and the click rate are in Settings.
+Costs, chances and the click rate are in Mod Settings.
 
 ## Pumpkin Smash
 
-A whack-a-pumpkin game on the in-game computer (address `pumpkin`). Smash pumpkins for 30 seconds, beat your best score and earn a little cash for each one. Round length and cash per pumpkin are in Settings.
+A whack-a-pumpkin game on the in-game computer (address `pumpkin`). Smash pumpkins for 30 seconds, beat your best score and earn a little cash for each one. Round length and cash per pumpkin are in Mod Settings.
 
 ## Cheat Menu
 
-Press **Insert** (changeable in Settings). Four tabs:
+Press **Insert** (changeable in Mod Settings). Four tabs:
 
 - **Player**: god mode, needs that don't drain, fill all needs, movement speed, teleport.
 - **Spawn**: items, people and creatures.
 - **World**: start or put out a fire, power on or off, unlock all doors, game speed.
 - **Computer**: money, taxes, crystals and the card game.
 
-The game keeps running while the menu is open unless you turn on pausing in Settings.
+The game keeps running while the menu is open unless you turn on pausing in Mod Settings.
 
 ## No Feedback
 

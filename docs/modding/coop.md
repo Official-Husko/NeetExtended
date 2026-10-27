@@ -142,7 +142,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### Co-op content
 
-- The hitman line is listed on Phone Expansion's Phone tab outside co-op too; dialing it there gets a busy line.
+- The hitman line is listed on Phone Expansion's Phone page outside co-op too; dialing it there gets a busy line.
 - Its cooldown counts play time in the host's save, so another host's house has its own.
 
 ### Watch list

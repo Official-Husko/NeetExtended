@@ -72,7 +72,7 @@ public sealed class CoopMod : NeetMod
         World.Ownership.HoldRepair.Init();
         Content.CoopStory.Register(this);
         SharedHouse.Init(this);
-        ModMenu.AddPage(this, new CoopPage());
+        ModMenu.AddTab(this, new CoopPage());
     }
 
     // After every part (and mods that add transports, like Steam) has started and is listening.

@@ -27,7 +27,7 @@ In the game, typing `http://metscape.com` matches nothing, because matching happ
 - **Built-in apps.** The first time the browser is used in a house, and at each house load, `ComputerApps` makes a `ComputerApp` for each of the game's `websites[]` entries. The id is the page object's name.
 - **Aliases.** An app keeps its original address working after the player changes it. The start menu uses the original addresses, so it still finds every app.
 - **Mod apps.** `ComputerApps.Register` adds an app. Its page is built on each house load, and it can get a start menu entry.
-- **PC Apps tab.** The mod menu's PC Apps tab lists every app, with its address field and `SAVE` and `RESET` buttons.
+- **PC Apps page.** The PC Apps page (mod menu, Mod Settings, Framework) lists every app, with its address field and `SAVE` and `RESET` buttons.
 
 ## Concepts
 
@@ -107,8 +107,8 @@ When the player types in the browser, `Navigate` matches the typed address again
 | Field | Type | Default | Meaning |
 |---|---|---|---|
 | `Id` | `string` | | Required. Stable and unique across apps. |
-| `Title` | `string` | `Id` | Shown in the PC Apps tab and the start menu, unless `StartMenuLabel` is set. |
-| `Description` | `string` | | Shown in the PC Apps tab. |
+| `Title` | `string` | `Id` | Shown in the PC Apps page and the start menu, unless `StartMenuLabel` is set. |
+| `Description` | `string` | | Shown in the PC Apps page. |
 | `Url` | `string` | `Id` | Default address, without `http://` and `.com`. |
 | `Height` | `float` | `120` | Page height in computer units. The screen shows about 120 at a time. The framework does not scroll the page; content that does not fit is cut off unless the `Build` callback adds a `Scroll` area. |
 | `InStartMenu` | `bool` | `true` | Adds an entry to the start menu. |
@@ -351,7 +351,7 @@ public override void OnLoad()
 Points to note:
 
 - The app is registered in `OnLoad`, and the framework builds its page on each house load through `Build`.
-- The `Url` is `pumpkin`, so the page opens at `http://pumpkin.com`. The player can change it on the PC Apps tab, and the start menu still finds it, because the start menu entry opens the app by its object, not its address.
+- The `Url` is `pumpkin`, so the page opens at `http://pumpkin.com`. The player can change it on the PC Apps page, and the start menu still finds it, because the start menu entry opens the app by its object, not its address.
 - `StartMenuLabel` is shorter than the title, so the start menu entry fits.
 - Settings are registered with `ModSettings` (see [ui-and-menu.md](ui-and-menu.md#settings-pages)).
 

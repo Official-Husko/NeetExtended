@@ -59,7 +59,7 @@ Mods/MyCalls/
     landlord.jsonc
 ```
 
-Problems (bad JSON, unknown actions, Ink compile errors) are logged and listed on the Phone tab with the file and the step they're in. A call with a problem is skipped; the rest of the file still loads.
+Problems (bad JSON, unknown actions, Ink compile errors) are logged and listed on the Phone page with the file and the step they're in. A call with a problem is skipped; the rest of the file still loads.
 
 ## Call files
 
@@ -87,7 +87,7 @@ A file holds one call, a list of calls, or `{ "calls": [ ... ] }`. `//` and `/* 
 | --- | --- |
 | `id` | Unique within the mod. Defaults to the number's digits, or the name. Other files refer to it as `id` (same mod) or `ModId/id`. |
 | `number` | What to dial: 3 to 7 digits, the dash is optional. Leave it out for a call that only rings in. |
-| `name` | Who it is, for the Phone tab. |
+| `name` | Who it is, for the Phone page. |
 | `callerId` | What the phone's screen shows while this call rings. About 10 characters fit. Defaults to the name. |
 | `say` | What's said: a list of steps (below). |
 | `ink` | Instead of `say`: the name of a knot from an `.ink` file (see "Writing calls in Ink"). |
@@ -192,7 +192,7 @@ Other mods can add actions and conditions (see "From code").
 
 | Field | Default | Meaning |
 | --- | --- | --- |
-| `trigger` | `"random"` | `random`: in place of one of the game's random prank calls. `order`: after the player orders from a computer store. `arrive`: after the house loads. `wake`: when the player wakes up after sleeping. `manual`: only when something rings it (a `ring` action, the Phone tab, code). |
+| `trigger` | `"random"` | `random`: in place of one of the game's random prank calls. `order`: after the player orders from a computer store. `arrive`: after the house loads. `wake`: when the player wakes up after sleeping. `manual`: only when something rings it (a `ring` action, the Phone page, code). |
 | `weight` | 1 | How likely it's picked among the calls that could ring. |
 | `when` | | Only rings while this holds. |
 | `once` | false | Only ever rings once per save. |
@@ -272,7 +272,7 @@ RuleConditions.Register(this, "raining", value => { bool want = value.Value<bool
 
 ## Testing
 
-- The Phone tab: RING NOW on any call, HANG UP, RELOAD CALLS.
+- The Phone page: RING NOW on any call, HANG UP, RELOAD CALLS.
 - The in-game console (backquote): `phoneCalls`, `phoneRing <id>`, `phoneDial <number>` (dials on the phone nearest to you), `phoneHangUp`, `phoneReload`, and the framework's `flags` and `setFlag <name> <value>`.
 - From a terminal through the dev bridge: `neet call console.exec '{"command":"phoneRing PhoneExpansion/pizza"}'`.
 

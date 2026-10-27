@@ -9,14 +9,24 @@ using InputKey = UnityEngine.InputSystem.Key;
 namespace NeetModKit.Menu;
 
 /// <summary>
-/// The in-game mod menu, built from the game's own menu elements. Mods add tabs with
-/// <see cref="AddPage"/>; pages are removed automatically when the mod unloads.
+/// The in-game mod menu, built from the game's own menu elements. A few tabs along the top (Mods,
+/// Mod Settings, What's New, Errors, and any a mod adds with <see cref="AddTab"/>); the pages mods
+/// add with <see cref="AddPage"/> are listed per mod on the Mod Settings tab, next to their
+/// settings. Pages are removed automatically when the mod unloads.
 /// </summary>
 public static class ModMenu
 {
     private const string ReopenKey = "NeetModKit.MenuOpenOn";
 
-    private static readonly OwnedList<MenuPage> PageList = new OwnedList<MenuPage>();
+    /// <summary>A page a mod added, listed under that mod on the Mod Settings tab.</summary>
+    internal sealed class ModPage
+    {
+        public NeetMod Owner;
+        public MenuPage Page;
+    }
+
+    private static readonly OwnedList<MenuPage> TabList = new OwnedList<MenuPage>();
+    private static readonly OwnedList<ModPage> ModPageList = new OwnedList<ModPage>();
     private static readonly Hotkey Key = new Hotkey("F1", InputKey.F1);
     private static UiTabbedWindow _window;
     private static IDisposable _inputLock;
@@ -24,12 +34,23 @@ public static class ModMenu
 
     public static bool IsOpen { get; private set; }
 
-    public static IReadOnlyList<MenuPage> Pages => PageList.Items;
+    /// <summary>The tabs along the top.</summary>
+    public static IReadOnlyList<MenuPage> Pages => TabList.Items;
 
+    internal static IReadOnlyList<ModPage> ModPages => ModPageList.Items;
+
+    /// <summary>Adds a page for <paramref name="owner"/> to the Mod Settings tab, under the mod's name.</summary>
     public static void AddPage(NeetMod owner, MenuPage page)
     {
-        PageList.Add(owner, page);
-        PageList.Sort((a, b) => a.Order != b.Order ? a.Order.CompareTo(b.Order) : string.CompareOrdinal(a.Title, b.Title));
+        ModPageList.Add(owner, new ModPage { Owner = owner, Page = page });
+        ModPageList.Sort((a, b) => a.Page.Order != b.Page.Order ? a.Page.Order.CompareTo(b.Page.Order) : string.CompareOrdinal(a.Page.Title, b.Page.Title));
+    }
+
+    /// <summary>Adds a tab along the top. Keep these few: most pages belong on Mod Settings (<see cref="AddPage"/>).</summary>
+    public static void AddTab(NeetMod owner, MenuPage page)
+    {
+        TabList.Add(owner, page);
+        TabList.Sort((a, b) => a.Order != b.Order ? a.Order.CompareTo(b.Order) : string.CompareOrdinal(a.Title, b.Title));
     }
 
     public static void Open(string pageTitle = null)
@@ -42,11 +63,11 @@ public static class ModMenu
                 KitMod.Instance?.Log.Warn("The mod menu can't open before the game's menus are loaded.");
                 return;
             }
-            _window = new UiTabbedWindow(_owner, About.PackInfo.Title, () => PageList.Items, Close);
+            _window = new UiTabbedWindow(_owner, About.PackInfo.Title, () => TabList.Items, Close);
         }
 
-        if (pageTitle != null)
-            _window.Select(pageTitle);
+        if (pageTitle != null && !_window.Select(pageTitle) && NeetModKit.Menu.Pages.ModSettingsPage.Show(pageTitle))
+            _window.Select(NeetModKit.Menu.Pages.ModSettingsPage.PageTitle);
         if (IsOpen)
             return;
         IsOpen = true;
@@ -75,7 +96,8 @@ public static class ModMenu
     internal static void Init(NeetMod owner)
     {
         _owner = owner;
-        PageList.Changed += () => _window?.PagesChanged();
+        TabList.Changed += () => _window?.PagesChanged();
+        ModPageList.Changed += NeetModKit.Menu.Pages.ModSettingsPage.PagesChanged;
         ApplyConfig(KitMod.Config.Value);
         KitMod.Config.Changed += ApplyConfig;
     }

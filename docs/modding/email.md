@@ -45,7 +45,7 @@ Mods/MyEmails/
     landlord.jsonc
 ```
 
-Problems (bad JSON, unknown actions, Ink compile errors) are logged and listed on the Email tab with the file and the step they're in. An email with a problem is skipped; the rest of the file still loads.
+Problems (bad JSON, unknown actions, Ink compile errors) are logged and listed on the Email page with the file and the step they're in. An email with a problem is skipped; the rest of the file still loads.
 
 ## Email files
 
@@ -75,7 +75,7 @@ A file holds one email, a list of emails, or `{ "emails": [ ... ] }`. `//` and `
 | `subject` | What the inbox shows. Plain text, no rich text. |
 | `body` | What it says: a list of steps (below). Every line is its own paragraph. |
 | `ink` | Instead of `body`: the name of a knot from an `.ink` file (see "Writing emails in Ink"). |
-| `send` | `true`, or an object (below), to make the email arrive by itself. Leave it out for an email that only something else sends (an `email` action, the Email tab, code). |
+| `send` | `true`, or an object (below), to make the email arrive by itself. Leave it out for an email that only something else sends (an `email` action, the Email page, code). |
 
 ### Steps
 
@@ -170,7 +170,7 @@ MailBook.Add(this, new MailItem { Id = "MyMod/landlord", Subject = "RENT", Knot 
 
 ## Testing
 
-- The Email tab: SEND NOW on any email, RELOAD EMAILS.
+- The Email page: SEND NOW on any email, RELOAD EMAILS.
 - The in-game console (backquote): `emailList`, `emailSend <id>`, `emailReload`, `flags`.
 - The dev bridge: `neet call console.exec '{"command":"emailSend welcome"}'`, `email.lists` for the whole inbox.
 

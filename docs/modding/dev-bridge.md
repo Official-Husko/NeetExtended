@@ -141,7 +141,7 @@ The table lists all 53 built-in commands. Parameters marked `?` are optional. `h
 
 | Method | Parameters | Description and result |
 | ------ | ---------- | ---------------------- |
-| `settings.list` | none | Every section of the mod menu's Settings page, with `section` (its title) and `values`. |
+| `settings.list` | none | Every settings section on the mod menu's Mod Settings tab, with `section` (its title) and `values`. |
 | `settings.set` | `section`: title, `name`: field name, `value` | Change one setting and save it, which applies it the same way the Settings page does. Names are case-insensitive. Returns the new value. |
 
 ### Objects

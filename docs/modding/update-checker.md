@@ -5,10 +5,10 @@ The Update Checker mod (`mods/UpdateChecker`) finds out whether a newer release 
 ## What it does
 
 - **Checks** when the mod loads (game start) and then every hour of real time. One request to `https://api.github.com/repos/Official-Husko/NeetExtended/releases/latest`, with the headers `User-Agent: NeetExtended/<version>` and `Accept: application/vnd.github+json` and a 10 second timeout. It reads `tag_name` (`v0.3.0`; the `v` and anything after a `-` or `+` is dropped) and `html_url`, and compares the tag with `PackInfo.Version` as a `System.Version`.
-- **Fails quietly**: offline, a 404, GitHub's rate limit or Proton network trouble each write one Info line to the log (`Update check failed: ...`) and show nothing in game. The Updates tab shows the same reason as plain text. A failed check keeps what an earlier check found.
+- **Fails quietly**: offline, a 404, GitHub's rate limit or Proton network trouble each write one Info line to the log (`Update check failed: ...`) and show nothing in game. The Updates page shows the same reason as plain text. A failed check keeps what an earlier check found.
 - **Corner note**: while an update exists, `VersionTag.AddNote` adds `update available (v0.3.0)` after the pack's version. The note goes when the update is gone (the check was switched off) or the mod unloads.
 - **Tells the player in the game** (details below).
-- **Updates tab** in the mod menu: the version running, the newest one found, the release page as plain text, the status of the last check, CHECK NOW (one check even with the setting off) and COPY LINK.
+- **Updates page** in the mod menu (Mod Settings): the version running, the newest one found, the release page as plain text, the status of the last check, CHECK NOW (one check even with the setting off) and COPY LINK.
 
 ## Settings
 
@@ -56,7 +56,7 @@ Namespace `UpdateChecker`. Everything is internal; the mod has no API for others
 | `Check/CornerNote.cs` | The version label note. |
 | `Notice/UpdateNotice.cs` | The email and call, the counts. |
 | `Rules/UpdateRules.cs` | `updateVersion` and `updateAvailable`. |
-| `Menu/UpdatePage.cs` | The Updates tab. |
+| `Menu/UpdatePage.cs` | The Updates page. |
 | `Testing.cs` | Hooks for the dev bridge. |
 
 ## Testing
@@ -78,5 +78,5 @@ Faking an update in a launch that hasn't told yet also runs the first-time notic
 - GitHub allows 60 unauthenticated requests an hour per address. Normal play makes one; a lot of mod reloads in a row can use them up, and the check then fails quietly until the limit resets.
 - The check runs from the main menu too, but the email and call only happen in the house.
 - If the email or call file is missing (the mod folder was edited), the action logs a warning, and the count still goes up.
-- The email and call say "where you got these mods" because the mod can't know how the player installed the pack; the Updates tab has the release page.
+- The email and call say "where you got these mods" because the mod can't know how the player installed the pack; the Updates page has the release page.
 - A client in co-op sees the corner note but never gets the email or call; the host's inbox and phone get them.
