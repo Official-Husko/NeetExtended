@@ -7,25 +7,22 @@ set "NEET=%HERE%tool\win-x64\neet.exe"
 
 echo NeetExtended installer
 echo.
-echo This adds the mod loader and the mods to NEET Demo. Close the game first.
+echo This adds the mod loader and the mods to NEET Demo, and switches the game to Unity's 64-bit player
+echo (downloaded from unity3d.com the first time, about 180 MB). If you went back to 32-bit with
+echo use-32bit.bat, that stays. Close the game first.
 echo.
 
 set "FLAGS="
-echo Switch the game to 64-bit? It runs a little faster and can use more memory. This downloads
-set /p "ANSWER=Unity's 64-bit player (about 180 MB) from unity3d.com. You can switch back later. [y/N] "
-if /i "%ANSWER%"=="y" set "FLAGS=--64bit"
-if /i "%ANSWER%"=="yes" set "FLAGS=--64bit"
-
 set "ANSWER="
 echo Clean up memory in small steps instead of freezing the game for a moment every so often
 set /p "ANSWER=(incremental garbage collection)? Recommended. [Y/n] "
-if /i not "%ANSWER%"=="n" if /i not "%ANSWER%"=="no" set "FLAGS=%FLAGS% --incremental-gc"
+if /i not "%ANSWER%"=="n" if /i not "%ANSWER%"=="no" set "FLAGS=--incremental-gc"
 
 set "ANSWER="
 set "STEAM="
 echo.
-echo Co-op over Steam needs one file from Valve (steam_api.dll, about 270 KB) that this pack can't
-set /p "ANSWER=include. Download it now from github.com (the Steamworks.NET release)? [y/N] "
+echo Co-op over Steam needs two files from Valve (steam_api.dll and steam_api64.dll, about 560 KB)
+set /p "ANSWER=that this pack can't include. Download them now from github.com (the Steamworks.NET release)? [y/N] "
 if /i "%ANSWER%"=="y" set "STEAM=1"
 if /i "%ANSWER%"=="yes" set "STEAM=1"
 
@@ -39,8 +36,10 @@ if errorlevel 1 (
 )
 if defined STEAM (
     "%NEET%" steam %*
-    if errorlevel 1 echo Couldn't fetch steam_api.dll. Try again later with: neet steam
+    if errorlevel 1 echo Couldn't fetch Steam's files. Try again later with: neet steam
 )
 echo.
 echo Done. Start NEET Demo from Steam; F1 opens the mod menu.
+echo If the game doesn't start or keeps crashing on 64-bit, run use-32bit.bat to go back to its original
+echo 32-bit player.
 pause

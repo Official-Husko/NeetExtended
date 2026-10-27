@@ -28,9 +28,9 @@ for project in "$repo"/src/NeetModKit "$repo"/mods/*/; do
     echo "  $id"
 done
 
-# steam_api.dll is Valve's. The Co-op over Steam mod gets it from 'neet steam', never from the package.
+# steam_api.dll and steam_api64.dll are Valve's. Co-op over Steam gets them from 'neet steam', never from the package.
 if [ -n "$(find "$out" -iname 'steam_api*.dll' -print -quit)" ]; then
-    echo "steam_api.dll ended up in the package; it must not be shipped." >&2
+    echo "A steam_api DLL ended up in the package; it must not be shipped." >&2
     exit 1
 fi
 
@@ -42,8 +42,9 @@ for rid in linux-x64 win-x64; do
     rm -f "$out/tool/$rid/"*.pdb
 done
 
-cp "$repo/build/package/"{install.sh,install.bat,uninstall.sh,uninstall.bat,README.txt} "$repo/FEATURES.md" "$repo/LICENSE" "$out/"
-chmod +x "$out/install.sh" "$out/uninstall.sh" "$out/tool/linux-x64/neet"
+cp "$repo/build/package/"{install,uninstall,use-32bit,use-64bit}.{sh,bat} "$repo/build/package/README.txt" \
+    "$repo/FEATURES.md" "$repo/LICENSE" "$out/"
+chmod +x "$out/"*.sh "$out/tool/linux-x64/neet"
 
 (cd "$repo/dist" && zip -qr "$name.zip" "$name")
 echo "Done: dist/$name.zip ($(du -h "$repo/dist/$name.zip" | cut -f1))"

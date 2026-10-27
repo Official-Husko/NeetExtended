@@ -4,9 +4,10 @@ Everything NeetExtended adds to NEET Demo, for players. Each mod can be switched
 
 ## Getting started
 
-- **Installing**: unpack the release, close the game, run `install.sh` (Linux) or `install.bat` (Windows). The installer asks two questions:
-  - **Switch to 64-bit?** Downloads Unity's 64-bit version of the game's engine from Unity (about 180 MB) and swaps it in. The game runs a little faster and can use more memory. You can switch back at any time.
+- **Installing**: unpack the release, close the game, run `install.sh` (Linux) or `install.bat` (Windows). The installer switches the game to Unity's 64-bit version of its engine, downloaded from Unity the first time (about 180 MB): the game runs a little faster and can use more memory. It asks two questions:
   - **Incremental garbage collection?** The game cleans up memory in small steps instead of freezing for a moment every so often. Recommended.
+  - **Files for Co-op over Steam?** Downloads the two files from Valve that Co-op over Steam needs and the pack can't include.
+- **Back to 32-bit**: if the game won't start or keeps crashing on 64-bit, close it and run `use-32bit.sh` or `use-32bit.bat`. That puts the game's original 32-bit engine back, and installing again keeps it. `use-64bit.sh` or `use-64bit.bat` switches to 64-bit again.
 - **Uninstalling**: run `uninstall.sh` or `uninstall.bat`. It puts the original game files back. Your saves and mod settings stay.
 - **Version in the corner**: the bottom left corner shows the pack's name, version and build (for example `NeetExtended v0.1.0 (1a2b3c4)`), so you can see the mods are running and screenshots show which build you have. Hide it in Mod Settings.
 - **Game version check**: every release is tested with a specific build of NEET Demo. If your game is a different build (after a Steam update, say), the corner adds "game build not tested". Most things usually still work; report anything that doesn't.

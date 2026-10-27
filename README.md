@@ -62,10 +62,12 @@ You need NEET Demo from Steam, on Windows or on Linux through Proton.
 
 The installer finds the game through Steam. If it doesn't, pass the folder: `install.sh --game "/path/to/steamapps/common/NEET Demo"`.
 
+The installer switches the game to Unity's 64-bit player for the game's exact Unity version, downloaded straight from Unity the first time (about 180 MB). Slightly faster, more memory. The 32-bit files are kept: if the game gives you trouble on 64-bit, `use-32bit.bat` / `use-32bit.sh` puts the original player back (installing again keeps it), and `use-64bit` switches again.
+
 It asks two things:
 
-- **Switch to 64-bit?** Downloads Unity's 64-bit player for the game's exact Unity version straight from Unity (about 180 MB) and swaps it in. Slightly faster, more memory. The 32-bit files are kept, so you can switch back.
 - **Incremental garbage collection?** Memory gets cleaned up a little every frame instead of all at once, which gets rid of the short freezes. Recommended.
+- **Files for Co-op over Steam?** Valve's `steam_api.dll` and `steam_api64.dll` can't be in the pack, so the installer offers to download them.
 
 Each release is tested with a specific build of the game; the **game compatibility** badge at the top shows whether that's still Steam's current build. If the game updates, the mods tell you in the corner of the screen and usually keep working until a tested release follows.
 
