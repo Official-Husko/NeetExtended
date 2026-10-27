@@ -31,5 +31,8 @@ What's in here
 Mods/            the mods, one folder each
 tool/            the installer and modding tool (neet) for Linux and Windows
 FEATURES.md      what the mods add
+LICENSE          GPL-3.0
 install.*        installs everything
 uninstall.*      takes it out again
+
+Source code, issues and new versions: https://github.com/Official-Husko/NeetExtended

@@ -36,7 +36,7 @@ for rid in linux-x64 win-x64; do
     rm -f "$out/tool/$rid/"*.pdb
 done
 
-cp "$repo/build/package/"{install.sh,install.bat,uninstall.sh,uninstall.bat,README.txt} "$repo/FEATURES.md" "$out/"
+cp "$repo/build/package/"{install.sh,install.bat,uninstall.sh,uninstall.bat,README.txt} "$repo/FEATURES.md" "$repo/LICENSE" "$out/"
 chmod +x "$out/install.sh" "$out/uninstall.sh" "$out/tool/linux-x64/neet"
 
 (cd "$repo/dist" && zip -qr "$name.zip" "$name")
