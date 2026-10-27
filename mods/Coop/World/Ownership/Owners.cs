@@ -153,6 +153,12 @@ internal static class Owners
         if (usable == null || player == null || usable.player != player)
             return;
         using (SpawnContext.Quiet())
+        {
             usable.DropHand();
+            // DropHand does nothing when the hands don't list it (or have no Player_Abilities);
+            // a holder left behind would make the game refuse it to everyone.
+            if (usable.player != null)
+                usable.ResetPlayerRef();
+        }
     }
 }
