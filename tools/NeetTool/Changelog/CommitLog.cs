@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 namespace NeetTool.Changelog;
 
 /// <summary>A commit reduced to what the changelog needs.</summary>
-public sealed record CommitEntry(string Hash, DateOnly Date, string Type, string? Scope, IReadOnlyList<ChangeLine> Lines);
+public sealed record CommitEntry(string Hash, DateOnly Date, string Type, string? Scope, IReadOnlyList<ChangeLine> Lines, bool Breaking = false);
 
 /// <summary>One player-facing line from a Changelog-* trailer.</summary>
 public sealed record ChangeLine(ChangeKind Kind, string Text);
@@ -36,12 +36,15 @@ public static partial class CommitLog
                 continue;
 
             var subject = Subject().Match(f[2]);
+            // Conventional commits mark breaking changes with "!" after the type or a BREAKING CHANGE trailer.
+            bool breaking = (subject.Success && subject.Groups["bang"].Success) || f[3].Contains("BREAKING CHANGE", StringComparison.Ordinal);
             commits.Add(new CommitEntry(
                 f[0],
                 DateOnly.Parse(f[1]),
                 subject.Success ? subject.Groups["type"].Value : "other",
                 subject.Success && subject.Groups["scope"].Success ? subject.Groups["scope"].Value : null,
-                ParseTrailers(f[3])));
+                ParseTrailers(f[3]),
+                breaking));
         }
         return commits;
     }
@@ -57,7 +60,7 @@ public static partial class CommitLog
         return lines;
     }
 
-    [GeneratedRegex(@"^(?<type>[a-z]+)(\((?<scope>[^)]+)\))?!?:")]
+    [GeneratedRegex(@"^(?<type>[a-z]+)(\((?<scope>[^)]+)\))?(?<bang>!)?:")]
     private static partial Regex Subject();
 
     [GeneratedRegex(@"^Changelog-(?<kind>Added|Changed|Fixed|Removed):\s*(?<text>.+)$", RegexOptions.Multiline | RegexOptions.IgnoreCase)]

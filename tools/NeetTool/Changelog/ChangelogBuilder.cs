@@ -34,13 +34,15 @@ public static class ChangelogBuilder
 
     private static readonly ChangeKind[] Sections = Enum.GetValues<ChangeKind>();
 
-    public static JsonObject Build(string repo)
+    /// <param name="releasing">A version being released right now; see <see cref="Releases.Resolve"/>.</param>
+    public static JsonObject Build(string repo, string? releasing = null)
     {
         var releases = new JsonArray();
-        foreach (var release in Releases.Resolve(repo))
+        foreach (var release in Releases.Resolve(repo, releasing))
         {
             var commits = CommitLog.Read(repo, release.Range);
-            if (commits.Count == 0)
+            // Releases without anything for players (only tooling or release commits) are left out.
+            if (commits.All(c => c.Lines.Count == 0))
                 continue;
 
             var entry = new JsonObject

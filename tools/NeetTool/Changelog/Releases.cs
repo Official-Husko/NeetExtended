@@ -11,7 +11,11 @@ public sealed record ReleaseRange(string Version, string Range, bool Released, D
 /// </summary>
 public static partial class Releases
 {
-    public static List<ReleaseRange> Resolve(string repo)
+    /// <param name="releasing">
+    /// A version being released right now, before its tag exists: the commits after the last tag
+    /// become that release, dated today.
+    /// </param>
+    public static List<ReleaseRange> Resolve(string repo, string? releasing = null)
     {
         var tags = Git.Run(repo, "for-each-ref", "refs/tags/v*", "--format=%(refname:short)\u001f%(creatordate:short)")
             .Split('\n', StringSplitOptions.RemoveEmptyEntries)
@@ -29,10 +33,17 @@ public static partial class Releases
             previous = t.Tag;
         }
 
-        string upcoming = UpcomingVersion(repo);
-        bool alreadyTagged = tags.Any(t => t.Tag == "v" + upcoming);
         string range = previous == null ? "HEAD" : $"{previous}..HEAD";
-        releases.Add(new ReleaseRange(alreadyTagged ? "Unreleased" : upcoming, range, false, null));
+        if (releasing != null)
+        {
+            releases.Add(new ReleaseRange(releasing, range, true, DateOnly.FromDateTime(DateTime.Now)));
+        }
+        else
+        {
+            string upcoming = UpcomingVersion(repo);
+            bool alreadyTagged = tags.Any(t => t.Tag == "v" + upcoming);
+            releases.Add(new ReleaseRange(alreadyTagged ? "Unreleased" : upcoming, range, false, null));
+        }
 
         releases.Reverse(); // Newest first.
         return releases;
@@ -44,6 +55,18 @@ public static partial class Releases
         string props = File.ReadAllText(Path.Combine(repo, "Directory.Build.props"));
         var m = VersionElement().Match(props);
         return m.Success ? m.Groups[1].Value.Trim() : "0.0.0";
+    }
+
+    /// <summary>The newest vX.Y.Z tag, or null before the first release.</summary>
+    public static (string Tag, Version Version)? LastTag(string repo)
+    {
+        var last = Git.Run(repo, "tag", "--list", "v*")
+            .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+            .Select(t => (Tag: t.Trim(), Version: ParseVersion(t.Trim()[1..])))
+            .Where(t => t.Version != null)
+            .OrderByDescending(t => t.Version)
+            .FirstOrDefault();
+        return last.Tag == null ? null : (last.Tag, last.Version!);
     }
 
     private static Version? ParseVersion(string text) => Version.TryParse(text, out var v) ? v : null;
