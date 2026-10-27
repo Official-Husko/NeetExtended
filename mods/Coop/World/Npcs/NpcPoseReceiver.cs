@@ -87,7 +87,8 @@ internal static class NpcPoseReceiver
             if (!active)
                 continue;
             var shown = rig.Shown;
-            if (pose.Bools != shown.Bools || pose.Dancing != shown.Dancing || pose.Speed != shown.Speed || pose.Flags != shown.Flags)
+            if (pose.Bools != shown.Bools || pose.Dancing != shown.Dancing || pose.Speed != shown.Speed || pose.Flags != shown.Flags
+                || pose.Kicks != shown.Kicks)
                 rig.Show(pose);
         }
     }

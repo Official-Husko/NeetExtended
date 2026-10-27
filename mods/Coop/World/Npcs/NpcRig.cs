@@ -12,12 +12,22 @@ internal sealed class NpcRig
 {
     private static readonly int DancingHash = Animator.StringToHash("Dancing");
     private static readonly int DeadHash = Animator.StringToHash("isDead");
+    private static readonly int CrouchHash = Animator.StringToHash("isCrouching");
+    private static readonly int KickHash = Animator.StringToHash("Kick");
+
+    // The body collider's shape while standing and while crouching, sitting or lying down (the
+    // numbers Player_Movement.Update sets).
+    private const float KickImpactDelay = 0.2f;
+    private const float StandHeight = 1.67f;
+    private const float CrouchHeight = 0.55f;
+    private static readonly Vector3 CrouchCenter = new Vector3(0f, -0.6f, 0f);
 
     public Animator Animator;
     public SkinnedMeshRenderer Skin;
     public SkinnedMeshRenderer[] Hands;
     public Player_Movement Movement;
     public Player_Abilities Abilities;
+    public CapsuleCollider Capsule;
 
     private AnimatorBools _bools;
     private bool _hasDancing;
@@ -28,11 +38,15 @@ internal sealed class NpcRig
     public bool HasSent;
     public int DressSignature;
     public bool DressSent;
+    public byte KickCount;
+    public bool KickHit;
 
     // Client: poses from the host.
     public readonly TimedRing<NpcPose> Poses = new TimedRing<NpcPose>(6);
     public bool Driving;
     public NpcPose Shown;
+    private bool _hasShown;
+    private bool _crouched;
 
     public static NpcRig TryCreate(Brain brain)
     {
@@ -47,6 +61,7 @@ internal sealed class NpcRig
             Hands = abilities.rendererHands,
             Movement = movement,
             Abilities = abilities,
+            Capsule = brain.GetComponent<CapsuleCollider>(),
         };
     }
 
@@ -74,7 +89,10 @@ internal sealed class NpcRig
             Position = root.position,
             Rotation = root.rotation,
             Speed = 50,
+            Kicks = KickCount,
         };
+        if (KickHit)
+            pose.Flags |= NpcPose.KickHit;
         if (root.gameObject.activeSelf)
             pose.Flags |= NpcPose.Active;
         if (Ready())
@@ -102,6 +120,9 @@ internal sealed class NpcRig
             if (_hasDancing)
                 Animator.SetInteger(DancingHash, pose.Dancing);
             Animator.speed = pose.Speed > 0 ? pose.Speed / 50f : 1f;
+            ShapeCollider(Animator.GetBool(CrouchHash));
+            if (_hasShown && pose.Kicks != Shown.Kicks)
+                Kick((pose.Flags & NpcPose.KickHit) != 0);
         }
         bool left = (pose.Flags & NpcPose.LeftHand) != 0;
         bool right = (pose.Flags & NpcPose.RightHand) != 0;
@@ -118,7 +139,29 @@ internal sealed class NpcRig
                 Hands[1].enabled = right;
         }
         Shown = pose;
+        _hasShown = true;
         DieIfDead();
+    }
+
+    // The movement script that does this on the host is switched off here.
+    private void ShapeCollider(bool crouching)
+    {
+        if (crouching == _crouched || Capsule == null)
+            return;
+        _crouched = crouching;
+        Capsule.center = crouching ? CrouchCenter : Vector3.zero;
+        Capsule.height = crouching ? CrouchHeight : StandHeight;
+    }
+
+    // The swing; what the kick hits is the host's business and arrives as item moves and damage.
+    private void Kick(bool hit)
+    {
+        Animator.SetTrigger(KickHash);
+        if (hit && Abilities != null && Abilities.punchImpactAudio != null)
+        {
+            Abilities.punchImpactAudio.pitch = Random.Range(0.9f, 1.1f);
+            Abilities.punchImpactAudio.PlayDelayed(KickImpactDelay);
+        }
     }
 
     // The host's NPC died: this copy becomes a corpse the game's way (it can be picked up, it bleeds

@@ -3,12 +3,19 @@ using UnityEngine;
 
 namespace Coop.World.Npcs;
 
-/// <summary>What an NPC rig is doing: where it is, how it's turned (a corpse lies on its side) and its animator state.</summary>
+/// <summary>
+/// What an NPC rig is doing: where it is, how it's turned (a corpse lies on its side) and its animator state.
+/// Kicks is a counter the host raises with every kick: a trigger can't be read back from the animator,
+/// and a counter in the pose is played in step with the walking and survives a lost packet.
+/// </summary>
 internal struct NpcPose
 {
     public const byte LeftHand = 1;
     public const byte RightHand = 2;
     public const byte Active = 4;
+
+    /// <summary>The latest kick landed on something (it makes a thud).</summary>
+    public const byte KickHit = 8;
 
     public Vector3 Position;
     public Quaternion Rotation;
@@ -16,6 +23,7 @@ internal struct NpcPose
     public byte Dancing;
     public byte Speed;
     public byte Flags;
+    public byte Kicks;
 
     public void Write(NetDataWriter writer)
     {
@@ -30,6 +38,7 @@ internal struct NpcPose
         writer.Put(Dancing);
         writer.Put(Speed);
         writer.Put(Flags);
+        writer.Put(Kicks);
     }
 
     public static NpcPose Read(NetDataReader reader) => new NpcPose
@@ -40,12 +49,14 @@ internal struct NpcPose
         Dancing = reader.GetByte(),
         Speed = reader.GetByte(),
         Flags = reader.GetByte(),
+        Kicks = reader.GetByte(),
     };
 
-    public const int Size = 33;
+    public const int Size = 34;
 
     public bool SameAs(in NpcPose other) =>
         (Position - other.Position).sqrMagnitude < 1e-6f
         && Mathf.Abs(Quaternion.Dot(Rotation, other.Rotation)) > 0.99999f
-        && Bools == other.Bools && Dancing == other.Dancing && Speed == other.Speed && Flags == other.Flags;
+        && Bools == other.Bools && Dancing == other.Dancing && Speed == other.Speed && Flags == other.Flags
+        && Kicks == other.Kicks;
 }
