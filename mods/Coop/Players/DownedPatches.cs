@@ -1,3 +1,4 @@
+using Coop.Session;
 using HarmonyLib;
 
 namespace Coop.Players;
@@ -6,7 +7,7 @@ namespace Coop.Players;
 /// The hooks downed players need. Every way the game kills the local player (its death, being
 /// skeletonized, being gibbed) becomes going down first, and the death happens later if nobody helps
 /// (<see cref="Downed"/>). Food and drinks used while looking at a downed player go to them
-/// (<see cref="Reviving"/>).
+/// (<see cref="Reviving"/>). The hand that carries someone can't pick up or punch (<see cref="Carrying"/>).
 /// </summary>
 [HarmonyPatch]
 internal static class DownedPatches
@@ -34,4 +35,15 @@ internal static class DownedPatches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LiquidContainer), nameof(LiquidContainer.Use))]
     private static bool GiveDownedPlayerADrink(LiquidContainer __instance) => !Reviving.TryGiveDrink(__instance);
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.Pickup), typeof(Hands), typeof(UnityEngine.GameObject))]
+    private static bool NoPickupWithBusyHand(Player_Abilities __instance, Hands hand) => !IsCarryingWith(__instance, hand);
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player_Abilities), nameof(Player_Abilities.Punch))]
+    private static bool NoPunchWithBusyHand(Player_Abilities __instance, Hands hand) => !IsCarryingWith(__instance, hand);
+
+    private static bool IsCarryingWith(Player_Abilities rig, Hands hand) =>
+        CoopSession.InWorld && Carrying.HandBusy(hand) && HouseManager._ != null && rig.gameObject == HouseManager._.player;
 }

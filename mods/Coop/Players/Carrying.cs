@@ -8,7 +8,8 @@ namespace Coop.Players;
 
 /// <summary>
 /// Carrying a downed player: aim at them with an empty hand and tap its button (<see cref="Reviving"/>
-/// tells a tap from a hold); press either hand again to put them down. The downed player's own game moves its body onto the carrier's shoulder (so every game sees
+/// tells a tap from a hold); press either hand again to put them down. The hand that picked them up
+/// stays busy until then (<see cref="HandBusy"/>). The downed player's own game moves its body onto the carrier's shoulder (so every game sees
 /// the same), and decides who carries them: one carrier at a time, told to everyone. The carrier's
 /// game shows the body on its own shoulder straight away (<see cref="PlayerPuppet.Shoulder"/>). Being
 /// revived, dying, the carrier going down or either player leaving ends it.
@@ -47,6 +48,9 @@ internal static class Carrying
 
     /// <summary>The player this game's player carries (or has just asked to), or 255.</summary>
     public static byte Carried => _carrying;
+
+    /// <summary>The hand holding a carried player can't pick up or punch.</summary>
+    public static bool HandBusy(Hands hand) => _carrying != None && (int)hand == _hand;
 
     /// <summary>Who carries the player in <paramref name="slot"/>, or 255.</summary>
     public static byte CarrierOf(byte slot) => CarriedBy.TryGetValue(slot, out byte carrier) ? carrier : None;
