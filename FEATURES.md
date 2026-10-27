@@ -78,6 +78,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **The TV shows after loading**: a TV that was on when you saved came back on with its sound playing but a dark screen. It shows its channel again.
 - **Custom shirts show when you wear them**: a shirt from the custom shop showed your picture in your hand, but was plain once you put it on, until you saved and loaded. It shows the picture right away.
 - **Pans cool down after food burns in them**: a frying pan that had food burn in it stayed hot for good, even long after the stove was off. It cools down like any other pan.
+- **Thunder keeps going**: once the story had set off its own lightning there was no thunder again until you restarted the game. Thunder now carries on at random.
 
 ## Performance Fixes (experimental)
 

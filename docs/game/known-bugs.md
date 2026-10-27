@@ -374,6 +374,16 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 
 **Reproduce:** burn a piece of meat in a pan on a lit stove, turn the stove off, destroy the meat and lift the pan away from the stove, then read `HeatHolder._heatIndex` and `flamesInContact`: with `PanCooling` off the set holds destroyed flames and the heat stays put, with it on the set is clean and the heat falls by 1 a second. (A pan left inside the stove's zone doesn't cool either way: the stove's `Stove_Zone` flame stays in the set while the pan touches it, and it resets the delay too. That is how the game is, not part of this fix.)
 
+## Thunder stops for good after the story's lightning
+
+**What happens:** the random thunder (a strike every 30 to 180 seconds) works until the story sets off its own lightning (Ghostboy's first line on Night 1). After that there is no more thunder until the game is restarted. Measured at 5x speed: 8 strikes in 750 game seconds before the story strike, none in 850 after.
+
+**Cause:** `HouseManager.Start` starts the loop without keeping it, and the story's `Thunder` sequence stops `thunderCorout` and starts a single strike in its place (`HouseManager.cs:345-352`). The loop schedules its next round by storing itself in `thunderCorout` at its end (`:521`), so once the first random strike has happened the story's stop kills the loop. The single strike (`instant: true`) never schedules another (`if (!instant)`, `:520`). Before the first random strike the stop does nothing, because the field is still empty and the loop lives on unnoticed.
+
+**Fix:** the loop no longer stores itself in `thunderCorout` (the store in `Thunder`'s state machine is swapped for a call that does nothing). The story's stop then only ever reaches its own earlier single strike, and the one loop started in `Start` keeps running. `Sky.Strike()` in the framework starts the same single strike without touching the field either.
+
+**Reproduce:** turn `ThunderLoop` off, wait for a strike (or `sky.set thunderMin=5 thunderMax=8` on the bridge), run `sky.strike story=true`, and count strikes: none after. With it on, they carry on.
+
 ## Not bugs
 
 - `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.
