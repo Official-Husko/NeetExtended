@@ -28,6 +28,7 @@ Mods, a mod loader and modding tools for [NEET Demo](https://store.steampowered.
 | **Phone Expansion** | Over 60 new calls and 18 numbers to dial: pizza delivery, Spookbusters, a deal with Satan, hotlines, telemarketers, kids prank calling you, and a few you'd rather not answer. |
 | **Email Expansion** | About 70 new emails in the computer's inbox that you can answer: scams, mom, cults, bills, creeps. Replies can pay you, cost you, or send something to your door. |
 | **Custom TV Stations** | Your own videos (MP4 or WebM) on the living room TV. |
+| **Randomizer** | A seed per save shuffles who knocks at night, store prices, deliveries, the house on a new game and how fast you get hungry. |
 | **Mixtapes** | Your own music (OGG, MP3 or WAV) on cassettes for the radio, and as the radio's station when there's no tape in. |
 | **Open House** | Opens the pantry, the basement backroom, dad's yard, and if you want the attic and the roof. |
 | **Card Expansion** | Twelve Halloween cards, summons, an auto-clicker and a better crystal exchange for the computer's card game. |

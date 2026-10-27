@@ -13,6 +13,7 @@
 | [Emails](modding/email.md) | The Email Expansion mod: email files, replies, triggers, Ink emails, the C# API |
 | [Writing style](modding/writing-style.md) | Writing calls, emails and other game text in NEET's voice |
 | [TV stations](modding/tv-stations.md) | The Custom TV Stations mod: video files, stations.json, the remote |
+| [Randomizer](modding/randomizer.md) | The Randomizer mod: seeds, each randomized part, and how it hooks the game |
 | [Mixtapes](modding/mixtapes.md) | The Mixtapes mod: song files as cassettes, tapes.json, the radio station |
 | [Save format](modding/save-format.md) | The `.nsav` format and the Open Saves mod |
 | [Dev bridge](modding/dev-bridge.md) | Controlling the running game from tools and scripts |

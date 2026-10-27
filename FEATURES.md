@@ -26,6 +26,7 @@ Press **F1**, or pick **MODS** in the pause menu (where the feedback form used t
 | **Email** | Every new email, with a button to send it now (Email Expansion). |
 | **TV** | Your TV stations (Custom TV Stations). |
 | **Mixtapes** | Your tapes, with a button to get one (Mixtapes). |
+| **Randomizer** | This save's seed, the visitors in the order they'll come and how fast your needs drain, with a button to roll again (Randomizer). |
 
 ## Unofficial NEET Patches
 
@@ -137,6 +138,18 @@ Your own music on cassettes for the radio. Put OGG, MP3 or WAV files into a mod'
 
 - **Mixtape radio**: with no tape in, the radio plays your songs one after another, shuffled, like a station. It still needs a fuse and the music button.
 - **Tape price** in Settings. Names, prices, colours and the room a tape is left in go in a `tapes.json` in the `mixtapes` folder.
+
+## Randomizer
+
+Every game is a little different. Each save gets a seed that decides:
+
+- **Shuffled visitors**: who knocks at night comes in a different order.
+- **Random prices**: the store charges more or less for everything (how much in Settings). Money keeps its value.
+- **Mystery deliveries**: sometimes an order brings something else from the same store, for what you paid (how often in Settings).
+- **Shuffled house**: on a new game, loose things in the house swap places. Keys and notes stay, and nothing ends up somewhere you can't reach.
+- **Random needs**: hunger, energy, bladder and hygiene drain faster or slower (how much in Settings).
+
+Each part can be switched off. **Seed for new games** in Settings lets you play a seed someone shared; the **Randomizer** tab shows yours.
 
 ## Card Expansion
 

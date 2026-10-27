@@ -6,7 +6,7 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 
 - [ ] **Co-op**: 2 to 4 players in one house. Research done, see [docs/research/coop.md](docs/research/coop.md) (LiteNetLib over UDP, host-authoritative, remote players as player rigs driven by intents).
 - [ ] **Twitch Integration**: chat commands and channel point rewards that act in the game. Can reuse Phone Expansion's actions and conditions as the command set ("chat rings the phone", "chat pops the fuses").
-- [ ] **Randomizer**: shuffle night visitors, store prices, dream layouts and the like.
+- [x] **Randomizer**: shuffle night visitors, store prices, dream layouts and the like. (Dreams are already random in the game; visitors, prices, deliveries, the house and needs are done.)
 - [x] **Performance Fixes** (experimental): `mods/PerformanceFixes`, results in [docs/research/performance.md](docs/research/performance.md#whats-fixed).
   - [x] Peephole camera renders only near the front door.
   - [x] Shadow presets (room lights by default, or none).
