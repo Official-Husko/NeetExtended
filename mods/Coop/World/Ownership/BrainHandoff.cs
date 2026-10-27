@@ -7,7 +7,8 @@ namespace Coop.World.Ownership;
 /// Rats, the cat and dead NPCs can be picked up. Their brain runs on the host, so while someone else
 /// holds or throws one, the host pauses it the way the animal's own pickup does (no walking, no
 /// thinking), and wakes it with the animal's own drop once it's back (a corpse has nothing to pause).
-/// On a client it goes back to being a puppet when it's handed back.
+/// On a client it goes back to being a puppet when it's handed back; a rat in this game's player's
+/// hand wriggles and bites here (<see cref="HeldAnimals"/>).
 /// </summary>
 internal static class BrainHandoff
 {
@@ -34,8 +35,11 @@ internal static class BrainHandoff
     /// <summary>Client: this game simulates it now (held or thrown); it falls like a dropped animal does.</summary>
     public static void TakenHere(NetObject o)
     {
-        if (Holdable(o) && o.Body != null)
+        if (!Holdable(o))
+            return;
+        if (o.Body != null)
             o.Body.useGravity = true;
+        HeldAnimals.Taken(o);
     }
 
     /// <summary>

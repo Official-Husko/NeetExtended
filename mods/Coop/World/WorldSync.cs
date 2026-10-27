@@ -140,6 +140,7 @@ internal static class WorldSync
         TalkSync.Stop();
         Hitman.Clear();
         CopExits.Clear();
+        HeldAnimals.Clear();
         NetObjects.Clear();
         StateTrackers.Clear();
         StateSync.Clear();
@@ -166,6 +167,8 @@ internal static class WorldSync
         NpcPuppets.ProcessLater();
         EconomySync.Update();
         TalkSync.Update(_hosting);
+        if (!_hosting)
+            HeldAnimals.Tick();
         WorldTiming.End(WorldTiming.Update, started);
     }
 

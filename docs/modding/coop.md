@@ -166,7 +166,7 @@ State of things:
 
 Picking things up and pushing them:
 
-- Clients can pick up rats, the cat and dead NPCs: the host pauses the animal while someone else holds or throws it and wakes it once it lands. A held rat doesn't bite a client, and doesn't wriggle in a client's hands.
+- Clients can pick up rats, the cat and dead NPCs: the host pauses the animal while someone else holds or throws it and wakes it once it lands. A rat held by a client bites and wriggles in its hand like in the host's (`World/Ownership/HeldAnimals`: the client's game does what BrainRat.Update does for a held rat, since the rat's brain only runs on the host).
 - A player takes over what their body, what they hold, or (on a client) what they threw runs into, so it can be pushed. Things only knocked on by other knocked things move on the host first and reach the others a moment later.
 - The client that throws a plate breaks it. Scene windows and other breakables that aren't items only break on the host, so a client throwing something at a window doesn't break it.
 - Item logic that replaces, wears down or uses up the item runs only on the machine that simulates it: damage (burns, cuts, hits, so liquid bombs and lighters going off too), food spoiling, cooking and soaking, breaking, ice melting, glasses tipping and filling, fuse and lighter explosions, fuses snapping into the fuse box or a smoke detector, dust balls merging (only between two balls simulated on the same machine), the cat bowl, the piggy bank and baths soaking things.
@@ -179,7 +179,6 @@ NPCs:
 - What hurts a player hurts their real body, whoever's game it happened in: NPC punches, cop shots, player punches and kicks, knives, guns, traps and explosions (with their push). Burns come from each game's own copy of the fire. A client's hits on an NPC go to the host's real NPC.
 - Enemies go after the nearest player who's up, host or remote: the cop van's agents, the hostile NPC, house spiders (within their 4 m reach) and the skeleton parasite. A downed player counts as dead for them. Cops shoot their one target until it's down or dead and then leave, like the game's raid after its one kill. The hostile NPC goes after the next player, anywhere in the house. A cop up close knocks things out of a remote player's hands like out of the host's. The number of cops doesn't grow with more players.
 - `Coop.World.Contracts.SendHitman(slot, delay)` (host) sends the cop van after one player only, wherever they are; the agents leave once that player is down, dead or gone. One at a time, and a raid's van already in the street goes first. A hot reload of Co-op turns a hitman in progress into an ordinary raid.
-- Not passed on yet: a rat held by a client doesn't bite.
 
 Conversations and the phones:
 
