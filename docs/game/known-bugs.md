@@ -26,6 +26,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Custom cassettes cost 10$ more than shown | `CassettePrice` |
 | The last achievement has no spot on the medal shelf | `LastMedal` |
 | The money platinum medal reads another medal's progress | `MoneyMedal` |
+| Picking up the thief's beanie throws and leaves a broken hand | `WigPickup` |
 
 ## Saving fails with a dead house spider around
 
@@ -221,6 +222,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Cause:** `AchievementManager.Awake` builds the `totalMoneyPlatinum` goal with `TryGetPlayerPrefBool("biggestMoneyGainPlatinum")` (`AchievementManager.cs:254`).
 
 **Fix:** a transpiler replaces that key with `totalMoneyPlatinum`.
+
+## Picking up the thief's beanie throws and leaves a broken hand
+
+**What happens:** picking up the beanie of the thief (or of a character carrying one) throws a `NullReferenceException`. The beanie is in the hand but nobody holds it, and `Player_Abilities.FixedUpdate` fails on it every physics step.
+
+**Cause:** `Wig.PickupTrigger` turns collisions with the wearer back on with `Physics.IgnoreCollision(GetComponent<BoxCollider>(), ignoreCollisionWith[0], false)` (`Wig.cs:53`). The beanie has a `SphereCollider`, so the first argument is null and the call throws. `Player_Abilities.Pickup` has already put the item in the hand (`Player_Abilities.cs:1144`) and runs the pickup triggers (`:1168`) before it sets who holds it (`SetPlayerRef`, `:1187`), so the hand keeps an item whose `player_Abilities` is null. `FixedUpdate` drops it from afar through that reference (`:890`) and throws each step.
+
+**Fix:** a transpiler on `Wig.PickupTrigger` asks for any `Collider` (what `Usable.Start` does for the same list, `Usable.cs:304`) and makes the `IgnoreCollision` call skip a null collider.
+
+**Reproduce:** with `WigPickup` off, spawn the thief's beanie (or take it from `Bad_Thief` after the story event) and pick it up: the error shows in the log and the hand is stuck. With it on, the beanie is picked up and the wig script removes itself as intended.
 
 ## Not bugs
 
