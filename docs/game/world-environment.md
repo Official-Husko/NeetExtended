@@ -255,11 +255,30 @@ If the modding framework needs an AI-hearing system, it has to be built from scr
 
 ---
 
+## Weather & sky
+
+The house has no weather system: it is one fixed scene, a rainy night with thunder. No clock, no time of day, no wind, clouds, snow or seasons. Measured in a running game (64-bit, 2026-10-27) and read from the code:
+
+- **Light.** "Directional light Moon" (blue, intensity 0.2, soft shadows) is the only directional light on and is `RenderSettings.sun`. "Directional light Sun" (orange, 2.8) exists but is disabled. Ambient is flat black, fog is black ExponentialSquared at 0.06, the skybox is `Skybox_CubeTest`. Six `Star (n)` sprites with `LightFlicker` sit about 100 units west.
+- **Sun and moon don't move in the house.** Both `SunRotation` components in `NEET_House` are disabled with `cycleSpeed` (0,0,0). Only the main menu's sun turns (0.1 degrees per frame, a full turn in about 25 s at 143 fps). Tutorial has one static light; DreamZone randomises its lights and sky tint (`DreamRandomizer.cs:61-72`).
+- **Rain.** Four particle systems (`Particle_Rain_Frontyard` about 120 particles, `_Backyard`, `_DinnerRoom`, `_LivingRoom` about 30 each). Three carry a `Water` component, and `Flame.ParticleHandle` (`Flame.cs:443-466`) puts out a flame hit by a `Water` particle, so rain puts out open flames in the yard. Rain paints nothing and doesn't make the player wet (`PlayerStats.wetness` only comes from water colliders).
+- **Storm sound.** `HouseManager`'s first AudioSource is the rain-and-wind loop (`thunderStormAudio`), the next three the claps (`HouseManager.cs:337-338`, played at `:518-519`; the indices are fixed, so another AudioSource on that object breaks them). `BrainPlayer.cs:62-82` sets the loop to 1.0 in FrontYard/Backyard and 0.28 elsewhere (`Commons.ExteriorLocations`, which leaves out the Shed). Outdoors the player also gets rain in the eyes (`BrainPlayer.cs:105-111`) and breath fog (`Player_Abilities.cs:445-456`).
+- **Thunder** (`HouseManager.Thunder`, `:488-524`): waits 30-180 s, pushes the Moon's intensity to 14-22 for the flash (per-frame lerps, so the flash is shorter at high frame rates), raises `OnLightningStrike` (only `LightSwitch.Flicker` listens: lamps dip, `LightSwitch.cs:86,155-175`), fades the Moon and sets it to **0**, plays a clap after 0.1-2.2 s and starts the next wait. `noThunder` stops the loop from starting. The story forces a strike through `SequenceDict["Thunder"]` (`:345-352`; Ghostboy's first Night 1 line).
+- **Nothing is saved**: a load restarts the scene and the thunder timer. `church_Bell`/`Church_Bell` (`:526-529`) only waits and plays nothing.
+
+Bugs (not fixed yet, see TODO.md):
+
+- **A story strike ends the thunder for the session.** The sequence stops `thunderCorout` and starts `Thunder(instant: true)`, and an instant strike never schedules the next one (`if (!instant)` at `:520`). The loop started in `Start` isn't stored, so it only bites once the first random strike has happened. Measured at 5x speed: 8 strikes in 750 game seconds before, none in 850 after.
+- **The Moon never comes back after a strike**: `Thunder` ends with `intensity = 0` and nothing restores 0.2 (a running `SunRotation` would, but it's off in the house). Hard to see; it does make the moon's shadows free by accident.
+- **Moon shadows are costly**: with the Moon at 0.2 and soft shadows, the living room had 12% more draw calls (5,203 vs 4,586) and the backyard 15% more (18,571 vs 15,814) than with them off, for a light that is almost invisible. `PerformanceFixes` `ShadowControl` leaves directional lights alone.
+
+---
+
 ## Misc world objects
 
 | Class | File | What it does |
 |---|---|---|
-| SunRotation | `SunRotation.cs` | Rotates the sun light by `cycleSpeed` each `Update` (per frame, not time-scaled). Sets intensity from the height of the light's forward vector, lerped from 0 to the cached intensity. |
+| SunRotation | `SunRotation.cs` | Rotates the sun light by `cycleSpeed` each `Update` (per frame, not time-scaled). Sets intensity from the height of the light's forward vector, lerped from 0 to the cached intensity. Only runs in the main menu; in `NEET_House` both are disabled (see Weather & sky). |
 | Billboard | `Billboard.cs` | Starts `Commons.Billboard`, a coroutine that turns the object to face `HouseManager._.mainCamera` at the end of every frame (`Commons.cs:40-48`). |
 | ActiveWhileInside | `ActiveWhileInside.cs` | Disables `activatedObject` on `Start`. Enables it on each `OnTriggerStay` from an object with `checkForTag`, and disables it again on `OnTriggerExit`. |
 | PickupPackageArea | `PickupPackageArea.cs` | The package delivery area. Collects `Cardboard_Box` objects that enter. A box not yet opened and not locked gains 2x `Time.deltaTime` to `soldFreezeTimer`. After more than 10 s it is locked (`PickupPackageArea.cs:87`). A `DeliveryGuy` entering with locked boxes takes the package and calls `SellBoxes` (`PickupPackageArea.cs:122`). That adds `SellBoxContent()` to `HouseManager._.mainComputer.Money` and destroys the boxes. Save stores locked box `saveId`s. |

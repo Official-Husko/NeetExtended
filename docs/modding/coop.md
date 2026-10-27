@@ -298,7 +298,7 @@ Paint:
 
 Other:
 
-- The sun and moon turn a fixed step per frame, so they'd drift apart between games at different frame rates: clients ease toward the host's twice a second. Thunder strikes when the host's does (`World/Ambience/SkySync`). A client's first strike of a session can still be its own, since its thunder was scheduled before co-op started.
+- The sun and moon don't move in the house (the game's `SunRotation` is off there; only the main menu's turns), so SkySync's light stream, which eases clients toward the host's sun and moon twice a second, has nothing to do today; it's there for a mod that turns them. Thunder strikes when the host's does (`World/Ambience/SkySync`). A client's first strike of a session can still be its own, since its thunder was scheduled before co-op started.
 - During a hot reload of the Co-op mod (about 0.2 s), changes aren't sent. The resync afterwards fixes items, but something a client used up or destroyed during its own reload comes back.
 - A few scene objects with no id of their own are matched by their place in the scene. A mod that changes the scene differently on two machines would break that match.
 - Things that fall below the house (a body without a floor under it) stop being sent once they're 1 km down. Clothes parked by the game used to do that after every load; Unofficial NEET Patches parks them again now (`WornClothes`).

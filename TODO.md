@@ -41,6 +41,8 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 - [ ] **Stock Market Events**: news-driven crashes and booms, more stocks (`StockMarket`, `Stock`, `StockGraph`). Insider tips by phone through Phone Expansion.
 - [ ] **Cooking**: recipes that combine ingredients (flour, dough, tomato, cheese, ...) and a cookbook app on the computer. Food already cooks, burns and spoils (`Food`, see [docs/game/items-usables.md](docs/game/items-usables.md)).
 
+- [ ] **Weather**: storm states over the night (drizzle, normal, heavy, a clear spell), driven by what the house already has: the four rain particle systems (rain also puts out flames in the yard), fog density, the storm loop's volume and the thunder interval (`HouseManager.Thunder`, `noThunder`). Each effect a `ModFeature`: rain makes you wet in the yard (`PlayerStats.wetness`: drips, half burns, worse shocks), lightning flicks the TV to static, crackles the radio and (setting, off by default) pops a fuse. Settings for thunder frequency, rain and storm volume. In co-op the host owns the state (a SkySync message). Needs the thunder fixes below. Notes: [docs/game/world-environment.md](docs/game/world-environment.md#weather--sky). A day and night cycle (the disabled orange sun and `SunRotation`) is possible but large and fights the game's look; not planned.
+
 ## Tools and quality of life
 
 - [ ] **Photo Mode**: free camera, hidden HUD, paused time, screenshots saved to disk (`CameraControl`, `MaxCamera`, `Orbitcam`, `ZoomCam`). Also save photos from the in-game camera (`PhotoCamera`, `Picture`) as PNG files.
@@ -49,6 +51,13 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 
 ## Follow-ups for existing mods
 
+- [ ] **Unofficial NEET Patches**: thunder stops for the rest of the session after the story's strike (`HouseManager.cs:345-352` stops the loop, an instant strike never schedules the next, `:520`). Measured: 8 strikes, then none.
+- [ ] **Unofficial NEET Patches**: the Moon stays at intensity 0 after the first strike (`HouseManager.cs:515`). Do the moon shadow switch below first: restoring it brings its shadow cost back.
+- [ ] **Unofficial NEET Patches**: the lightning flash and lamp flicker are per-frame lerps, so they're shorter at high frame rates (`HouseManager.cs:500-514`, `LightSwitch.cs:155-175`).
+- [ ] **Performance Fixes**: a moon shadow option (off, on, only outdoors). Measured 12-15% fewer draw calls with them off; the moon at 0.2 is almost invisible. `ShadowControl` skips directional lights today.
+- [ ] **Framework**: a small `Sky` API (moon/sun, `Strike()`, an `OnStrike` event that survives house loads, the storm volume) and a `weather` rule condition plus `{{weather}}` text for content files (the framework and phone guides already use `Weather.Raining` as an example that doesn't exist).
+- [ ] **Dev Bridge**: `sky.get`, `sky.strike`, `sky.set`, `rain.set` (today a strike needs `obj.call ... TriggerSequence ["Execute","Thunder"]`).
+- [ ] **Cheat Menu**: strike lightning now, rain and thunder on or off, on the World page.
 - [ ] **Unofficial NEET Patches**: check whether `Spawner.concurrentSpawnIds` (only grows, saved every time) and `Locator.sitRestEnablers` (only grows) cause problems over a long game.
 - [ ] **Unofficial NEET Patches**: `PaintTarget.ClearAllPaint(clearMemory: true)` destroys the textures of surfaces that have no saved picture but leaves them marked as set up, so painting on them later draws into destroyed textures. From the code; confirm in the game first.
 - [ ] **Phone Expansion**: voicemail (missed calls leave a message to play back).
