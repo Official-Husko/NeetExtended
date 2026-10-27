@@ -6,7 +6,7 @@ namespace Coop.Join;
 /// <summary>
 /// Puts a returning player's stored body into the joiner's Player entry: where they stood, their
 /// stats, status effects and clothes. Hands come back empty (whatever they held was dropped when they
-/// left). The game looks worn items up by id while loading and stops the whole load if one is
+/// left), and nobody comes back dead. The game looks worn items up by id while loading and stops the whole load if one is
 /// missing, so clothes that aren't in the house any more fall back to the default outfit.
 /// </summary>
 internal static class BodyRestore
@@ -44,11 +44,17 @@ internal static class BodyRestore
         return true;
     }
 
-    /// <summary>Empties the hands; false when a worn item is gone (leave the part out: default outfit).</summary>
+    /// <summary>
+    /// Empties the hands and clears what the body was in the middle of (dying, peeing, puking); false
+    /// when a worn item is gone (leave the part out: default outfit).
+    /// </summary>
     private static bool EmptyHands(JObject abilities, HashSet<int> itemIds)
     {
         abilities["pickupLeftId"] = -1;
         abilities["pickupRightId"] = -1;
+        abilities["dead"] = false;
+        abilities["peeing"] = false;
+        abilities["vomiting"] = false;
         if (!(abilities["clothingIds"] is JArray worn))
             return true;
         for (int i = 0; i < worn.Count; i++)
