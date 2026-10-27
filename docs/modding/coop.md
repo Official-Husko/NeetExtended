@@ -12,9 +12,10 @@ The Co-op mod (`mods/Coop`) lets several games share one house over the network.
 - The mod menu and the cheat menu don't pause the game in co-op: the house keeps going for everyone while you're in a menu.
 - **Your files go to the others:** custom photos and tapes you buy in the custom shops, photos you take with the camera, a wallpaper you pick on the computer and your face (the computer's face changer) are sent to the other players, and theirs to you. Everyone's TV stations and mixtapes are in the game for everyone: the host's and every player's own, each file once. A player who joins gets the files already in the game before their house loads (setting **Get files before joining**); later ones come in the background, and until one has arrived you see what the game shows without it (a station shows its please-stand-by card). A note in the corner shows what's being sent and received, and the Co-op tab too.
 - **The TV plays in step:** a video on the TV waits on its stand-by card until every player has it, starts for everyone at once, and stays in step with the host's.
+- Notes in the corner also say when a player is joining, joins or leaves (setting **Show players joining and leaving**).
 - **The hitman line:** in co-op, call 448-626 on either phone. For $69 the hitman takes a job on any player in the game, yourself included: about a minute later the cop van comes, its agents go straight for that player wherever they are, and they leave once the target is down or dead. One job at a time, and after an order the line won't take another for a while (setting **Hitman line cooldown**, 10 minutes of play by default; the host's setting counts). Outside co-op the line is busy.
 
-Settings (Mods page, Co-op): **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown**, **Physics hands on other players** (experimental), **Biggest file to share** (512 MB), **File upload speed** (4096 KB/s), **Get files before joining** (on), **Show file transfers** (on), **File cache size** (2048 MB).
+Settings (Mods page, Co-op): **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown**, **Physics hands on other players** (experimental), **Biggest file to share** (512 MB), **File upload speed** (4096 KB/s), **Get files before joining** (on), **Show file transfers** (on), **Show players joining and leaving** (on), **File cache size** (2048 MB).
 
 ### Over Steam
 
@@ -39,6 +40,8 @@ The **Co-op over Steam** mod (`mods/CoopSteam`) adds Steam next to direct IP. No
 `Coop.Session.CoopSession` holds the role (`Hosting`, or `Connecting`, `Joining`, `Playing` for a client), the players (slot 0 is the host) and the events everything else listens to: `PlayerArrived`, `HouseWanted`, `PlayerReady`, `PlayerLeft`, `Welcomed`, `WorldReady`, `Resumed`, `Ended`.
 
 Handshake: the client connects and sends Hello (protocol, version, player id, name); the host gives it a slot (Welcome, with the player list) and raises `PlayerArrived`: it sends its mod setup, the session's media list and the list of files in the house (see Files). The client sends its own media folders, and once it has the files (`Join/JoinFiles`) asks for the house (SendHouse); the host raises `HouseWanted` and sends the snapshot; the client loads it and sends Ready; the host tells the others (PlayerJoined) and raises `PlayerReady`, which is where full state goes out.
+
+`SessionNotices` puts notes in the corner (the framework's `Notices`) for a player joining, joined or gone, the house a client walked into, and why a client's game ended.
 
 ### Mod setup
 

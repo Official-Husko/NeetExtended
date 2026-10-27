@@ -69,6 +69,7 @@ public sealed class CoopMod : NeetMod
         BodySender.Init();
         Downed.Init();
         Carrying.Init();
+        Session.SessionNotices.Init();
         World.WorldSync.Init(this);
         Assets.FileSharing.Init(this);
         World.Ownership.HoldRepair.Init();

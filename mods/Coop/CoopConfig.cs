@@ -52,6 +52,10 @@ public sealed class CoopConfig
     [Description("A note in the bottom right corner while files are sent or received, with how far along they are.")]
     public bool ShowFileNotices = true;
 
+    [Label("Show players joining and leaving")]
+    [Description("A note in the bottom right corner when someone joins or leaves the game.")]
+    public bool ShowPlayerNotices = true;
+
     [Label("File cache size (MB)")]
     [Description("Files from other players are kept in Mods/Coop/cache, so each is only sent once. When it's full, the ones used longest ago go.")]
     [Range(64, 65536)]
