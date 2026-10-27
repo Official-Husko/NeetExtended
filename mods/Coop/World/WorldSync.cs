@@ -1,5 +1,6 @@
 using Coop.Session;
 using Coop.World.Economy;
+using Coop.World.Flames;
 using Coop.World.Forwarding;
 using Coop.World.Hostiles;
 using Coop.World.Hazards;
@@ -40,6 +41,9 @@ internal static class WorldSync
         NpcEffects.Init();
         EconomySync.Init();
         FireSync.Init();
+        FlameSync.Init();
+        GasSync.Init();
+        BlastSync.Init();
         CopVanSync.Init();
         Hazards.BodyHazards.Init();
         Ambience.SkySync.Init();
@@ -93,6 +97,8 @@ internal static class WorldSync
         _hosting = CoopSession.IsHost;
         SceneScan.Rebuild();
         StateTrackers.Rebuild();
+        GasSync.Rebuild();
+        FlameBook.Rebuild();
         PaintSync.Start();
         Breakables.SceneBreakers.Rebuild();
         Ambience.RadioPlayback.Rescan();
@@ -159,6 +165,8 @@ internal static class WorldSync
         StateSync.Clear();
         EconomySync.Clear();
         FireSync.Clear();
+        FlameSync.Clear();
+        GasSync.Clear();
         CopVanSync.Clear();
         Ambience.SkySync.Clear();
         Ambience.ToiletSync.Clear();
@@ -236,6 +244,7 @@ internal static class WorldSync
         EconomySync.AfterSpawns();
         OwnershipNet.Flush();
         StateSync.LateTick();
+        FlameSync.LateTick();
         PaintSync.LateTick();
         SpawnSender.FlushDestroys();
         WorldTiming.End(WorldTiming.Late, started);

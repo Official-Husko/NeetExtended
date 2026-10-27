@@ -1,3 +1,4 @@
+using Coop.World.Flames;
 using Coop.World.Hazards;
 using HarmonyLib;
 using NeetModKit.Game;
@@ -34,7 +35,7 @@ internal static class FirePatches
     [HarmonyPatch(typeof(FireSpreader), nameof(FireSpreader.Clear))]
     private static void FireOut(FireSpreader __instance) => FireSync.FireOut(__instance);
 
-    // A client's flame burns out when the host's does.
+    // A client's flame of the room fire burns out when the host's does (an explosion's fireball has no fire to follow).
     [HarmonyPrefix]
     [HarmonyPatch(typeof(FireParticle), "OnParticleSystemStopped")]
     private static bool FlameBurntOut(FireParticle __instance) =>
@@ -47,7 +48,8 @@ internal static class FirePatches
     {
         if (!WorldSide.Running || !WorldSide.IsClient || FireSync.Matching)
             return true;
-        FireStarts.Request(loc, origin, byUsableCol);
+        if (!GasSync.Replaying)
+            FireStarts.Request(loc, origin, byUsableCol);
         var go = Locator.GetRoom(loc)?.fireSpreader;
         __result = go != null ? go.GetComponent<FireSpreader>() : null;
         return false;

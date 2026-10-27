@@ -154,8 +154,9 @@ internal static class SpawnSender
     {
         if (usable.lever || usable.button || usable.GetComponent<Rigidbody>() == null || !string.IsNullOrEmpty(usable.prefabName))
             return;
-        // Pee, puke and blood are made on every machine on their own.
-        if (usable.GetComponentInParent<Brain>(true) != null || usable.GetComponent<SpraySphere>() != null)
+        // Pee, puke and blood are made on every machine on their own, and an explosion's fireball is
+        // made in each game from the word of the one it went off in (BlastSync).
+        if (usable.GetComponentInParent<Brain>(true) != null || usable.GetComponent<SpraySphere>() != null || usable.GetComponent<FireParticle>() != null)
             return;
         string name = usable.name.Replace("(Clone)", "").Trim();
         if (Unshareable.Add(name))

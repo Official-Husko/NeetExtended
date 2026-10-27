@@ -92,4 +92,7 @@ public static class MessageIds
     public const ushort WorldTalkWatch = 160;
     public const ushort WorldFireDelta = 145;
     public const ushort WorldFireStart = 146;
+    public const ushort WorldFlame = 147;
+    public const ushort WorldGas = 148;
+    public const ushort WorldBlast = 149;
 }
