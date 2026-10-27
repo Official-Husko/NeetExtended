@@ -87,8 +87,11 @@ internal sealed class CoopPage : MenuPage
             if (!player.IsLocal)
                 _pings.Add((player, row.Text(PingText(player))));
         }
-        _files = ui.Text(MenuPalette.Paint(Assets.FileSharing.StatusLine(), MenuPalette.Muted));
+        _files = ui.Text(MenuPalette.Paint(FilesLine(), MenuPalette.Muted));
     }
+
+    private static string FilesLine() =>
+        Join.JoinFiles.Status.Length > 0 ? Join.JoinFiles.Status : Assets.FileSharing.StatusLine();
 
     private static string PingText(CoopPlayer player) => MenuPalette.Paint(
         player.InWorld ? $"{CoopSession.Transport.PingOf(player.Peer)} ms" : "loading...", MenuPalette.Muted);
@@ -118,7 +121,7 @@ internal sealed class CoopPage : MenuPage
         foreach (var (player, label) in _pings)
             label.text = PingText(player);
         if (_files != null)
-            _files.text = MenuPalette.Paint(Assets.FileSharing.StatusLine(), MenuPalette.Muted);
+            _files.text = MenuPalette.Paint(FilesLine(), MenuPalette.Muted);
     }
 
     private void Changed() => Rebuild();

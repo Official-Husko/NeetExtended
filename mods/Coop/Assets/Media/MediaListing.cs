@@ -3,38 +3,51 @@ using LiteNetLib.Utils;
 
 namespace Coop.Assets.Media;
 
-/// <summary>One mod's media folder as the host has it: its files by path inside it, and its list files' text.</summary>
+/// <summary>One mod's media folder as a player has it: its files by path inside it, and its list files' text.</summary>
 internal sealed class MediaFolderInfo
 {
     public string FolderName;
     public string ModId;
+
+    /// <summary>Whose folder it is (in the session's list).</summary>
+    public byte Owner;
+
+    /// <summary>Where it is on this disk (this game's own folders only; never sent).</summary>
+    public string Directory;
+
     public readonly List<KeyValuePair<string, AssetId>> Files = new List<KeyValuePair<string, AssetId>>();
     public readonly List<KeyValuePair<string, string>> Texts = new List<KeyValuePair<string, string>>();
 }
 
 /// <summary>
-/// The host's media folders, for the players. Files too big to share are listed with no id, so
-/// the channel and tape lists still match the host's (that station or tape just stays empty).
+/// Media folders on the wire. Files too big to share are listed with no id, so the channel and
+/// tape lists still match everyone else's (that station or tape just stays empty).
 ///
-/// AssetMedia (Events): kind (0 request, client to host; 1 listing, host to clients), then for a
-/// listing: folder count, and per folder: folder name, mod id, files (path, file id), texts (path, text).
+/// AssetMedia (Events), by kind:
+/// - <see cref="Request"/>: from a client, send me the session's list again; from the host, send me
+///   your folders again (after a hot reload).
+/// - <see cref="Mine"/> (client to host): number, then this game's own folders.
+/// - <see cref="Listing"/> (host to clients): the session's folders, everyone's merged (owner per
+///   folder), then per player the last <see cref="Mine"/> number that's in it.
+/// A folder: name, mod id, owner, files (path, file id), texts (path, text).
 /// </summary>
 internal static class MediaListing
 {
     public const byte Request = 0;
     public const byte Listing = 1;
+    public const byte Mine = 2;
 
     // A list file is a few lines. Message strings top out at 64 KB of UTF-8; a file this size can't get there.
     public const int MaxText = 16 * 1024;
 
-    public static void Write(NetDataWriter w, List<MediaFolderInfo> folders)
+    public static void WriteFolders(NetDataWriter w, List<MediaFolderInfo> folders)
     {
-        w.Put(Listing);
         w.Put((ushort)folders.Count);
         foreach (var folder in folders)
         {
             w.Put(folder.FolderName);
             w.Put(folder.ModId);
+            w.Put(folder.Owner);
             w.Put((ushort)folder.Files.Count);
             foreach (var file in folder.Files)
             {
@@ -50,13 +63,13 @@ internal static class MediaListing
         }
     }
 
-    public static List<MediaFolderInfo> Read(NetDataReader r)
+    public static List<MediaFolderInfo> ReadFolders(NetDataReader r)
     {
         int count = r.GetUShort();
         var folders = new List<MediaFolderInfo>(count);
         for (int i = 0; i < count; i++)
         {
-            var folder = new MediaFolderInfo { FolderName = r.GetString(64), ModId = r.GetString(128) };
+            var folder = new MediaFolderInfo { FolderName = r.GetString(64), ModId = r.GetString(128), Owner = r.GetByte() };
             int files = r.GetUShort();
             for (int f = 0; f < files; f++)
             {
@@ -73,10 +86,29 @@ internal static class MediaListing
                 if (MediaPaths.IsSafe(path) && text != null)
                     folder.Texts.Add(new KeyValuePair<string, string>(path, text));
             }
-            if (MediaPaths.IsSafe(folder.FolderName))
+            if (MediaPaths.IsSafe(folder.FolderName) && MediaPaths.IsSafe(folder.ModId))
                 folders.Add(folder);
         }
         return folders;
+    }
+
+    public static void WriteMerged(NetDataWriter w, Dictionary<byte, int> merged)
+    {
+        w.Put((byte)merged.Count);
+        foreach (var pair in merged)
+        {
+            w.Put(pair.Key);
+            w.Put(pair.Value);
+        }
+    }
+
+    public static Dictionary<byte, int> ReadMerged(NetDataReader r)
+    {
+        int count = r.GetByte();
+        var merged = new Dictionary<byte, int>(count);
+        for (int i = 0; i < count; i++)
+            merged[r.GetByte()] = r.GetInt();
+        return merged;
     }
 }
 

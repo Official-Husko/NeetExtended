@@ -64,12 +64,15 @@ internal static class AssetNet
     /// <summary>Whether files can move right now: a session past the hello.</summary>
     public static bool CanTalk => CoopSession.IsHost || CoopSession.State == SessionState.Joining || CoopSession.State == SessionState.Playing;
 
-    /// <summary>Host: a player in the world takes file chunks (a loading one gets its house first).</summary>
+    /// <summary>
+    /// Host: a player in the session takes file chunks, joining ones too (they get the files in
+    /// the game before their house).
+    /// </summary>
     public static bool Receives(byte slot)
     {
         if (CoopSession.IsClient)
             return slot == CoopPlayer.HostSlot;
         var player = CoopSession.FindSlot(slot);
-        return player != null && !player.IsLocal && player.InWorld;
+        return player != null && !player.IsLocal;
     }
 }

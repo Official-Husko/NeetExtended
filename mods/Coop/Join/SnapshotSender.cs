@@ -10,7 +10,7 @@ namespace Coop.Join;
 /// <summary>Host: sends a joining player the house as it is right now.</summary>
 internal static class SnapshotSender
 {
-    public static void Init() => CoopSession.PlayerArrived += Send;
+    public static void Init() => CoopSession.HouseWanted += Send;
 
     private static void Send(CoopPlayer player)
     {

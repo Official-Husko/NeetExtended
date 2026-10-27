@@ -54,6 +54,7 @@ internal static class SharedFiles
             CoopMod.Log.Info($"Files: {label} stays on this machine ({System.IO.Path.GetFileName(path)}): {error ?? "it can't be read"}.");
             return path;
         }
+        FileLabels.Set(id, label);
         Hub.Offer(id);
         return FileCache.PathOf(id);
     }
@@ -73,6 +74,7 @@ internal static class SharedFiles
                 done(null);
                 return;
             }
+            FileLabels.SetIfNew(id.FileName, System.IO.Path.GetFileName(path));
             Hub.Offer(id);
             done(FileCache.PathOf(id));
         });

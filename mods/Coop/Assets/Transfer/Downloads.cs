@@ -65,6 +65,7 @@ internal static partial class Downloads
         if (!ByKey.TryGetValue(id.FileName, out var download))
         {
             download = new Download { Id = id, Label = label, Transfer = _nextTransfer++, Total = id.Size };
+            FileLabels.SetIfNew(id.FileName, label);
             ByKey[download.Key] = download;
             ByTransfer[download.Transfer] = download;
             All.Add(download);
@@ -83,6 +84,9 @@ internal static partial class Downloads
     }
 
     public static bool IsGetting(string key) => ByKey.ContainsKey(key);
+
+    /// <summary>The download of "hash.ext", or null.</summary>
+    public static Download Find(string key) => ByKey.TryGetValue(key, out var download) ? download : null;
 
     /// <summary>Host: someone offered a file; a download nobody had a source for asks them now.</summary>
     public static void SourceAppeared(string key)

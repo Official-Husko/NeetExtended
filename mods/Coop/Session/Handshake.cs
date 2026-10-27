@@ -6,8 +6,9 @@ namespace Coop.Session;
 
 /// <summary>
 /// Getting into a session and keeping the player list right:
-/// client connects, sends Hello; host gives it a slot (Welcome) and sends the world; the client loads
-/// it and sends Ready; the host tells everyone (PlayerJoined). Leaving goes out as PlayerLeft.
+/// client connects, sends Hello; host gives it a slot (Welcome) and sends its mod setup and the
+/// files in the game; once the client has them it asks for the house (SendHouse), loads it and
+/// sends Ready; the host tells everyone (PlayerJoined). Leaving goes out as PlayerLeft.
 /// </summary>
 internal static class Handshake
 {
@@ -18,6 +19,7 @@ internal static class Handshake
         Messages.On(MessageIds.PlayerJoined, OnPlayerJoined);
         Messages.On(MessageIds.PlayerLeft, OnPlayerLeft);
         Messages.On(MessageIds.Ready, OnReady);
+        Messages.On(MessageIds.SendHouse, OnSendHouse);
         Messages.On(MessageIds.Resync, OnResync);
     }
 
@@ -45,6 +47,13 @@ internal static class Handshake
         CoopSession.SetState(SessionState.Playing);
         Outbox.ToHost(Outbox.Begin(MessageIds.Ready), Channel.Events);
         CoopSession.RaiseWorldReady();
+    }
+
+    /// <summary>Client: has the mods and files; the house can come.</summary>
+    public static void AskForHouse()
+    {
+        if (CoopSession.State == SessionState.Joining)
+            Outbox.ToHost(Outbox.Begin(MessageIds.SendHouse), Channel.Events);
     }
 
     /// <summary>After a hot reload: the host sends everything again (client), or gets sent again (host).</summary>
@@ -223,6 +232,13 @@ internal static class Handshake
         joined.Put(player.Id);
         Outbox.ToPlayers(joined, Channel.Events, exceptSlot: player.Slot);
         CoopSession.RaiseReady(player);
+    }
+
+    private static void OnSendHouse(in Sender from, NetDataReader reader)
+    {
+        var player = CoopSession.FindSlot(from.Slot);
+        if (CoopSession.IsHost && player != null && !player.InWorld)
+            CoopSession.RaiseHouseWanted(player);
     }
 
     private static void OnResync(in Sender from, NetDataReader reader)

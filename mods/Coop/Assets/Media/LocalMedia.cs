@@ -6,12 +6,12 @@ using NeetModKit.IO;
 namespace Coop.Assets.Media;
 
 /// <summary>
-/// This game's media folders (every loaded mod's "tv" and "mixtapes"), with every file's id, for
-/// when it hosts: the players get the same TV stations and tapes. Files are hashed in the background
-/// as soon as the mod loads and whenever a folder changes (unchanged files come from the hash index),
-/// so the list is ready by the time someone joins.
+/// This game's own media folders (every loaded mod's "tv" and "mixtapes"), with every file's id, to
+/// put into a session: everyone gets everyone's TV stations and tapes. Files are hashed in the
+/// background as soon as the mod loads and whenever a folder changes (unchanged files come from the
+/// hash index), so the list is ready by the time someone hosts or joins.
 /// </summary>
-internal static class MediaHost
+internal static class LocalMedia
 {
     /// <summary>The media folders whose contents shape the shared house (Custom TV Stations, Mixtapes).</summary>
     public static readonly string[] FolderNames = { "tv", "mixtapes" };
@@ -32,6 +32,27 @@ internal static class MediaHost
     /// still gets every tape and station by name, and the files with the next list).
     /// </summary>
     public static List<MediaFolderInfo> Current => _building ?? _folders;
+
+    /// <summary>Tests: extra folders, as if a mod with this id had them (two games on one PC share their mods).</summary>
+    private static readonly List<KeyValuePair<string, string>> TestFolders = new List<KeyValuePair<string, string>>();
+
+    /// <summary>Where this game's own folder of that mod and name is, or null.</summary>
+    public static string DirectoryOf(string modId, string folderName)
+    {
+        foreach (var folder in Current)
+        {
+            if (folder.ModId == modId && string.Equals(folder.FolderName, folderName, System.StringComparison.OrdinalIgnoreCase))
+                return folder.Directory;
+        }
+        return null;
+    }
+
+    /// <summary>Tests: adds a folder of this game's own to the session, under a made-up mod id.</summary>
+    public static void AddForTests(string modId, string folderName, string path)
+    {
+        TestFolders.Add(new KeyValuePair<string, string>(modId + "/" + folderName, path));
+        _changed = true;
+    }
 
     public static void Init(CoopMod mod)
     {
@@ -78,15 +99,21 @@ internal static class MediaHost
             {
                 string path = Path.Combine(mod.Directory, name);
                 if (Directory.Exists(path))
-                    _building.Add(Read(mod, name, path, version));
+                    _building.Add(Read(mod.Id, name, path, version));
             }
+        }
+        foreach (var test in TestFolders)
+        {
+            string[] parts = test.Key.Split('/');
+            if (Directory.Exists(test.Value))
+                _building.Add(Read(parts[0], parts[1], test.Value, version));
         }
         Done(version);
     }
 
-    private static MediaFolderInfo Read(ModInfo mod, string name, string path, int version)
+    private static MediaFolderInfo Read(string modId, string name, string path, int version)
     {
-        var folder = new MediaFolderInfo { FolderName = name, ModId = mod.Id };
+        var folder = new MediaFolderInfo { FolderName = name, ModId = modId, Directory = path };
         string[] files;
         try
         {
@@ -115,7 +142,10 @@ internal static class MediaHost
                 if (version != _version)
                     return;
                 if (id.IsValid)
+                {
                     LocalFiles.Add(id, file);
+                    FileLabels.Set(id, Path.GetFileName(file));
+                }
                 folder.Files[index] = new KeyValuePair<string, AssetId>(relative, id);
                 Done(version);
             });

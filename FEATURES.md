@@ -162,7 +162,7 @@ Your own videos on the living room TV. Put MP4 or WebM files into a mod's `tv` f
 - **Keep the game's channels**: switch off to watch only your own stations. Single channels can be hidden with a `stations.jsonc` in the `tv` folder.
 - **Station volume** in Mod Settings.
 - A station whose video isn't playing yet shows an old "Please stand by" card instead of a black screen.
-- In co-op everyone gets the host's stations.
+- In co-op everyone's stations are on everyone's TV.
 
 ## Mixtapes
 
@@ -170,7 +170,7 @@ Your own music on cassettes for the radio. Put OGG, MP3 or WAV files into a mod'
 
 - **Mixtape radio**: with no tape in, the radio plays your songs one after another, shuffled, like a station. It still needs a fuse and the music button.
 - **Tape price** in Mod Settings. Names, prices, colours and the room a tape is left in go in a `tapes.jsonc` in the `mixtapes` folder.
-- In co-op everyone gets the host's tapes.
+- In co-op everyone's tapes are in everyone's game.
 
 ## Update Checker
 
@@ -209,13 +209,13 @@ Play the house together, over the internet or your own network. The host's house
 - **Down, not dead**: when your health runs out you go down instead of dying. For 15 seconds anyone can get you back up by using food on you (look at you, use it); otherwise you die and respawn as usual. You can carry a downed player: look at them with an empty hand and press that hand's button to sling them over your shoulder, press it again to put them down.
 - **Enemies pick the nearest player**: the cops, the hostile visitor, house spiders and the skeleton parasite go after whoever is closest and still standing, and leave downed players alone.
 - **Paint is shared**: blood, poop, piss, water, scorch marks, footprints and cleaning show up for everyone, whoever made the mess.
-- **Your files are shared**: custom photos and tapes from the custom shops, photos you take with the camera, the wallpaper you pick on the computer and your face go to the other players, and theirs come to you. The TV stations and mixtapes are the host's, so everyone gets the same channels and tapes. Files come in the background; until one has arrived you see it blank, silent or with the default face. The Co-op tab shows what's on its way.
+- **Your files are shared**: custom photos and tapes from the custom shops, photos you take with the camera, the wallpaper you pick on the computer and your face go to the other players, and theirs come to you. Everyone's TV stations and mixtapes are in the game for everyone. When you join you get the files already in the game first, then the house loads with all of it there; files added later come in the background. A note in the bottom right corner shows what's being sent and received.
 - **Talking and the phones**: everyone can talk to the characters and use both phones. The host's game runs the conversation, so whatever it gives, costs or sets off happens once, and what it checks or does to you (your needs, what you're holding, knocking you out) is about whoever is talking. Only the one talking sees the lines, and a character talks to one player at a time: anyone else gets a busy line.
 - **The hitman line**: in co-op, call 448-626. Pay $69, pick a player (or yourself), and about a minute later the van comes: its agents go straight for that player and leave once they're down. One job at a time, then the line waits a while before the next (setting **Hitman line cooldown**, 10 minutes by default).
 - **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and the mod and cheat menus don't pause the game. Going back to the main menu leaves; when the host leaves, the game ends for everyone.
 - Everyone needs the host's mods installed, in the same versions. Switched on or not doesn't matter: a joining game loads what the host runs (and sets aside what the host doesn't) until it leaves. Mods that only change your own game (Cheat Menu, Performance Fixes, Open Saves and the like) can differ.
 - **The host decides the mods**: the host's mods, their switches and the settings that change the house (prices, chances, timings) count for everyone. Your mod menu shows them locked while you're in someone's game, and you get your own setup back when you leave.
-- Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown** (the host's counts), **Physics hands on other players** (experimental: other players get the floppy first-person arms you see on yourself, reaching for what they hold, instead of their body's plain arms), **Biggest file to share** (512 MB; bigger files aren't sent or taken), **File upload speed** (4096 KB/s) and **File cache size** (2048 MB; other players' files are kept in `Mods/Coop/cache`, so each one is only sent once).
+- Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown** (the host's counts), **Physics hands on other players** (experimental: other players get the floppy first-person arms you see on yourself, reaching for what they hold, instead of their body's plain arms), **Biggest file to share** (512 MB; bigger files aren't sent or taken), **File upload speed** (4096 KB/s), **Get files before joining** (on; off loads the house straight away and the files follow), **Show file transfers** and **File cache size** (2048 MB; other players' files are kept in `Mods/Coop/cache`, so each one is only sent once).
 - Not everything is shared yet: see [Known limitations](docs/modding/coop.md#known-limitations).
 
 ## Card Expansion

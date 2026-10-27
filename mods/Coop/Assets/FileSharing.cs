@@ -10,9 +10,10 @@ namespace Coop.Assets;
 
 /// <summary>
 /// Files from players' disks, shared in co-op: custom photos and tapes from the custom shops, photos
-/// from the camera, the computer's wallpaper, faces, and the host's TV stations and mixtapes. Each
-/// file is known by its content (<see cref="AssetId"/>), sent once in the background and kept in
-/// the cache; until it's there, the game shows what it shows without it. This wires the parts up.
+/// from the camera, the computer's wallpaper, faces, and everyone's TV stations and mixtapes. Each
+/// file is known by its content (<see cref="AssetId"/>), sent once and kept in the cache. A joiner
+/// gets the files already in the game before its house loads; later ones come in the background,
+/// and until one is there the game shows what it shows without it. This wires the parts up.
 /// </summary>
 internal static class FileSharing
 {
@@ -26,6 +27,8 @@ internal static class FileSharing
         ItemPaths.Init();
         FaceSync.Init();
         MediaSync.Init(mod);
+        HouseManifest.Init();
+        Join.JoinFiles.Init();
 
         CoopLoop.Update += Update;
         CoopLoop.LateUpdate += ItemPaths.LateTick;
@@ -84,16 +87,21 @@ internal static class FileSharing
     private static void Update()
     {
         FileHasher.Tick();
+        // Ready before anyone hosts or joins.
+        LocalMedia.Tick();
         if (!CoopSession.IsActive)
             return;
         Downloads.Tick();
         Uploads.Tick();
         FaceSync.Tick();
         MediaSync.Tick();
+        Join.JoinFiles.Tick();
+        TransferNotices.Tick();
     }
 
     private static void Stop()
     {
+        TransferNotices.Clear();
         Downloads.Clear();
         Uploads.Clear();
         Hub.Clear();

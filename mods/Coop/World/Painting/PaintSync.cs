@@ -30,7 +30,7 @@ internal static class PaintSync
     {
         Messages.On(MessageIds.WorldPaint, OnPaint);
         Messages.On(MessageIds.WorldPaintDry, OnDry);
-        CoopSession.PlayerArrived += player =>
+        CoopSession.HouseWanted += player =>
         {
             if (!WorldSide.Running || !WorldSide.IsHost)
                 return;

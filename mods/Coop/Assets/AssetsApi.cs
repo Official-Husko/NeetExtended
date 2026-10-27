@@ -22,7 +22,7 @@ public static class AssetsApi
         var text = new StringBuilder();
         text.Append("cache ").Append(FileCache.Folder).Append(", offered ").Append(LocalFiles.OfferedCount)
             .Append(LocalFiles.IgnoreOwnForTests ? " (ignored for tests)" : "")
-            .Append(", media ").Append(MediaHost.IsReady ? "ready" : "hashing")
+            .Append(", media ").Append(LocalMedia.IsReady ? "ready" : "hashing")
             .Append(", my face ").Append(FaceSync.Local);
         foreach (var download in Downloads.Active)
             text.Append("\n  getting ").Append(download.Describe()).Append(": ").Append(FileSizes.Describe(download.Received))
@@ -34,6 +34,27 @@ public static class AssetsApi
                 text.Append("\n  face of slot ").Append(player.Slot).Append(": ").Append(FaceSync.Describe(player.Slot));
         }
         return text.ToString();
+    }
+
+    /// <summary>The session's TV stations and tapes as this game shows them: each folder, whose it is, and how many files are here.</summary>
+    public static string Media() => MediaStandIn.Describe();
+
+    private static int _testFolders;
+
+    /// <summary>Tests: puts a folder of this game's own into the session ("tv" or "mixtapes"), as if a mod had it.</summary>
+    public static string AddMedia(string folderName, string path)
+    {
+        if (!Directory.Exists(path))
+            return "No such folder.";
+        LocalMedia.AddForTests("CoopTest" + folderName + (++_testFolders), folderName, path);
+        return "Added; it's hashed and sent in a moment.";
+    }
+
+    /// <summary>Tests: a notice in the corner, to look at.</summary>
+    public static string TestNotice(string title, string detail, float progress, float seconds)
+    {
+        NeetModKit.Ui.Notifications.Notices.Show(CoopMod.Instance, title, detail, progress >= 0f ? progress : (float?)null, seconds);
+        return "Shown.";
     }
 
     /// <summary>Tests: this game uses only what it got sent (its cache), not its own copies of the same files.</summary>

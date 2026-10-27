@@ -67,6 +67,9 @@ internal static class FaceSync
 
     public static AssetId Local => _local;
 
+    /// <summary>The other players' faces, by slot (none: the default face).</summary>
+    public static IReadOnlyDictionary<byte, AssetId> Others => Known;
+
     public static void Tick()
     {
         if (!CoopSession.InWorld || Time.unscaledTime < _nextCheck)
@@ -128,7 +131,10 @@ internal static class FaceSync
             _hashing = false;
             _stale = false;
             if (id.IsValid)
+            {
                 LocalFiles.Add(id, path);
+                FileLabels.Set(id, "your face");
+            }
             if (!id.Equals(_local))
                 _sent = false;
             _local = id;

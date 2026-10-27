@@ -56,8 +56,11 @@ public static class CoopSession
     public static event Action Started;
     public static event Action<string> Ended;
 
-    /// <summary>Host: a player said hello and was given a slot; their world is about to be sent.</summary>
+    /// <summary>Host: a player said hello and was given a slot. Their mods and files come first, then the house.</summary>
     public static event Action<CoopPlayer> PlayerArrived;
+
+    /// <summary>Host: a joining player has what it needs (mods, files) and wants the house now.</summary>
+    public static event Action<CoopPlayer> HouseWanted;
 
     /// <summary>A player entered the world (host: also after a resync request). Puppets and full state follow this.</summary>
     public static event Action<CoopPlayer> PlayerReady;
@@ -182,6 +185,7 @@ public static class CoopSession
 
     internal static void RaiseArrived(CoopPlayer player) => PlayerArrived?.Invoke(player);
     internal static void RaiseReady(CoopPlayer player) => PlayerReady?.Invoke(player);
+    internal static void RaiseHouseWanted(CoopPlayer player) => HouseWanted?.Invoke(player);
     internal static void RaiseWelcomed() => Welcomed?.Invoke();
     internal static void RaiseWorldReady() => WorldReady?.Invoke();
     internal static void RaiseResumed() => Resumed?.Invoke();

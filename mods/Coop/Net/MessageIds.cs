@@ -19,6 +19,7 @@ public static class MessageIds
 
     // Join
     public const ushort Snapshot = 20;
+    public const ushort SendHouse = 21;
 
     // Players
     public const ushort Pose = 40;
@@ -39,6 +40,7 @@ public static class MessageIds
     public const ushort AssetPath = 66;
     public const ushort AssetFace = 67;
     public const ushort AssetMedia = 68;
+    public const ushort AssetManifest = 69;
 
     // World: 100-199, see World/.
     public const ushort WorldSpawn = 100;

@@ -44,6 +44,14 @@ public sealed class CoopConfig
     [Range(64, 102400)]
     public int UploadKbps = 4096;
 
+    [Label("Get files before joining")]
+    [Description("When you join, the files already in the game (TV videos, mixtapes, custom pictures and tapes, photos, faces) come first, and the house loads once they're here. Off: the house loads straight away and the files follow.")]
+    public bool GetFilesFirst = true;
+
+    [Label("Show file transfers")]
+    [Description("A note in the bottom right corner while files are sent or received, with how far along they are.")]
+    public bool ShowFileNotices = true;
+
     [Label("File cache size (MB)")]
     [Description("Files from other players are kept in Mods/Coop/cache, so each is only sent once. When it's full, the ones used longest ago go.")]
     [Range(64, 65536)]

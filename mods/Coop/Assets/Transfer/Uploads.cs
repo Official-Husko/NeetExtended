@@ -16,7 +16,7 @@ namespace Coop.Assets.Transfer;
 /// </summary>
 internal static class Uploads
 {
-    private sealed class Upload
+    internal sealed class Upload
     {
         public byte Slot;
         public uint Transfer;
@@ -40,6 +40,9 @@ internal static class Uploads
     private static float _budget;
 
     public static int Count => Active.Count;
+
+    /// <summary>What's being sent now, for the notices.</summary>
+    public static IReadOnlyList<Upload> All => Active;
 
     public static void Init()
     {
