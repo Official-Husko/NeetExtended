@@ -32,6 +32,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Timed spawners stop after loading a save | `SpawnersAfterLoad` |
 | Worn clothes fall out of the world after loading | `WornClothes` |
 | Dying with a mask on gets stuck half way | `MaskDeath` |
+| Only the first mask comes back after loading | `MasksAfterLoad` |
 | Skeletons ruin every pair of black pants | `SkeletonPants` |
 | The clothes you die in are lost for good | `DeathDrops` |
 | Camera photos replace each other and come back blank | `CameraPhotos` |
@@ -302,6 +303,16 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 **Fix:** a last prefix on `DieAccessor` takes the masks off from a copy of the list first, so the game's loop finds it empty. It runs last and only when the death goes ahead, so a death that something else turns away (god mode, co-op's going down) keeps the masks on.
 
 **Reproduce:** wear a mask, then die (`player.set` health 0 with god mode off): with `MaskDeath` off the death stops with the error above; with it on the body dies and respawns as usual. Found in co-op testing, where a downed player bled out wearing one.
+
+## Only the first mask comes back after loading
+
+**What happens:** wear a hat and a cigarette (or glasses), save and load: only one of them is on your head afterwards. The other hangs in the air where it was, or drops.
+
+**Cause:** `Player_Abilities.GetClothingIds` saves every mask after the shoes, pants and shirt (`clothingIds[3]`, `[4]`, ...), but `Player_Abilities.Load` only reads index 3 (`Player_Abilities.cs:371-374`). The rest are loaded as ordinary items at their saved place, and since the load never applies the saved kinematic flag they fall. In co-op the same happens every time a player comes back.
+
+**Fix:** a postfix on `Player_Abilities.Load` puts on every other saved mask with the game's own `MaskFace.PutOnMask`. What can't be worn together (two non-stackable masks) is refused by `PutOnMask` as it is for a click.
+
+**Reproduce:** put on a cap and a cigarette (`items.spawn`, then `MaskFace.PutOnMask`), save, load: `Player_Abilities.masks` has both with `MasksAfterLoad` on and one without.
 
 ## Skeletons ruin every pair of black pants
 

@@ -41,6 +41,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new SpawnersAfterLoadFix());
         ModFeatures.Register(this, new WornClothesFix());
         ModFeatures.Register(this, new MaskDeathFix());
+        ModFeatures.Register(this, new MasksAfterLoadFix());
         ModFeatures.Register(this, new SkeletonPantsFix());
         ModFeatures.Register(this, new DeathDropsFix());
         ModFeatures.Register(this, new CameraPhotosFix());
