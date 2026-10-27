@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Mixtapes</RootNamespace>
+    <Description>Your own music as cassettes for the radio, and as the radio's station.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
+    <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
+  </ItemGroup>
+
+  <!-- The songs ship in the mod folder so they can be swapped in place. -->
+  <ItemGroup>
+    <None Include="mixtapes/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

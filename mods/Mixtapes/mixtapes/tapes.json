@@ -1,0 +1,20 @@
+// Optional: names, prices, colours and places for the songs in this folder.
+// Every song in the folder (OGG, MP3, WAV) is a tape even without this file: it's sold in the store
+// for the price in the settings and named after the file. Comments like these are fine.
+{
+  "tapes": [
+    {
+      "file": "pumpkin-mix.ogg",
+      "name": "Pumpkin Mix",
+      // In the computer's store, for this much. "store": false keeps it out of the store.
+      "price": 10,
+      // The cassette's colour, "#rrggbb".
+      "color": "#ff7518",
+      // One copy is left in this room the first time the house loads with it, once per save.
+      // Rooms: Bedroom_Neet, Livingroom, Kitchen, Basement, ...
+      "house": "Bedroom_Neet",
+      // What the store says about it.
+      "description": "A tape somebody made for you. The label says PUMPKIN MIX and there's a little drawing of a pumpkin with a dick. Put it in the radio and press play."
+    }
+  ]
+}
