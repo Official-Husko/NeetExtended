@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using WeatherExpansion.Storm;
 using WeatherExpansion.Fog;
 using WeatherExpansion.Lightning;
+using WeatherExpansion.Forecast;
 using WeatherExpansion.Windows;
 
 namespace WeatherExpansion;
@@ -36,6 +37,7 @@ public sealed class WeatherExpansionMod : NeetMod
         ModFeatures.Register(this, new RadioCrackleFeature());
         ModFeatures.Register(this, new PhoneStaticFeature());
         ModFeatures.Register(this, new FusePopFeature());
+        ForecastApp.Register(this);
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
@@ -43,12 +45,14 @@ public sealed class WeatherExpansionMod : NeetMod
     {
         WeatherFollow.Tick(Time.deltaTime);
         FogLook.Tick(Config.Value);
+        ForecastApp.Tick();
     }
 
     public override void OnUnload()
     {
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
         CrackleClip.Release();
+        ForecastApp.Release();
         Instance = null;
     }
 

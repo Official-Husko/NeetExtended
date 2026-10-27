@@ -25,7 +25,11 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 | Lightning on the phones (`PhoneStatic`) | The handset screens garble for a moment; a call in progress gets a burst of static. | Static in phone calls (on) |
 | Lightning pops a fuse (`FusePop`, off by default) | A strike can trip a breaker and cut a room's power until someone flips it back. | Fuse pop chance (0.1 a strike, 0 to 1) |
 
-## The weather line
+## The forecast site and the weather line
+
+Two things for the player to read the weather from, both plain readers of the framework's `Sky` state (`Sky.Weather`, `Sky.NextStrikeIn`), so neither changes anything in the scene.
+
+**The forecast site** (`Forecast/`) is a computer app made with `ComputerApps.Register`: "Wetballs Weather" at `http://wetballs.com`, with a start menu entry "Weather". The page shows the weather now (coloured by kind, with a line of copy picked when the kind changes), what the forecast says comes next with a `m:ss` countdown (or a shrug when nobody forecasts), and the next lightning as a countdown (or "Can't tell" while `Sky.NextStrikeIn` is -1: mid-strike, no thunder loop, and on a co-op client). `ForecastApp.Tick` runs every frame from `WeatherExpansionMod.OnUpdate`, does nothing while the page isn't on screen, and then only builds new text when a kind, the forecast or a shown second changed (at most once a second, no per-frame allocation). The page is built again for every house load, so it keeps no references between houses. Files: `ForecastApp.cs` (registration, tick), `ForecastPage.cs` (the page), `ForecastWords.cs` (copy, colours, the clock).
 
 **The weather line** is the call `phone/weather-line.jsonc`: dial 555-9328 (W-E-A-T on the keypad). Skip Moistman reads the weather now (three variants per kind, picked with the `weather` condition), then what comes next when there is a forecast (`"forecast": "storm"` and so on, with `{{weather:in}}` for the time), or makes something up when there isn't (`"forecast": false` is a branch of its own). Skip derails a little more with every kind (a drizzle is Skip locked out in the yard, a storm is Skip on the roof with the Rain Cult and the line cutting out). Then a menu of at most three choices, said the way the player would say them: "can i go out" (answers by weather), "am i gonna get fried" (storms only) or "when does this shit stop" (every other time), and "Fuck off Skip", which ends the call. An ad for the number rings in once per save. The file is picked up from the mod's `phone` folder like any call pack (the csproj copies the folder), so Weather Expansion doesn't depend on Phone Expansion; without Phone Expansion the file simply isn't read. Both the conditions and the `{{weather}}` texts are the framework's (see [phone.md](phone.md) and [framework.md](framework.md#sky)).
 
@@ -82,9 +86,10 @@ Intensity 1 is the kind's usual strength; wetness is also multiplied by it, and 
 
 | File | What it does |
 | --- | --- |
-| `WeatherExpansionMod.cs` | Registers the features and the settings, runs `FogLook.Tick` every frame. |
+| `WeatherExpansionMod.cs` | Registers the features, the settings and the forecast site, runs `FogLook.Tick` and `ForecastApp.Tick` every frame. |
 | `WeatherExpansionConfig.cs` | The settings. |
 | `Storm/WeatherFollow.cs` | Turns `Sky.Weather` into smoothed multipliers for fog, mist, wetness and drop speed. |
+| `Forecast/ForecastApp.cs`, `ForecastPage.cs`, `ForecastWords.cs` | The forecast site on the computer. |
 | `phone/weather-line.jsonc` | The weather hotline and its ad. |
 | `Fog/FogLook.cs`, `FlashLevel.cs` | Applying fog and sky tint, and following the lightning. |
 | `Fog/StormFogFeature.cs`, `LightningGlowFeature.cs` | The two fog looks. |
@@ -115,6 +120,7 @@ Strike effects: `neet call sky.strike` (the effects start when the flash peaks, 
 
 ## Known limitations
 
+- The forecast site's lightning countdown is the thunder loop's own timer, so it reads "Can't tell" on a co-op client, while a strike is playing and when the thunder loop has stopped (the story's strike stops it unless the Unofficial NEET Patches' ThunderLoop fix is on).
 - The weather line is only read by Phone Expansion. The forecast says the same thing on every call until the weather changes; the lines are picked at random from a few variants.
 - Nothing here is saved with the game. The looks follow `Sky.Weather` but only the three kinds (drizzle, rain, storm); there is no clear spell, and nothing in this mod changes the weather.
 - There is no height fog and no fog that sits in the sky: Unity's fog is one global colour and density, and a fog volume needs a shader the game doesn't ship. Mist banks stand in for it, over the two yards only.

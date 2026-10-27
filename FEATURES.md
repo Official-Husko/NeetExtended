@@ -205,6 +205,7 @@ Changes how the storm outside looks. Each look is its own switch on the Mods pag
 - **Lightning on the phones**: a strike garbles the phone screens for a moment, and a call in progress gets a burst of static (never cut off). **Static in phone calls** in Mod Settings.
 - **Lightning pops a fuse** (off until you switch it on): a strike can trip a breaker in the fuse box and cut a room's power until you flip it back. **Fuse pop chance** in Mod Settings. In co-op the host's game does it and everybody sees the breaker go.
 - **Weather hotline**: call 555-9328 and Skip reads you the weather and what the forecast says comes next, in a different way each time. He makes something up when nobody has a forecast. An ad for the number rings in once (needs Phone Expansion).
+- **Forecast site**: **Wetballs Weather** on the computer (address `wetballs`, or Weather in the start menu) shows the weather now, what's coming with a countdown and the next lightning.
 
 ## Randomizer
 
