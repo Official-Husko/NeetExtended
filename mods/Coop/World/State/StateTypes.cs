@@ -23,6 +23,20 @@ internal static class StateTypes
         new SmokeDetectorState(),
         new RadioState(),
         new BoxState(),
+        new FoodState(),
+        new SeafoodState(),
+        new LiquidState(),
+        new SoakerState(),
+        new UsableState(),
+        new PrefabContainerState(),
+        new PaperRollState(),
+        new CerealBoxState(),
+        new VacuumState(),
+        new PiggyBankState(),
+        new CatBowlState(),
+        new MagazineState(),
+        new GunState(),
+        new WearableState(),
     };
 
     static StateTypes()
