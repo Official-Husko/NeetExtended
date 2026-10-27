@@ -1,6 +1,113 @@
 {
   "releases": [
     {
+      "version": "0.4.0",
+      "date": "2026-10-27",
+      "released": true,
+      "added": [
+        {
+          "text": "A Moon shadows setting: the moon casts shadows only in the yards (the default) or never, for a faster game.",
+          "area": "Performance Fixes"
+        },
+        {
+          "text": "A new mod, all of it experimental, that makes the storm outside feel like one: changing weather, fog and mist, rain on the windows, rain that soaks you and lightning that reaches into the house. Every part can be switched off on its own.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "A dark blue-grey fog instead of pitch black, so the house and the trees show in the haze, and it slowly thickens and thins.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "Lightning lights up the fog and the sky, so the landscape behind the yard shows for a moment.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "Banks of mist drift over the front and back yard and light up with the lightning.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "Rain on the windows: drops sit on the glass and run down it, bending the view outside, and show in the dark through a thin haze. Broken windows lose theirs.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "Lightning flicks a TV that's on to static for a moment, makes a playing radio crackle and garbles the phone screens, with static on calls in progress.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "Lightning can trip a breaker in the fuse box and cut a room's power until you flip it back. Off until you switch it on, with a chance per strike in Mod Settings.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "A weather hotline on 555-9328: Skip tells you the weather and what's coming, and makes it up when nobody knows.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "A forecast website on the computer, Wetballs Weather, with the weather now, what's coming and when the next lightning is.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "Changing weather: the storm moves over the night between drizzle, rain and a full storm, lighter and heavier, and never clears up. Rain, wind, fog, mist, the drops on the windows and how often lightning strikes follow it. How fast it changes, how strong it gets, how stormy and how often thunder strikes are in Mod Settings.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "Rain makes you wet: standing in the yard in the rain with nothing over your head soaks you, slowly in a drizzle and fast in a storm, and you dry off indoors. Wet people drip, take half the damage from fire and get shocked harder.",
+          "area": "Weather Expansion"
+        },
+        {
+          "text": "Strike lightning now, and set the weather to drizzle, rain or storm while Weather Expansion's changing weather is on.",
+          "area": "Cheat Menu"
+        },
+        {
+          "text": "The host's weather (drizzle, rain, storm) is the weather for everyone, and the rain wets each player on their own.",
+          "area": "Co-op"
+        }
+      ],
+      "changed": [],
+      "fixed": [
+        {
+          "text": "A frying pan that had food burn in it stayed hot for good, even with the stove off. It cools down like any other pan now.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Wearing a hat and a cigarette (or glasses) and loading a save now puts all of them back on, not only the first.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Thunder no longer stops for good after the story's own lightning.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "The moon's light comes back after lightning instead of staying off.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "The flash of lightning and the lamps flickering with it last as long at high frame rates as they do at 60 fps.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "A hot pan is exactly as hot for everyone in the house, so what cooks in it and what burns you matches. Before, it could differ between players' games.",
+          "area": "Co-op"
+        },
+        {
+          "text": "A laser pointer switched on now shows its beam and burning dot in everyone's game.",
+          "area": "Co-op"
+        },
+        {
+          "text": "The ball of fire a spray makes when a flame lights it, and the puff of fire when a tax bill burns up, now show in everyone's game, not only the game that made them.",
+          "area": "Co-op"
+        },
+        {
+          "text": "A player's hat, mask, glasses or cigarette no longer hang in the air when they leave; they are back on their head when they return.",
+          "area": "Co-op"
+        },
+        {
+          "text": "Clothes, hats and masks you put on right before leaving someone's game are still on you when you come back.",
+          "area": "Co-op"
+        }
+      ],
+      "removed": []
+    },
+    {
       "version": "0.3.0",
       "date": "2026-10-27",
       "released": true,
