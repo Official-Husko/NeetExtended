@@ -22,6 +22,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Spam comes twice as often after loading | `DoubleSpam` |
 | Poopman never says his hurt and disgusted lines | `KnotNames` |
 | Grandpa is sent to a routine he doesn't have | `SegmentLines` |
+| Market orders that don't go through can still bring the cops | `FailedOrderCops` |
 
 ## Saving fails with a dead house spider around
 
@@ -179,6 +180,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a prefix on `SwitchSegmentLine(string, string)` (after `LostCharacters`' check): a missing routine becomes the one its name ends with (`Blackout`), or the switch is skipped and reported in the error report.
 
 **Reproduce:** call `SwitchSegmentLine("Grandpa_NPC", "Thief_Intro_Blackout")` on `DialogueCanvas`. With `SegmentLines` on, the log says it used `Blackout`.
+
+## Market orders that don't go through can still bring the cops
+
+**What happens:** black and occult market orders have a 20% chance to bring a cop van, even when the order doesn't happen: in the demo (where those markets are closed), without enough money, or when clicking twice.
+
+**Cause:** `Computer.OrderItem` rolls the van (`Computer.cs:245`) before it checks the demo block, the money and the half-second cooldown (`:249`).
+
+**Fix:** during `OrderItem`, a prefix on `HouseManager.SpawnCopVan` holds the van back; a postfix calls it if the order went through.
+
+**Reproduce:** set `HouseManager.copVan` to null and `demoMode` to true, then place black market orders (`CacheItemToOrder` and the confirm button). With `FailedOrderCops` off, a van comes within a few; with it on, none.
 
 ## Not bugs
 
