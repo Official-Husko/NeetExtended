@@ -144,7 +144,6 @@ State of things:
 - The stove's knob is shared, but what the gas does afterwards (lighting, exploding) happens on each machine on its own.
 - The radio's tape starts from the top on each machine; the play position isn't shared.
 - Fire: the host spreads it and clients get its flames once a second, so a client sees a growing fire in steps. A flame a client puts out goes out on the host too (the nearest one). Candles and other flames a fire lights on a client stay lit only there.
-- Prank calls only ring on the host.
 - The inbox is the host's: every email that arrives there reaches everyone (a joining player gets the whole list). Which emails you've read is your own. Email Expansion's conversations are shared: anyone can open and answer them, the host's game runs them, and everyone sees the same conversation. What an email does (money, deliveries) happens once, on the host.
 
 Picking things up and pushing them:
@@ -160,7 +159,17 @@ NPCs:
 
 - NPCs think only on the host. Clients see their position and rotation (corpses included), the walking, sitting, crouching and death animations, dancing, speed and raised hands. They don't see crouch height, kicks, or an NPC taking clothes off (dressing is shared, undressing isn't). Skeletonizing and gibbing should come through as the spawns and destroys they are; untested.
 - What hurts a player hurts their real body, whoever's game it happened in: NPC punches, cop shots, player punches and kicks, knives, guns, traps and explosions (with their push). Burns come from each game's own copy of the fire. A client's hits on an NPC go to the host's real NPC.
-- Not passed on yet: spiders only go after NPCs and the host's player; a rat held by a client doesn't bite; NPCs and cops can't knock things out of a remote player's hands; the skeleton parasite only goes after the host's player.
+- Not passed on yet: spiders only go after NPCs and the host's player; a rat held by a client doesn't bite; NPCs and cops can't knock things out of a remote player's hands.
+
+Conversations and the phones:
+
+- Anyone can talk to NPCs and use the phones. The story runs only in the host's game, so what's said and what it does (items, money, NPCs leaving, story flags) happens once, there. A remote player's conversation doesn't use or block the host's dialogue box.
+- One conversation per speaker. Anyone else who tries, the host included, gets a "busy" line naming who's talking. Hurting a speaker or grossing them out cuts the other conversation off, like the game closing its dialogue first.
+- Only the player who's talking sees the lines and choices and hears the voice. Other players nearby see and hear nothing of it.
+- What the story knows about the talker (what they hold, fat, muscle, woman, naked) comes from their own game with each step. KillPlayer, SkeletonizePlayer and KnockoutPlayer happen to the talking player. Trading your soul for a clone, and mod rule actions that act on "the player" (knockout, stats, an item in front of the player), still act on the host's player.
+- Offerings (the candy bucket) only work in the host's own conversations for now: a remote player can't hand a trick-or-treater anything, but saying no works. Items that run a bit of story when picked up or used only do it for the host.
+- Both handsets are the host's: a client's button press is pressed on the host's handset, and the screen (caller ID included), ring and busy tone come back within a quarter second. Answering or dialing makes the call that player's conversation. The host walking past a handset doesn't hang up someone else's call. Prank calls and Phone Expansion's incoming calls are scheduled by the host and ring on every machine.
+- A remote player's conversation open during a hot reload of Co-op closes; walking back up to the speaker picks it up where the story stopped.
 
 Money and the computer:
 

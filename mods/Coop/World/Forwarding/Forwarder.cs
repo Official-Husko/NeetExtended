@@ -21,7 +21,8 @@ namespace Coop.World.Forwarding;
 /// - Damage: position, amount, damage kind, force (optional);
 /// - Blast: centre, radius (an explosion's push);
 /// - NpcDamage (to the host): NPC ref, position, amount, damage kind, force (optional);
-/// - Possess: the skeleton parasite that got the player (its mask goes on their face).
+/// - Possess: the skeleton parasite that got the player (its mask goes on their face);
+/// - Kill, Skeletonize, Knockout (seconds): the story did it to the player it was talking to.
 /// </summary>
 internal static class Forwarder
 {
@@ -29,6 +30,9 @@ internal static class Forwarder
     private const byte Blast = 1;
     private const byte NpcDamage = 2;
     private const byte Possess = 3;
+    private const byte Kill = 4;
+    private const byte Skeletonize = 5;
+    private const byte Knockout = 6;
 
     // What the game's explosions push bodies with (Commons.ExplosionDamage).
     private const float BlastForce = 100f;
@@ -62,6 +66,22 @@ internal static class Forwarder
             return;
         var w = Begin(slot, Possess);
         parasite.Write(w);
+        Send(slot, w);
+    }
+
+    /// <summary>Host: a conversation's KillPlayer, SkeletonizePlayer or KnockoutPlayer, for the player it was with.</summary>
+    public static void StoryKilled(byte slot) => SendStory(slot, Kill, 0f);
+
+    public static void StorySkeletonized(byte slot) => SendStory(slot, Skeletonize, 0f);
+
+    public static void StoryKnockedOut(byte slot, float seconds) => SendStory(slot, Knockout, seconds);
+
+    private static void SendStory(byte slot, byte kind, float amount)
+    {
+        if (!WorldSide.Running || !WorldSide.IsHost)
+            return;
+        var w = Begin(slot, kind);
+        w.Put(amount);
         Send(slot, w);
     }
 
@@ -115,7 +135,8 @@ internal static class Forwarder
         }
         if (!WorldSide.Running || target != WorldSide.LocalSlot)
             return;
-        switch (reader.GetByte())
+        byte kind = reader.GetByte();
+        switch (kind)
         {
             case Damage:
                 TakeHit(reader);
@@ -128,6 +149,11 @@ internal static class Forwarder
                 break;
             case Possess:
                 BePossessed(NetObjects.Find(NetRef.Read(reader)));
+                break;
+            case Kill:
+            case Skeletonize:
+            case Knockout:
+                FromStory(kind, reader.GetFloat());
                 break;
         }
     }
@@ -166,6 +192,20 @@ internal static class Forwarder
         }
         if (mask != null)
             Object.Instantiate(mask, Vector3.up * 100f, Quaternion.identity).GetComponent<MaskFace>()?.PutOnMask(player, notHeld: true);
+    }
+
+    // What Dialogue's KillPlayer, SkeletonizePlayer and KnockoutPlayer do, to this game's player.
+    private static void FromStory(byte kind, float amount)
+    {
+        var player = WorldSide.LocalPlayer;
+        if (player == null || !player.TryGetComponent(out Player_Abilities hands))
+            return;
+        if (kind == Kill)
+            hands.DieAccessor();
+        else if (kind == Skeletonize)
+            hands.SkeletonizeAccessor();
+        else if (player.TryGetComponent(out PlayerStats stats) && stats.knockout != null)
+            stats.knockout.AddVal(amount);
     }
 
     private static void HurtNpc(NetObject npc, NetDataReader reader)

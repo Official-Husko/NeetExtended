@@ -11,6 +11,7 @@ using Coop.World.Simulation;
 using Coop.World.Spawning;
 using Coop.World.State;
 using Coop.World.Streaming;
+using Coop.World.Talk;
 using NeetModKit.Events;
 
 namespace Coop.World;
@@ -39,6 +40,7 @@ internal static class WorldSync
         CopVanSync.Init();
         Forwarder.Init();
         HealthReport.Init();
+        TalkSync.Init();
 
         CoopSession.Started += () => WorldPatches.Apply(CoopSession.IsClient);
         CoopSession.WorldReady += () => Start(resumed: false);
@@ -50,8 +52,10 @@ internal static class WorldSync
         CoopSession.PlayerReady += OnPlayerReady;
         CoopSession.PlayerLeft += player =>
         {
-            if (WorldSide.Running && WorldSide.IsHost)
-                Departures.PlayerLeft(player.Slot);
+            if (!WorldSide.Running || !WorldSide.IsHost)
+                return;
+            Departures.PlayerLeft(player.Slot);
+            TalkSync.PlayerLeft(player.Slot);
         };
         CoopSession.Ended += _ => End();
 
@@ -84,6 +88,7 @@ internal static class WorldSync
 
         if (WorldSide.IsClient)
             StartClient();
+        TalkSync.Start(_hosting);
         WorldSide.Running = true;
         NpcPoseSender.SendAllAgain();
         CoopMod.Log.Info($"World: running as {(_hosting ? "host" : "client")}" + (resumed ? $", {carried} owners carried over the reload." : "."));
@@ -115,6 +120,7 @@ internal static class WorldSync
         CopVanSync.SendAgain();
         NpcPoseSender.SendAllAgain();
         NpcClothes.SendAllAgain();
+        TalkSync.PlayerReady();
     }
 
     private static void End()
@@ -129,6 +135,7 @@ internal static class WorldSync
     private static void Stop()
     {
         WorldSide.Running = false;
+        TalkSync.Stop();
         NetObjects.Clear();
         StateTrackers.Clear();
         StateSync.Clear();
@@ -154,6 +161,7 @@ internal static class WorldSync
         SpawnSender.ProcessStartedBrains();
         NpcPuppets.ProcessLater();
         EconomySync.Update();
+        TalkSync.Update(_hosting);
         WorldTiming.End(WorldTiming.Update, started);
     }
 
@@ -185,6 +193,7 @@ internal static class WorldSync
             FireSync.HostTick();
             CopVanSync.HostTick();
             RemoteNeeds.HostTick();
+            TalkSync.HostLateUpdate();
         }
         else
             NpcPoseReceiver.LateTick();
@@ -203,6 +212,7 @@ internal static class WorldSync
             OwnershipParking.Park();
         NpcPuppets.RestoreDamage();
         Purchases.Unload();
+        TalkExternals.Uninstall();
         WorldSide.Running = false;
     }
 }
