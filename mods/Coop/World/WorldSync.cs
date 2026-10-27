@@ -43,6 +43,7 @@ internal static class WorldSync
         Ambience.SkySync.Init();
         Ambience.ToiletSync.Init();
         Ambience.TvPlayback.Init();
+        Ambience.RadioPlayback.Init();
         Forwarder.Init();
         HealthReport.Init();
         TalkSync.Init();
@@ -90,6 +91,7 @@ internal static class WorldSync
         SceneScan.Rebuild();
         StateTrackers.Rebuild();
         PaintSync.Start();
+        Ambience.RadioPlayback.Rescan();
         int carried = resumed ? OwnershipParking.Restore() : 0;
         if (!resumed)
             OwnershipParking.Forget();
@@ -156,6 +158,7 @@ internal static class WorldSync
         Ambience.SkySync.Clear();
         Ambience.ToiletSync.Clear();
         Ambience.TvPlayback.Clear();
+        Ambience.RadioPlayback.Clear();
         PaintSync.Clear();
         RemoteNeeds.Clear();
         HealthReport.Clear();
@@ -221,6 +224,7 @@ internal static class WorldSync
         Ambience.SkySync.LateTick(_hosting);
         Ambience.ToiletSync.LateTick();
         Ambience.TvPlayback.LateTick(_hosting);
+        Ambience.RadioPlayback.LateTick(_hosting);
         HealthReport.Tick();
         SpawnSender.FlushSpawns();
         EconomySync.AfterSpawns();

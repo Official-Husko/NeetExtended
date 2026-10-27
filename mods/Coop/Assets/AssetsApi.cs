@@ -42,6 +42,9 @@ public static class AssetsApi
     /// <summary>The TV's video here, and what the host last said about it.</summary>
     public static string Tv() => World.Ambience.TvPlayback.Describe();
 
+    /// <summary>What each radio here plays.</summary>
+    public static string Radio() => World.Ambience.RadioPlayback.Describe();
+
     private static int _testFolders;
 
     /// <summary>Tests: puts a folder of this game's own into the session ("tv" or "mixtapes"), as if a mod had it.</summary>

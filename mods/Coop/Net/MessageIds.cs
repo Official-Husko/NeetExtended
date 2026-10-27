@@ -83,4 +83,5 @@ public static class MessageIds
     public const ushort WorldSky = 136;
     public const ushort WorldToilet = 137;
     public const ushort WorldTv = 138;
+    public const ushort WorldRadio = 139;
 }

@@ -4,7 +4,7 @@ using HarmonyLib;
 
 namespace Coop.World.Patches;
 
-/// <summary>The sky and the toilets: see <see cref="SkySync"/> and <see cref="ToiletSync"/>.</summary>
+/// <summary>The sky, the toilets and the radios: see <see cref="SkySync"/>, <see cref="ToiletSync"/> and <see cref="RadioPlayback"/>.</summary>
 [HarmonyPatchCategory(WorldPatches.World)]
 [HarmonyPatch]
 internal static class AmbiencePatches
@@ -18,4 +18,9 @@ internal static class AmbiencePatches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Toilet_Flush), "FixedUpdate")]
     private static bool Flush(Toilet_Flush __instance) => !WorldSide.Running || !ToiletSync.IsRemote(__instance);
+
+    // Radios made after world sync started (bought, spawned).
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Radio), "Start")]
+    private static void RadioStarted(Radio __instance) => RadioPlayback.Track(__instance);
 }

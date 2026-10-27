@@ -7,7 +7,7 @@ namespace Coop.World.State.Types;
 /// <summary>
 /// A radio: which battery and cassette are in it, the lid and the music switch. The cassette and
 /// battery are shared items moved by their own streams; this only tells the radio what it holds.
-/// The tape starts from the top on each machine (the play position isn't shared).
+/// What it plays and where it is in the song is kept in step by <see cref="Ambience.RadioPlayback"/>.
 /// </summary>
 internal sealed class RadioState : StateType<Radio>
 {

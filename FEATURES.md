@@ -171,7 +171,7 @@ Your own music on cassettes for the radio. Put OGG, MP3 or WAV files into a mod'
 
 - **Mixtape radio**: with no tape in, the radio plays your songs one after another, shuffled, like a station. It still needs a fuse and the music button.
 - **Tape price** in Mod Settings. Names, prices, colours and the room a tape is left in go in a `tapes.jsonc` in the `mixtapes` folder.
-- In co-op everyone's tapes are in everyone's game.
+- In co-op everyone's tapes are in everyone's game, and a radio plays the same song at the same moment for everyone.
 
 ## Update Checker
 
@@ -212,6 +212,7 @@ Play the house together, over the internet or your own network. The host's house
 - **Paint is shared**: blood, poop, piss, water, scorch marks, footprints and cleaning show up for everyone, whoever made the mess.
 - **Your files are shared**: custom photos and tapes from the custom shops, photos you take with the camera, the wallpaper you pick on the computer and your face go to the other players, and theirs come to you. Everyone's TV stations and mixtapes are in the game for everyone. When you join you get the files already in the game first, then the house loads with all of it there; files added later come in the background. A note in the bottom right corner shows what's being sent and received.
 - **The TV plays in step**: a video waits on its "Please stand by" card until everyone has it, then starts for everyone at once and stays in step with the host's TV.
+- **The radio plays in step**: a tape in a radio, and the mixtape radio station, play the same song at the same moment for everyone.
 - **Who's coming and going**: a note in the corner says when someone is joining, joins or leaves.
 - **The host's Players tab** (mod menu): pick a player, then help them (heal them and get them back up, bring them to you, go to them, give them any item, kick a player who's stuck or bugged) or make trouble (send the hitman, slap, yeet, spin, freeze, starve, piss alarm, make them shit, knock them down, set their room on fire, or drop a spider, a rat or Poopman next to them). They get a note saying who did it.
 - **Disconnect**: in someone else's house the pause menu's **Get out** button says **Disconnect** and takes you out of their game.
