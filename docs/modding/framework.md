@@ -748,6 +748,7 @@ The framework's patches live in `src/NeetModKit/Patches/`. Each one is an applie
 | `Dialogue.Awake` (post) | `DialoguePatches` | Raises `InkStory.Dialogue.Created`, so mod scripts and functions are in the story before a save loads into it |
 | `EmailHandler.Start` (post) | `DialoguePatches` | Raises `InkStory.Email.Created` once the email story is built |
 | `Computer.OrderItem` (post) | `OrderPatch` | Raises `ItemOrdered` for orders that went through |
+| `EmailApp.LoadEmail` (pre, last) | `EmailGuardPatch` | An email whose knot is gone (its mod was removed) shows a note instead of throwing |
 
 ### Reasons for the less obvious ones
 
