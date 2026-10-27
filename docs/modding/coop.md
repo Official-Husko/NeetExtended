@@ -147,6 +147,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### Watch list
 
+- Clothes that no one wears any more (outfits of characters who died, like the thief's striped shirt) were found falling forever below the house on the host, about y -1.9e8, dynamic. Nothing visible, but they're saved with those positions. Cause not found yet; the player's own death drops aren't involved.
 - MushroomBoy was found once at y -84162 on the host, fallen through the floor; probably its rolling physics, seen before any test touched it.
 - A cop knocking an item out of a remote player's hand: the forwarding is tested (the item drops in their game and goes back to the host), but the trigger, the game's own (something that isn't a door blocks the shot, under 1.7 m, while chasing), hasn't been seen in play yet; in tests the cop's ray passed under the held box and they shot instead.
 - Seen once, after a long session with dozens of hot reloads: doors stopped taking clicks in both games until both restarted. The game marks what a hand grabs with `Usable.player` (always together with `Player_Abilities.pickups`) and refuses to pick up anything whose `player` is still set, so a drag that ends without the game's own release (a reload mid-drag, a forced hand-back) leaves a door nobody can grab. `HoldRepair` now releases such holds (checked once a second, released the game's way after two checks, logged once per object); tested with a faked stuck door, and a real hold isn't touched. If doors or items stop taking clicks again, `CoopApi.LookAt`, `RayAll`, `LayerOf` and `Patched` show what the click meets.
@@ -178,6 +179,7 @@ State of things:
 
 Picking things up and pushing them:
 
+- What a client's game frees by itself without a hand (clothes the game takes off, what a dead player had falling where they died) becomes that client's to simulate (`World/Ownership/FreedReplicas`: a replica that turned dynamic is claimed within a quarter second), so the host and everyone else see it fall and land in the same place.
 - Clients can pick up rats, the cat and dead NPCs: the host pauses the animal while someone else holds or throws it and wakes it once it lands. A rat held by a client bites and wriggles in its hand like in the host's (`World/Ownership/HeldAnimals`: the client's game does what BrainRat.Update does for a held rat, since the rat's brain only runs on the host).
 - A player takes over what their body, what they hold, or (on a client) what they threw runs into, so it can be pushed. Things only knocked on by other knocked things move on the host first and reach the others a moment later.
 - The client that throws a plate breaks it. Scene windows and other breakables that aren't items only break on the host, so a client throwing something at a window doesn't break it.

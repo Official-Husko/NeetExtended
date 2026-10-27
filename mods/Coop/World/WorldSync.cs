@@ -168,7 +168,10 @@ internal static class WorldSync
         EconomySync.Update();
         TalkSync.Update(_hosting);
         if (!_hosting)
+        {
             HeldAnimals.Tick();
+            FreedReplicas.Tick();
+        }
         WorldTiming.End(WorldTiming.Update, started);
     }
 
