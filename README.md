@@ -1,62 +1,112 @@
-# NEET Mods
+<div align="center">
 
-Mods, a mod loader and modding tools for **NEET Demo** (Steam app 2054460). The game's developer stopped working on it but kept the demo up, so this project keeps it going: a loader that needs no extra launcher, a framework for adding content, an in-game mod menu, and tools for testing.
+# NeetExtended
 
-Not affiliated with the game's developer.
+Mods, a mod loader and modding tools for [NEET Demo](https://store.steampowered.com/app/2054460/).
 
-## What's here
+[![License](https://img.shields.io/github/license/Official-Husko/NeetExtended)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/Official-Husko/NeetExtended?include_prereleases&sort=semver)](https://github.com/Official-Husko/NeetExtended/releases)
+[![Downloads](https://img.shields.io/github/downloads/Official-Husko/NeetExtended/total)](https://github.com/Official-Husko/NeetExtended/releases)
+[![Stars](https://img.shields.io/github/stars/Official-Husko/NeetExtended?style=flat)](https://github.com/Official-Husko/NeetExtended/stargazers)
+[![Last commit](https://img.shields.io/github/last-commit/Official-Husko/NeetExtended)](https://github.com/Official-Husko/NeetExtended/commits)
+<br>
+[![NEET Demo on Steam](https://img.shields.io/badge/Steam-NEET%20Demo-1b2838?logo=steam&logoColor=white)](https://store.steampowered.com/app/2054460/)
+![Windows and Linux](https://img.shields.io/badge/runs%20on-Windows%20%7C%20Linux%20(Proton)-4a4a4a)
+![Unity 2022.3](https://img.shields.io/badge/Unity-2022.3.17f1-222?logo=unity&logoColor=white)
 
-| Part | What it does |
+![The mod menu](docs/images/mod-menu.jpg)
+
+</div>
+
+## What you get
+
+| Mod | What it does |
 | --- | --- |
-| **NeetLoader** (`src/NeetLoader`) | Starts with the game through Unity's own startup files. Loads mods from `<game>/Mods`, in dependency order, and can load, unload and hot reload them while the game runs. |
-| **NeetModKit** (`src/NeetModKit`) | The framework mods build on: game access, events, items, the anime card game, computer apps, dialogue scripts in the game's own dialogue system, save data, a UI toolkit built from the game's own menus, switchable features, and the mod menu (F1, or MODS in the pause menu). |
-| **DevBridge** (`mods/DevBridge`) | A local socket for tools: read and change game state, spawn things, click UI, take screenshots, reload mods. |
-| **Open Saves** (`mods/OpenSaves`) | Compressed, documented `.nsav` saves (about 16x smaller) and cleanup of old save files. |
-| **No Feedback** (`mods/NoFeedback`) | Stops the pause menu sending feedback reports to the original developer. Always on, like the framework. |
-| **Unofficial NEET Patches** (`mods/UnofficialNeetPatches`) | Fixes for bugs in the game itself: saves failing (dead house spiders, a leftover fuse, any one broken object), put-out fires coming back after loading, story events breaking after Grandpa dies or repeating every frame after an error, status effects that freeze, stick or depend on the frame rate, frame rate and vsync settings that don't stick, promoted cards losing their stats. Each fix can be switched off. |
-| **Performance Fixes** (`mods/PerformanceFixes`) | Experimental. Saves without freezing (only changed paint, written in the background), frees the video memory the game leaks on every load, runs the front door's peephole camera only nearby, fewer shadowed lights, less log spam, idle paint surfaces and characters that don't redo work every frame. Each fix can be switched off. |
-| **Card Expansion** (`mods/CardExpansion`) | Twelve Halloween cards, summons, an auto-clicker and a better crystal exchange for the computer's card game. |
-| **Pumpkin Smash** (`mods/PumpkinSmash`) | A whack-a-pumpkin game on the in-game computer. |
-| **Open House** (`mods/OpenHouse`) | Opens what the demo closes off: the pantry, the black basement door, dad's yard door, and optionally the attic, the roof and the demo's other limits. |
-| **Phone Expansion** (`mods/PhoneExpansion`) | New numbers to dial and new calls that ring in, with choices and consequences: pizza delivery, Spookbusters, a deal with Satan, a call you shouldn't answer. Calls are JSON or Ink files any mod can ship. |
-| **Custom TV Stations** (`mods/TvStations`) | Your own videos (MP4 or WebM) on the living room TV, next to or in place of the game's channels. |
-| **Cheat Menu** (`mods/CheatMenu`) | Press Insert: god mode, needs, speed, teleport, money, crystals, spawning items and people, fire, power, doors, game speed. |
-| **neet** (`tools/NeetTool`) | Command-line tool: install the loader and mods (optionally with a 64-bit player and incremental garbage collection), start and stop the game, read logs, talk to DevBridge, convert saves, build the changelog, and an MCP server. |
+| **Unofficial NEET Patches** | Fixes bugs in the game: saves that stop working, put-out fires that come back after loading, story events stuck in a loop, status effects that never wear off, frame rate and vsync settings that reset themselves, and more. |
+| **Performance Fixes** | Saving without the freeze, no more video memory piling up on every load, the front door's peephole camera only running near the door, a shadow setting, less log spam. Experimental. |
+| **Phone Expansion** | New numbers to call and new calls that ring in: pizza delivery, Spookbusters, a deal with Satan, and a few you'd rather not answer. |
+| **Custom TV Stations** | Your own videos (MP4 or WebM) on the living room TV. |
+| **Open House** | Opens the pantry, the basement backroom, dad's yard, and if you want the attic and the roof. |
+| **Card Expansion** | Twelve Halloween cards, summons, an auto-clicker and a better crystal exchange for the computer's card game. |
+| **Pumpkin Smash** | A whack-a-pumpkin game on the in-game computer. |
+| **Open Saves** | Saves about 16 times smaller and a save folder that doesn't fill up. |
+| **Cheat Menu** | Press Insert: god mode, needs, money, spawning, fire, power, doors, game speed. |
+| **No Feedback** | Stops the pause menu from sending feedback reports from a modded game. |
 
-## Installing (players)
+Everything can be switched on and off in game, mod by mod and feature by feature. [FEATURES.md](FEATURES.md) has the full list with every switch and setting.
 
-Get a release package (`NEET-Mods-<version>.zip`), unpack it, close the game and run `install.sh` (Linux) or `install.bat` (Windows). The installer asks whether to switch the game to 64-bit (it downloads Unity's player from Unity) and whether to turn on incremental garbage collection. `uninstall.sh` / `uninstall.bat` put the game back. The package is built with `build/package.sh`.
+<table>
+  <tr>
+    <td><img src="docs/images/pause-menu.jpg" alt="MODS in the pause menu"></td>
+    <td><img src="docs/images/whats-new.jpg" alt="What's New"></td>
+  </tr>
+  <tr>
+    <td align="center">MODS in the pause menu</td>
+    <td align="center">What's New, built from the commit history</td>
+  </tr>
+</table>
 
-## Quick start (development)
+## Installing
 
-Needs the .NET 10 SDK and the game installed through Steam.
+You need NEET Demo from Steam, on Windows or on Linux through Proton.
+
+1. Download the latest `NeetExtended-<version>.zip` from [Releases](https://github.com/Official-Husko/NeetExtended/releases) and unpack it anywhere.
+2. Close the game.
+3. Run `install.bat` on Windows or `install.sh` on Linux.
+4. Start the game from Steam. **F1** (or MODS in the pause menu) opens the mod menu.
+
+The installer finds the game through Steam. If it doesn't, pass the folder: `install.sh --game "/path/to/steamapps/common/NEET Demo"`.
+
+It asks two things:
+
+- **Switch to 64-bit?** Downloads Unity's 64-bit player for the game's exact Unity version straight from Unity (about 180 MB) and swaps it in. Slightly faster, more memory. The 32-bit files are kept, so you can switch back.
+- **Incremental garbage collection?** Memory gets cleaned up a little every frame instead of all at once, which gets rid of the short freezes. Recommended.
+
+Running the installer again updates the mods and keeps your settings. `uninstall.bat` / `uninstall.sh` put the game back the way it was; your saves stay.
+
+## Building from source
+
+You need the [.NET 10 SDK](https://dotnet.microsoft.com/download) and the game installed through Steam (the build references the game's own assemblies, nothing from the game is in this repo).
 
 ```sh
-dotnet build NeetMods.sln -c Release           # builds everything and copies it into the game
+git clone https://github.com/Official-Husko/NeetExtended.git
+cd NeetExtended
+dotnet build NeetMods.sln -c Release           # builds everything and copies the mods into the game
 dotnet run --project tools/NeetTool -- install # once: hook the loader into the game
 dotnet run --project tools/NeetTool -- launch  # start the game in a window
 ```
 
-If the game isn't in the default Steam library, set `NEET_GAME_DIR` or create `build/Local.props` with a `<NeetGameDir>`.
+If the game isn't in your main Steam library, set `NEET_GAME_DIR` or put a `<NeetGameDir>` in `build/Local.props`.
 
-With the game running, rebuild and the changed mods reload by themselves within about a second. Press **F1** in game for the mod menu.
+With the game running, rebuild and the changed mods reload by themselves within a second or so. `build/package.sh` makes the release zip.
 
-To remove everything again: `dotnet run --project tools/NeetTool -- uninstall` (add `--remove-mods` to delete the Mods folder too).
+Writing your own mod? Start with [getting started](docs/modding/getting-started.md). The rest of the guides are in [docs/](docs/README.md), along with notes on how the game's code works.
 
-## Features
+## How it's put together
 
-[FEATURES.md](FEATURES.md) lists everything the mods add, for players: what each mod does, its switches and settings.
+| Part | |
+| --- | --- |
+| [`src/NeetLoader`](src/NeetLoader) | The loader. It starts with the game through Unity's own startup files, so there's no launcher, proxy DLL or Proton launch option. Loads, unloads and hot reloads mods while the game runs. |
+| [`src/NeetModKit`](src/NeetModKit) | The framework mods build on: game access, events, items, dialogue in the game's own Ink story, save data, the card game, computer apps, UI built from the game's menus, switchable features, and the mod menu. |
+| [`mods/`](mods) | The mods, one folder each. |
+| [`mods/DevBridge`](mods/DevBridge) | A local socket for testing: read and change game state, spawn things, profile, take screenshots. Not part of the release. |
+| [`tools/NeetTool`](tools/NeetTool) | `neet`, the command-line tool: install, launch, logs, the bridge, save conversion, the changelog, and an MCP server. |
 
-## Docs
+## Bugs and ideas
 
-- [docs/README.md](docs/README.md) — index
-- [Getting started](docs/modding/getting-started.md), including writing your first mod
-- [Notes on the game's code](docs/game/) — how NEET's systems work, from the decompiled source
+Open an [issue](https://github.com/Official-Husko/NeetExtended/issues). For a bug, the mod menu's **Errors** tab has a **COPY REPORT** button; paste that in (it's also saved as `NeetLoader/logs/errors.log` in the game folder). [TODO.md](TODO.md) has what's planned. Pull requests are welcome.
 
-## Plans
+## License
 
-[TODO.md](TODO.md) lists the mods that are planned or being considered, and follow-ups for the existing ones.
+[GPL-3.0](LICENSE).
 
-## Changelog
+NeetExtended is a fan project, not affiliated with the makers of NEET. It contains none of the game's files; you need your own copy of NEET Demo.
 
-[changelog.json](changelog.json) is generated from the commit history (`neet changelog --write`) and shown in game on the What's New page.
+## Star history
+
+<a href="https://star-history.com/#Official-Husko/NeetExtended&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Official-Husko/NeetExtended&type=Date&theme=dark">
+    <img alt="Star history" src="https://api.star-history.com/svg?repos=Official-Husko/NeetExtended&type=Date">
+  </picture>
+</a>
