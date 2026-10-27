@@ -20,6 +20,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Spam emails come again after every load | `RepeatingSpam` |
 | The spam timer starts over after loading | `SpamTimer` |
 | Spam comes twice as often after loading | `DoubleSpam` |
+| Poopman never says his hurt and disgusted lines | `KnotNames` |
 
 ## Saving fails with a dead house spider around
 
@@ -157,6 +158,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a prefix and postfix on `EmailHandler.Start`: when the load already started one, the coroutine `Start` started is stopped, and the load's coroutine and its timer are kept.
 
 **Reproduce:** with `DoubleSpam` off, load a save and watch `timeToNextRandom`: it jumps between two schedules as both coroutines write it.
+
+## Poopman never says his hurt and disgusted lines
+
+**What happens:** hitting a visitor or throwing something gross at them makes them react, if they have lines for it. Poopman has both ("You are weak.", "Oooohhh yessssss..."), but never says them.
+
+**Cause:** `CharacterStories.OnCollisionEnter` asks for `characterName + "Harm"` / `"Disgust"` (`CharacterStories.cs:212,217`). His `characterName` is `Poopman`, the knots are `PoopManHarm` and `PoopManDisgust`. `ChoosePathString` fails and `Dialogue.InitCharacterDialogue` swallows the error for Harm/Disgust knots (`Dialogue.cs:410-416`).
+
+**Fix:** a prefix on `Dialogue.InitCharacterDialogue`: when the knot asked for doesn't exist, one whose name only differs in upper and lower case is used.
+
+**Reproduce:** with `KnotNames` off, spawn Poopman (`npcs.spawn`) and call `InitCharacterDialogue(poopman, "Poopman_Harm", "PoopmanHarm", true, true)` on `DialogueCanvas`: nothing. With it on: "You are weak."
 
 ## Not bugs
 

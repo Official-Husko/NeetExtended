@@ -46,6 +46,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Spam emails only come once**: the game's spam no longer arrives all over again after every load.
 - **Spam keeps its timer through saves**: after loading, the next spam comes when it was due instead of 15 seconds in.
 - **Spam doesn't double up after loading**: the game ran its spam timer twice after a load, so spam came twice as often. Now it runs once.
+- **Characters say their reaction lines**: Poopman has lines for when you hurt him or throw something gross at him, but the game never found them. Now he says them.
 
 ## Performance Fixes (experimental)
 
