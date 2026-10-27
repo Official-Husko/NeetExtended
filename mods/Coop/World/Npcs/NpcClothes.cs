@@ -79,15 +79,20 @@ internal static class NpcClothes
             return;
         _next = now + Interval;
         foreach (var o in NetObjects.Rigs)
+        {
             SendIfChanged(o);
+            NpcMasks.SendIfChanged(o);
+        }
     }
 
     /// <summary>Host: a rig just put something on or took something off; say so now, not at the next tick.</summary>
     public static void Changed(Player_Abilities abilities)
     {
         var o = NetObjects.Find(abilities.gameObject);
-        if (o?.Rig != null)
-            SendIfChanged(o);
+        if (o?.Rig == null)
+            return;
+        SendIfChanged(o);
+        NpcMasks.SendIfChanged(o);
     }
 
     private static void SendIfChanged(NetObject o)
@@ -109,6 +114,7 @@ internal static class NpcClothes
     {
         foreach (var o in NetObjects.Rigs)
             o.Rig.DressSent = false;
+        NpcMasks.SendAllAgain();
     }
 
     private static int Signature(GameObject[] clothings, out bool allShared)
@@ -146,6 +152,11 @@ internal static class NpcClothes
         if (WorldSide.IsHost || !WorldSide.Running)
             return;
         byte kind = reader.GetByte();
+        if (kind == NpcMasks.Kind)
+        {
+            NpcMasks.Read(reader);
+            return;
+        }
         if (kind != Dress)
             return;
         var rigObject = NetObjects.Find(NetRef.Read(reader));

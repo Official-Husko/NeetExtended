@@ -45,11 +45,14 @@ internal sealed class NpcRig
     public bool[] VoiceNew;
     public AudioClip[] VoiceClip;
     public bool VoicesKnown;
+    public int MaskSignature;
+    public bool MasksSent;
 
     // Client: poses from the host.
     public readonly TimedRing<NpcPose> Poses = new TimedRing<NpcPose>(6);
     public bool Driving;
     public NpcPose Shown;
+    public readonly System.Collections.Generic.List<GameObject> Masked = new System.Collections.Generic.List<GameObject>(2);
     private bool _hasShown;
     private int _shape = -1;
 

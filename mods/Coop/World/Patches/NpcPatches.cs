@@ -78,4 +78,20 @@ internal static class NpcPatches
         if (o?.Rig != null)
             NpcEffects.Send(NpcEffects.Burst, o, __instance);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MaskFace), nameof(MaskFace.PutOnMask))]
+    private static void MaskedUp(MaskFace __instance, GameObject playerRef)
+    {
+        if (Hosting && playerRef != null && playerRef.TryGetComponent(out Player_Abilities abilities))
+            NpcClothes.Changed(abilities);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MaskFace), nameof(MaskFace.RemoveMask))]
+    private static void MaskedOff(GameObject playerRef)
+    {
+        if (Hosting && playerRef != null && playerRef.TryGetComponent(out Player_Abilities abilities))
+            NpcClothes.Changed(abilities);
+    }
 }
