@@ -6,6 +6,7 @@ using EmailExpansion.Mail;
 using Ink.Runtime;
 using NeetModKit.Conversations;
 using NeetModKit.Events;
+using NeetModKit.Game;
 using NeetModKit.Rules;
 
 namespace EmailExpansion.Reader;
@@ -15,7 +16,8 @@ namespace EmailExpansion.Reader;
 /// end or to its replies, with its actions running the first time. Each inbox entry runs in its own
 /// Ink flow, so opening other emails doesn't lose its place, and keeps its text and the replies
 /// picked in the save. After loading a save, the flow is rebuilt by replaying those replies with the
-/// actions switched off.
+/// actions switched off. In someone else's co-op game the reader is read-only: no reply buttons, and
+/// the emails' actions stay off.
 /// </summary>
 internal static class MailReader
 {
@@ -28,6 +30,9 @@ internal static class MailReader
     private static EmailExpansionMod _mod;
     private static ReaderView _view;
     private static bool _loading;
+
+    // In someone else's co-op game: read only, no replies (the host's game runs the emails).
+    private static bool IsGuest => !WorldRole.RunsWorld;
 
     /// <summary>The email being read right now, for its conditions and actions; null otherwise.</summary>
     public static MailItem Active { get; private set; }
@@ -68,6 +73,8 @@ internal static class MailReader
 
     private static void Reply(EmailApp app, string key, MailItem mail, int index)
     {
+        if (IsGuest)
+            return;
         var letter = MailMemory.LetterFor(key);
         var story = InkStory.Email.Current;
         if (story == null || letter.Done)
@@ -114,6 +121,7 @@ internal static class MailReader
 
     private static void Replay(Story story, MailMemory.Letter letter)
     {
+        bool wasMuted = RuleSteps.Muted;
         RuleSteps.Muted = true;
         try
         {
@@ -129,7 +137,7 @@ internal static class MailReader
         }
         finally
         {
-            RuleSteps.Muted = false;
+            RuleSteps.Muted = wasMuted;
         }
     }
 
@@ -146,8 +154,12 @@ internal static class MailReader
     private static void Run(Story story, string key, MailItem mail, MailMemory.Letter letter, Action body)
     {
         var previous = RuleContext.Active;
+        bool wasMuted = RuleSteps.Muted;
         Active = mail;
         RuleContext.Active = mail;
+        // A co-op guest reads along; what the email does (money, deliveries) happens in the host's game.
+        if (IsGuest)
+            RuleSteps.Muted = true;
         try
         {
             story.SwitchFlow(FlowPrefix + key);
@@ -164,13 +176,14 @@ internal static class MailReader
             story.SwitchToDefaultFlow();
             Active = null;
             RuleContext.Active = previous;
+            RuleSteps.Muted = wasMuted;
         }
     }
 
     private static void Show(EmailApp app, string key, MailItem mail, MailMemory.Letter letter, bool toBottom)
     {
         _view = ReaderView.For(_mod, app, _view);
-        _view.Show(letter.Text, letter.Done ? Array.Empty<string>() : (IReadOnlyList<string>)Choices,
+        _view.Show(letter.Text, letter.Done || IsGuest ? Array.Empty<string>() : (IReadOnlyList<string>)Choices,
             index => Reply(app, key, mail, index), toBottom);
     }
 

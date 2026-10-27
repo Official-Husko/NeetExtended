@@ -137,7 +137,7 @@ State of things:
 - The radio's tape starts from the top on each machine; the play position isn't shared.
 - Fire: the host spreads it and clients get its flames once a second, so a client sees a growing fire in steps. A flame a client puts out goes out on the host too (the nearest one). Candles and other flames a fire lights on a client stay lit only there.
 - Prank calls only ring on the host.
-- The inbox is the host's: every email that arrives there reaches everyone (a joining player gets the whole list). Which emails you've read is your own. Replies to Email Expansion's emails only count on the host: on a client the reply buttons still show, and a reply there only moves that client's copy of the conversation.
+- The inbox is the host's: every email that arrives there reaches everyone (a joining player gets the whole list). Which emails you've read is your own. Only the host can answer Email Expansion's emails: on a client they show without reply buttons, and what an email does (money, deliveries) happens when the host reads or answers it.
 
 Picking things up and pushing them:
 
