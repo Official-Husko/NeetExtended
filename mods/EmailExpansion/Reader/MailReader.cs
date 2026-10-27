@@ -1,46 +1,38 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using EmailExpansion.Mail;
-using Ink.Runtime;
-using NeetModKit.Conversations;
 using NeetModKit.Events;
 using NeetModKit.Game;
-using NeetModKit.Rules;
+using Newtonsoft.Json.Linq;
 
 namespace EmailExpansion.Reader;
 
 /// <summary>
-/// Opens modded emails. The game reads one line of an email's knot; a modded email is read to the
-/// end or to its replies, with its actions running the first time. Each inbox entry runs in its own
-/// Ink flow, so opening other emails doesn't lose its place, and keeps its text and the replies
-/// picked in the save. After loading a save, the flow is rebuilt by replaying those replies with the
-/// actions switched off. In someone else's co-op game the reader is read-only: no reply buttons, and
-/// the emails' actions stay off.
+/// Shows modded emails in the inbox. Opening and replying are actions that run where the house runs
+/// (<see cref="SharedLetters"/>, <see cref="LetterRunner"/>); the reader shows the conversation as it
+/// was published, so in co-op every player sees the same one and anyone can answer it.
 /// </summary>
 internal static class MailReader
 {
-    private const string FlowPrefix = "NeetMail_";
-    private const string Paragraph = "\n\n";
-
-    private static readonly HashSet<string> LiveFlows = new HashSet<string>();
-    private static readonly List<string> Choices = new List<string>();
-    private static readonly StringBuilder Lines = new StringBuilder();
     private static EmailExpansionMod _mod;
     private static ReaderView _view;
     private static bool _loading;
 
-    // In someone else's co-op game: read only, no replies (the host's game runs the emails).
-    private static bool IsGuest => !WorldRole.RunsWorld;
+    // What the reader shows now, to refresh it when the conversation moves on.
+    private static EmailApp _app;
+    private static MailItem _mail;
+    private static string _key;
 
-    /// <summary>The email being read right now, for its conditions and actions; null otherwise.</summary>
-    public static MailItem Active { get; private set; }
+    /// <summary>The email being run right now, for its conditions and actions; null otherwise.</summary>
+    public static MailItem Active => LetterRunner.Active;
 
     public static void Init(EmailExpansionMod mod)
     {
         _mod = mod;
-        InkStory.Email.Created.Subscribe(mod, _ => LiveFlows.Clear());
+        LetterRunner.Init(mod);
+        SharedLetters.Init(mod);
+        SharedState.Changed.Subscribe(mod, OnChanged);
         // While a save loads, the game reopens every read email to rebuild the inbox. Nothing of
         // ours is restored yet then, so those opens are left alone.
         GameEvents.BeforeLoad.Subscribe(mod, () => _loading = true);
@@ -53,6 +45,7 @@ internal static class MailReader
         var mail = knot != null ? MailBook.ByKnot(knot.inkName) : null;
         if (mail == null)
         {
+            _key = null;
             _view?.Hide();
             return true; // One of the game's.
         }
@@ -60,159 +53,39 @@ internal static class MailReader
             return false;
 
         string key = Key(knot);
-        var letter = MailMemory.LetterFor(key);
         MailMemory.RecordRead(mail.Id);
-        Choices.Clear();
-        var story = InkStory.Email.Current;
-        if (story != null && !letter.Done)
-            Run(story, key, mail, letter, () => Catch(story, mail, letter));
-
-        Show(app, key, mail, letter, toBottom: false);
+        _app = app;
+        _mail = mail;
+        _key = null;
+        // Where the house runs this catches the letter up right away; elsewhere it asks the host,
+        // and the reader fills in when the answer arrives.
+        if (WorldRole.RunsWorld || !SharedLetters.TryGet(key, out _))
+            SharedLetters.Open(key, mail);
+        _key = key;
+        Show(toBottom: false);
         return false;
     }
 
-    private static void Reply(EmailApp app, string key, MailItem mail, int index)
+    private static void Show(bool toBottom)
     {
-        if (IsGuest)
+        if (_app == null || _key == null)
             return;
-        var letter = MailMemory.LetterFor(key);
-        var story = InkStory.Email.Current;
-        if (story == null || letter.Done)
-            return;
-        Choices.Clear();
-        Run(story, key, mail, letter, () =>
+        _view = ReaderView.For(_mod, _app, _view);
+        if (!SharedLetters.TryGet(_key, out var letter))
         {
-            Catch(story, mail, letter);
-            if (index >= story.currentChoices.Count)
-                return;
-            string reply = story.currentChoices[index].text;
-            story.ChooseChoiceIndex(index);
-            letter.Replies.Add(reply);
-            letter.Text += Paragraph + "<b>You:</b> " + reply;
-            string more = ReadOn(story);
-            if (more.Length > 0)
-                letter.Text += Paragraph + more;
-            Settle(story, letter);
-        });
-        Show(app, key, mail, letter, toBottom: true);
-    }
-
-    /// <summary>Gets the flow to where the letter is: started fresh, or replayed after a load.</summary>
-    private static void Catch(Story story, MailItem mail, MailMemory.Letter letter)
-    {
-        string flow = story.currentFlowName;
-        if (!LiveFlows.Add(flow))
-        {
-            Settle(story, letter);
+            _view.Show("...", Array.Empty<string>(), null, toBottom: false);
             return;
         }
-        story.ChoosePathString(mail.Knot);
-        if (!letter.Started)
-        {
-            letter.Started = true;
-            letter.Text = ReadOn(story);
-        }
-        else
-        {
-            Replay(story, letter);
-        }
-        Settle(story, letter);
+        string key = _key;
+        var mail = _mail;
+        _view.Show(letter.Text, letter.Done ? Array.Empty<string>() : (IReadOnlyList<string>)letter.Choices,
+            index => SharedLetters.Reply(key, mail, index), toBottom);
     }
 
-    private static void Replay(Story story, MailMemory.Letter letter)
+    private static void OnChanged(KeyValuePair<string, JToken> change)
     {
-        bool wasMuted = RuleSteps.Muted;
-        RuleSteps.Muted = true;
-        try
-        {
-            ReadOn(story);
-            foreach (string reply in letter.Replies)
-            {
-                int index = IndexOf(story, reply);
-                if (index < 0)
-                    break; // Something changed since; leave it at this reply.
-                story.ChooseChoiceIndex(index);
-                ReadOn(story);
-            }
-        }
-        finally
-        {
-            RuleSteps.Muted = wasMuted;
-        }
-    }
-
-    /// <summary>Notes the replies on offer, or that the email is finished.</summary>
-    private static void Settle(Story story, MailMemory.Letter letter)
-    {
-        Choices.Clear();
-        foreach (var choice in story.currentChoices)
-            Choices.Add(choice.text);
-        if (Choices.Count == 0 && !story.canContinue)
-            letter.Done = true;
-    }
-
-    private static void Run(Story story, string key, MailItem mail, MailMemory.Letter letter, Action body)
-    {
-        var previous = RuleContext.Active;
-        bool wasMuted = RuleSteps.Muted;
-        Active = mail;
-        RuleContext.Active = mail;
-        // A co-op guest reads along; what the email does (money, deliveries) happens in the host's game.
-        if (IsGuest)
-            RuleSteps.Muted = true;
-        try
-        {
-            story.SwitchFlow(FlowPrefix + key);
-            body();
-        }
-        catch (Exception e)
-        {
-            _mod.Log.Warn($"Email {mail.Id} stopped: {e.Message}");
-            letter.Done = true;
-            Choices.Clear();
-        }
-        finally
-        {
-            story.SwitchToDefaultFlow();
-            Active = null;
-            RuleContext.Active = previous;
-            RuleSteps.Muted = wasMuted;
-        }
-    }
-
-    private static void Show(EmailApp app, string key, MailItem mail, MailMemory.Letter letter, bool toBottom)
-    {
-        _view = ReaderView.For(_mod, app, _view);
-        _view.Show(letter.Text, letter.Done || IsGuest ? Array.Empty<string>() : (IReadOnlyList<string>)Choices,
-            index => Reply(app, key, mail, index), toBottom);
-    }
-
-    /// <summary>Everything up to the next replies or the end, one paragraph per line.</summary>
-    private static string ReadOn(Story story)
-    {
-        Lines.Clear();
-        while (story.canContinue)
-        {
-            string line = story.Continue().Trim();
-            if (line.Length == 0)
-                continue;
-            if (Lines.Length > 0)
-                Lines.Append(Paragraph);
-            // The game's own emails mark paragraphs and line breaks like this, often with a space after.
-            Lines.Append(line.Replace("^N ", Paragraph).Replace("^N", Paragraph).Replace("^n ", "\n").Replace("^n", "\n"));
-        }
-        return Lines.ToString();
-    }
-
-    private static int IndexOf(Story story, string text)
-    {
-        var choices = story.currentChoices;
-        for (int i = 0; i < choices.Count; i++)
-        {
-            if (choices[i].text == text)
-                return i;
-        }
-        return -1;
+        if (_key != null && _view != null && _view.IsShowing && SharedLetters.IsLetter(change.Key, out string key) && key == _key)
+            Show(toBottom: true);
     }
 
     /// <summary>One inbox entry: the same email can be in the inbox more than once.</summary>

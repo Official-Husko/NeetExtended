@@ -77,6 +77,9 @@ internal sealed class ReaderView
             ? current
             : new ReaderView(owner, app);
 
+    /// <summary>Showing a modded email (rather than the game's own text box).</summary>
+    public bool IsShowing => _root != null && _root.activeSelf;
+
     /// <summary>Shows <paramref name="text"/> and a reply button per choice.</summary>
     public void Show(string text, IReadOnlyList<string> choices, Action<int> onReply, bool toBottom)
     {

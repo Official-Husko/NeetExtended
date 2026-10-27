@@ -137,7 +137,7 @@ State of things:
 - The radio's tape starts from the top on each machine; the play position isn't shared.
 - Fire: the host spreads it and clients get its flames once a second, so a client sees a growing fire in steps. A flame a client puts out goes out on the host too (the nearest one). Candles and other flames a fire lights on a client stay lit only there.
 - Prank calls only ring on the host.
-- The inbox is the host's: every email that arrives there reaches everyone (a joining player gets the whole list). Which emails you've read is your own. Only the host can answer Email Expansion's emails: on a client they show without reply buttons, and what an email does (money, deliveries) happens when the host reads or answers it.
+- The inbox is the host's: every email that arrives there reaches everyone (a joining player gets the whole list). Which emails you've read is your own. Email Expansion's conversations are shared: anyone can open and answer them, the host's game runs them, and everyone sees the same conversation. What an email does (money, deliveries) happens once, on the host.
 
 Picking things up and pushing them:
 
@@ -172,7 +172,7 @@ Cost (two games on one PC, a house with about 550 shared things and 13 NPCs; `Wo
 - World's own work per physics step: about 0.1 ms on the host and 0.07 to 0.09 ms on a client, idle or with 30 items falling; the worst step was 1.2 ms, on the frame 30 items spawned at once. Per rendered frame it's under 0.02 ms.
 - Allocations stay at about 2 KB per frame for the whole game on both sides (the game alone measured about 11 KB per frame in earlier single-player runs), with no garbage collections from World in normal play.
 - The per-tick work only walks what moved lately (plus a quarter of the house per tick to notice things the physics woke up), NPC rigs and marked states; whole-house walks are left for joins, resyncs and reloads. A body knocked into motion by something World doesn't see can start streaming up to 0.2 s late.
-- Network traffic hasn't been measured yet.
+- Network traffic, whole mod (`CoopApi.Traffic`): idle, about 6 KB/s from the host to each client and 1 KB/s back (player and NPC poses, stock ticks, the card game). With 30 bricks dropped from 10 m, about 9 KB/s from the host over the 4.5 s they fell and settled.
 
 ## Testing with two games on one machine
 
