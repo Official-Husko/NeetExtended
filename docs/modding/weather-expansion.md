@@ -118,6 +118,8 @@ A real strike is `neet call sky.strike`. Dark scenes need a brightened copy of a
 
 Strike effects: `neet call sky.strike` (the effects start when the flash peaks, a few tenths of a second later). For the radio, spawn a `Radio`, a `Fuse` and a `Cassette_Walk`, then `obj.set` the radio's `Fuse`, call `InsertCassette` and `MusicSwitch`. For the phones dial a number with `Phone_Interface.ComposeNumber` (digits, then -1 to call). `features.set mod=WeatherExpansion id=FusePop enabled=true` and the setting `Fuse pop chance` at 1 trip a breaker on every strike.
 
+The Cheat Menu's World page has a SKY panel: strike lightning now (always) and drizzle, rain and storm buttons that call `Sky.SetWeather`. The weather buttons only show while a feature of this mod with the id `StormSchedule` is on, since nothing else turns the weather into rain, fog and thunder; the page rebuilds itself when that switches.
+
 ## Known limitations
 
 - The forecast site's lightning countdown is the thunder loop's own timer, so it reads "Can't tell" on a co-op client, while a strike is playing and when the thunder loop has stopped (the story's strike stops it unless the Unofficial NEET Patches' ThunderLoop fix is on).

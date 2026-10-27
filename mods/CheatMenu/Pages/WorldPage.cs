@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 namespace CheatMenu.Pages;
 
-/// <summary>Fire, power, doors and how fast the game runs.</summary>
+/// <summary>Fire, power, doors, lightning and weather, and how fast the game runs.</summary>
 internal sealed class WorldPage : CheatPage
 {
+    private readonly SkyPanel _sky = new SkyPanel();
     private Text _room;
+    private bool _weatherShown;
 
     public override string Title => "World";
     public override int Order => 30;
@@ -27,6 +29,9 @@ internal sealed class WorldPage : CheatPage
         power.Button("POWER OFF", () => Run(() => HouseSystems.SetHousePower(false), "Power off everywhere."), 160f);
         power.Button("UNLOCK ALL DOORS", () => Run(() => Doors.UnlockAll(), "Every door is unlocked."), 200f);
 
+        _weatherShown = SkyPanel.WeatherButtons;
+        _sky.Build(ui, (cheat, success) => Run(cheat, success));
+
         var time = ui.Panel();
         time.Header("TIME");
         if (WorldRole.IsShared)
@@ -43,6 +48,12 @@ internal sealed class WorldPage : CheatPage
 
     protected override void RefreshPage()
     {
+        if (SkyPanel.WeatherButtons != _weatherShown)
+        {
+            Rebuild();
+            return;
+        }
+        _sky.Refresh();
         if (GameRefs.Player != null)
             _room.text = "YOU'RE IN: " + CurrentRoom().ToString().ToUpperInvariant();
     }

@@ -272,7 +272,7 @@ Press **Insert** (changeable in Mod Settings). Four tabs:
 
 - **Player**: god mode, needs that don't drain, fill all needs, movement speed, teleport.
 - **Spawn**: items, people and creatures.
-- **World**: start or put out a fire, power on or off, unlock all doors, game speed.
+- **World**: start or put out a fire, power on or off, unlock all doors, strike lightning, set the weather (drizzle, rain or storm, only while Weather Expansion's storm schedule is on), game speed.
 - **Computer**: money, taxes, crystals and the card game.
 
 The game keeps running while the menu is open unless you turn on pausing in Mod Settings.
