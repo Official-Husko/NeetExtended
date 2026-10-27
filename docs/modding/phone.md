@@ -52,7 +52,7 @@ A call pack doesn't need code. This is a complete mod:
 
 ```
 Mods/MyCalls/
-  mod.json          { "id": "MyCalls", "name": "My Calls", "version": "1.0.0", "dependencies": { "PhoneExpansion": "0.1.0" } }
+  mod.json          { "id": "MyCalls", "name": "My Calls", "version": "1.0.0", "dependencies": { "PhoneExpansion": "0.2.0" } }
   phone/
     landlord.json
 ```
@@ -222,7 +222,7 @@ The older names `PhoneAct`, `PhoneCheck`, `PhoneFlag`, `SetPhoneFlag` and `AddPh
 
 ## From code
 
-Namespace `PhoneExpansion.Calls`; conditions, actions and flags are in the framework's `NeetModKit.Rules` (see [framework.md](framework.md#rules)). Add `"PhoneExpansion": "0.1.0"` to your mod's dependencies and reference the project.
+Namespace `PhoneExpansion.Calls`; conditions, actions and flags are in the framework's `NeetModKit.Rules` (see [framework.md](framework.md#rules)). Add `"PhoneExpansion": "0.2.0"` to your mod's dependencies and reference the project.
 
 ```csharp
 // A call with hand-written Ink.

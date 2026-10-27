@@ -1,9 +1,9 @@
 {
   "id": "PhoneExpansion",
   "name": "Phone Expansion",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "pawbeans",
   "description": "New numbers to call and new calls that ring in, with choices and real consequences. Calls are plain JSON or Ink files in any mod's phone folder.",
-  "dependencies": { "NeetModKit": "0.1.0" },
+  "dependencies": { "NeetModKit": "0.2.0" },
   "hotReload": true
 }

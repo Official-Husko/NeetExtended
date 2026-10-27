@@ -1,7 +1,7 @@
 {
   "id": "NeetModKit",
   "name": "Framework",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "pawbeans",
   "description": "Shared framework other mods build on: game access, items, card game, console commands, mod menu.",
   "hotReload": true,
