@@ -7,5 +7,10 @@ namespace OpenSaves.Patches;
 [HarmonyPatchCategory(Features.SaveCleanupFeature.FeatureId)]
 internal static class SaveCleanupPatch
 {
-    private static void Postfix() => SaveCleanup.Prune();
+    // Not when the save was skipped (SaveLock): those saves aren't ours to tidy up after.
+    private static void Postfix(bool __runOriginal)
+    {
+        if (__runOriginal)
+            SaveCleanup.Prune();
+    }
 }
