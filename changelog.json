@@ -1,6 +1,58 @@
 {
   "releases": [
     {
+      "version": "Unreleased",
+      "date": "2026-10-27",
+      "released": false,
+      "added": [
+        {
+          "text": "About 50 new calls that ring in: telemarketers, creepy callers, wrong numbers, kids prank calling you, the neighbours, people from your old life, a radio show and surveys.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "14 new numbers to call, including a psychic, Dial-a-Joke, a crisis line, a trivia line and the kids' own hotline.",
+          "area": "Phone Expansion"
+        },
+        {
+          "text": "Email Expansion: new emails in the computer's inbox that you can reply to. Replies can pay you, cost you money, send things to your door and more.",
+          "area": "Email Expansion"
+        },
+        {
+          "text": "About 70 new emails: scams, mom and grandpa, store orders, cults and Satan, your online life, bills and the HOA, creepy ones, and follow-ups to your phone calls.",
+          "area": "Email Expansion"
+        }
+      ],
+      "changed": [
+        {
+          "text": "The phone calls now sound like the game's own: cruder, louder, with its broken English.",
+          "area": "Phone Expansion"
+        }
+      ],
+      "fixed": [
+        {
+          "text": "Emails from a mod you removed show a short note instead of breaking the inbox.",
+          "area": "Framework"
+        },
+        {
+          "text": "The computer's inbox no longer comes back empty after loading a save.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "The game's spam emails no longer arrive all over again after every load.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "After loading, the next spam email comes when it was due instead of right away.",
+          "area": "Unofficial NEET Patches"
+        },
+        {
+          "text": "Spam emails no longer come twice as often after loading a save.",
+          "area": "Unofficial NEET Patches"
+        }
+      ],
+      "removed": []
+    },
+    {
       "version": "0.1.0",
       "date": "2026-10-27",
       "released": true,
