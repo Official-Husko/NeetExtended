@@ -1,6 +1,6 @@
 # Weather Expansion
 
-The Weather Expansion mod (`mods/WeatherExpansion`, id `WeatherExpansion`) changes how the storm outside looks. The house is one rainy night with thunder; this mod adds looks to it. Each look is a `ModFeature` marked experimental, so it can be switched off on its own on the Mods page, and each one undoes itself when it's switched off, when the mod unloads (hot reload) and when the house scene goes away.
+The Weather Expansion mod (`mods/WeatherExpansion`, id `WeatherExpansion`) changes the storm outside. The house is one rainy night with thunder; this mod adds looks to it, and makes the storm change over the night. Each look is a `ModFeature` marked experimental, so it can be switched off on its own on the Mods page, and each one undoes itself when it's switched off, when the mod unloads (hot reload) and when the house scene goes away.
 
 Lightning also has consequences: the TV, the radio and the phones react to every strike, and a strike can trip a breaker in the fuse box. Those are features too, described under [Lightning effects](#lightning-effects).
 
@@ -8,7 +8,9 @@ It only uses what the game already ships: no custom shader and no extra download
 
 ## What's local in co-op
 
-All of it, except the fuse pop. Every game draws its own looks (and runs its own lightning effects on the TV, radio and phones) from its own scene: nothing is sent over the network and no setting is `[Shared]`. The looks that follow lightning read the moon light's intensity (the game's own flash) in the local game, so they light up whenever that game's moon does; whether a client's moon flashes along with the host's is up to the co-op world sync, not this mod. The weather state (`Sky.Weather`: drizzle, rain, storm) is the framework's; this mod only reads it, so the looks follow whatever mod drives it (see [Following the weather](#following-the-weather)). The lightning effects follow `Sky.OnStrike`, which every game raises at the moment of the flash (a client replays the host's strikes), so they happen together without any message of their own. The fuse pop is the one effect on shared state: only the game that runs the house does it (`WorldRole.RunsWorld`) and Co-op carries the lever to the others. How hard a strike hits comes from the weather every game shares, so they last as long everywhere.
+The looks and the lightning effects are local, except the fuse pop: every game draws its own looks (and runs its own lightning effects on the TV, radio and phones) from its own scene: nothing is sent over the network and no setting is `[Shared]`. The looks that follow lightning read the moon light's intensity (the game's own flash) in the local game, so they light up whenever that game's moon does; whether a client's moon flashes along with the host's is up to the co-op world sync, not this mod. The weather state (`Sky.Weather`: drizzle, rain, storm) is the framework's; this mod only reads it, so the looks follow whatever mod drives it (see [Following the weather](#following-the-weather)). The lightning effects follow `Sky.OnStrike`, which every game raises at the moment of the flash (a client replays the host's strikes), so they happen together without any message of their own. The fuse pop is the one effect on shared state: only the game that runs the house does it (`WorldRole.RunsWorld`) and Co-op carries the lever to the others. How hard a strike hits comes from the weather every game shares, so they last as long everywhere.
+
+The storm itself is the host's. Only the host schedules the weather (`WorldRole.RunsWorld`) and strikes lightning at its pace; it publishes `Sky.Weather`, Co-op sends that to the clients (`World/Ambience/WeatherSync`, messages 164 and 165) and sets it there with Co-op as the owner. A client's changing-weather feature doesn't schedule or set anything: it reads `Sky.Weather` and eases its own rain and storm sound to match. The settings that shape the storm (how often it changes, the strongest weather, storminess, thunder frequency) are `[Shared]`, so the host's count. The looks that follow the storm read `Sky.Weather`, so they follow the host's weather too.
 
 ## Looks and settings
 
@@ -24,6 +26,7 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 | Lightning crackle on the radio (`RadioCrackle`) | A radio that's playing crackles and its music cuts in and out for a moment. | Radio crackle (0.7, 0 to 1) |
 | Lightning on the phones (`PhoneStatic`) | The handset screens garble for a moment; a call in progress gets a burst of static. | Static in phone calls (on) |
 | Lightning pops a fuse (`FusePop`, off by default) | A strike can trip a breaker and cut a room's power until someone flips it back. | Fuse pop chance (0.1 a strike, 0 to 1) |
+| Changing weather (`StormSchedule`) | The storm moves between drizzle, rain and storm, with a strength, and never clears up. | Weather changes every (4 minutes, 1 to 20), Strongest weather (storm), Storminess (0.5, 0 to 1), Thunder frequency (1, 0.25 to 4) |
 
 ## The forecast site and the weather line
 
@@ -59,6 +62,30 @@ A window is two invisible paintable panes (`Wall_Window_*_Pane_1` and `_Pane_2`,
 
 Wetness (the setting times the weather's wetness, see below) sets how fast new drops land and grow; the weather's speed sets how fast running drops slide. Window haze is the glass shader's `_Opacity` with a blue-grey tint: a thin film that makes the drops show in the dark. Once a second the quads check their panes and hide when either is broken or gone; the window parent owns them, so a window that is destroyed takes its quad along.
 
+## How the changing weather works
+
+`Storm/StormScheduleFeature.cs` is a small director. The host moves through spells of weather (a `StormPhase`: kind and strength). Everything about picking lives in `Storm/StormPlan.cs`:
+
+- A spell lasts the "Weather changes every" setting times 0.5 to 1.5. The next spell is picked when a spell starts and published as the forecast (`WeatherState.NextKind`, `NextAt`).
+- Kinds only move one step (drizzle, rain, storm), or stay and get lighter or heavier (strength 0.7 to 1.3, a shift of 0.12 to 0.3). A step starts at the strength that keeps the amount of rain near where it was, so nothing jumps from a thin drizzle to a downpour. Storminess weights up against down (0.5 is even: about 28% drizzle, 44% rain, 28% storm over a long night); Strongest weather cuts off the top, and lowering it while a storm runs eases the weather down a step.
+- There is no dry spell: the table has nothing below a drizzle.
+
+`Storm/StormLevels.cs` is the table of what each kind sets, scaled by the strength:
+
+| | Rain (`Sky.RainAmount`) | Storm sound (`Sky.StormVolume`) | Wait between strikes |
+| --- | --- | --- | --- |
+| Drizzle | 0.35 | 0.6 | 120 to 360 s |
+| Rain | 1 | 1 | 30 to 150 s |
+| Storm | 2.2 | 1.7 | 10 to 40 s |
+
+The wait is divided by the strength and by Thunder frequency, and is given to the kit through `Sky.SetThunderDelay`. `Storm/StormRamp.cs` eases the rain and sound from one level to the next (a third of the spell, 6 to 45 s, five steps a second) and the wait for lightning is asked for again halfway through and at the end of the change (`Sky.Reschedule`), so a storm that arrives doesn't sit out a drizzle's wait. The feature is the owner of those multipliers, the thunder delay and the weather (never shared with another feature), so switching it off or unloading the mod puts the game's own values back. It doesn't touch fog density; the fog look reads `Sky.Weather` and sets its own `Sky.FogAmount`.
+
+Another mod setting the weather (a cheat) is taken as the new spell, with a quick change, and the schedule carries on from it. If a mod lets go of the weather the feature sets its own again.
+
+The state is saved with the house (`Storm/StormMemory.cs`, `ModSaveData` key `WeatherExpansion.Storm`): kind, strength, how far into the spell, what comes next and how long until then, as seconds, because the play clock differs between runs. A load carries on where it was; a save from before this feature, or a new game, starts with the game's steady rain. A hot reload hands the state to the new copy.
+
+A client (a game that shows someone else's house) runs the same feature as a follower: no schedule, no `SetWeather`, no thunder timer. It eases its rain and sound to each `Sky.Weather` that arrives, in 12 s.
+
 ## Following the weather
 
 `Storm/WeatherFollow.cs` reads `Sky.Weather` once per frame (`Kind` and `Intensity`) and turns it into three numbers that the looks multiply in, each moving toward its new value over a few seconds (time constant 3 s) when the weather changes, so a storm rolls in instead of switching on:
@@ -89,6 +116,8 @@ Intensity 1 is the kind's usual strength; wetness is also multiplied by it, and 
 | `WeatherExpansionMod.cs` | Registers the features, the settings and the forecast site, runs `FogLook.Tick` and `ForecastApp.Tick` every frame. |
 | `WeatherExpansionConfig.cs` | The settings. |
 | `Storm/WeatherFollow.cs` | Turns `Sky.Weather` into smoothed multipliers for fog, mist, wetness and drop speed. |
+| `Storm/StormScheduleFeature.cs` | The changing weather: the schedule, publishing, the thunder delay, a follower on clients. |
+| `Storm/StormPlan.cs`, `StormLevels.cs`, `StormRamp.cs`, `StormMemory.cs` | Picking the next spell, what each kind sets, easing between levels, the save entry. |
 | `Forecast/ForecastApp.cs`, `ForecastPage.cs`, `ForecastWords.cs` | The forecast site on the computer. |
 | `phone/weather-line.jsonc` | The weather hotline and its ad. |
 | `Fog/FogLook.cs`, `FlashLevel.cs` | Applying fog and sky tint, and following the lightning. |
@@ -103,6 +132,8 @@ Intensity 1 is the kind's usual strength; wetness is also multiplied by it, and 
 | `Lightning/TvStaticFeature.cs`, `RadioCrackleFeature.cs`, `PhoneStaticFeature.cs`, `FusePopFeature.cs` | The four strike effects. |
 
 ## Testing
+
+The weather sets itself: sample `neet call sky.get` over time with `game.timescale value=10` (a spell is 4 minutes of game time), and `neet call sky.set weather=storm intensity=1.2` is taken as a new spell.
 
 The settings and switches work live, so most checks are `neet call settings.set` and `neet call features.set`. The weather comes from the bridge's `sky.set`:
 
@@ -124,7 +155,11 @@ The Cheat Menu's World page has a SKY panel: strike lightning now (always) and d
 
 - The forecast site's lightning countdown is the thunder loop's own timer, so it reads "Can't tell" on a co-op client, while a strike is playing and when the thunder loop has stopped (the story's strike stops it unless the Unofficial NEET Patches' ThunderLoop fix is on).
 - The weather line is only read by Phone Expansion. The forecast says the same thing on every call until the weather changes; the lines are picked at random from a few variants.
-- Nothing here is saved with the game. The looks follow `Sky.Weather` but only the three kinds (drizzle, rain, storm); there is no clear spell, and nothing in this mod changes the weather.
+- There is no clear spell or dry weather: it always rains, by design. The rain, wind and thunder levels are fixed numbers in `StormLevels`, not settings.
+- A spell's length is only picked from the setting when it starts; a changed "Weather changes every" shows from the next spell. Strongest weather, Storminess and Thunder frequency count at once.
+- Switching the changing weather off and on again starts over from steady rain, not from where it was.
+- A cheat that sets the weather and also sets its own rain amount stacks with the storm's: the kit multiplies every mod's factor.
+- A client sees the host's weather change within a moment, but its own clock differs, so a forecast's "in N seconds" can drift by a few seconds.
 - There is no height fog and no fog that sits in the sky: Unity's fog is one global colour and density, and a fog volume needs a shader the game doesn't ship. Mist banks stand in for it, over the two yards only.
 - Mist puffs are flat billboards without soft edges, so one that drifts into a wall or the ground shows a hard line there.
 - Window rain is drawn on the inside of the glass and only seen from inside; from the yard the windows look as they did. Some windows face a wall close outside, and that wall is what shows through their drops.

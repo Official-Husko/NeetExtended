@@ -194,7 +194,7 @@ Tells you when a newer version is out. Always on; switch off **Check for updates
 
 ## Weather Expansion (experimental)
 
-Changes how the storm outside looks. Each look is its own switch on the Mods page, and the amounts are in Mod Settings under "Weather Expansion". The looks and the TV, radio and phone effects are done by your own game, so in co-op everybody sees and hears their own copy at the same strike.
+Changes how the storm outside looks. Each look is its own switch on the Mods page, and the amounts are in Mod Settings under "Weather Expansion". The looks and the TV, radio and phone effects are done by your own game, so in co-op everybody sees and hears their own copy at the same strike. The changing weather is the host's.
 
 - **Stormy fog**: the night's fog is a dark blue-grey instead of pure black, so the house and the trees show as shapes in the haze, and it slowly thickens and thins. It follows the weather: thinner in a drizzle, thicker in a storm. **Fog thickness** and **Fog brightness** in Mod Settings.
 - **Lightning glow**: a lightning flash lights up the fog and the sky as well as the things near you, so the sky shows the landscape behind the yard for a moment. **Lightning glow** in Mod Settings.
@@ -206,6 +206,7 @@ Changes how the storm outside looks. Each look is its own switch on the Mods pag
 - **Lightning pops a fuse** (off until you switch it on): a strike can trip a breaker in the fuse box and cut a room's power until you flip it back. **Fuse pop chance** in Mod Settings. In co-op the host's game does it and everybody sees the breaker go.
 - **Weather hotline**: call 555-9328 and Skip reads you the weather and what the forecast says comes next, in a different way each time. He makes something up when nobody has a forecast. An ad for the number rings in once (needs Phone Expansion).
 - **Forecast site**: **Wetballs Weather** on the computer (address `wetballs`, or Weather in the start menu) shows the weather now, what's coming with a countdown and the next lightning.
+- **Changing weather**: the storm moves over the night between drizzle, rain and a full storm, lighter and heavier, and never clears up. The rain gets thinner or heavier, the wind louder or quieter, and lightning strikes often in a storm and hardly at all in a drizzle. It carries on where it was when you load a save. **Weather changes every (minutes)**, **Strongest weather**, **Storminess** (which way it leans) and **Thunder frequency** in Mod Settings. In co-op the host's weather and settings count for everyone.
 
 ## Randomizer
 

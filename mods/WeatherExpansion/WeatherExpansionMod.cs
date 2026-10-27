@@ -8,6 +8,7 @@ using WeatherExpansion.Storm;
 using WeatherExpansion.Fog;
 using WeatherExpansion.Lightning;
 using WeatherExpansion.Forecast;
+using NeetModKit.Saves;
 using WeatherExpansion.Windows;
 
 namespace WeatherExpansion;
@@ -19,6 +20,8 @@ namespace WeatherExpansion;
 /// </summary>
 public sealed class WeatherExpansionMod : NeetMod
 {
+    private const string SaveKey = "WeatherExpansion.Storm";
+
     internal static WeatherExpansionMod Instance { get; private set; }
     internal static ConfigFile<WeatherExpansionConfig> Config { get; private set; }
 
@@ -38,6 +41,8 @@ public sealed class WeatherExpansionMod : NeetMod
         ModFeatures.Register(this, new PhoneStaticFeature());
         ModFeatures.Register(this, new FusePopFeature());
         ForecastApp.Register(this);
+        ModFeatures.Register(this, new StormScheduleFeature());
+        ModSaveData.Register<StormMemory.Saved>(this, StormMemory.ForSave, StormMemory.FromSave, SaveKey);
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 

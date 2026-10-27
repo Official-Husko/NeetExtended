@@ -1,9 +1,10 @@
 using System.ComponentModel;
+using NeetModKit.Game;
 using NeetModKit.Settings;
 
 namespace WeatherExpansion;
 
-/// <summary>Stored in Mods/WeatherExpansion/config.json and shown in the mod menu. The looks and the TV, radio and phone effects are about your own game; the fuse pop changes the house.</summary>
+/// <summary>Stored in Mods/WeatherExpansion/config.json and shown in the mod menu. The looks and the TV, radio and phone effects are about your own game; the fuse pop changes the house, and the settings marked shared shape the storm itself (in co-op the host's count).</summary>
 public sealed class WeatherExpansionConfig
 {
     [Label("Fog thickness")]
@@ -54,4 +55,26 @@ public sealed class WeatherExpansionConfig
     [Range(0f, 1f)]
     [Description("The chance that a strike trips a breaker in the fuse box while \"Lightning pops a fuse\" is on (it is off by default). 0.1 is one strike in ten.")]
     public float FusePopChance = 0.1f;
+    [Label("Weather changes every (minutes)")]
+    [Range(1f, 20f)]
+    [Description("About how long a spell of weather lasts before it changes, while \"Changing weather\" is on. Each spell lasts between half and one and a half times this.")]
+    [Shared]
+    public float WeatherMinutes = 4f;
+
+    [Label("Strongest weather")]
+    [Description("The heaviest weather the night gets to: drizzle, rain or storm.")]
+    [Shared]
+    public WeatherKind StrongestWeather = WeatherKind.Storm;
+
+    [Label("Storminess")]
+    [Range(0f, 1f)]
+    [Description("Which way the weather leans. 0.5 is even, towards 1 it spends more time in heavy rain and storms, towards 0 more in drizzle.")]
+    [Shared]
+    public float Storminess = 0.5f;
+
+    [Label("Thunder frequency")]
+    [Range(0.25f, 4f)]
+    [Description("How often lightning strikes, compared to what the weather usually brings. 2 is twice as often, 0.5 half as often.")]
+    [Shared]
+    public float ThunderFrequency = 1f;
 }
