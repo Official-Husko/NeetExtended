@@ -1,4 +1,5 @@
 using Coop.World.Forwarding;
+using Coop.World.Hostiles;
 using Coop.World.Objects;
 using Coop.World.Simulation;
 using HarmonyLib;
@@ -8,7 +9,7 @@ using UnityEngine.AI;
 namespace Coop.World.Patches;
 
 /// <summary>
-/// Host: the skeleton parasite goes after the nearest player, not only the host's. Reaching a remote
+/// Host: the skeleton parasite goes after the nearest player who's up, not only the host's. Reaching a remote
 /// player, it possesses them in their own game (see <see cref="Forwarder.Possessed"/>) and leaves the
 /// way its own possession does.
 /// </summary>
@@ -30,7 +31,7 @@ internal static class ParasitePatches
     {
         if (!Hosting)
             return true;
-        var target = PlayerRooms.Nearest(__instance.transform.position, out _);
+        var target = Targets.NearestAlive(__instance.transform.position, out _);
         if (target == null)
             return true;
         __result = new AITarget(Brain.GetValidNavmeshDestination(target.transform.position));
@@ -43,7 +44,7 @@ internal static class ParasitePatches
     {
         if (!Hosting)
             return true;
-        var target = PlayerRooms.Nearest(__instance.transform.position, out byte slot);
+        var target = Targets.NearestAlive(__instance.transform.position, out byte slot);
         if (target == null || slot == WorldSide.LocalSlot)
             return true; // The host's own player: the game's own possession.
         var nav = Nav(__instance);

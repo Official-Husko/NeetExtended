@@ -24,7 +24,8 @@ namespace Coop.World.Forwarding;
 /// - NpcDamage (to the host): NPC ref, position, amount, damage kind, force (optional);
 /// - Possess: the skeleton parasite that got the player (its mask goes on their face);
 /// - Kill, Skeletonize, Knockout (seconds): the story did it to the player it was talking to;
-/// - Stat: name, set (else add), value: a rule changed a stat of the player it was about.
+/// - Stat: name, set (else add), value: a rule changed a stat of the player it was about;
+/// - Disarm: hand: a cop knocked what's in it out of the player's hand.
 /// </summary>
 internal static class Forwarder
 {
@@ -36,6 +37,7 @@ internal static class Forwarder
     private const byte Skeletonize = 5;
     private const byte Knockout = 6;
     private const byte Stat = 7;
+    private const byte Disarm = 8;
 
     // What the game's explosions push bodies with (Commons.ExplosionDamage).
     private const float BlastForce = 100f;
@@ -97,6 +99,16 @@ internal static class Forwarder
             return;
         var w = Begin(slot, kind);
         w.Put(amount);
+        Send(slot, w);
+    }
+
+    /// <summary>Host: a cop knocked something out of a remote player's hand (what it does to the host's player).</summary>
+    public static void Disarmed(byte slot, int hand)
+    {
+        if (!WorldSide.Running || !WorldSide.IsHost)
+            return;
+        var w = Begin(slot, Disarm);
+        w.Put((byte)hand);
         Send(slot, w);
     }
 
@@ -173,6 +185,9 @@ internal static class Forwarder
             case Stat:
                 ChangeStat(reader.GetString(), reader.GetBool(), reader.GetFloat());
                 break;
+            case Disarm:
+                LoseHeld(reader.GetByte());
+                break;
         }
     }
 
@@ -182,6 +197,13 @@ internal static class Forwarder
         var player = WorldSide.LocalPlayer;
         if (player != null && player.TryGetComponent(out PlayerStats stats) && stats.health != null)
             stats.health.Affect(position, amount, kind, force);
+    }
+
+    private static void LoseHeld(int hand)
+    {
+        var player = WorldSide.LocalPlayer;
+        if (player != null && player.TryGetComponent(out Player_Abilities hands) && hand < hands.pickups.Length && hands.pickups[hand] != null)
+            hands.Drop((Hands)hand);
     }
 
     private static void TakeBlast(Vector3 centre, float radius)

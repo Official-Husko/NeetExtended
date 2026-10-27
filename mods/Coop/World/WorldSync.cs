@@ -1,6 +1,7 @@
 using Coop.Session;
 using Coop.World.Economy;
 using Coop.World.Forwarding;
+using Coop.World.Hostiles;
 using Coop.World.Hazards;
 using Coop.World.Manifest;
 using Coop.World.Npcs;
@@ -137,6 +138,7 @@ internal static class WorldSync
     {
         WorldSide.Running = false;
         TalkSync.Stop();
+        Hitman.Clear();
         NetObjects.Clear();
         StateTrackers.Clear();
         StateSync.Clear();
@@ -195,6 +197,7 @@ internal static class WorldSync
             CopVanSync.HostTick();
             RemoteNeeds.HostTick();
             TalkSync.HostLateUpdate();
+            Hitman.Tick();
         }
         else
             NpcPoseReceiver.LateTick();

@@ -120,6 +120,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### Watch list
 
+- A cop knocking an item out of a remote player's hand: the forwarding is tested (the item drops in their game and goes back to the host), but the trigger, the game's own (something that isn't a door blocks the shot, under 1.7 m, while chasing), hasn't been seen in play yet; in tests the cop's ray passed under the held box and they shot instead.
 - Seen once, after a long session with dozens of hot reloads: doors stopped taking clicks in both games until both restarted. The game marks what a hand grabs with `Usable.player` (always together with `Player_Abilities.pickups`) and refuses to pick up anything whose `player` is still set, so a drag that ends without the game's own release (a reload mid-drag, a forced hand-back) leaves a door nobody can grab. `HoldRepair` now releases such holds (checked once a second, released the game's way after two checks, logged once per object); tested with a faked stuck door, and a real hold isn't touched. If doors or items stop taking clicks again, `CoopApi.LookAt`, `RayAll`, `LayerOf` and `Patched` show what the click meets.
 
 ### Scenes and story
@@ -160,7 +161,9 @@ NPCs:
 
 - NPCs think only on the host. Clients see their position and rotation (corpses included), the walking, sitting, crouching and death animations, dancing, speed and raised hands. They don't see crouch height, kicks, or an NPC taking clothes off (dressing is shared, undressing isn't). Skeletonizing and gibbing should come through as the spawns and destroys they are; untested.
 - What hurts a player hurts their real body, whoever's game it happened in: NPC punches, cop shots, player punches and kicks, knives, guns, traps and explosions (with their push). Burns come from each game's own copy of the fire. A client's hits on an NPC go to the host's real NPC.
-- Not passed on yet: spiders only go after NPCs and the host's player; a rat held by a client doesn't bite; NPCs and cops can't knock things out of a remote player's hands.
+- Enemies go after the nearest player who's up, host or remote: the cop van's agents, the hostile NPC, house spiders (within their 4 m reach) and the skeleton parasite. A downed player counts as dead for them. Cops shoot their one target until it's down or dead and then leave, like the game's raid after its one kill. The hostile NPC goes after the next player, anywhere in the house. A cop up close knocks things out of a remote player's hands like out of the host's. The number of cops doesn't grow with more players.
+- `Coop.World.Contracts.SendHitman(slot, delay)` (host) sends the cop van after one player only, wherever they are; the agents leave once that player is down, dead or gone. One at a time, and a raid's van already in the street goes first. A hot reload of Co-op turns a hitman in progress into an ordinary raid.
+- Not passed on yet: a rat held by a client doesn't bite.
 
 Conversations and the phones:
 
