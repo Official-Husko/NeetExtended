@@ -35,6 +35,8 @@ internal sealed class PlayerPuppet : MonoBehaviour
 
     public byte Slot { get; private set; }
 
+    internal SkinnedMeshRenderer Skin => _skin;
+
     internal Nameplate Plate { get; set; }
 
     /// <summary>The experimental physics arms, or null for the body's own arms.</summary>
@@ -70,7 +72,22 @@ internal sealed class PlayerPuppet : MonoBehaviour
         _hands = hands;
     }
 
-    public void Dress(in Appearance look) => PuppetDresser.Apply(_skin, _hands, look);
+    private Appearance _appearance;
+    private bool _dressed, _incomplete;
+
+    public void Dress(in Appearance look)
+    {
+        _appearance = look;
+        _dressed = true;
+        _incomplete = !PuppetDresser.Apply(_skin, _hands, look);
+    }
+
+    /// <summary>Dresses the body again if a worn item wasn't here when it was dressed (<see cref="AppearanceSync"/> asks about twice a second).</summary>
+    internal void Redress()
+    {
+        if (_dressed && _incomplete)
+            _incomplete = !PuppetDresser.Apply(_skin, _hands, _appearance);
+    }
 
     public void SetDowned(bool down)
     {

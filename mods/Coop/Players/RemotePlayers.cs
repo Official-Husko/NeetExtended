@@ -33,6 +33,16 @@ internal static class RemotePlayers
     public static PlayerPuppet Find(byte slot) =>
         Puppets.TryGetValue(slot, out var puppet) && puppet != null ? puppet : null;
 
+    /// <summary>Bodies dressed before a worn item arrived try again.</summary>
+    public static void Redress()
+    {
+        foreach (var puppet in Puppets.Values)
+        {
+            if (puppet != null)
+                puppet.Redress();
+        }
+    }
+
     private static void OnPose(in Sender from, NetDataReader reader)
     {
         var pose = PlayerPose.Read(reader, out byte slot);

@@ -39,6 +39,7 @@ internal static class AppearanceSync
         if (!CoopSession.InWorld || Time.time < _nextCheck)
             return;
         _nextCheck = Time.time + CheckInterval;
+        RemotePlayers.Redress();
         var player = HouseManager._ != null ? HouseManager._.player : null;
         if (player == null || !player.TryGetComponent(out Player_Abilities abilities))
             return;

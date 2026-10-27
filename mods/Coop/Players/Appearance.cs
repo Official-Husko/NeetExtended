@@ -1,11 +1,18 @@
+using Coop.World.Objects;
 using LiteNetLib.Utils;
 using UnityEngine;
 
 namespace Coop.Players;
 
 /// <summary>
-/// How a player looks: the clothes they wear (by item name: shoes, pants, shirt), which outfit the
-/// body mesh shows, and the body shape. Sent when it changes.
+/// How a player looks: the clothes they wear (shoes, pants, shirt), which outfit the body mesh shows,
+/// and the body shape. Sent when it changes.
+///
+/// Each worn piece travels as the shared item itself (its net ref, so the other games dress the body
+/// in that item's own material: a custom picture, or whatever else the item shows), its prefab name
+/// (the stand-in while the item isn't shared or hasn't arrived yet) and a dirty bit (the pants after
+/// an accident). Layout: slot, shoes, pants, shirt names, attire, fat, body type, muscle, then the
+/// three item refs and the dirty bits.
 /// </summary>
 internal struct Appearance
 {
@@ -17,20 +24,25 @@ internal struct Appearance
     public const int MuscleShape = 4;
 
     public string Shoes, Pants, Shirt;
+    public NetRef ShoesItem, PantsItem, ShirtItem;
+
+    /// <summary>Bit 0 shoes, 1 pants, 2 shirt: the piece is dirty (<c>Wearable.dirty</c>).</summary>
+    public byte Dirty;
     public byte Attire;
     public float Fat, BodyType, Muscle;
 
     public string Piece(int index) => index == 0 ? Shoes : index == 1 ? Pants : Shirt;
 
+    public NetRef Item(int index) => index == 0 ? ShoesItem : index == 1 ? PantsItem : ShirtItem;
+
+    public bool IsDirty(int index) => (Dirty & (1 << index)) != 0;
+
     public static Appearance Of(Player_Abilities abilities)
     {
-        var look = new Appearance
-        {
-            Shoes = ClothName(abilities, 0),
-            Pants = ClothName(abilities, 1),
-            Shirt = ClothName(abilities, 2),
-            Attire = (byte)abilities.currentAttire,
-        };
+        var look = new Appearance { Attire = (byte)abilities.currentAttire };
+        look.Shoes = Worn(abilities, 0, ref look.ShoesItem, ref look.Dirty);
+        look.Pants = Worn(abilities, 1, ref look.PantsItem, ref look.Dirty);
+        look.Shirt = Worn(abilities, 2, ref look.ShirtItem, ref look.Dirty);
         var body = abilities.neetRend;
         if (body != null && body.sharedMesh != null)
         {
@@ -43,6 +55,7 @@ internal struct Appearance
 
     public bool SameAs(in Appearance other) =>
         Shoes == other.Shoes && Pants == other.Pants && Shirt == other.Shirt && Attire == other.Attire &&
+        ShoesItem.Equals(other.ShoesItem) && PantsItem.Equals(other.PantsItem) && ShirtItem.Equals(other.ShirtItem) && Dirty == other.Dirty &&
         Mathf.Approximately(Fat, other.Fat) && Mathf.Approximately(BodyType, other.BodyType) && Mathf.Approximately(Muscle, other.Muscle);
 
     public void Write(NetDataWriter writer, byte slot)
@@ -55,12 +68,16 @@ internal struct Appearance
         writer.Put(Fat);
         writer.Put(BodyType);
         writer.Put(Muscle);
+        ShoesItem.Write(writer);
+        PantsItem.Write(writer);
+        ShirtItem.Write(writer);
+        writer.Put(Dirty);
     }
 
     public static Appearance Read(NetDataReader reader, out byte slot)
     {
         slot = reader.GetByte();
-        return new Appearance
+        var look = new Appearance
         {
             Shoes = reader.GetString(),
             Pants = reader.GetString(),
@@ -70,14 +87,27 @@ internal struct Appearance
             BodyType = reader.GetFloat(),
             Muscle = reader.GetFloat(),
         };
+        look.ShoesItem = NetRef.Read(reader);
+        look.PantsItem = NetRef.Read(reader);
+        look.ShirtItem = NetRef.Read(reader);
+        look.Dirty = reader.GetByte();
+        return look;
     }
 
-    private static string ClothName(Player_Abilities abilities, int piece)
+    // The prefab name of what is worn on a piece, its shared item (none while the game hasn't shared
+    // it yet) and whether it is dirty.
+    private static string Worn(Player_Abilities abilities, int piece, ref NetRef item, ref byte dirty)
     {
         var clothes = abilities.clothings;
         if (clothes == null || piece >= clothes.Length || clothes[piece] == null)
             return "";
-        return clothes[piece].TryGetComponent(out Usable usable) ? usable.prefabName ?? "" : "";
+        var worn = clothes[piece];
+        var shared = NetObjects.Find(worn);
+        if (shared != null)
+            item = shared.Ref;
+        if (worn.TryGetComponent(out Wearable wearable) && wearable.dirty)
+            dirty |= (byte)(1 << piece);
+        return worn.TryGetComponent(out Usable usable) ? usable.prefabName ?? "" : "";
     }
 
     private static float Shape(SkinnedMeshRenderer body, int index) =>

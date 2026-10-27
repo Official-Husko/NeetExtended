@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Coop.World.Objects;
 using UnityEngine;
 
 namespace Coop.Players;
@@ -7,6 +8,11 @@ namespace Coop.Players;
 /// Dresses a remote player's body the way the game dresses the player: each worn piece puts the
 /// clothing item's material on its slot of the body (the skin otherwise), the body mesh shows the
 /// UV set for the outfit, and the shirt also colours the hands.
+///
+/// The material is the shared item's own (its renderer's material, the one <c>PutOnClothes</c> takes),
+/// so a custom picture on a shirt shows, and shows once its file has arrived, because the file loads
+/// onto that very material. Dirty pieces get the game's dirty material. A piece whose item isn't
+/// here yet shows the plain prefab for now and <see cref="Apply"/> says so, so it can be done again.
 /// </summary>
 internal static class PuppetDresser
 {
@@ -14,17 +20,20 @@ internal static class PuppetDresser
     private const int HandClothSlot = 1;
 
     private static readonly List<Vector2> Uvs = new List<Vector2>();
+    private static Material _dirtyMaterial;
 
-    public static void Apply(SkinnedMeshRenderer body, SkinnedMeshRenderer[] hands, in Appearance look)
+    /// <summary>Dresses the body; false when a worn item isn't in this game yet (try again later).</summary>
+    public static bool Apply(SkinnedMeshRenderer body, SkinnedMeshRenderer[] hands, in Appearance look)
     {
         if (body == null)
-            return;
+            return true;
         var materials = body.sharedMaterials;
         if (materials.Length <= SkinSlot)
-            return;
+            return true;
         var skin = materials[SkinSlot];
+        bool complete = true;
         for (int piece = 0; piece < Appearance.Pieces; piece++)
-            materials[piece] = ClothMaterial(look.Piece(piece)) ?? skin;
+            materials[piece] = ClothMaterial(look, piece, ref complete) ?? skin;
         body.sharedMaterials = materials;
 
         foreach (var hand in hands)
@@ -43,11 +52,32 @@ internal static class PuppetDresser
         SetShape(body, Appearance.FatShape, look.Fat);
         SetShape(body, Appearance.BodyTypeShape, look.BodyType);
         SetShape(body, Appearance.MuscleShape, look.Muscle);
+        return complete;
     }
 
-    private static Material ClothMaterial(string item)
+    private static Material ClothMaterial(in Appearance look, int piece, ref bool complete)
     {
-        if (string.IsNullOrEmpty(item) || !PickupBank.pickupsDict.TryGetValue(item, out var spawnable) || spawnable.obj == null)
+        string name = look.Piece(piece);
+        if (string.IsNullOrEmpty(name) && !look.Item(piece).IsValid)
+            return null;
+        if (look.IsDirty(piece))
+        {
+            if (_dirtyMaterial == null)
+                _dirtyMaterial = Resources.Load<Material>("Materials/Shitty");
+            if (_dirtyMaterial != null)
+                return _dirtyMaterial;
+        }
+        var reference = look.Item(piece);
+        if (reference.IsValid)
+        {
+            var item = NetObjects.Find(reference);
+            // .material, like PutOnClothes: it makes the item's own copy, and later changes to the
+            // item (its picture arriving) are made to that copy.
+            if (item != null && item.Alive && item.Go.TryGetComponent(out MeshRenderer worn))
+                return worn.material;
+            complete = false;
+        }
+        if (string.IsNullOrEmpty(name) || !PickupBank.pickupsDict.TryGetValue(name, out var spawnable) || spawnable.obj == null)
             return null;
         return spawnable.obj.TryGetComponent(out MeshRenderer renderer) ? renderer.sharedMaterial : null;
     }
