@@ -1,9 +1,9 @@
 {
   "id": "Randomizer",
   "name": "Randomizer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "pawbeans",
   "description": "Every save gets a seed that shuffles who knocks at night, what the store charges, what the delivery guy brings, where things lie in the house on a new game, and how fast you get hungry. Each part can be switched off.",
-  "dependencies": { "NeetModKit": "0.2.0" },
+  "dependencies": { "NeetModKit": "0.3.0" },
   "hotReload": true
 }

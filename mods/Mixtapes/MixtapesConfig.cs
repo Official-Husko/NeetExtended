@@ -9,5 +9,6 @@ public sealed class MixtapesConfig
     [Label("Tape price")]
     [Description("What a mixtape costs in the store, unless its tapes.jsonc entry says otherwise.")]
     [Range(0, 200)]
+    [Shared]
     public int Price = 15;
 }
