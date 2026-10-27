@@ -78,8 +78,21 @@ New numbers to call and new calls that ring in, with choices and consequences.
 | 666-6666 | Satan | After the game's own call, he trades $666 for 20 soul, or a copy of you for 20 soul. |
 | 555-3666 | The Scream Line | A spooky fact; scream back for candy. |
 | 555-0100 | Phone Company Test Line | Tests the phone: calls you back, flickers the lights. |
+| 555-0201 | Evergreen Gardens | Somebody bought you a cemetery plot. The deed is $40. |
+| 555-0214 | No signal | A lost hiker with no pants. |
+| 555-0221 | Kids Hotline | The kids who keep prank calling you. |
+| 555-0231 | Still here | The number the creepy caller leaves you. Call it when the house is quiet. |
+| 555-0241 | Trivia Line | One question, $25 for the right answer. |
+| 555-0251 | Dot next door | She wants her cup of sugar back. |
+| 555-0261 | Psychic Hotline | First call free, then $5. |
+| 555-0262 | Dial-a-Joke | Bad jokes, mostly about a dad. |
+| 555-0263 | Crisis Line | Gary is on his sandwich break. |
+| 555-0264 | PC Help Desk | Opens the browser for you, once. |
+| 555-0265 | Lonely Hearts | Your matches are terrible. |
+| 555-0266 | Store Complaints | Complain about a late order and get a refund, once. |
+| 555-0272 | Tallow Creek Fitness | Collections for a gym membership you forgot about. |
 
-Calls that ring in by themselves: a mysterious **PRIVATE** caller (once per save), **MOM** when you're starving (sends food), **FEDUP** after you order something, and the **PIZZA** driver.
+About 50 calls ring in by themselves, in place of the game's own prank calls: telemarketers and robocalls, creepy callers (one cuts the power, one sounds like you), wrong numbers, kids daring each other, the neighbours complaining about the smell, people from your old life, a shock-jock radio show, surveys, plus a mysterious **PRIVATE** caller (once per save), **MOM** when you're starving (sends food), **FEDUP** after you order something, and the **PIZZA** driver. Some only call after something else happened, and some pay you or send stuff to the door. They're as crude as the game's own calls.
 
 - **New calls ring in**: how often a random call is a new one instead of one of the game's prank calls is set in Settings (**New call chance**, 50% by default).
 - **Caller ID**: the phone's screen shows who's calling; the game's prank calls show UNKNOWN.

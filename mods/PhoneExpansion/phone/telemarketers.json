@@ -1,0 +1,220 @@
+// Telemarketers and sales calls: warranties, timeshares, miracle cleaners and a cemetery plot salesman.
+{
+  "calls": [
+    {
+      "id": "tm-warranty",
+      "name": "Vehicle Warranty",
+      "callerId": "WARRANTY",
+      "incoming": { "trigger": "random", "weight": 2, "cooldown": 40 },
+      "say": [
+        "Hello yes this is courtesy call about ur car warranty",
+        "It expire today. Or yesterday. Either way its URGENT sir",
+        { "choices": [
+          {
+            "text": "I don't own a car.",
+            "say": [ "...Most people do bro.", "Warranty is for the car u gonna buy. Or steal. We dont check." ]
+          },
+          {
+            "text": "What car?",
+            "say": [ "The silver one. We got it on file. The one u hit a dog with. Dog is fine sir. Dog is ok." ]
+          },
+          {
+            "text": "Cancel my warranty.",
+            "once": true,
+            "say": [
+              "U cant cancel warranty on car u dont have, genius.",
+              "I cancelled it anyway. Now u are cancelled too. Congratulation.",
+              { "do": "flag", "name": "tm_told_off" }
+            ]
+          }
+        ] },
+        "Pls hold. Ur call is important to us. We keep it forever. Thank u"
+      ]
+    },
+    {
+      "id": "tm-robocall",
+      "name": "Automated Message",
+      "callerId": "AUTOMATED",
+      "incoming": { "trigger": "random", "weight": 1, "cooldown": 60 },
+      "say": [
+        "This is an important mesage regarding your... regarding your...",
+        "...",
+        "This is an important mesage regarding your... Hello? Are u there?",
+        "Press one to be removed from our list. Press two to hear this again. Press three to get your penis enlarged.",
+        { "choices": [
+          {
+            "text": "Press one.",
+            "say": [
+              "Thank u. U have been removed from our list.",
+              "...Pls stay on the line. U have not been removed from our list, dumbass.",
+              { "do": "flag", "name": "tm_robo_removed" }
+            ]
+          },
+          {
+            "text": "Hello?",
+            "say": [ "This message is for the homeowner. Pls press one to continue.", "I can hear u breathing. Press one." ]
+          },
+          {
+            "text": "Press two.",
+            "say": [ "This message is for the homeowner. This message is for the homeowner, dumbass." ]
+          }
+        ] },
+        "Thank u for ur time. Goodbye. Goodbye. Goodb"
+      ]
+    },
+    {
+      "id": "tm-plot",
+      "number": "555-0201",
+      "name": "Evergreen Gardens",
+      "callerId": "PLOTS",
+      "otherwise": "Evergreen Memorial Gardens. We're all booked up. Permanently. Fuck off.",
+      "say": [
+        "Evergreen Memorial Gardens, how can we bring u peace today",
+        "Im calling about ur plot. The one under ur name in our files",
+        { "choices": [
+          {
+            "text": "I don't have a plot.",
+            "say": [ "U do now sir. Its paid for. Paid by somebody.", "Probably u in a past life. Ur a dick in this one too." ]
+          },
+          {
+            "text": "How much?",
+            "say": [ "Forty dollars for the deed. The plot is free.", "Free to lie in. Forty dollars to own the paper about lying in it." ]
+          },
+          {
+            "text": "Is it near the house?",
+            "say": [ "Its like four steps from ur house sir.", "We are sorry. We get alot of complaints from the dead ones." ]
+          },
+          {
+            "text": "I'll take it.",
+            "if": { "money": 40 },
+            "once": true,
+            "say": [
+              { "do": "money", "amount": -40 },
+              "Wonderful. The deed goes out in the post. Dont use it for a while.",
+              { "do": "deliver", "item": "Envelope_Closed", "after": 60 },
+              { "do": "flag", "name": "tm_plot_owned" }
+            ]
+          }
+        ] },
+        "Evergreen. Where the grass is greener cuz of whats under it lmao"
+      ]
+    },
+    {
+      "id": "tm-last-call",
+      "name": "Last Call",
+      "callerId": "SALES",
+      "incoming": { "trigger": "random", "weight": 1, "cooldown": 90, "when": { "minutes": ">= 20" } },
+      "say": [
+        "Hi sorry this is my last call of shift. My LAST one. I swear to god",
+        "Pls just buy something. Anything. The knife set is so good bro",
+        { "choices": [
+          {
+            "text": "What knife set?",
+            "say": [ "The big one. 8 knives. One is a cleaver and it is VERY persuasive.", "Pls say yes. My manager is standing right behind me.", "...He isnt. He went home an hour ago and took my car." ]
+          },
+          {
+            "text": "No.",
+            "say": [ "Ok no problem. Have a nice night you fucking loser.", "...Or whatever it is u do in there. Eat a sandwich." ]
+          },
+          {
+            "text": "Fine. I'll take the knife set.",
+            "if": { "money": 25 },
+            "once": true,
+            "say": [
+              { "do": "money", "amount": -25 },
+              "Oh my god. Thank u. U dont know what this means for my life.",
+              { "do": "give", "item": "Knife_Chef" },
+              "Only cut vegetables with it. Pls. Im begging u. Dont cut the dog."
+            ]
+          }
+        ] },
+        "Right. Ok. Bye. Bye. Sorry."
+      ]
+    },
+    {
+      "id": "tm-miracle",
+      "name": "Glow Gel Ad",
+      "callerId": "MIRACLE",
+      "incoming": { "trigger": "random", "weight": 1, "cooldown": 45, "when": { "not": { "flag": "tm_miracle_bought" } } },
+      "say": [
+        "Tired of stains? Mold? Dust? Ur own face in the bathroom mirror??",
+        "Glow Gel removes it all in one wipe. Results may vary. Results always vary sir",
+        { "choices": [
+          {
+            "text": "Does it work on people?",
+            "say": [ "It works on everything sir. EVERYTHING.", "Pls dont test that. Our lawyers are so tired." ]
+          },
+          {
+            "text": "I don't clean.",
+            "say": [ "Then u need Glow Gel more than anybody in the whole country.", "Keep ur house. Keep ur stains. Keep ur stink." ]
+          },
+          {
+            "text": "I'll take two.",
+            "if": { "money": 20 },
+            "once": true,
+            "say": [
+              { "do": "money", "amount": -20 },
+              "Excellent. Wipe twice. Dont look at the cloth. Dont lick the cloth.",
+              { "do": "give", "item": "SprayBottle_Cleaner", "count": 2 },
+              { "do": "flag", "name": "tm_miracle_bought" }
+            ]
+          }
+        ] },
+        "Glow Gel. Its a gel. It glows. Its a little radioactive. Bye!"
+      ]
+    },
+    {
+      "id": "tm-timeshare",
+      "name": "Lakeside Getaway",
+      "callerId": "GETAWAY",
+      "incoming": { "trigger": "random", "weight": 1, "cooldown": 60 },
+      "say": [
+        "CONGRATULATIONS!! U have been selected for a FREE week at a lakeside getaway",
+        "Theres a small fee. Dont worry about the fee. Everybodys fee is small. Yours is very small.",
+        { "choices": [
+          {
+            "text": "What's the fee?",
+            "say": [ "Four thousand dollars a month. Forever. Its a timeshare sir.", "U own a share of the time. Of the lake. Of the week. Of ur life." ]
+          },
+          {
+            "text": "I can't leave the house.",
+            "say": [ "Oh thats perfect. The lake doesnt move. Neither will u. Ur mom told us." ]
+          },
+          {
+            "text": "Stop calling me.",
+            "once": true,
+            "say": [
+              "Okay. Okay. Noted, you little shit.",
+              { "do": "flag", "name": "tm_told_off" }
+            ]
+          }
+        ] },
+        "Enjoy ur week. Enjoy it real hard."
+      ]
+    },
+    {
+      "id": "tm-callback",
+      "name": "Gary Again",
+      "callerId": "GARY",
+      "incoming": { "trigger": "random", "weight": 3, "once": true, "when": { "flag": "tm_told_off" } },
+      "say": [
+        "Remember me? U hung up on me. Nobody hangs up on Gary.",
+        "...Im calling from the Warranty Department. And the Timeshare Department. Im the whole department bro",
+        { "choices": [
+          {
+            "text": "Sorry, I'm sorry.",
+            "say": [
+              "...Fine. We call u back with a better offer. A much worse one, probably.",
+              { "do": "flag", "name": "tm_told_off", "set": 0 }
+            ]
+          },
+          {
+            "text": "I'm still not interested.",
+            "say": [ "Then ill call u every day sir. Every single day.", "Thats not a threat. Its a warranty." ]
+          }
+        ] },
+        "Have a nice day. U wont."
+      ]
+    }
+  ]
+}

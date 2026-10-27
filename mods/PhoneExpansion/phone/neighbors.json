@@ -1,0 +1,266 @@
+// Next door: complaints, favours and gossip from the neighbours. Most of them ring in on their own.
+{
+  "calls": [
+    {
+      "id": "neighbor-smell",
+      "callerId": "NEXT DOOR",
+      "incoming": {
+        "trigger": "random",
+        "weight": 3,
+        "once": true,
+        "when": { "stat": "Hygiene < 25" }
+      },
+      "say": [
+        "Hi, it's the neighbor. The one on your left. The one who can hear you breathing.",
+        "Something in your house smells like a raccoon died in the fridge and then died again.",
+        "I got my kitchen window open. In THIS heat. My eyes are watering, the cat's in the dryer.",
+        { "choices": [
+          {
+            "text": "Sorry. I'll shower soon.",
+            "say": [
+              "Soon. Sure, sure. Like a normal fucking person. I left a spray on your step for the smell.",
+              { "do": "deliver", "item": "SprayBottle_Cleaner", "after": 60 },
+              { "do": "flag", "name": "neighbor_smell_sorry" }
+            ]
+          },
+          {
+            "text": "It's my house. It can smell how it likes.",
+            "say": [
+              "Wow. Okay. Have fun in there with your raccoon, you smelly little goblin.",
+              { "do": "flag", "name": "neighbor_smell_argued" }
+            ]
+          },
+          {
+            "text": "...",
+            "say": [ "Your silence is a no and your house is a shithole. Got it." ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "neighbor-lights",
+      "callerId": "NEXT DOOR",
+      "incoming": {
+        "trigger": "random",
+        "weight": 2,
+        "once": true,
+        "when": { "minutes": ">= 20" }
+      },
+      "say": [
+        "It's me again. Your upstairs light was on at three in the morning.",
+        "Also the TV. Also somebody was laughing. Was that you laughing?",
+        "Because it sounded like a goat getting its nuts stepped on.",
+        { "choices": [
+          {
+            "text": "Sorry, I'll keep it down.",
+            "say": [
+              "Thank you. The baby's asleep now. Well, the baby's asleep. Don't ask about the baby.",
+              { "do": "flag", "name": "neighbor_quiet_promise" }
+            ]
+          },
+          {
+            "text": "I don't sleep. I'm not built for it.",
+            "say": [
+              "Everybody's built for sleep, son. Worms sleep. You're worse than a worm.",
+              { "do": "flag", "name": "neighbor_warned" }
+            ]
+          },
+          {
+            "text": "Come round and check for yourself.",
+            "say": [
+              "No thank you. I've seen your front step. I'd need a tetanus shot and a priest.",
+              { "do": "flag", "name": "neighbor_warned" }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "neighbor-ladder",
+      "callerId": "NEXT DOOR",
+      "incoming": {
+        "trigger": "random",
+        "weight": 2,
+        "once": true,
+        "when": { "minutes": ">= 10" }
+      },
+      "say": [
+        "Morning. Or evening. Or whatever time it is in your cave. You still have my ladder.",
+        "The tall aluminium one. It's been on your side since spring, leaning on your shed.",
+        "Every time I look over it looks more ashamed of you.",
+        { "choices": [
+          {
+            "text": "What ladder?",
+            "say": [
+              "THE LADDER. Don't you fucking play with me, you little shit.",
+              "I can see the top of it from my bedroom window. There's a sock on it."
+            ]
+          },
+          {
+            "text": "I'll go look for it.",
+            "say": [
+              "Look harder. Check the shed. Don't stare at the shed too long, it stares back.",
+              { "do": "flag", "name": "neighbor_ladder_promise" }
+            ]
+          },
+          {
+            "text": "Keep it. It's better up there.",
+            "say": [
+              "Up where?",
+              "...Never mind. I'm calling the council. Then I'm calling the fucking news.",
+              { "do": "flag", "name": "neighbor_ladder_fight" }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "neighbor-watch",
+      "callerId": "WATCH",
+      "incoming": {
+        "trigger": "random",
+        "weight": 1,
+        "cooldown": 45,
+        "when": { "times": "< 3" }
+      },
+      "say": [
+        "Neighborhood Watch, just checking in. How are we doing in there?",
+        "We've had reports. Lights. Bins. A man with no shoes at the bus stop.",
+        "I'm not saying it was you. I'm saying I'm not saying it wasn't. Put pants on, sir.",
+        { "choices": [
+          {
+            "text": "We're fine. Thanks for checking.",
+            "say": [ "Good. Keep the blinds down. People are looking. The pigeons are looking too, and they've got a union." ]
+          },
+          {
+            "text": "Who gave you this number?",
+            "say": [
+              "The phone book. You're not in it, which is how we know it's you.",
+              { "do": "flag", "name": "neighbor_watch_nosy" }
+            ]
+          },
+          {
+            "text": "I'll chip in for the fund.",
+            "if": { "money": 20 },
+            "say": [
+              { "do": "money", "amount": -20 },
+              "The fund thanks you. We spent it on a sign. It says WATCH.",
+              "Just WATCH. Nothing else. We couldn't afford the rest of the words.",
+              { "do": "flag", "name": "neighbor_watch_donor" }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "neighbor-dot",
+      "number": "555-0251",
+      "name": "Dot next door",
+      "callerId": "DOT",
+      "when": { "not": { "flag": "neighbor_sugar_settled" } },
+      "otherwise": [
+        "Dot here. You still owe me the sugar, you lazy little prick.",
+        "Ten years. I'm not angry. I'm keeping a list and you're on it three times."
+      ],
+      "say": [
+        "Oh, it's you. Dot from next door. Your mom gave me this number.",
+        "You still have my sugar. The blue cup. You borrowed it ten years ago and never fucking gave it back.",
+        "Your mom says you don't come out much. I say I can see your blinds move. There's an eye in there.",
+        { "choices": [
+          {
+            "text": "I never borrowed any sugar.",
+            "say": [
+              "You did. I was there. You had a cardigan on and you were licking the spoon.",
+              { "do": "flag", "name": "neighbor_sugar_argued" }
+            ]
+          },
+          {
+            "text": "Fine. Here's ten bucks for it.",
+            "if": { "money": 10 },
+            "say": [
+              { "do": "money", "amount": -10 },
+              "Ten bucks. That's not sugar money. That's a bribe, you little shit. I'll take it.",
+              { "do": "flag", "name": "neighbor_sugar_settled" }
+            ]
+          },
+          {
+            "text": "Here's your sugar back.",
+            "say": [
+              { "do": "deliver", "item": "FlourBag", "after": 30 },
+              "It's flour. Close enough. I won't ask what you did with the sugar.",
+              "I can smell the answer from here.",
+              { "do": "flag", "name": "neighbor_sugar_settled" }
+            ]
+          },
+          {
+            "text": "Tell my mom I said hello.",
+            "say": [
+              "I will. She cries at the bins now. Every Tuesday. Next to your socks.",
+              { "do": "flag", "name": "neighbor_sugar_settled" }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "neighbor-yard",
+      "callerId": "NEXT DOOR",
+      "incoming": {
+        "trigger": "random",
+        "weight": 2,
+        "once": true,
+        "when": { "minutes": ">= 30" }
+      },
+      "say": [
+        "I saw someone in your yard last night. Digging by the fence.",
+        "The big shovel. Was that you? Because it was either you or a very short man with a grudge.",
+        { "choices": [
+          {
+            "text": "Wasn't me.",
+            "say": [
+              "Then it was a very short man with a very long shovel and a bad attitude.",
+              { "do": "flag", "name": "neighbor_saw_yard" }
+            ]
+          },
+          {
+            "text": "Mind your own business.",
+            "say": [
+              "You're digging up my roses, you gravedigging fuck. I'd call that MY business.",
+              { "do": "flag", "name": "neighbor_saw_yard" }
+            ]
+          },
+          {
+            "text": "I'll pay you to forget it.",
+            "if": { "money": 40 },
+            "say": [
+              "Forty dollars. I never looked out the window.",
+              "I did not see a hole. I did not see a shovel. I did not see your face.",
+              { "do": "money", "amount": -40 },
+              "Pleasure doing business. Mind the hole.",
+              { "do": "flag", "name": "neighbor_yard_bribe" }
+            ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "neighbor-hole",
+      "callerId": "NEXT DOOR",
+      "incoming": {
+        "trigger": "random",
+        "weight": 1,
+        "once": true,
+        "when": { "any": [
+          { "flag": "neighbor_saw_yard" },
+          { "flag": "neighbor_yard_bribe" }
+        ] }
+      },
+      "say": [
+        "It's the bins again. I found a pumpkin in mine. Carved, with teeth.",
+        "I think it's yours. I think everything in that yard is yours, honestly. It's a shrine to your bad decisions.",
+        { "do": "deliver", "item": "Pumpkin", "after": 20 },
+        "Enjoy. Don't dig near it. It's looking at me."
+      ]
+    }
+  ]
+}

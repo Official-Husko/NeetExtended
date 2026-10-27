@@ -13,15 +13,32 @@ Calls are plain files. Any mod can ship them in a `phone` folder; no code needed
 | 555-2368 | Spookbusters | The game's "call later" number. The second time you call, they pick up: they'll open the black basement door for $30 or put out a fire. |
 | 666-6666 | Satan | The game's call plays the first time. After that he trades $666 for 20 soul, or a copy of you for 20 soul (the game's own TradeSoulForClone). |
 | 555-3666 | The Scream Line | A random spooky fact; scream back for candy. Written in Ink by hand (`phone/scream-line.ink`). |
+| 555-0201 | Evergreen Gardens | A cemetery that sold you a plot. The deed is $40. |
+| 555-0214 | No signal | A lost hiker. Also rings in now and then. |
+| 555-0221 | Kids Hotline | The kids who keep prank calling you, once they've given up on you. |
+| 555-0231 | Still here | The number the creepy caller leaves you. |
+| 555-0241 | Trivia Line | One question, $25 for the right answer, once. |
+| 555-0251 | Dot next door | She wants her cup of sugar back. |
+| 555-0261 to 0266 | Hotlines | Psychic (first call free, then $5), Dial-a-Joke, a crisis line, PC help, Lonely Hearts, store complaints (one refund). |
+| 555-0272 | Tallow Creek Fitness | Collections for a gym membership. |
 
-Calls that ring in by themselves:
+Calls that ring in by themselves (`phone/*.json`, about 50 of them):
 
 | Caller | When |
 | --- | --- |
-| PRIVATE | Once per save, after 15 minutes of play, in place of a prank call. Ends with the fuses popping out. |
+| Telemarketers, robocalls, ads | In place of the game's prank calls. Gary calls back if you hang up on him. |
+| Creepy callers | Breathers, a countdown that cuts the power, your own voice, someone on the porch. Some only after a while of play. |
+| Wrong numbers | Doreen looking for Kevin, Gran who thinks you're Danny, a plumber, a dead man's grill, Dean in the car. |
+| Kids | Dares, a sleepover on speakerphone, trick-or-treaters, a callback with worse jokes. |
+| Neighbours | The smell, the lights at 3am, the ladder, the neighbourhood watch, the hole by the fence. |
+| Your old life | A class reunion (and why you didn't go), the dentist, an old job, the library, a recruiter. |
+| Radio and surveys | A shock-jock call-in show, surveys, a census, a prize desk that sends candy. |
+| PRIVATE | Once per save, after 15 minutes of play. Ends with the fuses popping out. |
 | MOM | When hunger is under 25, at most every 30 minutes. Sends food. |
 | FEDUP | After a store order, at most every 20 minutes. |
 | PIZZA | The pizza driver, 45 seconds after an order. |
+
+The calls are written to sound like the game's own (crude, loud, uncensored). If you write your own, [writing-style.md](writing-style.md) has the voice.
 
 Switches on the Mods page (F1): **New calls ring in** and **Caller ID** (shows who's calling on the phone's screen; the game's prank calls show UNKNOWN). In Settings, **New call chance** sets how often a random incoming call is a new one instead of one of the game's 11 pranks (default 50%).
 

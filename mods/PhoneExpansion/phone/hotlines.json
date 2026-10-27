@@ -1,0 +1,265 @@
+// Hotlines the player can dial: psychic, dial-a-joke, crisis, PC help, lonely hearts, store complaints, plus two ads.
+{
+  "calls": [
+    {
+      "id": "hotline-psychic",
+      "number": "555-0261",
+      "name": "Psychic Hotline",
+      "callerId": "PSYCHIC",
+      "when": { "any": [ { "times": "= 0" }, { "money": 5 } ] },
+      "otherwise": [
+        "Psychic hotline. Five bucks a call. I can see you don't have five bucks, you broke ass.",
+        "I can also see you'll try again tomorrow with the same zero bucks. Pathetic."
+      ],
+      "say": [
+        { "if": { "times": "= 0" },
+          "then": [ "Hello. I've been expecting you. The first one's free like the ad said, you sad sack of shit." ],
+          "else": [
+            { "do": "money", "amount": -5 },
+            "Five bucks. Thank you. I already spent it on your future. It was a Gamerade."
+          ]
+        },
+        { "if": { "stat": "Hunger < 25" },
+          "then": [ "You're hungry. Your stomach is chewing on your spine right now. Gross." ],
+          "else": [ "You ate something recently. Good for you. Wipe your mouth, sicko." ]
+        },
+        { "random": [
+          [ "I see a man in your house. He's been standing on the stairs since Tuesday with his dick out.", "Don't turn around. Seriously, don't." ],
+          [ "I see a fridge. It's mostly empty. Just mustard and one sad onion. The fridge is crying and so am I." ],
+          [ "I see a pumpkin on your shelf. It knows what you did in the bathroom. It's disgusted." ],
+          [ "You will clean something this week. It will not stay clean. Nothing you touch stays clean, you filthy nugget." ]
+        ] },
+        { "choices": [
+          {
+            "text": "How do you know that?",
+            "say": [
+              "I'm psychic. Nobody gets past five bucks without being psychic, dumbass.",
+              "...Also you leave the fridge door open. I can hear it. It's a sad little beep."
+            ]
+          },
+          {
+            "text": "Is that a real man?",
+            "say": [
+              "Yes. Don't turn around.",
+              { "do": "flag", "name": "hotline_psychic_warned" }
+            ]
+          },
+          { "text": "Hang up.", "say": [ "You can't. You paid for the whole minute, you cheap little freak." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "hotline-psychic-ad",
+      "callerId": "PSYCHIC",
+      "incoming": { "trigger": "random", "once": true },
+      "say": [
+        "Lonely? Confused? Behind on your bills? Ate a whole bag of chips and your mom saw? Call 555-0261 now.",
+        "First call's free. After that it's five bucks. We're psychic, not fucking stupid."
+      ]
+    },
+    {
+      "id": "hotline-jokes",
+      "number": "555-0262",
+      "name": "Dial-a-Joke",
+      "callerId": "JOKES",
+      "say": [
+        { "if": { "times": "= 0" },
+          "then": [ "Dial-a-Joke. Welcome. Here's your first joke, free of charge, you little shit." ],
+          "else": [ "Dial-a-Joke. Back for more? Here's one you've heard before, you clingy freak." ]
+        },
+        { "random": [
+          [ "What's a ghost's favourite food?", "BOOOO-ritos. Ha. Ha. Your mom gets it." ],
+          [ "Why did the toilet paper go to the party?", "Cuz it was tired of sitting on the shitter all day and wanted to get a little crumpled." ],
+          [ "What's a cat's favourite dessert?", "Mice-cream. Okay that's it, I'm gonna cry." ],
+          [ "Why did the dad go to the shed?", "To find his dignity. He's still in there. Mom says he's not coming out." ]
+        ] },
+        { "choices": [
+          {
+            "text": "Another one.",
+            "say": [ { "random": [
+              [ "Why don't skeletons fight each other?", "They don't have the guts. Neither do you, bum." ],
+              [ "What did the sandwich say to the therapist?", "I got too much bread on my mind and my mayo is expired." ],
+              [ "What do you call a rat with a hat?", "Ratty Hatty. My mom's favourite. She isn't here anymore. The rat was involved." ]
+            ] } ]
+          },
+          {
+            "text": "That wasn't funny.",
+            "say": [
+              { "if": { "flag": "hotline_jokes_booed" },
+                "then": [ "Still booing? That's the spirit, you fucking goblin." ],
+                "else": [ "Thanks. I'll pass that on to the joke. The joke's mom is gonna be pissed." ]
+              },
+              { "do": "flag", "name": "hotline_jokes_booed" }
+            ]
+          },
+          { "text": "Hang up.", "say": [ "Goodbye. Laugh at the next one, it's the law, shithead." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "hotline-jokes-ad",
+      "callerId": "JOKES",
+      "incoming": { "trigger": "random", "once": true },
+      "say": [
+        "Bored? Dial 555-0262 for a joke. A new one every time, you lazy fuck.",
+        "Some of them are good. Most of them are about a dad."
+      ]
+    },
+    {
+      "id": "hotline-crisis",
+      "number": "555-0263",
+      "name": "Crisis Line",
+      "callerId": "CRISIS",
+      "say": [
+        { "if": { "times": "= 0" },
+          "then": [
+            "Crisis line, this is Gary. Sorry, I'm eating a sandwich. It's my only break and I'm not sharing it.",
+            "I've got six people on hold. One of them is my supervisor. He's calling about me. Probably."
+          ],
+          "else": [
+            "Crisis line, it's Gary again. The sandwich didn't work out. Mayo everywhere.",
+            "Still no supervisor. He's on hold, so that's something."
+          ]
+        },
+        { "random": [
+          [ "My car got towed this morning. With my dog in it. He's fine, he's taking it pretty well. Bad dog." ],
+          [ "My landlord called about the rent. I said I'd call him back. I'm calling you instead, cuz I'm a coward." ],
+          [ "I haven't been outside since Thursday. Is that a problem? Don't tell me it's a problem. I know it's a problem." ]
+        ] },
+        { "choices": [
+          {
+            "text": "Are you ok?",
+            "say": [
+              "No. Thanks for asking. Nobody ever asks the crisis line how the crisis line is.",
+              { "do": "flag", "name": "hotline_crisis_vent" }
+            ]
+          },
+          {
+            "text": "What should I do?",
+            "say": [
+              "Drink some water. Stand up. Look at a wall that isn't a screen. Lick the wall if you want.",
+              "I'm not qualified for that. Nobody checked. Nobody even read my file."
+            ]
+          },
+          { "text": "Hang up.", "say": [ "Yeah. Me too. Bye." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "hotline-tech",
+      "number": "555-0264",
+      "name": "PC Help Desk",
+      "callerId": "TECH HELP",
+      "say": [
+        { "if": { "times": "= 0" },
+          "then": [ "PC Help Desk, this is Doug. Is your computer on? Is it actually a computer or a pizza box with a sticker on it?" ],
+          "else": [ "PC Help Desk, Doug again. Is it on now? Did you spill Mountain Doo in the keyboard again, you pig?" ]
+        },
+        { "choices": [
+          {
+            "text": "The screen is flickering.",
+            "say": [
+              "Have you tried turning the screen off and on again?",
+              "Don't answer that. I can hear you hitting it with a spoon."
+            ]
+          },
+          {
+            "text": "Nothing works.",
+            "say": [
+              "Is the cord plugged into the wall?",
+              "...Huh. It is. Then I got no idea, sorry. Maybe the wall's broken. Your house is a fucking mess."
+            ]
+          },
+          {
+            "text": "Can you open the browser for me?",
+            "once": true,
+            "say": [
+              "Sure. Opening metscape. Don't read the comments, they're all about the ass guy.",
+              { "do": "site", "url": "metscape" },
+              { "do": "flag", "name": "hotline_tech_helped" },
+              "There. You're welcome. Don't call back, you lonely loser."
+            ]
+          },
+          { "text": "Hang up.", "say": [ "Bye. Restart it. Restart your whole life." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "hotline-lonely",
+      "number": "555-0265",
+      "name": "Lonely Hearts",
+      "callerId": "LONELY",
+      "say": [
+        { "if": { "times": "= 0" },
+          "then": [
+            "Lonely Hearts. Please say your name after the tone. The tone is a fart.",
+            { "player": "Nobody." },
+            "Thank you. Nobody is a lovely name. Sounds like a guy who eats cereal in the dark."
+          ],
+          "else": [ "Lonely Hearts. Welcome back, Nobody. Your match is still sitting in her car crying, same as last time." ]
+        },
+        { "random": [
+          [ "Your match today is a woman named Marjorie. She likes long walks to the fridge and she has a mustache better than yours." ],
+          [ "Your match is a man who says he's a doctor. He's a doctor of nothing. But he's very sure, and he smells like a dog that got lost in a parking lot." ],
+          [ "Your match is a lovely person who also never leaves home. You two would get along.", "Please don't meet. I beg you. Please." ]
+        ] },
+        { "choices": [
+          {
+            "text": "Leave a message.",
+            "say": [
+              "Please say your message after the tone. It's a fart again.",
+              { "player": "Hi. Anyone there? Hello? Mom?" },
+              "Thank you. Your message has been sent to a mailbox that has been full since two thousand and four.",
+              { "do": "flag", "name": "hotline_lonely_message" }
+            ]
+          },
+          {
+            "text": "Who else is on here?",
+            "say": [ "Other lonely people. Mostly a guy who only calls to listen to the hold music. Don't ask." ]
+          },
+          { "text": "Hang up.", "say": [ "Hang up gently. Tell your match you're sorry. Tell her you're a shitty hugger." ] }
+        ] }
+      ]
+    },
+    {
+      "id": "hotline-complaints",
+      "number": "555-0266",
+      "name": "Store Complaints",
+      "callerId": "COMPLAINT",
+      "say": [
+        { "if": { "times": "= 0" },
+          "then": [ "Store Complaints. Your call is important to us. Please hold while I eat this pen." ],
+          "else": [ "Store Complaints. We remember you, you annoying little prick. Please hold." ]
+        },
+        { "random": [
+          [ "Your call may be recorded for training. You're training us right now, dumbass." ],
+          [ "We value your feedback. Our feedback department is also on hold and it's crying." ]
+        ] },
+        { "choices": [
+          {
+            "text": "My order was late.",
+            "if": { "not": { "flag": "hotline_refunded" } },
+            "once": true,
+            "say": [
+              "Late orders get logged. Please hold while I log yours with a crayon.",
+              "Logged. We're refunding you twelve bucks for the inconvenience, you poor fuck.",
+              { "do": "money", "amount": 12 },
+              { "do": "deliver", "item": "Candy_Bag_S", "after": 60 },
+              { "do": "flag", "name": "hotline_refunded" },
+              "A free candy bag is on its way to your front door. You're the only one who was inconvenienced."
+            ]
+          },
+          {
+            "text": "Your store smells like feet.",
+            "say": [ "Thank you for your feedback. It has been sent to a department that does not exist and smells worse than you said." ]
+          },
+          {
+            "text": "I want to speak to a manager.",
+            "say": [ "A manager is not available. He's on the same hold as you. He's been on there since Christmas.", "Please hold." ]
+          },
+          { "text": "Hang up.", "say": [ "Your call is important to us. Goodbye, dickhead." ] }
+        ] }
+      ]
+    }
+  ]
+}

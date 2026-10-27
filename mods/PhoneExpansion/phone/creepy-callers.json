@@ -1,0 +1,193 @@
+// Creepy callers: voices from the house, the dark and the porch. Ring in by themselves, mostly once per save.
+{
+  "calls": [
+    {
+      "id": "creep-breathing",
+      "name": "Heavy breathing",
+      "callerId": "BREATHER",
+      "incoming": { "weight": 1, "once": true, "when": { "minutes": ">= 10" } },
+      "say": [
+        "...",
+        "<size=60%>hhhhhh... hhhhhh...",
+        "Your mom said you'd pick up. She also said you smell like a dead hamster. I didn't ask.",
+        { "choices": [
+          {
+            "text": "Who is this?",
+            "say": [ "...", "Keep breathing. I can hear you doing it. Nice and slow, like you're sniffing your own socks." ]
+          },
+          {
+            "text": "Mom?",
+            "once": true,
+            "say": [ "No. She's downstairs eating the last of the Prangles and crying about you.", { "do": "flag", "name": "creep_breath_heard" } ]
+          }
+        ] },
+        "...",
+        "<color=red>Go back to sleep, you disgusting little goblin.</color>"
+      ]
+    },
+    {
+      "id": "creep-countdown",
+      "name": "Numbers",
+      "callerId": "COUNTER",
+      "incoming": { "weight": 1, "once": true, "when": { "minutes": ">= 30" } },
+      "say": [
+        "Ninety-nine.",
+        "Ninety-eight.",
+        "<size=60%>...still with me? You're breathing so loud, bro.",
+        "You can stop me whenever you like.",
+        { "choices": [
+          {
+            "text": "Stop counting.",
+            "say": [ "Ok. Seven.", "<size=60%>...he counted too. Right to the end, poor bastard.", "Six." ]
+          },
+          {
+            "text": "Keep going.",
+            "say": [ "Good. Keep going, fuckface." ]
+          }
+        ] },
+        "Two.",
+        "One.",
+        "Zero.",
+        { "do": "power", "on": false, "for": 4 },
+        "Lights are back on. See? Nothing happened. Also I shat in your laundry basket."
+      ]
+    },
+    {
+      "id": "creep-own-voice",
+      "name": "Hey, it's me",
+      "callerId": "NEET",
+      "incoming": { "weight": 1, "once": true, "when": { "minutes": ">= 20" } },
+      "say": [
+        "Hey.",
+        "It's me.",
+        "Stop sitting in the dark. It's bad for your eyes. Also your room smells like a Taco Hell bathroom.",
+        { "choices": [
+          {
+            "text": "Who is this?",
+            "say": [ "You know who I am.", "Don't sound so surprised, you fat fuck." ]
+          },
+          {
+            "text": "That's not me.",
+            "say": [ "Yes it is.", "Check the mirror. Ew, not that one. The other one with the crust.", { "do": "flag", "name": "creep_own_voice" } ]
+          }
+        ] },
+        "You should sleep. Go to bed, you're gross. I'll keep the lights on for you.",
+        { "do": "knockout", "seconds": 4 }
+      ]
+    },
+    {
+      "id": "creep-inside",
+      "name": "Inside",
+      "callerId": "INSIDE",
+      "incoming": { "weight": 1, "once": true, "when": { "room": [ "Kitchen", "Diningroom", "Livingroom" ] } },
+      "say": [
+        "I'm in the house.",
+        "Not the one you're thinking of. The one you're standing in. Yeah, the one that smells like cat piss.",
+        { "choices": [
+          {
+            "text": "Where are you?",
+            "say": [ "Two rooms over, behind the fridge, eating the chicken you didn't thaw.", "Keep talking. I like hearing you waddle around like a sad hamster." ]
+          },
+          {
+            "text": "Get out of my house.",
+            "once": true,
+            "say": [ "Your house. Sure. Mom's house, actually, and she's gonna kill you too.", { "do": "power", "on": false, "for": 5 }, "Bet you can't find the switch in the dark, you useless fuck." ]
+          }
+        ] },
+        "I'll be right where you left me. Under the bed. With your socks.",
+        "*click*"
+      ]
+    },
+    {
+      "id": "creep-let-me-in",
+      "name": "Porch",
+      "callerId": "PORCH",
+      "incoming": { "weight": 1, "once": true, "when": { "minutes": ">= 20" } },
+      "say": [
+        "It's cold out here. My nuts are basically frozen to the railing.",
+        "The porch light's still on. You left it on for me, right?",
+        { "choices": [
+          {
+            "text": "Who is this?",
+            "say": [ "Someone who's been on your porch a while.", "<size=60%>...pick your nose if you want, I can't see you. Yet." ]
+          },
+          {
+            "text": "I'm not opening the door.",
+            "once": true,
+            "say": [ "That's ok.", "I'll wait. I'm good at waiting. I waited for your dad.", { "do": "flag", "name": "creep_waiting" } ]
+          },
+          {
+            "text": "Leave something on the step.",
+            "once": true,
+            "say": [
+              "Good. Don't open it until I'm gone.",
+              { "do": "deliver", "item": "Candle", "after": 40 },
+              "Light it only if you're gonna watch it, you coward."
+            ]
+          }
+        ] },
+        "*click*"
+      ]
+    },
+    {
+      "id": "creep-tv",
+      "name": "Channel 2",
+      "callerId": "CHANNEL 2",
+      "incoming": { "weight": 1, "once": true, "when": { "room": [ "Kitchen", "Diningroom" ] } },
+      "say": [
+        "...",
+        "*static*",
+        "Did you leave the TV on? Your mom's gonna kill you.",
+        "It's showing the kitchen. Your fridge is open. Nobody's been in there for like a week, bro.",
+        "Your chair is still warm and it's wet, dude.",
+        "...",
+        "*click*"
+      ]
+    },
+    {
+      "id": "creep-leave-number",
+      "name": "Message",
+      "callerId": "MESSAGE",
+      "incoming": { "weight": 1, "once": true, "when": { "minutes": ">= 15" } },
+      "say": [
+        "Write this down, dumbass.",
+        "Five, five, five. Oh, two, three, one.",
+        "Call it when the house is quiet. Mom's snoring doesn't count.",
+        "Not before.",
+        { "do": "flag", "name": "creep_number_left" },
+        "*click*"
+      ]
+    },
+    {
+      "id": "creep-callback",
+      "number": "555-0231",
+      "name": "Still here",
+      "callerId": "STILL HERE",
+      "when": { "flag": "creep_number_left" },
+      "otherwise": [ "...", "Nobody here yet. Go back to your Dorritoes, you pig." ],
+      "say": [
+        "You called. Dumbass.",
+        "...",
+        "Are you alone? Be honest, I can smell the Dorritoes.",
+        { "choices": [
+          {
+            "text": "Yes.",
+            "say": [ "Good. Stay that way. Nobody wants to be near that, trust me." ]
+          },
+          {
+            "text": "No.",
+            "say": [ "Then who's been breathing on the other line? Tell them hi from the grave." ]
+          },
+          {
+            "text": "Who was breathing?",
+            "if": { "flag": "creep_breath_heard" },
+            "say": [ "Ask your mom. She knows all about heavy breathing, loser." ]
+          }
+        ] },
+        { "if": { "flag": "creep_waiting" }, "then": [ "You didn't open the door for me. Thank you. Good boy." ] },
+        "Don't pick up when it rings.",
+        "*click*"
+      ]
+    }
+  ]
+}

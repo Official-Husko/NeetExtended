@@ -1,0 +1,280 @@
+// Wrong numbers: people who dialled the wrong house, or who can't accept that they did.
+{
+  "calls": [
+    {
+      "id": "wrong-kevin",
+      "name": "Doreen",
+      "callerId": "DOREEN",
+      "incoming": { "weight": 1, "cooldown": 45, "once": true },
+      "say": [
+        "<size=150%>KEVIN.<size=100%> Is Kevin there? It's Doreen. Tell him it's fucking Doreen.",
+        { "choices": [
+          {
+            "text": "There's no Kevin here.",
+            "say": [
+              "Don't lie to me Kevin. I can hear the microwave going.",
+              "Lasagna AGAIN? You put it on for four minutes and forget it every time, you dumb son of a bitch."
+            ]
+          },
+          {
+            "text": "Kevin moved out.",
+            "say": [
+              "Oh, so he finally did it. Good for him, honestly.",
+              "Tell him he can keep the blender. That thing screams, I never want to see it again.",
+              { "do": "flag", "name": "wrong_kevin_moved" }
+            ]
+          },
+          {
+            "text": "Yeah, it's me.",
+            "say": [
+              "Oh thank God. You're alive. Your mom has been calling me all week crying into the phone.",
+              "You still owe me twenty bucks, you little shit. I'm sending it anyway, so don't be weird about it.",
+              { "do": "money", "amount": 20 },
+              { "do": "flag", "name": "wrong_kevin_me" }
+            ]
+          },
+          {
+            "text": "Who's Kevin?",
+            "say": [
+              "<size=150%>KEVIN.<size=100%> Kevin, stop being a child and pick up the fucking phone.",
+              "...Is this not 40 Hollis Road? Oh. Oh god, I'm so sorry."
+            ]
+          }
+        ] },
+        { "random": [
+          "Right. Well. I'll tell Kevin you said hi, you lucky bastard.",
+          "Call your mom back, Kevin. She's really worried about the car.",
+          "She says it looks like a sad hot dog now. I don't know what that means either."
+        ] }
+      ]
+    },
+    {
+      "id": "wrong-gran-danny",
+      "name": "Gran",
+      "callerId": "GRAN",
+      "incoming": { "weight": 1, "cooldown": 45, "once": true },
+      "say": [
+        "Danny? Danny, is that you? You sound fucking terrible, sweetheart.",
+        { "choices": [
+          {
+            "text": "Yeah, it's me, Gran.",
+            "say": [
+              "I knew it. Are you eating? You're not eating, I can hear it in your voice like a dying seal.",
+              "I'm sending you forty dollars for a sandwich. Don't argue with me, I'll come over and smell your room.",
+              { "do": "money", "amount": 40 },
+              { "do": "flag", "name": "wrong_gran_danny" }
+            ]
+          },
+          {
+            "text": "Wrong number, Gran.",
+            "say": [
+              "Don't be silly, I'd know that voice anywhere, Danny. You sound like a wet sock.",
+              "Then why'd you pick up? Hm? Just say hello to your gran for once in your miserable life."
+            ]
+          },
+          {
+            "text": "Who is this?",
+            "say": [
+              "It's your Gran, Danny. Who the hell did you think it was?",
+              "Did you get a new phone? This one's awful, the buttons are all sticky. Is that gravy?"
+            ]
+          }
+        ] },
+        { "random": [
+          "Love you, Danny. Put some shoes on, the floor is cold and so is your soul.",
+          "Your uncle says hello. He doesn't, but he would if he knew you were still in there with the blinds shut."
+        ] }
+      ]
+    },
+    {
+      "id": "wrong-plumber",
+      "name": "Plumber",
+      "callerId": "PLUMBER",
+      "incoming": { "weight": 1, "cooldown": 60 },
+      "say": [
+        "Hi, is this 14 Marlow Close? It's the plumber, I'm running late as shit.",
+        "Ring road's a fucking nightmare. Somebody said there's a lorry on fire.",
+        { "choices": [
+          {
+            "text": "This is the wrong house.",
+            "say": [
+              "What? Oh no. That's the third one today. Sorry mate, my van smells like a dead fox.",
+              "I'll try the house with the blue door. That'll be the Pattersons. They're horrible."
+            ]
+          },
+          {
+            "text": "Yeah, it's here. Hurry up.",
+            "say": [
+              "Brilliant. Twenty minutes tops. Go easy on the stairs, I can hear them creaking like a dying whale.",
+              "And there's a bit of water in the basement. Well, quite a lot of water.",
+              "It's shit water, mate. It's probably fine. Don't worry about the water."
+            ]
+          },
+          {
+            "text": "Who lives at 14 Marlow Close?",
+            "say": [
+              "Is that not the Pattersons? Bloody hell, they've been waiting since May.",
+              "They'd better not mind the bucket in the hall. I'm bringing a bigger bucket and a bigger fucking attitude."
+            ]
+          }
+        ] },
+        { "random": [
+          "Right, I'm parking up now. Is that a hedge or a man by the gate?",
+          "Right, I'm parking up. Don't come out, it's windy and I'm not stopping. I've got a dump to take."
+        ] }
+      ]
+    },
+    {
+      "id": "wrong-restaurant",
+      "name": "Gerald's Grill",
+      "callerId": "GRILL",
+      "incoming": { "weight": 1, "cooldown": 60 },
+      "say": [
+        "Hi, is this Gerald's? I'd like to put in a delivery order, please.",
+        "The usual. Two lo mein, one chicken leg, and extra of the red sauce. Don't fuck it up.",
+        { "choices": [
+          {
+            "text": "Gerald's closed years ago.",
+            "say": [
+              "What? It's been open since I was a kid, you're lying, you little prick.",
+              "Oh. Oh, that's sad. Gerald did the good sauce, the one in the squeezy bottle that made my bowels sing."
+            ]
+          },
+          {
+            "text": "Sure, send the chicken leg.",
+            "if": { "money": 12 },
+            "say": [
+              { "do": "money", "amount": -12 },
+              { "do": "deliver", "item": "Chicken_Leg", "after": 60 },
+              "Great. The driver's already out front. He won't talk about it, he just keeps sniffing his hands."
+            ]
+          },
+          {
+            "text": "Who is this?",
+            "say": [
+              "It's Gerald's, who else would it be? Are you the new girl with the bad knee?",
+              "Well, you're the new girl now. Congrats on the job. It's a shitty job."
+            ]
+          }
+        ] },
+        { "random": [
+          "Okay, see you in forty minutes. Don't tip the driver, he gets weird.",
+          "Thanks Gerald. Oh shit, sorry. Thanks, whoever you are."
+        ] }
+      ]
+    },
+    {
+      "id": "wrong-refuser",
+      "name": "Mobile",
+      "callerId": "MOBILE",
+      "incoming": { "weight": 1, "cooldown": 30 },
+      "say": [
+        "Hey, it's me. Are you outside yet? I can see the car from here, you dumb fuck.",
+        { "choices": [
+          {
+            "text": "Wrong number.",
+            "say": [
+              "No it isn't. I know that hum. That's your fridge, Dean, you fucking idiot.",
+              "Stop messing around and come down to the car. Please. <size=60%>Please, I'm begging.<size=100%>",
+              { "do": "flag", "name": "wrong_fridge_hum" }
+            ]
+          },
+          {
+            "text": "Who is this?",
+            "say": [
+              "Don't do this to me today. It's Dean. Dean from the car, Dean with the cold fries.",
+              "Are you outside, or are you still in the bath with the lights off?"
+            ]
+          },
+          {
+            "text": "Yes, I'm outside.",
+            "say": [
+              "Good. Stay where you are, I'll come round the back. Don't let anyone see you in that shirt.",
+              "Oh, and bring the bag with the sandwiches. The one you forgot last time. It's still on the seat."
+            ]
+          }
+        ] },
+        { "random": [
+          "Ok, I'm coming. I'm literally coming now, so don't fucking hang up.",
+          "Hanging up now. I'll see you in a minute. Stay put, Dean. Don't touch the radio."
+        ] }
+      ]
+    },
+    {
+      "id": "wrong-hiker",
+      "number": "555-0214",
+      "callerId": "NO SIGNAL",
+      "incoming": { "weight": 1, "cooldown": 60 },
+      "say": [
+        "Hello? Hello, is anyone there? I'm lost out here. I've been screaming for an hour.",
+        "I've been walking for hours. I think there's a house. Is that you? Please say it's you.",
+        { "choices": [
+          {
+            "text": "Go left at the shed.",
+            "say": [
+              "The shed. Okay. Left at the shed, got it. Thank you so much, you beautiful bastard.",
+              "Oh, there's a shed. There's actually a fucking shed! Thank you, stranger."
+            ]
+          },
+          {
+            "text": "I'm not a house.",
+            "say": [
+              "Then what are you? Why is there a phone ringing in the trees?",
+              "Sorry. Sorry, I'll keep walking. Something keeps following me and it sounds like it's chewing."
+            ]
+          },
+          {
+            "text": "Stay where you are.",
+            "say": [
+              "Okay. I'm sitting on a log. It's damp and something is licking my hand.",
+              "I think it's a dog. Or a very friendly rat. Please send someone. I'm not wearing pants."
+            ]
+          }
+        ] },
+        { "random": [
+          "My phone is at four percent. If I don't call back, send help. Or a map, whatever.",
+          "Battery's dying. Tell whoever's out there the trail goes up, not down. Down is where the bears are."
+        ] }
+      ]
+    },
+    {
+      "id": "wrong-kevin-again",
+      "name": "Doreen",
+      "callerId": "DOREEN",
+      "incoming": {
+        "weight": 1,
+        "cooldown": 60,
+        "once": true,
+        "when": { "flag": "wrong_kevin_me" }
+      },
+      "say": [
+        "Kevin? It's Doreen again. Mom's asking about Sunday dinner, and I'm not asking nicely.",
+        { "choices": [
+          {
+            "text": "Tell her I'm not coming.",
+            "say": [
+              "She'll cry. She cries when you skip the gravy, Kevin, you fucking coward.",
+              "Fine. I'll tell her you're busy. You're always busy. Busy with your dick and a bag of Dorritoes.",
+              { "do": "flag", "name": "wrong_kevin_skipped" }
+            ]
+          },
+          {
+            "text": "Fine, I'll come.",
+            "say": [
+              "Good. I left a loaf of bread on your front step. Don't let the cat eat it, it's had a bad week.",
+              { "do": "deliver", "item": "Bread_Loaf", "after": 30 },
+              "...Hang on. You don't sound like Kevin at all. You sound like a hostage."
+            ]
+          },
+          {
+            "text": "Who's Kevin?",
+            "say": [
+              "Oh, not again. Tell whoever you are to stop answering his phone.",
+              "He's been dead to me since the blender incident, and that was a whole thing."
+            ]
+          }
+        ] }
+      ]
+    }
+  ]
+}

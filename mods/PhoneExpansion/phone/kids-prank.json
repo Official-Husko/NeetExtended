@@ -1,0 +1,232 @@
+// Neighbourhood kids prank-calling the house: dares, a sleepover on speaker, Halloween, and a kid who keeps calling back.
+{
+  "calls": [
+    {
+      "id": "kids-dare-call",
+      "callerId": "KIDS",
+      "incoming": { "weight": 2, "cooldown": 30, "when": { "not": { "flag": "kids_scared_off" } } },
+      "say": [
+        "Yo is this the creepy house? Dwayne says a hermit lives here and he eats his own toenails.",
+        "<size=150%>DWAYNE SAY THE THING.<size=100%>\nCome on. Say the fuckin thing, Dwayne!",
+        { "choices": [
+          {
+            "text": "Who the fuck is this?",
+            "say": [
+              "Uh, nobody, wrong number, sorry. Dwayne hang up you dumbass.",
+              "Dwayne I said HANG UP. He's still on the line. He's breathing like a fat dog in a bag."
+            ]
+          },
+          {
+            "text": "Yes. I'm a hermit. I haven't showered since 2019.",
+            "say": [
+              "<size=150%>OH MY GOD HE SAID YES. HE'S A REAL HERMIT.<size=100%>",
+              "Dwayne's gonna be so mad he didn't get to scream first. He owes me a Dorito."
+            ]
+          },
+          {
+            "text": "Get off my phone, you little shits.",
+            "once": true,
+            "say": [
+              "Oh no he's coming out he's coming out!",
+              "RUN RUN RUN RUN RUN. DWAYNE YOUR SHOES ARE ON THE WRONG FEET, RUN",
+              { "do": "flag", "name": "kids_scared_off" }
+            ]
+          }
+        ] },
+        { "random": [
+          "Dwayne you owe me five dollars, you said he'd never pick up, you lying piece of shit.",
+          "Okay Dwayne is still breathing really loud. Smells like farts through the phone."
+        ] }
+      ]
+    },
+    {
+      "id": "kids-sleepover",
+      "callerId": "SLEEPOVER",
+      "incoming": { "weight": 1, "cooldown": 45, "when": { "not": { "flag": "kids_scared_off" } } },
+      "say": [
+        "Hi, we're on speaker, so everybody shut up and don't say anything weird.",
+        "<size=60%>Shhh! Somebody picked up! Say something creepy, quick!<size=100%>",
+        "Hi, is this the house? You got a ghost in there or what?",
+        { "random": [
+          "Kayla says it's a ghost. Kayla is dumb as a bag of hammers, it's a rat and we all know it.",
+          "Tyler says the ghost lives in the basement. Tyler will not go in the basement. Tyler shit his pants at the dentist.",
+          "Priya says you smell like old socks and wet dog. Priya is sorry, she's just nervous and she farted in the sleeping bag."
+        ] },
+        { "choices": [
+          {
+            "text": "There's no ghost. Go to bed, you little shits.",
+            "say": [ "It's not even nine o'clock, that's fucking unfair!", "Okay okay, he's lying. Bye house, bye. Don't come in my sleeping bag." ]
+          },
+          {
+            "text": "Stop breathing into the phone, weirdo.",
+            "say": [ "We're not breathing, YOU'RE breathing! Everybody stop breathing!", "Priya's mom is coming up the stairs. Hang up hang up. Priya, did you fart again?" ]
+          },
+          {
+            "text": "Who wants to know?",
+            "say": [ "Everybody wants to know. Kayla is crying a little bit now.", "Okay we're hanging up now, bye bye bye!" ]
+          }
+        ] },
+        "Okay bye house. Tyler, stop farting in the tent, we're hanging up."
+      ]
+    },
+    {
+      "id": "kids-scared-one",
+      "callerId": "MIKEY",
+      "incoming": { "weight": 1, "cooldown": 60, "when": { "not": { "flag": "kids_scared_off" } } },
+      "say": [
+        "Hi. Um. It's Mikey. Are you the one who lives in the house?",
+        "Don't tell anybody I called. I'm not supposed to have a phone after nine, okay?",
+        "We dared each other. I'm the only one who actually did it. Dwayne's a chicken shit.",
+        "<size=60%>I'm really scared right now.<size=100%> Please don't be mean to me, I'm gonna cry and my nose runs.",
+        { "choices": [
+          {
+            "text": "Go home before it gets dark, dumbass.",
+            "say": [
+              "Okay. It's already kinda dark out here though. And there's a weird smell.",
+              { "do": "give", "item": "Candy_Bar" },
+              "Thanks. Don't come out, okay? Seriously don't come out.",
+              { "do": "flag", "name": "kids_nice" }
+            ]
+          },
+          {
+            "text": "Want me to walk you home?",
+            "say": [ "No way. That's so weird. Maybe. But no.", "My mom would kill me if a hermit walked me home. She'd make me wash my hands for like an hour." ]
+          },
+          {
+            "text": "Then hang up and go to bed, kid.",
+            "say": [ "Okay. Sorry. I'm really sorry I called you. I kinda shit my pants a little." ]
+          }
+        ] },
+        "Okay, bye. Please don't tell Dwayne I called you, he'll put it on the internet."
+      ]
+    },
+    {
+      "id": "kids-halloween",
+      "callerId": "TRICKERS",
+      "incoming": { "weight": 2, "cooldown": 60 },
+      "say": [
+        "Trick or treat! Wait. We're on the phone. Does that still count?",
+        "Dylan says if nobody answers the door we get to egg the whole house.",
+        "I said we're not egging anything Dylan! I said NO EGGS, you got egg on my shoe!",
+        "Okay we're not coming up to the door. The door is scary and it smells like a dead raccoon.",
+        { "choices": [
+          {
+            "text": "Fine. Leave the candy on the porch.",
+            "say": [
+              "Yes! Dylan the candy's coming, don't be weird about it, you're being so weird.",
+              { "do": "deliver", "item": "Candy_Bag_S", "after": 60 },
+              "We'll be watching from the hedge. Don't look at us, you creep."
+            ]
+          },
+          {
+            "text": "Egg it, I dare you.",
+            "once": true,
+            "say": [
+              "Dylan, he said he'll actually do it this time! Get the eggs!",
+              "Okay no eggs. Dylan says just a pumpkin then. He's a fucking moron but pumpkins are fine."
+            ]
+          },
+          {
+            "text": "Go away. I'm busy being creepy.",
+            "say": [ "Okay, Mr. Creepy. Happy Halloween anyway, you weirdo.", "Dylan says you're the best house on the whole street. He's such a suck up." ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "kids-callback",
+      "callerId": "SAME KID",
+      "incoming": {
+        "weight": 3,
+        "cooldown": 20,
+        "when": { "all": [
+          { "called": "kids-dare-call" },
+          { "minutes": ">= 15" },
+          { "not": { "flag": "kids_scared_off" } }
+        ] }
+      },
+      "say": [
+        { "random": [
+          "Knock knock. Who's there? Poop. Poop who? Poop, you're still in the house, loser!",
+          "Why did the ghost cross the road? Cause it was dead. DEAD. Get it? It's a dead joke. HA!",
+          "What do you call a skeleton who never goes outside? A bone-a-fide shut-in! Like you! You're a shut-in!"
+        ] },
+        { "choices": [
+          {
+            "text": "That was worse than the last one.",
+            "say": [ "I know. Dwayne helped me write it, he said it was funny.", "Dwayne's not allowed to help anymore. His mom took his Swotch and now he cries at night." ]
+          },
+          {
+            "text": "Is that the same joke as last time?",
+            "say": [ "No, it's different, the ghost is in a different sheet this time, dumbass." ]
+          },
+          {
+            "text": "Stop calling me, you little dick.",
+            "say": [ "Fine. I'll call you back tomorrow then.", "Bye. I'm gonna bring a better one. A fucking good one." ]
+          }
+        ] }
+      ]
+    },
+    {
+      "id": "kids-prank-turns",
+      "callerId": "TYLER",
+      "incoming": { "weight": 1, "cooldown": 90, "once": true },
+      "say": [
+        "Is this the house with the lady in the upstairs window?",
+        "Okay we're gonna prank you. Your house smells like old socks and cat pee.",
+        { "choices": [
+          {
+            "text": "Tyler, your mom's in the kitchen. She heard all of that.",
+            "say": [
+              "...What? No she's not, she's at work.",
+              "<size=150%>MOM? MOM WHY ARE YOU HOME?<size=100%> Mom I was just fucking joking!"
+            ]
+          },
+          {
+            "text": "Yeah, they're my socks. Got a problem with that?",
+            "say": [ "No. Sorry about your socks, mister.", "Dwayne says the socks are the scariest part of the whole prank. Dwayne is a liar, the socks are gross." ]
+          },
+          {
+            "text": "Hang up before your dad finds out.",
+            "say": [ "Our dad isn't even home, he's at work until six.", "Okay okay, we're hanging up. Sorry about the socks, they look pretty nasty." ]
+          }
+        ] },
+        { "random": [
+          "Okay we're grounded. Mom says we're grounded forever now. No more video games.",
+          "Mom says it's not funny and she's coming to get the phone. She's so pissed."
+        ] }
+      ]
+    },
+    {
+      "id": "kids-hotline",
+      "number": "555-0221",
+      "name": "Kids Hotline",
+      "callerId": "HOTLINE",
+      "when": { "not": { "flag": "kids_scared_off" } },
+      "otherwise": [ "Hotline's closed. Dwayne got grounded for this one, the shit head." ],
+      "say": [
+        "Hotline? Hotline?? Oh my god, you actually called the number.",
+        "We said you wouldn't. Dwayne owes Priya five bucks for this.",
+        { "choices": [
+          {
+            "text": "What do you want?",
+            "say": [
+              "Nothing! That's the dare. Stay on the line for thirty seconds.",
+              "Twenty-nine. Twenty-eight. Don't hang up on us you big chicken shit.",
+              "Okay, that's it. You're the bravest hermit in the whole fucking town."
+            ]
+          },
+          {
+            "text": "Can I hang up now?",
+            "say": [ "No! Dwayne she's trying to hang up!", "...Fine. Bye. Bye hermit, go wash your ass." ]
+          },
+          {
+            "text": "Tell Mikey I said hi.",
+            "if": { "flag": "kids_nice" },
+            "say": [ "Oh. Okay. He says hi back and he isn't scared anymore.", "Maybe still a little scared, he pissed his pants. Bye, creep." ]
+          }
+        ] }
+      ]
+    }
+  ]
+}
