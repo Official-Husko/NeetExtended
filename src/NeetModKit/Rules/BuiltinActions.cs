@@ -12,6 +12,8 @@ internal static class BuiltinActions
     {
         RuleActions.Register(kit, "money", a => Money.Add(a.Num("amount")), "amount",
             "Adds (or with a minus, takes) cash. Increases are taxed like any income.");
+        RuleActions.Register(kit, "give", a => a.Repeat(() => Spawning.Item(a.Require("item"), BesideSpeaker())), "item",
+            "Pops an item out next to whoever is talking (like the game's GiveItem), or in front of the player. \"count\" for more.");
         RuleActions.Register(kit, "deliver", a => RuleActions.Later(kit, a.Num("after"), () => a.Repeat(() => Deliveries.Drop(a.Require("item")))), "item",
             "Drops a package with the item at the front door. \"after\": seconds to wait, \"count\" for more.");
         RuleActions.Register(kit, "npc", a => Spawning.NpcInRoom(a.Require("name"), Room(a, Location.FrontYard)), "name",
@@ -36,6 +38,15 @@ internal static class BuiltinActions
             "Knocks the player out for a few seconds.");
         RuleActions.Register(kit, "stat", a => ChangeStat(a), "name",
             "Changes a player stat (Hunger, Energy, Soul, ...): \"set\" a value or \"add\" to it.");
+    }
+
+    private static Vector3 BesideSpeaker()
+    {
+        var speaker = Dialogue._ != null ? Dialogue._.currSpeaker : null;
+        if (speaker == null)
+            return Spawning.InFrontOfPlayer();
+        // Same spot the game uses for GiveItem.
+        return speaker.transform.position + Vector3.up * 0.6f + speaker.transform.forward * 0.3f;
     }
 
     private static Location Room(ActionArgs args, Location fallback) =>

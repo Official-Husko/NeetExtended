@@ -121,7 +121,7 @@ Wherever steps are expected, a single step works too: `"then": "Oh hi."`. After 
 
 ### Conditions
 
-A condition is an object; every key in it must hold. Used by `when`, `if`, choice `if` and `incoming.when`. Conditions and actions are shared with every mod that reads content files (emails use the same ones), and flags are shared too: an email can set a flag a call checks. `called`, `dialed`, `give` and `ring` come from the phone; the rest from the framework.
+A condition is an object; every key in it must hold. Used by `when`, `if`, choice `if` and `incoming.when`. Conditions and actions are shared with every mod that reads content files (emails use the same ones), and flags are shared too: an email can set a flag a call checks. `called`, `dialed` and `ring` come from the phone; the rest from the framework.
 
 | Key | Holds when |
 | --- | --- |
@@ -152,7 +152,7 @@ A condition is an object; every key in it must hold. Used by `when`, `if`, choic
 | Action | Values | Does |
 | --- | --- | --- |
 | `money` | `amount` | Adds cash, or takes it with a minus. Increases are taxed like any income. |
-| `give` | `item`, `count` | Pops items out next to the phone, like the game's GiveItem. |
+| `give` | `item`, `count` | Pops items out next to the phone (whoever is talking), like the game's GiveItem. Elsewhere, in front of the player. |
 | `deliver` | `item`, `count`, `after` | Drops a package with the item at the front door after `after` seconds. Item names are the cheat menu's spawn list. A delivery still waiting when the game saves is lost. |
 | `npc` | `name`, `room` | Spawns a character (default room: FrontYard). |
 | `fire` | `room` | Starts a fire (default: wherever the player is). |
