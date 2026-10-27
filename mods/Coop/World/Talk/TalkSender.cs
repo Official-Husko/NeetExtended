@@ -9,6 +9,8 @@ internal static class TalkSender
     /// <summary>The conversation's last step to its player; a closed conversation's bookkeeping follows.</summary>
     public static void Line(Conversation c)
     {
+        // One seed for the line's voice, for the talker's box and everyone watching.
+        c.Seed = Watch.LineVoice.NewSeed();
         var w = Outbox.Begin(MessageIds.WorldTalkView);
         w.Put(TalkProtocol.Line);
         w.Put(c.Id);
@@ -31,6 +33,7 @@ internal static class TalkSender
         if (c.BucketOff)
             flags |= TalkProtocol.BucketOff;
         w.Put(flags);
+        w.Put(c.Seed);
         if (c.HasLine)
             w.Put(c.Text);
         int count = Math.Min(c.Choices.Count, byte.MaxValue);

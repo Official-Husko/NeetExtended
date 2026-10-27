@@ -7,9 +7,9 @@ namespace Coop.World.Talk.Watch;
 
 /// <summary>
 /// The conversations other players are in, shown in this game's dialogue box when this player is
-/// close to the speaker (<see cref="WatchProtocol"/>). Every game keeps the latest state of each
-/// conversation (the host feeds its own copy as it sends), and the closest one in range is drawn
-/// from its current line: a player walking up mid-conversation starts there, silently.
+/// close to the speaker and not shut off from it by a wall (<see cref="Earshot"/>, <see cref="WatchProtocol"/>).
+/// Every game keeps the latest state of each conversation (the host feeds its own copy as it sends),
+/// and the closest one in range is drawn from its current line: a player walking up mid-conversation starts there, silently.
 ///
 /// Watching never takes over the watcher: the box is for show (its buttons can't be clicked) and no
 /// speaker is set in <c>Dialogue</c>, so Use, movement and walking away work as usual. A
@@ -68,7 +68,7 @@ internal static class Watching
 
     // The events, from the host's own hooks and from the network.
 
-    public static void OnShow(SpeakerRef speaker, byte talker, bool playerVoice, string text)
+    public static void OnShow(SpeakerRef speaker, byte talker, bool playerVoice, int seed, string text)
     {
         if (!speaker.IsValid)
             return;
@@ -78,7 +78,7 @@ internal static class Watching
             t = new WatchedTalk { Ref = speaker };
             Talks[key] = t;
         }
-        t.NewLine(talker, text, playerVoice);
+        t.NewLine(talker, text, playerVoice, seed);
         Select(t);
     }
 
@@ -115,7 +115,7 @@ internal static class Watching
         {
             t.Lingering = true;
             TalkView.HideChoices();
-            TalkView.StopVoice();
+            TalkVoice.Stop();
             return;
         }
         Talks.Remove(key);
@@ -137,7 +137,8 @@ internal static class Watching
             case WatchProtocol.Show:
                 byte talker = r.GetByte();
                 byte flags = r.GetByte();
-                OnShow(speaker, talker, (flags & WatchProtocol.PlayerVoice) != 0, r.GetString());
+                int seed = r.GetInt();
+                OnShow(speaker, talker, (flags & WatchProtocol.PlayerVoice) != 0, seed, r.GetString());
                 break;
             case WatchProtocol.Choices:
                 int count = r.GetByte();
@@ -169,7 +170,7 @@ internal static class Watching
             {
                 _shown = null;
                 TalkView.HideChoices();
-                TalkView.StopVoice();
+                TalkVoice.Stop();
             }
             return;
         }
@@ -192,7 +193,7 @@ internal static class Watching
                 if (speaker == null)
                     continue;
                 bool wasShown = t == _shown;
-                if (!Near(from, speaker.transform.position, wasShown))
+                if (!Near(from, speaker.transform.position, wasShown) || !t.Heard(from, speaker.transform.position))
                 {
                     if (t.Lingering)
                         gone = t;
@@ -223,7 +224,7 @@ internal static class Watching
 
     private static void Display(WatchedTalk t, bool voice)
     {
-        TalkView.ShowWatched(t.Speaker, t.Text, t.PlayerVoice, voice ? Speakers.PlayerAt(t.Talker) : null, voice);
+        TalkView.ShowWatched(t.Speaker, t.Text, t.PlayerVoice, voice ? Speakers.PlayerAt(t.Talker) : null, voice, t.Seed);
         if (!t.ChoicesShown)
             return;
         if (t.Picked >= 0)

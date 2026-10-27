@@ -16,7 +16,7 @@ internal static class WatchSender
     {
         c.ChoicesSent = false;
         if (c.HasLine)
-            Show(c.Ref, c.Slot, c.PlayerVoice, c.Text);
+            Show(c.Ref, c.Slot, c.PlayerVoice, c.Seed, c.Text);
     }
 
     /// <summary>The talker's choices came up (their game said so).</summary>
@@ -36,12 +36,14 @@ internal static class WatchSender
 
     public static void Close(Conversation c) => Close(c.Ref, c.KeepText);
 
-    public static void Show(SpeakerRef speaker, byte talker, bool playerVoice, string text)
+    public static void Show(SpeakerRef speaker, byte talker, bool playerVoice, int seed, string text)
     {
         if (!speaker.IsValid)
             return;
-        Watching.OnShow(speaker, talker, playerVoice, text);
-        Write(WatchProtocol.Show, speaker, talker, playerVoice, text);
+        Watching.OnShow(speaker, talker, playerVoice, seed, text);
+        var w = Outbox.Begin(MessageIds.WorldTalkWatch);
+        BeginShow(w, speaker, talker, playerVoice, seed, text);
+        Outbox.ToPlayers(w, Channel.Events);
     }
 
     public static void Choices(SpeakerRef speaker, List<string> choices)
@@ -86,7 +88,7 @@ internal static class WatchSender
             if (t.Lingering)
                 continue;
             var w = Outbox.Begin(MessageIds.WorldTalkWatch);
-            Begin(w, WatchProtocol.Show, t.Ref, t.Talker, t.PlayerVoice, t.Text);
+            BeginShow(w, t.Ref, t.Talker, t.PlayerVoice, t.Seed, t.Text);
             Outbox.ToSlot(slot, w, Channel.Events);
             if (!t.ChoicesShown)
                 continue;
@@ -103,11 +105,14 @@ internal static class WatchSender
         }
     }
 
-    private static void Write(byte kind, SpeakerRef speaker, byte talker, bool playerVoice, string text)
+    private static void BeginShow(LiteNetLib.Utils.NetDataWriter w, SpeakerRef speaker, byte talker, bool playerVoice, int seed, string text)
     {
-        var w = Outbox.Begin(MessageIds.WorldTalkWatch);
-        Begin(w, kind, speaker, talker, playerVoice, text);
-        Outbox.ToPlayers(w, Channel.Events);
+        w.Put(WatchProtocol.Show);
+        speaker.Write(w);
+        w.Put(talker);
+        w.Put(playerVoice ? WatchProtocol.PlayerVoice : (byte)0);
+        w.Put(seed);
+        w.Put(text ?? "");
     }
 
     private static void BeginChoices(LiteNetLib.Utils.NetDataWriter w, SpeakerRef speaker, List<string> choices)
@@ -118,14 +123,5 @@ internal static class WatchSender
         w.Put((byte)count);
         for (int i = 0; i < count; i++)
             w.Put(choices[i]);
-    }
-
-    private static void Begin(LiteNetLib.Utils.NetDataWriter w, byte kind, SpeakerRef speaker, byte talker, bool playerVoice, string text)
-    {
-        w.Put(kind);
-        speaker.Write(w);
-        w.Put(talker);
-        w.Put(playerVoice ? WatchProtocol.PlayerVoice : (byte)0);
-        w.Put(text ?? "");
     }
 }

@@ -110,8 +110,19 @@ public static class TalkTestApi
         return text.ToString();
     }
 
+    /// <summary>Whether a player at x, y, z could take in a conversation at a handset (phone index) in this game: line clear, same room.</summary>
+    public static string Earshot(int phone, float x, float y, float z)
+    {
+        var handset = global::Coop.World.Talk.Speakers.PhoneAt(phone);
+        if (handset == null)
+            return "No phone.";
+        var spot = handset.transform.position;
+        var at = new Vector3(x, y, z);
+        return $"phone at {spot:0.0} in {NeetModKit.Game.Rooms.At(spot)}, player in {NeetModKit.Game.Rooms.At(at)}: clear {Watch.Earshot.Clear(spot, at)}, same room {Watch.Earshot.SameRoom(spot, at)}";
+    }
+
     /// <summary>Voice blips played here so far, and the last one's source.</summary>
-    public static string Blips() => TalkView.Blips + ", last: " + TalkView.LastVoice;
+    public static string Blips() => "box " + Watch.HostVoice.Blips + " (pitch " + Watch.HostVoice.LastPitch + "), view " + TalkVoice.Blips + ", last: " + TalkVoice.LastVoice;
 
     /// <summary>Host: sends one player the state of every conversation, as a joiner gets it.</summary>
     public static string ResendWatched(int slot)

@@ -6,7 +6,8 @@ namespace Coop.World.Talk.Watch;
 /// events, so nobody has a timer of their own deciding when a line changes).
 ///
 /// WorldTalkWatch (host to all): kind, the speaker (<see cref="SpeakerRef"/>), then
-/// - Show: talker slot, flags, text. A new line; the typing and the voice start over;
+/// - Show: talker slot, flags, the line's voice seed (<see cref="LineVoice"/>), text. A new line; the typing
+///   and the voice start over;
 /// - Choices: count, texts. The talker pressed Use and the choices came up;
 /// - Pick: index. The talker picked one;
 /// - Close: keep text. The conversation is over; with keep text the last line stays up.

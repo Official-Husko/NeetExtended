@@ -30,6 +30,8 @@ internal sealed class Conversation
     public bool PlayerVoice;
     // The watchers were told the choices came up.
     public bool ChoicesSent;
+    // The line's voice seed, for the talker's box and the watchers.
+    public int Seed;
     public bool BucketOff;
 
     // How it ended, if it did.

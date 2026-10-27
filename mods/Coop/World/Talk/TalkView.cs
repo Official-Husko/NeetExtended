@@ -19,29 +19,18 @@ internal static class TalkView
 
     private static Coroutine _typing;
 
-    // Voice blips, played from Tick instead of a coroutine.
-    private static AudioSource _voice;
-    private static bool _oneShot;
-    private static int _blipsLeft;
-    private static float _nextBlip;
-
-    /// <summary>For tests: how many voice blips played, and from what, in this game.</summary>
-    public static int Blips { get; private set; }
-
-    public static string LastVoice { get; private set; } = "";
-
     private static string _toast;
     private static float _toastUntil;
 
     public static void Clear()
     {
         _typing = null;
-        _voice = null;
-        _blipsLeft = 0;
+        TalkVoice.Clear();
         _toast = null;
     }
 
-    public static void ShowLine(CharacterStories speaker, string text, bool isChoice)
+    /// <summary>The talker's own line: the game's typing effect and the blips rolled from the line's seed.</summary>
+    public static void ShowLine(CharacterStories speaker, string text, bool isChoice, int seed)
     {
         var d = Dialogue._;
         if (d == null || d.storyText == null)
@@ -50,7 +39,7 @@ internal static class TalkView
         d.storyText.enabled = true;
         d.GetComponent<CanvasGroup>().interactable = true;
         HideChoices();
-        Show(d, speaker, text, isChoice);
+        Show(d, speaker, text, isChoice, seed);
     }
 
     /// <summary>A line that isn't a conversation, gone after a moment unless a conversation takes the box.</summary>
@@ -60,13 +49,13 @@ internal static class TalkView
         if (d == null || d.storyText == null || d.currSpeaker != null)
             return;
         d.storyText.enabled = true;
-        Show(d, speaker, text, false);
+        Show(d, speaker, text, false, LineVoice.NewSeed());
         _toast = text;
         _toastUntil = Time.time + ToastTime;
     }
 
-    /// <summary>Another player's line: typed out like the game's, in a box nobody can click. With a talker, the voice plays too (theirs at their body).</summary>
-    public static void ShowWatched(CharacterStories speaker, string text, bool playerVoice, Transform talker, bool voice)
+    /// <summary>Another player's line, in a box nobody can click. With a talker the voice plays too, theirs from their body.</summary>
+    public static void ShowWatched(CharacterStories speaker, string text, bool playerVoice, Transform talker, bool voice, int seed)
     {
         var d = Dialogue._;
         if (d == null || d.storyText == null)
@@ -78,9 +67,9 @@ internal static class TalkView
         d.storyText.SetText(text);
         Type(d);
         if (voice)
-            Voice(d, speaker, text, playerVoice, talker);
+            TalkVoice.Begin(d, speaker, text, playerVoice, talker, seed);
         else
-            _blipsLeft = 0;
+            TalkVoice.Stop();
     }
 
     /// <summary>Takes another player's line away.</summary>
@@ -89,7 +78,7 @@ internal static class TalkView
         var d = Dialogue._;
         if (d == null || d.storyText == null)
             return;
-        StopVoice();
+        TalkVoice.Stop();
         if (_typing != null)
         {
             d.StopCoroutine(_typing);
@@ -99,8 +88,6 @@ internal static class TalkView
         d.storyText.enabled = false;
         HideChoices();
     }
-
-    public static void StopVoice() => _blipsLeft = 0;
 
     /// <summary>Only the choice another player picked stays up.</summary>
     public static void ShowPicked(List<string> choices, int index)
@@ -154,20 +141,8 @@ internal static class TalkView
     /// <summary>Every frame: voice blips, and a short line timing out.</summary>
     public static void Tick()
     {
+        TalkVoice.Tick();
         float now = Time.time;
-        if (_blipsLeft > 0 && now >= _nextBlip)
-        {
-            if (_voice != null)
-            {
-                if (!_oneShot)
-                    _voice.pitch = Random.Range(0.8f, 1.4f);
-                _voice.Play();
-                LastVoice = _voice.name + " at " + _voice.transform.position.ToString("0.0");
-                Blips++;
-            }
-            _blipsLeft--;
-            _nextBlip = now + Random.Range(0.1f, 0.2f);
-        }
         if (_toast != null && now > _toastUntil)
         {
             var d = Dialogue._;
@@ -181,11 +156,11 @@ internal static class TalkView
         }
     }
 
-    private static void Show(Dialogue d, CharacterStories speaker, string text, bool isChoice)
+    private static void Show(Dialogue d, CharacterStories speaker, string text, bool isChoice, int seed)
     {
         d.storyText.SetText(text);
         Type(d);
-        Voice(d, speaker, text, isChoice, null);
+        TalkVoice.Begin(d, speaker, text, isChoice, null, seed);
     }
 
     private static void Type(Dialogue d)
@@ -194,57 +169,5 @@ internal static class TalkView
             d.StopCoroutine(_typing);
         var typing = d.storyText.GetComponent<TextAnimations>();
         _typing = typing != null ? d.StartCoroutine(typing.AnimateVertexColors(Dialogue.TextAnimationType.Simple)) : null;
-    }
-
-    // Dialogue.PlayVoiceAudio's recipe: a blip every 0.1-0.2 s, about one per two words.
-    // With a talker (another player's line), the player's voice comes from their body.
-    private static void Voice(Dialogue d, CharacterStories speaker, string text, bool isChoice, Transform talker)
-    {
-        _oneShot = speaker != null && speaker.soundOneShot;
-        if (_oneShot)
-        {
-            var sources = speaker.GetComponents<AudioSource>();
-            _voice = sources.Length > 0 ? sources[Random.Range(0, sources.Length)] : null;
-            _blipsLeft = 1;
-        }
-        else
-        {
-            _voice = isChoice || speaker == null ? PlayerVoice(d, talker) : SpeakerVoice(d, speaker, talker);
-            _blipsLeft = 1 + Random.Range(0, 2) + Mathf.Max(0, Mathf.RoundToInt(Words(text) * 0.42f));
-        }
-        _nextBlip = Time.time;
-    }
-
-    private static AudioSource SpeakerVoice(Dialogue d, CharacterStories speaker, Transform talker)
-    {
-        if (speaker.TryGetComponent(out AudioSource own) && own.clip != null)
-        {
-            if (speaker.dialogueAudio != null)
-                own.clip = speaker.dialogueAudio;
-            return own;
-        }
-        return PlayerVoice(d, talker);
-    }
-
-    private static AudioSource PlayerVoice(Dialogue d, Transform talker)
-    {
-        if (talker != null)
-        {
-            var world = WatchVoice.At(d, talker.position + Vector3.up * 1.5f);
-            if (world != null)
-                return world;
-        }
-        return d.TryGetComponent(out AudioSource voice) ? voice : null;
-    }
-
-    private static int Words(string text)
-    {
-        int words = 1;
-        foreach (char c in text)
-        {
-            if (c == ' ')
-                words++;
-        }
-        return words;
     }
 }

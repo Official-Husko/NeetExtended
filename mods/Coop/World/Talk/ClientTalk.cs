@@ -164,6 +164,7 @@ internal static class ClientTalk
         int id = r.GetInt();
         var speaker = Speakers.Resolve(SpeakerRef.Read(r));
         byte flags = r.GetByte();
+        int seed = r.GetInt();
         string text = (flags & TalkProtocol.HasText) != 0 ? r.GetString() : null;
         int count = r.GetByte();
         Choices.Clear();
@@ -180,7 +181,7 @@ internal static class ClientTalk
         var d = Dialogue._;
         d.currSpeaker = speaker;
         if (text != null)
-            TalkView.ShowLine(speaker, text, (flags & TalkProtocol.IsChoice) != 0);
+            TalkView.ShowLine(speaker, text, (flags & TalkProtocol.IsChoice) != 0, seed);
         if ((flags & TalkProtocol.OfferingTime) != 0)
             Offerings.Show(speaker, on: true);
         if ((flags & TalkProtocol.BucketOff) != 0)

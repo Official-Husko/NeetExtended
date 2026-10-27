@@ -11,7 +11,7 @@ namespace Coop.World.Talk;
 /// - Showed: conversation id. The choices came up in the talker's box (the others' boxes follow, see <see cref="Watch.WatchProtocol"/>).
 ///
 /// WorldTalkView (host to clients): kind, then
-/// - Line (to the talker): id, speaker, flags, text, choices;
+/// - Line (to the talker): id, speaker, flags, the line's voice seed, text, choices;
 /// - Close (to the talker): id;
 /// - Busy (to the one who asked): speaker, who's talking to them;
 /// - Left (to everyone): speaker (it walked off; nobody can talk to it any more).

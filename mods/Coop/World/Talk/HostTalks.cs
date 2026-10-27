@@ -223,29 +223,6 @@ internal static class HostTalks
         return false;
     }
 
-    /// <summary>Host, before a handset's ClearScreen: a remote player's call ends with it, and only the host's own call closes the host's dialogue box.</summary>
-    public static void BeforeClearScreen(Phone_Interface phone, bool noDistanceCheck, ref bool endPhoneCall)
-    {
-        if (!WorldSide.Running || !WorldSide.IsHost || TalkRunner.Current != null)
-            return;
-        var speaker = phone.GetComponent<CharacterStories>();
-        if (endPhoneCall && Dialogue._ != null && Dialogue._.currSpeaker != speaker)
-            endPhoneCall = false;
-        bool acts = noDistanceCheck || (phone.player != null && Vector3.Distance(phone.player.transform.position, phone.transform.position) < 2.2f);
-        if (acts && speaker != null && BySpeaker.TryGetValue(speaker, out var c))
-            End(c, hangUp: false, tell: true);
-    }
-
-    /// <summary>Host: true when a remote player is on <paramref name="phone"/> or dialing it (the host walking past leaves it alone).</summary>
-    public static bool RemoteOnPhone(Phone_Interface phone)
-    {
-        var speaker = phone.GetComponent<CharacterStories>();
-        if (speaker != null && BySpeaker.ContainsKey(speaker))
-            return true;
-        byte caller = speaker != null ? PhoneRequests.CallerOf(speaker) : WorldSide.None;
-        return caller != WorldSide.None && caller != WorldSide.HostSlot;
-    }
-
     /// <summary>Host, after CharacterStories.Leaving: everyone's copy stops taking conversations.</summary>
     public static void AfterLeaving(CharacterStories speaker)
     {

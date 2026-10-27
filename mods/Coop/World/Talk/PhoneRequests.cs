@@ -84,7 +84,7 @@ internal static class PhoneRequests
         if (!WorldSide.Running)
             return true;
         if (WorldSide.IsHost)
-            return !HostTalks.RemoteOnPhone(phone);
+            return !HostPhoneTalks.RemoteOnPhone(phone);
         if (other.gameObject == WorldSide.LocalPlayer)
             Send(phone, WalkedAway);
         return false;

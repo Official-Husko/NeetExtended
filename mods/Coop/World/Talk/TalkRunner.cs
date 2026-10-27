@@ -13,21 +13,10 @@ namespace Coop.World.Talk;
 /// </summary>
 internal static class TalkRunner
 {
-    private const string DefaultFlow = "DEFAULT_FLOW";
-
     private static readonly List<string> Tags = new List<string>();
 
     /// <summary>The conversation a step is running for, or null between steps.</summary>
     public static Conversation Current { get; private set; }
-
-    // The host's own state while a step runs.
-    private static string _flow;
-    private static CharacterStories _speaker;
-    private static string _knot;
-    private static GameObject _offering;
-    private static AudioSource _audio;
-    private static GameObject _playerRef;
-    private static Brain _playerBrain;
 
     /// <summary>InitCharacterDialogue's story part: start the knot, or pick the flow up where it stopped.</summary>
     public static void Begin(Conversation c, bool enableCanvasOnly, bool forceChoosePath)
@@ -112,7 +101,8 @@ internal static class TalkRunner
         if (c.Closed || c.Speaker == null || Dialogue._ == null)
             return;
         c.BeginStep();
-        Enter(c);
+        TalkSwap.Enter(c);
+        Current = c;
         try
         {
             step();
@@ -126,7 +116,8 @@ internal static class TalkRunner
         }
         finally
         {
-            Exit(c);
+            Current = null;
+            TalkSwap.Exit(c);
         }
     }
 
@@ -258,51 +249,4 @@ internal static class TalkRunner
     }
 
     private static bool Starts(string tag, string name) => tag.StartsWith(name, StringComparison.Ordinal);
-
-    private static void Enter(Conversation c)
-    {
-        var d = Dialogue._;
-        _flow = d.masterStory.currentFlowName;
-        _speaker = d.currSpeaker;
-        _knot = d.currKnot;
-        _offering = d.currentOffering;
-        _audio = d.currentAudio;
-        _playerRef = c.Speaker.playerRef;
-        _playerBrain = c.Speaker.playerBrain;
-
-        d.currSpeaker = c.Speaker;
-        d.currKnot = c.Knot;
-        d.currentOffering = c.Offering;
-        // Story functions that look at "the player" through the speaker find the talker's body.
-        var body = Speakers.BodyOf(c.Slot);
-        if (body != null)
-            c.Speaker.playerRef = body;
-        d.masterStory.SwitchFlow(c.Flow);
-        Current = c;
-    }
-
-    private static void Exit(Conversation c)
-    {
-        Current = null;
-        var d = Dialogue._;
-        c.Offering = d.currentOffering;
-        if (_flow == DefaultFlow)
-            d.masterStory.SwitchToDefaultFlow();
-        else
-            d.masterStory.SwitchFlow(_flow);
-        d.currSpeaker = _speaker;
-        d.currKnot = _knot;
-        d.currentOffering = _offering;
-        d.currentAudio = _audio;
-        if (c.Speaker != null)
-        {
-            c.Speaker.playerRef = _playerRef;
-            c.Speaker.playerBrain = _playerBrain;
-        }
-        _speaker = null;
-        _offering = null;
-        _audio = null;
-        _playerRef = null;
-        _playerBrain = null;
-    }
 }

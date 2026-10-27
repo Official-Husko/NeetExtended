@@ -100,7 +100,7 @@ internal static class TalkPatches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Phone_Interface), nameof(Phone_Interface.ClearScreen))]
     private static void Clearing(Phone_Interface __instance, bool noDistanceCheck, ref bool endPhoneCall) =>
-        HostTalks.BeforeClearScreen(__instance, noDistanceCheck, ref endPhoneCall);
+        HostPhoneTalks.BeforeClearScreen(__instance, noDistanceCheck, ref endPhoneCall);
 
     // Walking away from a handset clears it; only for the player who's using it.
     [HarmonyPrefix]
