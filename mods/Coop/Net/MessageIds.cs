@@ -14,5 +14,8 @@ public static class MessageIds
     public const ushort Ready = 5;
     public const ushort Resync = 6;
 
+    // Join
+    public const ushort Snapshot = 20;
+
     // World: 100-199, see World/.
 }

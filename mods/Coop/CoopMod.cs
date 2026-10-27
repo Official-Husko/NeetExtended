@@ -1,4 +1,5 @@
 using System;
+using Coop.Join;
 using Coop.Menu;
 using Coop.Net;
 using Coop.Session;
@@ -55,6 +56,9 @@ public sealed class CoopMod : NeetMod
 
         RemoteClock.Init();
         Handshake.Init();
+        ScenePolicy.Init(this);
+        JoinLoader.Init(this);
+        SnapshotSender.Init();
         ModMenu.AddPage(this, new CoopPage());
     }
 
