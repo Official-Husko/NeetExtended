@@ -64,6 +64,8 @@ internal sealed class MixtapesPage : MenuPage
         string error = SongLibrary.ErrorOf(tape.File);
         if (error != null)
             parts.Add(MenuPalette.Paint("the song " + error, MenuPalette.Bad));
+        else if (SongLibrary.IsMissing(tape.File))
+            parts.Add("waiting for the song to arrive");
         else if (SongLibrary.Loaded(tape.File) == null)
             parts.Add("loading the song");
         else

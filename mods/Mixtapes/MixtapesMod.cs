@@ -7,6 +7,7 @@ using Mixtapes.Tapes;
 using NeetLoader;
 using NeetLoader.Config;
 using NeetModKit.Features;
+using NeetModKit.IO;
 using NeetModKit.Menu;
 using NeetModKit.Settings;
 
@@ -30,6 +31,7 @@ public sealed class MixtapesMod : NeetMod
         ModSettings.Register(this, Config, "Mixtapes");
 
         SongLibrary.Init(this);
+        ModContent.FileArrived += SongLibrary.FileArrived;
         SongLibrary.SongLoaded += RadioStation.Refresh;
         TapeLoader.Changed += RadioStation.Refresh;
         TapeLoader.Init(this);
@@ -44,6 +46,7 @@ public sealed class MixtapesMod : NeetMod
 
     public override void OnUnload()
     {
+        ModContent.FileArrived -= SongLibrary.FileArrived;
         SongLibrary.SongLoaded -= RadioStation.Refresh;
         TapeLoader.Changed -= RadioStation.Refresh;
         RadioStation.StopAll();

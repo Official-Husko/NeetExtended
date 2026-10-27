@@ -19,6 +19,10 @@ internal static class SongLibrary
         public AudioClip Clip;
         public string Error;
         public bool Loading;
+
+        /// <summary>The file isn't there yet (co-op is still getting it); it loads when it arrives.</summary>
+        public bool Missing;
+
         public readonly List<Action<AudioClip>> Waiting = new List<Action<AudioClip>>();
     }
 
@@ -33,16 +37,13 @@ internal static class SongLibrary
 
     public static void Init(MixtapesMod mod) => _mod = mod;
 
-    /// <summary>Calls <paramref name="done"/> with the song's clip once it's loaded (right away if it is), or null if it can't be.</summary>
+    /// <summary>
+    /// Calls <paramref name="done"/> with the song's clip once it's loaded (right away if it is), or
+    /// null if it can't be. A file that isn't there yet (co-op is still getting it) loads when it
+    /// arrives (<see cref="FileArrived"/>).
+    /// </summary>
     public static void Get(string file, Action<AudioClip> done)
     {
-        // Not there yet (co-op is still fetching the host's song): no clip, and no error kept, so
-        // the next load tries again.
-        if (!Songs.ContainsKey(file) && !File.Exists(file))
-        {
-            done(null);
-            return;
-        }
         if (!Songs.TryGetValue(file, out var song))
             Songs[file] = song = new Song();
         if (song.Clip != null || song.Error != null)
@@ -51,12 +52,25 @@ internal static class SongLibrary
             return;
         }
         song.Waiting.Add(done);
-        if (!song.Loading)
+        if (song.Loading)
+            return;
+        if (!File.Exists(file))
         {
-            song.Loading = true;
-            _mod.StartCoroutine(Load(file, song));
+            song.Missing = true;
+            return;
         }
+        StartLoading(file, song);
     }
+
+    /// <summary>A song's file turned up: it loads now, and the tapes waiting for it get it.</summary>
+    public static void FileArrived(string path)
+    {
+        if (Songs.TryGetValue(path, out var song) && song.Missing && !song.Loading && File.Exists(path))
+            StartLoading(path, song);
+    }
+
+    /// <summary>Waiting for its file (see <see cref="Get"/>).</summary>
+    public static bool IsMissing(string file) => Songs.TryGetValue(file, out var song) && song.Missing;
 
     /// <summary>The clip if it's loaded, else null.</summary>
     public static AudioClip Loaded(string file) => Songs.TryGetValue(file, out var song) ? song.Clip : null;
@@ -85,6 +99,13 @@ internal static class SongLibrary
         foreach (var song in Songs.Values)
             Destroy(song);
         Songs.Clear();
+    }
+
+    private static void StartLoading(string file, Song song)
+    {
+        song.Missing = false;
+        song.Loading = true;
+        _mod.StartCoroutine(Load(file, song));
     }
 
     private static IEnumerator Load(string file, Song song)
