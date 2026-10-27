@@ -25,6 +25,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Market orders that don't go through can still bring the cops | `FailedOrderCops` |
 | Custom cassettes cost 10$ more than shown | `CassettePrice` |
 | The last achievement has no spot on the medal shelf | `LastMedal` |
+| The money platinum medal reads another medal's progress | `MoneyMedal` |
 
 ## Saving fails with a dead house spider around
 
@@ -212,6 +213,14 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a transpiler turns the `- 1` into `- 0`.
 
 **Reproduce:** count `achievementWings` on the `AchievementViewer` after the house loads: 9 without `LastMedal`, 10 with it.
+
+## The money platinum medal reads another medal's progress
+
+**What happens:** the total money platinum goal starts as done if you earned the platinum for the biggest single money gain, and not done if you earned its own.
+
+**Cause:** `AchievementManager.Awake` builds the `totalMoneyPlatinum` goal with `TryGetPlayerPrefBool("biggestMoneyGainPlatinum")` (`AchievementManager.cs:254`).
+
+**Fix:** a transpiler replaces that key with `totalMoneyPlatinum`.
 
 ## Not bugs
 
