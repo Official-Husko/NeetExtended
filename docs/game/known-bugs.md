@@ -21,6 +21,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | The spam timer starts over after loading | `SpamTimer` |
 | Spam comes twice as often after loading | `DoubleSpam` |
 | Poopman never says his hurt and disgusted lines | `KnotNames` |
+| Grandpa is sent to a routine he doesn't have | `SegmentLines` |
 
 ## Saving fails with a dead house spider around
 
@@ -168,6 +169,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a prefix on `Dialogue.InitCharacterDialogue`: when the knot asked for doesn't exist, one whose name only differs in upper and lower case is used.
 
 **Reproduce:** with `KnotNames` off, spawn Poopman (`npcs.spawn`) and call `InitCharacterDialogue(poopman, "Poopman_Harm", "PoopmanHarm", true, true)` on `DialogueCanvas`: nothing. With it on: "You are weak."
+
+## Grandpa is sent to a routine he doesn't have
+
+**What happens:** when the bad thief's kill timer runs out, the game switches Grandpa to the routine `Thief_Intro_Blackout`. His routines are `Init`, `Thief_Intro` and `Blackout`. Looking the routine up throws, right away (`InitSegments`) and again whenever his behaviour tree reaches a target (`SetDestinationReachedRot`, `BrainNeetAI.cs:649`).
+
+**Cause:** the switch comes from scene data (the thief's `OnDelayedKill` event calls `Dialogue.SwitchSegmentLine("Grandpa_NPC@Thief_Intro_Blackout")`), and `SwitchSegmentLine` doesn't check the name; `GetCurrentSegmentLine` uses `Single` (`BrainNeetAI.cs:119`). Found in the scene data, not seen in play.
+
+**Fix:** a prefix on `SwitchSegmentLine(string, string)` (after `LostCharacters`' check): a missing routine becomes the one its name ends with (`Blackout`), or the switch is skipped and reported in the error report.
+
+**Reproduce:** call `SwitchSegmentLine("Grandpa_NPC", "Thief_Intro_Blackout")` on `DialogueCanvas`. With `SegmentLines` on, the log says it used `Blackout`.
 
 ## Not bugs
 

@@ -21,6 +21,9 @@ internal static class PatchReports
     public static void CharacterMissing(string character, string call) =>
         ErrorReport.Add(Source, $"Story event skipped: {character} isn't in the house", $"{call}\n{Where()}\nCalled from:\n{Caller()}");
 
+    public static void RoutineMissing(string character, string routine) =>
+        ErrorReport.Add(Source, $"{character} has no routine \"{routine}\"; kept the one it's on", $"SwitchSegmentLine({character}, {routine})\n{Where()}\nCalled from:\n{Caller()}");
+
     public static void SaveSkipped(object owner, Exception error)
     {
         string what = Describe(owner);
