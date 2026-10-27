@@ -8,6 +8,7 @@ using WeatherExpansion.Storm;
 using WeatherExpansion.Fog;
 using WeatherExpansion.Lightning;
 using WeatherExpansion.Forecast;
+using WeatherExpansion.Soaking;
 using NeetModKit.Saves;
 using WeatherExpansion.Windows;
 
@@ -42,6 +43,7 @@ public sealed class WeatherExpansionMod : NeetMod
         ModFeatures.Register(this, new FusePopFeature());
         ForecastApp.Register(this);
         ModFeatures.Register(this, new StormScheduleFeature());
+        ModFeatures.Register(this, new RainWetnessFeature());
         ModSaveData.Register<StormMemory.Saved>(this, StormMemory.ForSave, StormMemory.FromSave, SaveKey);
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }

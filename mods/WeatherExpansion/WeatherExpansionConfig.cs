@@ -77,4 +77,15 @@ public sealed class WeatherExpansionConfig
     [Description("How often lightning strikes, compared to what the weather usually brings. 2 is twice as often, 0.5 half as often.")]
     [Shared]
     public float ThunderFrequency = 1f;
+
+    [Label("Rain makes you wet")]
+    [Description("Standing in the rain outside, with nothing over your head, soaks you.")]
+    [Shared]
+    public bool RainMakesYouWet = true;
+
+    [Label("How fast rain soaks you")]
+    [Range(0.25f, 3f)]
+    [Description("How quickly you get wet in the rain. 1 is the normal speed.")]
+    [Shared]
+    public float SoakSpeed = 1f;
 }

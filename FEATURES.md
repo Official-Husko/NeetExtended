@@ -207,6 +207,7 @@ Changes how the storm outside looks. Each look is its own switch on the Mods pag
 - **Weather hotline**: call 555-9328 and Skip reads you the weather and what the forecast says comes next, in a different way each time. He makes something up when nobody has a forecast. An ad for the number rings in once (needs Phone Expansion).
 - **Forecast site**: **Wetballs Weather** on the computer (address `wetballs`, or Weather in the start menu) shows the weather now, what's coming with a countdown and the next lightning.
 - **Changing weather**: the storm moves over the night between drizzle, rain and a full storm, lighter and heavier, and never clears up. The rain gets thinner or heavier, the wind louder or quieter, and lightning strikes often in a storm and hardly at all in a drizzle. It carries on where it was when you load a save. **Weather changes every (minutes)**, **Strongest weather**, **Storminess** (which way it leans) and **Thunder frequency** in Mod Settings. In co-op the host's weather and settings count for everyone.
+- **Rain makes you wet**: standing in the yard in the rain with nothing over your head soaks you, slowly in a drizzle and fast in a storm. You dry off indoors, and under a roof or a tree you stay dry. Wet people drip, take half the damage from fire and get shocked harder. **Rain makes you wet** and **How fast rain soaks you** in Mod Settings.
 
 ## Randomizer
 
