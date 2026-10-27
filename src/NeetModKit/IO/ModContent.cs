@@ -61,8 +61,9 @@ public sealed class ModContent
             _real != null && _real.TryGetValue(System.IO.Path.GetFullPath(file), out string real) ? real : file;
 
         /// <summary>"ModId/folder/file.ext", for messages.</summary>
-        public string Display(string file) =>
-            Mod.Id + "/" + file.Substring(Mod.Directory.Length).TrimStart('/', '\\').Replace('\\', '/');
+        public string Display(string file) => file.StartsWith(Mod.Directory, StringComparison.OrdinalIgnoreCase)
+            ? Mod.Id + "/" + file.Substring(Mod.Directory.Length).TrimStart('/', '\\').Replace('\\', '/')
+            : Mod.Id + "/" + System.IO.Path.GetFileName(file);
     }
 
     private sealed class Stand
@@ -144,6 +145,32 @@ public sealed class ModContent
         {
             if (string.Equals(content.FolderName, folderName, StringComparison.OrdinalIgnoreCase))
                 content.MarkDirty();
+        }
+    }
+
+    /// <summary>
+    /// A file a stand-in folder lists has just turned up (co-op got it), with its real path. Readers
+    /// that kept an entry for the missing file can start using it now, without loading the whole
+    /// folder again: the TV plays the station, the tape gets its song.
+    /// </summary>
+    public static event Action<string> FileArrived;
+
+    /// <summary>Raises <see cref="FileArrived"/>; a listener that throws doesn't stop the others.</summary>
+    public static void ReportArrived(string path)
+    {
+        var handlers = FileArrived;
+        if (handlers == null || string.IsNullOrEmpty(path))
+            return;
+        foreach (Action<string> handler in handlers.GetInvocationList())
+        {
+            try
+            {
+                handler(path);
+            }
+            catch (Exception e)
+            {
+                KitMod.Instance?.Log.Error($"Using {Path.GetFileName(path)} after it arrived failed", e);
+            }
         }
     }
 

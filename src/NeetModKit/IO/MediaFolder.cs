@@ -18,8 +18,17 @@ public sealed class MediaFile
     /// <summary>The file's entry in the list (names, volume, price, ...), or null for files the list doesn't mention.</summary>
     public JObject Entry;
 
-    /// <summary>The file name without extension, a default name for menus.</summary>
-    public string Name => System.IO.Path.GetFileNameWithoutExtension(Path);
+    private string _name;
+
+    /// <summary>
+    /// The file name without extension, a default name for menus. For a folder made of files from
+    /// elsewhere it's the name the file has in the folder, not the name of the file it's read from.
+    /// </summary>
+    public string Name
+    {
+        get => _name ?? System.IO.Path.GetFileNameWithoutExtension(Path);
+        set => _name = value;
+    }
 }
 
 /// <summary>
@@ -52,7 +61,7 @@ public static class MediaFolder
             AddListed(folder, listPath, entries, files, result, problems);
 
         foreach (string file in files)
-            result.Add(new MediaFile { Path = folder.RealPath(file), Source = folder.Display(file) });
+            result.Add(new MediaFile { Path = folder.RealPath(file), Source = folder.Display(file), Name = System.IO.Path.GetFileNameWithoutExtension(file) });
         return result;
     }
 
@@ -110,7 +119,7 @@ public static class MediaFolder
                 continue;
             }
             files.RemoveAt(index);
-            result.Add(new MediaFile { Path = folder.RealPath(file), Source = folder.Display(file), Entry = entry });
+            result.Add(new MediaFile { Path = folder.RealPath(file), Source = folder.Display(file), Entry = entry, Name = System.IO.Path.GetFileNameWithoutExtension(file) });
         }
     }
 }

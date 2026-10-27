@@ -375,7 +375,7 @@ Conditions are compiled when a file loads, so every pack loads again when a mod 
 
 ## Media folders
 
-`NeetModKit.IO.MediaFolder.Read(folder, extensions, listFile, listKey, problems, out list)` reads a `ModContent` folder of media files (Custom TV Stations' videos, Mixtapes' songs): every file of the given types, sub folders included, as `MediaFile`s (`Path`, `Source`, `Name`, and `Entry`, the file's object from the optional list file). Files the list names come first in its order, the rest follow by file name; list problems (bad JSON, a missing file) go into `problems`. `list` is the whole list file, for anything else in it (the TV's `hide`).
+`NeetModKit.IO.MediaFolder.Read(folder, extensions, listFile, listKey, problems, out list)` reads a `ModContent` folder of media files (Custom TV Stations' videos, Mixtapes' songs): every file of the given types, sub folders included, as `MediaFile`s (`Path`, the real file; `Source`, for messages; `Name`, the file's name without extension as it is in the folder, also for a virtual folder whose files are read from elsewhere; and `Entry`, the file's object from the optional list file). Files the list names come first in its order, the rest follow by file name; list problems (bad JSON, a missing file) go into `problems`. `list` is the whole list file, for anything else in it (the TV's `hide`).
 
 ## Saves
 
@@ -749,6 +749,8 @@ void LoadVideos()
 ```
 
 The load callback runs again on the next frame when a file in any of the folders changes, or a mod that has the folder loads or unloads, so a burst of changes loads once. `MarkDirty()` asks for that too. Watching starts after the first `Load()`.
+
+Another mod can show other folders in place of every mod's own folders of a name: `ModContent.Substitute(owner, "tv", folders)` until it's called again with null or the owner unloads. Co-op uses it so every player sees the session's TV stations and tapes. A stand-in folder is usually virtual: `new ModContent.Folder(mod, path, files)` with a map from each file's path inside the folder to where the file really is (`folder.IsVirtual`, `folder.Files`, `folder.RealPath(file)`). Readers that list files themselves should go through `Files` for a virtual folder; `MediaFolder` does that already. A file of a stand-in folder may not be there yet: when it arrives, the stand-in's owner calls `ModContent.ReportArrived(realPath)` and readers that listen to `ModContent.FileArrived` can start using it (play the station, load the song) without loading the whole folder again.
 
 ## Reflection
 
