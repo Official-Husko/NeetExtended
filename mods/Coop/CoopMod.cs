@@ -70,12 +70,15 @@ public sealed class CoopMod : NeetMod
         Downed.Init();
         Carrying.Init();
         Session.SessionNotices.Init();
+        Admin.PlayerAdmin.Init();
+        Menu.DisconnectButton.Init();
         World.WorldSync.Init(this);
         Assets.FileSharing.Init(this);
         World.Ownership.HoldRepair.Init();
         Content.CoopStory.Register(this);
         SharedHouse.Init(this);
         ModMenu.AddTab(this, new CoopPage());
+        ModMenu.AddTab(this, new PlayersPage());
     }
 
     // After every part (and mods that add transports, like Steam) has started and is listening.

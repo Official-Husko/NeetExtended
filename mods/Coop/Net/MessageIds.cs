@@ -29,6 +29,7 @@ public static class MessageIds
     public const ushort Revive = 44;
     public const ushort CarryRequest = 45;
     public const ushort CarryState = 46;
+    public const ushort PlayerAdmin = 47;
 
     // Assets: 60-79, see Assets/.
     public const ushort AssetWant = 60;

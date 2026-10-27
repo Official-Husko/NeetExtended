@@ -6,7 +6,8 @@ The Co-op mod (`mods/Coop`) lets several games share one house over the network.
 
 - **Host:** load a game, open the mod menu (F1), **Co-op** tab, **OPEN MY HOUSE**. Others connect to your address on UDP port 8889 (setting **Port**). The port has to be open in your router (forwarded to your PC) and in your firewall. On Linux with firewalld: `sudo firewall-cmd --add-port=8889/udp` (add `--permanent` to keep it). Without a forwarded port, a VPN like Tailscale or ZeroTier works: join the host's VPN address.
 - **Join:** **Co-op** tab, type the host's address (`203.0.113.5` or `203.0.113.5:8889`), **JOIN**. You don't need a save of your own; yours are never read or written while you're in someone else's house.
-- **Leave:** **LEAVE**, or go back to the main menu. A client goes back to the main menu when the game ends. When the host leaves, the game ends for everyone.
+- **Leave:** **LEAVE**, or go back to the main menu. In someone else's house the pause menu's **Get out** button reads **Disconnect** and leaves straight away. A client goes back to the main menu when the game ends. When the host leaves, the game ends for everyone.
+- **The host's Players tab:** pick a player, then **Help** (heal: needs full and back up if they're down; bring them to you; go to them; kick, for a player who's stuck or bugged; give them any item) or **Trouble** (send the hitman, no charge and no wait for the line; slap; yeet; spin them around; freeze; starve; piss alarm; make them shit; knock down; set their room on fire; a spider, a rat or Poopman next to them). The host can pick themselves too. Players are told when the host did something to them.
 - **Cheats are the host's:** the cheat menu doesn't open in someone else's house. While the house is shared the host's game speed stays normal.
 - While in co-op you can rest with your eyes shut, but nobody dreams, and the story's scene changes wait (they'd take one player, or the whole house, away from the others).
 - **The host decides the mods:** the mods that shape the shared house (all but Cheat Menu, Performance Fixes, Open Saves, No Feedback, the dev bridge and Co-op over Steam), their features and their shared settings (prices, chances, timings) are the host's. A client's mod menu shows them locked. When the host loads or unloads one of those mods, switches a feature or changes a shared setting, every client follows within a second; leaving gives a client its own setup back (nothing of the host's is saved on the client).
@@ -102,6 +103,12 @@ Custom pictures and tapes from the custom shops, camera photos, the computer's w
 - `Steamworks.NET.dll` (MIT, Windows-x86 build of release 2024.8.0, Steamworks SDK 1.60) is committed in `mods/CoopSteam/lib/` with its licence: the NuGet package has no x86 build, and it must match the `steam_api.dll` that `neet steam` fetches from the same release. SDK 1.60 is on purpose: SDK 1.64's `steam_api.dll` asks for interface versions (Apps 009, RemotePlay 004) that GE-Proton 10's Steam bridge doesn't have, and Steamworks.NET won't start without every interface. If start-up fails anyway, the message names the missing interfaces (`Native/InterfaceCheck.cs`). Update both together (`lib/`, and the URL, size and hashes in `tools/NeetTool/Game/SteamApiSource.cs`). `steam_api.dll` is never committed or packaged; `build/package.sh` stops if one ends up in `dist/`. Licence reasoning: [coop-steam.md](../research/coop-steam.md#licensing).
 - `CoopSteam.SteamProbe.Run()` returns one line (init result, SteamID, persona name, app id, overlay, relay status), for checking the Steam side through the dev bridge without a session.
 
+### The host's Players tab
+
+`Menu/PlayersPage` and `Admin/`: `PlayerAdmin.Do(slot, action, item)` runs on the host only. What happens in the house (an item in front of them, a room fire, a spider, rat or Poopman, the hitman with a 5 s wait) is done in the host's world and shared like anything else. What happens to a body (heal, bring here, slap, yeet, spin, freeze, starve, piss alarm, shit, knock down) goes to that player's game as PlayerAdmin (action, point, label) and `AdminEffects` does it to their real body there, with a note saying who did it; for the host's own body it's done right away. Kick is the transport's kick with a reason. Clients take PlayerAdmin only from the host.
+
+`Menu/DisconnectButton` swaps the pause menu's Get out button's click and text on a client and puts the game's back when the session ends. The Cheat Menu checks the framework's `WorldRole.RunsWorld` before opening, and hides its game speed slider while `WorldRole.IsShared`.
+
 ### Co-op content
 
 Calls and emails can be written for co-op; the hitman line is `mods/Coop/phone/hitman.jsonc`. Conversations run in the host's game, and the framework's rules about the player (`stat`, `holding`, `room`, `knockout`) are about whoever is talking or answering (`World/RemoteRules`: the client sends its stats and held items with every request, `Players/PlayerFacts`). Co-op adds (`Content/`):
@@ -179,6 +186,13 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 - Remote players' hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
 - Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.
+
+### Players tab
+
+- Kick doesn't ban: a kicked player can join again straight away.
+- Freeze slows the player to a tenth of their speed for 8 seconds rather than stopping them (the game's speed stat has a floor).
+- Items and critters for a player appear in front of their body as the host sees it, a moment behind where they really are.
+- The hitman from the tab takes one job at a time, like the line.
 
 ### Mod setup
 
