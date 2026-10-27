@@ -125,6 +125,8 @@ New emails in the computer's inbox (Rail Mail), and you can answer them: replies
 - **Creepy**: emails from the basement, the machine, your own account, dad's old account, the walls, and the future.
 - **The neighbourhood**: Dot's list, smell complaints, Pumpkin Pizza, the Spookbusters invoice, Doug from the reunion. These follow up on what happened in your phone calls.
 
+It also sends the three emails the game has but never sends: mom's "love u bb" some morning, your clone's hate mail after you trade soul for a clone, and the C.U.M. tax reminder with your first tax bill.
+
 Emails can pay you, charge you, send stuff to the front door, cut the power, send someone over or make the phone ring. Some only come after another email, a reply, a phone call, a store order, or the morning after you slept.
 
 - **New emails arrive**: new emails show up every few minutes while you play, after store orders, when you get home and when you wake up. How often is in Settings (**Fewest/Most minutes between emails**, 4 to 10 by default).

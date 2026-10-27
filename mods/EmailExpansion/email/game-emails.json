@@ -1,0 +1,12 @@
+// Emails the game has but never sends: mom's love, your clone's hate mail and the C.U.M. tax
+// reminder. The text is the game's own (knots in its email story); this gives them a subject and
+// a way to arrive. Mom's comes some morning; the other two are sent by the mod when you trade soul
+// for a clone and when the first tax bill comes.
+{
+  "emails": [
+    { "id": "game-love-you", "subject": "love u bb", "ink": "LoveYou",
+      "send": { "trigger": "wake", "when": { "day": ">= 2" } } },
+    { "id": "game-hate-you", "subject": "fuck you (from you)", "ink": "HateYou" },
+    { "id": "game-tax-reminder", "subject": "TAX SEASON IS UPON YOU", "ink": "TaxReminder" }
+  ]
+}

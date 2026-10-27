@@ -11,6 +11,9 @@ Emails are plain files. Any mod can ship them in an `email` folder; no code need
 | Welcom to Rail Mail!! | Soon after you get home, once | Free money, or a candy for emotional damage. The example email (`email/example.json`). |
 | RE: ur free money | The morning after you took the money | Rail Mail wants it back. |
 | money on ur card | Now and then, at most every 45 minutes | Mom sends snack money. Written in Ink by hand (`email/from-mom.ink`). |
+| love u bb | Some morning from day 2, once | The game's own `LoveYou` email, which the game never sends (`email/game-emails.json`). |
+| fuck you (from you) | 90 seconds after you trade soul for a clone, once | The game's own `HateYou`, signed "Your own clone." Sent by `Mail/GameMail.cs`. |
+| TAX SEASON IS UPON YOU | With the first tax bill, once | The game's own `TaxReminder`. The game's reader would only show its first line; the mod's shows all of it. |
 
 And about 70 more, one file per kind, most of them arriving at random and some only after another email, a reply, a phone call, a store order or a night's sleep:
 

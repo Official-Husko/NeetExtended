@@ -185,8 +185,8 @@ internal static class MailReader
                 continue;
             if (Lines.Length > 0)
                 Lines.Append(Paragraph);
-            // The game's own emails mark paragraphs and line breaks like this.
-            Lines.Append(line.Replace("^N", Paragraph).Replace("^n", "\n"));
+            // The game's own emails mark paragraphs and line breaks like this, often with a space after.
+            Lines.Append(line.Replace("^N ", Paragraph).Replace("^N", Paragraph).Replace("^n ", "\n").Replace("^n", "\n"));
         }
         return Lines.ToString();
     }
