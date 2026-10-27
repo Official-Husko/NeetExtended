@@ -43,7 +43,7 @@ internal static class ReplicaDriver
         for (int i = Active.Count - 1; i >= 0; i--)
         {
             var o = Active[i];
-            if (!o.Driving || o.Index < 0 || !o.IsReplica || o.PosedByHost || o.Buffer.IsEmpty || !o.Alive)
+            if (!o.Driving || o.Index < 0 || !o.IsReplica || o.PosedByHost || o.OnPuppet || o.Buffer.IsEmpty || !o.Alive)
             {
                 Drop(o, i);
                 continue;

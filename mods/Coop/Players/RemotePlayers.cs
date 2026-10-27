@@ -82,7 +82,10 @@ internal static class RemotePlayers
         if (Puppets.TryGetValue(slot, out var puppet))
         {
             if (puppet != null)
+            {
+                puppet.Undress();
                 Object.Destroy(puppet.gameObject);
+            }
             Puppets.Remove(slot);
         }
     }
@@ -92,7 +95,10 @@ internal static class RemotePlayers
         foreach (var puppet in Puppets.Values)
         {
             if (puppet != null)
+            {
+                puppet.Undress();
                 Object.Destroy(puppet.gameObject);
+            }
         }
         Puppets.Clear();
     }

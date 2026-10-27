@@ -29,6 +29,9 @@ internal struct Appearance
     /// <summary>Bit 0 shoes, 1 pants, 2 shirt: the piece is dirty (<c>Wearable.dirty</c>).</summary>
     public byte Dirty;
     public byte Attire;
+
+    /// <summary>Masks, hats and the like on the face; null for none.</summary>
+    public MaskLook[] Masks;
     public float Fat, BodyType, Muscle;
 
     public string Piece(int index) => index == 0 ? Shoes : index == 1 ? Pants : Shirt;
@@ -43,6 +46,7 @@ internal struct Appearance
         look.Shoes = Worn(abilities, 0, ref look.ShoesItem, ref look.Dirty);
         look.Pants = Worn(abilities, 1, ref look.PantsItem, ref look.Dirty);
         look.Shirt = Worn(abilities, 2, ref look.ShirtItem, ref look.Dirty);
+        look.Masks = MaskLook.Of(abilities);
         var body = abilities.neetRend;
         if (body != null && body.sharedMesh != null)
         {
@@ -55,7 +59,7 @@ internal struct Appearance
 
     public bool SameAs(in Appearance other) =>
         Shoes == other.Shoes && Pants == other.Pants && Shirt == other.Shirt && Attire == other.Attire &&
-        ShoesItem.Equals(other.ShoesItem) && PantsItem.Equals(other.PantsItem) && ShirtItem.Equals(other.ShirtItem) && Dirty == other.Dirty &&
+        ShoesItem.Equals(other.ShoesItem) && PantsItem.Equals(other.PantsItem) && ShirtItem.Equals(other.ShirtItem) && Dirty == other.Dirty && MaskLook.Same(Masks, other.Masks) &&
         Mathf.Approximately(Fat, other.Fat) && Mathf.Approximately(BodyType, other.BodyType) && Mathf.Approximately(Muscle, other.Muscle);
 
     public void Write(NetDataWriter writer, byte slot)
@@ -72,6 +76,10 @@ internal struct Appearance
         PantsItem.Write(writer);
         ShirtItem.Write(writer);
         writer.Put(Dirty);
+        int masks = Masks?.Length ?? 0;
+        writer.Put((byte)masks);
+        for (int i = 0; i < masks; i++)
+            Masks[i].Write(writer);
     }
 
     public static Appearance Read(NetDataReader reader, out byte slot)
@@ -91,6 +99,13 @@ internal struct Appearance
         look.PantsItem = NetRef.Read(reader);
         look.ShirtItem = NetRef.Read(reader);
         look.Dirty = reader.GetByte();
+        int masks = Mathf.Min(reader.GetByte(), MaskLook.MostWorn);
+        if (masks > 0)
+        {
+            look.Masks = new MaskLook[masks];
+            for (int i = 0; i < masks; i++)
+                look.Masks[i] = MaskLook.Read(reader);
+        }
         return look;
     }
 

@@ -37,6 +37,9 @@ internal sealed class NetObject
     /// <summary>Kinematic here and moved by the owner's stream.</summary>
     public bool IsReplica;
 
+    /// <summary>Worn on another player's body here (a mask or hat on their puppet): the body moves it, the stream only fills its buffer.</summary>
+    public bool OnPuppet;
+
     // Owner side: what was sent last and when it last changed.
     public Vector3 SentPosition;
     public Quaternion SentRotation;

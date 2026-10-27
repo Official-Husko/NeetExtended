@@ -44,6 +44,7 @@ internal static class AppearanceSync
         if (player == null || !player.TryGetComponent(out Player_Abilities abilities))
             return;
 
+        MaskClaims.Claim(abilities);
         var look = Appearance.Of(abilities);
         if (_hasSent && look.SameAs(_sent))
             return;

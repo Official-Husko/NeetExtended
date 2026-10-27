@@ -47,7 +47,9 @@ internal static class BodyReceiver
             if (o == null || !o.IsReplica || o.Owner != owner || o.PosedByHost || !o.Alive)
                 continue;
             ApplyFlags(o, flags, scale);
-            if (o.Buffer.Add(time, position, rotation))
+            // Worn on a player's body: the body moves it, but where the stream says it is stays known
+            // for when it comes off.
+            if (o.Buffer.Add(time, position, rotation) && !o.OnPuppet)
                 ReplicaDriver.Push(o);
         }
     }

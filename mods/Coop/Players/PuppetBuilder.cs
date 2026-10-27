@@ -60,7 +60,9 @@ internal static class PuppetBuilder
             if (renderer != skin)
                 handMeshes.Add(renderer);
         }
+        var head = FindDeep(copy.transform, "headbone");
         puppet.Init(slot, copy.GetComponent<Animator>(), skin, handMeshes.ToArray());
+        puppet.Eyes = PuppetEyes.Create(root.transform, copy.GetComponent<Animator>(), head);
         puppet.Hands = hands;
         hands?.UseBody(skin);
         puppet.Plate = Nameplate.Attach(root.transform, name, capsule.center.y + capsule.height * 0.5f + 0.15f);

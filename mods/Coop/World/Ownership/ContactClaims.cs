@@ -96,6 +96,7 @@ internal static class ContactClaims
 
     private static bool Claimable(NetObject o) =>
         o.IsReplica
+        && !o.OnPuppet
         && o.Holder == WorldSide.None
         && !o.GameKinematic
         && o.Brain == null

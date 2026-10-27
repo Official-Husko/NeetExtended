@@ -39,6 +39,9 @@ internal sealed class PlayerPuppet : MonoBehaviour
 
     internal Nameplate Plate { get; set; }
 
+    /// <summary>Where the wearer's camera is on this body (<see cref="PuppetEyes"/>), the parent of its masks.</summary>
+    internal Transform Eyes { get; set; }
+
     /// <summary>The experimental physics arms, or null for the body's own arms.</summary>
     internal PuppetHands Hands { get; set; }
 
@@ -74,19 +77,31 @@ internal sealed class PlayerPuppet : MonoBehaviour
 
     private Appearance _appearance;
     private bool _dressed, _incomplete;
+    private readonly PuppetMasks _masks = new PuppetMasks();
 
     public void Dress(in Appearance look)
     {
         _appearance = look;
         _dressed = true;
-        _incomplete = !PuppetDresser.Apply(_skin, _hands, look);
+        _incomplete = !Wear(look);
     }
+
+    // False when a worn item isn't in this game yet.
+    private bool Wear(in Appearance look)
+    {
+        bool clothes = PuppetDresser.Apply(_skin, _hands, look);
+        bool masks = Eyes == null || _masks.Apply(Eyes, look.Masks);
+        return clothes && masks;
+    }
+
+    /// <summary>Takes the masks off before the body goes (they'd go with it).</summary>
+    internal void Undress() => _masks.Release();
 
     /// <summary>Dresses the body again if a worn item wasn't here when it was dressed (<see cref="AppearanceSync"/> asks about twice a second).</summary>
     internal void Redress()
     {
         if (_dressed && _incomplete)
-            _incomplete = !PuppetDresser.Apply(_skin, _hands, _appearance);
+            _incomplete = !Wear(_appearance);
     }
 
     public void SetDowned(bool down)
