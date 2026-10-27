@@ -70,7 +70,7 @@ internal static class PhoneRequests
         var w = Outbox.Begin(MessageIds.WorldPhoneButton);
         w.Put((byte)index);
         w.Put((sbyte)number);
-        TalkerFacts.Write(w);
+        Players.PlayerFacts.Write(w);
         Outbox.ToHost(w, Channel.Events);
     }
 
@@ -110,7 +110,7 @@ internal static class PhoneRequests
         int number = reader.GetSByte();
         if (!WorldSide.IsHost || !WorldSide.Running || index >= MaxPhones)
             return;
-        TalkerFacts.Read(reader, from.Slot);
+        Players.PlayerFacts.Read(reader, from.Slot);
         var phone = Speakers.PhoneAt(index);
         var body = Speakers.BodyOf(from.Slot);
         if (phone == null || body == null)

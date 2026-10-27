@@ -43,11 +43,17 @@ internal static class ModBridge
             HostActions.Forward = null;
     }
 
+    private const byte NoOne = byte.MaxValue;
+
+    /// <summary>Host: the player whose host action is running right now, or 255 outside one.</summary>
+    public static byte ActingSlot { get; private set; } = NoOne;
+
     private static void Forward(string name, JToken args)
     {
         var message = Outbox.Begin(MessageIds.ModAction);
         message.Put(name);
         message.Put(args?.ToString(Formatting.None) ?? "");
+        Players.PlayerFacts.Write(message);
         Outbox.ToHost(message, Channel.Events);
     }
 
@@ -57,7 +63,16 @@ internal static class ModBridge
             return;
         string name = reader.GetString();
         string json = reader.GetString();
-        HostActions.Invoke(name, json.Length > 0 ? JToken.Parse(json) : null, from.Slot);
+        Players.PlayerFacts.Read(reader, from.Slot);
+        ActingSlot = from.Slot;
+        try
+        {
+            HostActions.Invoke(name, json.Length > 0 ? JToken.Parse(json) : null, from.Slot);
+        }
+        finally
+        {
+            ActingSlot = NoOne;
+        }
     }
 
     private static void OnPublished(KeyValuePair<string, JToken> change)

@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
 using LiteNetLib.Utils;
+using NeetModKit.Game;
 
-namespace Coop.World.Talk;
+namespace Coop.Players;
 
 /// <summary>
 /// What the framework's rules ask about a player (stats, held items), sent by a remote player's
-/// game with every conversation request and phone button. The host keeps the latest per player, so
-/// the <c>stat</c> and <c>holding</c> conditions in their conversation read their own body.
+/// game with every request the host carries out for them: conversation steps, phone buttons and mods'
+/// host actions. The host keeps the latest per player, so the <c>stat</c> and <c>holding</c>
+/// conditions read the body of the player they're about (see World.RemoteRules).
 /// </summary>
-internal static class TalkerFacts
+internal static class PlayerFacts
 {
     internal sealed class Facts
     {
@@ -29,7 +31,7 @@ internal static class TalkerFacts
     /// <summary>Client: this game's player's stats and held items.</summary>
     public static void Write(NetDataWriter w)
     {
-        var player = WorldSide.LocalPlayer;
+        var player = GameRefs.Player;
         var stats = player != null ? player.GetComponent<PlayerStats>() : null;
         if (stats == null || stats.statTypes == null)
             w.Put((byte)0);
@@ -57,7 +59,7 @@ internal static class TalkerFacts
         for (int i = 0; held > 0 && i < pickups.Length && i < 2; i++)
         {
             if (pickups[i] != null)
-                w.Put(NeetModKit.Game.Spawning.PrefabName(pickups[i].name));
+                w.Put(Spawning.PrefabName(pickups[i].name));
         }
     }
 

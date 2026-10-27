@@ -36,7 +36,7 @@ internal static class PlayerMasks
         }
         w.Put(held);
         w.Put(body);
-        TalkerFacts.Write(w);
+        Players.PlayerFacts.Write(w);
     }
 
     /// <summary>Host: reads what <see cref="Write"/> sent; the rules' facts are kept for <paramref name="slot"/>.</summary>
@@ -44,7 +44,7 @@ internal static class PlayerMasks
     {
         held = r.GetString();
         body = r.GetString();
-        TalkerFacts.Read(r, slot);
+        Players.PlayerFacts.Read(r, slot);
     }
 
     /// <summary>Host, before a step: the talking player's lists go into the story.</summary>

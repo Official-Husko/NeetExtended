@@ -1,42 +1,54 @@
 using System;
 using System.Collections.Generic;
 using Coop.Players;
+using Coop.Session;
 using Coop.World.Forwarding;
+using Coop.World.Talk;
 using NeetLoader;
 using NeetModKit.Rules;
 using UnityEngine;
 
-namespace Coop.World.Talk;
+namespace Coop.World;
 
 /// <summary>
-/// Host: while a remote player's conversation step runs, the framework's rules are about that
-/// player. Conditions read the stats and items their game sent (<see cref="TalkerFacts"/>) and where
-/// their body is here; stat changes and knockouts go to their game and happen to their real body.
+/// Host: while something runs for a remote player (a step of their conversation, or a mod's host
+/// action they sent, like answering an email), the framework's rules are about that player.
+/// Conditions read the stats and items their game sent (<see cref="PlayerFacts"/>) and where their
+/// body is here; stat changes and knockouts go to their game and happen to their real body.
 /// </summary>
-internal static class TalkerRules
+internal static class RemoteRules
 {
-    private static readonly RemoteRulePlayer Talker = new RemoteRulePlayer();
+    private static readonly RemoteRulePlayer Remote = new RemoteRulePlayer();
 
     public static void Init(NeetMod mod) => RulePlayer.AddSource(mod, Current);
 
     private static IRulePlayer Current()
     {
         var c = TalkRunner.Current;
-        if (c == null)
+        byte slot = c != null ? c.Slot : ModBridge.ActingSlot;
+        if (slot == WorldSide.None || slot == WorldSide.LocalSlot)
             return null;
-        Talker.Slot = c.Slot;
-        return Talker;
+        Remote.Slot = slot;
+        return Remote;
     }
 
     private sealed class RemoteRulePlayer : IRulePlayer
     {
         public byte Slot;
 
-        private Transform Body =>
-            RemotePlayers.Find(Slot)?.transform ?? throw new InvalidOperationException($"Player {Slot} has no body here.");
+        private Transform Body
+        {
+            get
+            {
+                var puppet = RemotePlayers.Find(Slot);
+                if (puppet == null)
+                    throw new InvalidOperationException($"Player {Slot} has no body here.");
+                return puppet.transform;
+            }
+        }
 
-        private TalkerFacts.Facts Facts =>
-            TalkerFacts.Of(Slot) ?? throw new InvalidOperationException($"Player {Slot}'s game hasn't sent their stats yet.");
+        private PlayerFacts.Facts Facts =>
+            PlayerFacts.Of(Slot) ?? throw new InvalidOperationException($"Player {Slot}'s game hasn't sent their stats yet.");
 
         public Vector3 Position => Body.position;
 
@@ -72,7 +84,7 @@ internal static class TalkerRules
 
         public bool Holds(ICollection<string> names)
         {
-            var held = TalkerFacts.Of(Slot)?.Held;
+            var held = PlayerFacts.Of(Slot)?.Held;
             if (held == null)
                 return false;
             foreach (string name in held)
