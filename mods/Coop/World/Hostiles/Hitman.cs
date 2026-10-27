@@ -68,7 +68,8 @@ internal static class Hitman
     {
         if (_phase == Phase.None)
             return;
-        bool targetHere = Targets.BodyOf(_target) != null;
+        // Gone means out of the session: a body that's rebuilt for a moment (new clothes, a reload) isn't.
+        bool targetHere = InGame(_target);
         if (_phase == Phase.Waiting)
         {
             if (!targetHere)
@@ -91,6 +92,17 @@ internal static class Hitman
         }
         if (!targetHere && !_calledOff)
             CallOff();
+    }
+
+    /// <summary>True while <paramref name="slot"/>'s player is in the session and in the house.</summary>
+    public static bool InGame(byte slot)
+    {
+        foreach (var player in Session.CoopSession.Players)
+        {
+            if (player.Slot == slot)
+                return player.IsLocal || player.InWorld;
+        }
+        return slot == WorldSide.LocalSlot;
     }
 
     // Everyone back to the van, the way the game sends them after a kill.

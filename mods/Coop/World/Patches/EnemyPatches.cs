@@ -29,6 +29,10 @@ internal static class EnemyPatches
     [HarmonyPatch(typeof(BrainAgentCop), "HasNEETLineOfSight")]
     private static bool CopSight(BrainAgentCop __instance, ref NodeState __result) => CopTargeting.BeforeSight(__instance, ref __result);
 
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(BrainAgentCop), "MoveTo")]
+    private static bool CopMoves(BrainAgentCop __instance, AITarget go, ref NodeState __result) => CopTargeting.BeforeMove(__instance, go, ref __result);
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BrainAgentCop), "HasNEETLineOfSight")]
     private static void CopBlocked(BrainAgentCop __instance, NodeState __result, bool __runOriginal)
@@ -40,6 +44,10 @@ internal static class EnemyPatches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BrainAgentCop), "CheckTargetDead")]
     private static bool CopKillCheck(BrainAgentCop __instance, ref NodeState __result) => CopTargeting.BeforeDeadCheck(__instance, ref __result);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(BrainAgentCop), "Update")]
+    private static void CopLeaving(BrainAgentCop __instance) => CopExits.AfterUpdate(__instance);
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(CopVan), "Start")]

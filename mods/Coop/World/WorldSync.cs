@@ -139,6 +139,7 @@ internal static class WorldSync
         WorldSide.Running = false;
         TalkSync.Stop();
         Hitman.Clear();
+        CopExits.Clear();
         NetObjects.Clear();
         StateTrackers.Clear();
         StateSync.Clear();

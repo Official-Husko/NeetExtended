@@ -168,6 +168,32 @@ public static class WorldApi
         return text.ToString();
     }
 
+    /// <summary>Navmesh check from a cop to its target (or a player's body): the sampled point and the path the navmesh gives.</summary>
+    public static string CopPath(int slot = 255)
+    {
+        var cop = Object.FindObjectOfType<BrainAgentCop>();
+        if (cop == null)
+            return "No cop.";
+        var target = slot != 255 ? Hostiles.Targets.BodyOf((byte)slot) : cop.moveTgt?.Obj;
+        if (target == null)
+            return $"Cop at {cop.transform.position} has no target object (target point {cop.moveTgt?.Position}).";
+        var text = new StringBuilder();
+        var from = cop.transform.position;
+        var to = target.transform.position;
+        text.Append("cop ").Append(from).Append(" target ").Append(target.name).Append(' ').Append(to).Append('\n');
+        bool sampled = UnityEngine.AI.NavMesh.SamplePosition(to, out var near, 2f, UnityEngine.AI.NavMesh.AllAreas);
+        text.Append("sample at target: ").Append(sampled ? near.position.ToString() : "none within 2 m").Append('\n');
+        var path = new UnityEngine.AI.NavMeshPath();
+        UnityEngine.AI.NavMesh.CalculatePath(from, sampled ? near.position : to, UnityEngine.AI.NavMesh.AllAreas, path);
+        text.Append("path ").Append(path.status).Append(", ").Append(path.corners.Length).Append(" corners");
+        if (path.corners.Length > 0)
+            text.Append(", ends at ").Append(path.corners[path.corners.Length - 1]);
+        var nav = cop.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (nav != null)
+            text.Append("\nagent destination ").Append(nav.destination).Append(", ").Append(nav.pathStatus).Append(", area mask ").Append(nav.areaMask);
+        return text.ToString();
+    }
+
     private static uint Mix(uint x)
     {
         unchecked

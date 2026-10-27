@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Coop.World.Hostiles;
 
@@ -23,6 +24,15 @@ internal static class CopTargeting
 
     private static readonly float[] NextDisarm = new float[byte.MaxValue + 1];
 
+    // How far from a body the navmesh point to walk to may be.
+    private const float NavReach = 2f;
+
+    private static readonly AccessTools.FieldRef<BrainAgentCop, NavMeshAgent> Nav =
+        AccessTools.FieldRefAccess<BrainAgentCop, NavMeshAgent>("nav");
+
+    private static readonly AccessTools.FieldRef<BrainAgentCop, Animator> Anim =
+        AccessTools.FieldRefAccess<BrainAgentCop, Animator>("anim");
+
     private static readonly System.Func<BrainAgentCop, NodeState> GoToVan =
         AccessTools.MethodDelegate<System.Func<BrainAgentCop, NodeState>>(AccessTools.Method(typeof(BrainAgentCop), "SetVanDestination"));
 
@@ -35,6 +45,14 @@ internal static class CopTargeting
             return true;
         // The agent's own Start picks a raid's patience; a hitman doesn't give up on the way.
         cop.leaveTimer = Mathf.Max(cop.leaveTimer, Hitman.AgentPatience);
+        if (Targets.BodyOf(slot) == null)
+        {
+            // Their body is being rebuilt (or they left, and the job ends).
+            if (!Hitman.InGame(slot))
+                Kill(cop);
+            result = NodeState.Failure;
+            return false;
+        }
         if (!Targets.IsAlive(slot))
         {
             Kill(cop);
@@ -73,9 +91,19 @@ internal static class CopTargeting
         var target = cop.moveTgt.Obj;
         if (target == null)
         {
-            // Destroyed (a player who left): look again, or (a hitman) go home.
-            if (Hitman.Hunts(cop, out _))
-                Kill(cop);
+            // Destroyed: a player who left, or a body rebuilt for a moment. A hitman takes the new
+            // body (or goes home once the target left); anyone else looks again.
+            if (Hitman.Hunts(cop, out byte hunted))
+            {
+                var body = Targets.BodyOf(hunted);
+                if (body != null && Targets.IsAlive(hunted))
+                {
+                    cop.moveTgt.Obj = body;
+                    return true;
+                }
+                if (!Hitman.InGame(hunted))
+                    Kill(cop);
+            }
             else
                 cop.spottedNEET = false;
             result = NodeState.Failure;
@@ -130,6 +158,29 @@ internal static class CopTargeting
             return false;
         }
         return true;
+    }
+
+    /// <summary>
+    /// Before the cop's MoveTo while chasing a player: walk to a point on the navmesh by their body.
+    /// The game hands the navmesh the body's own point, which can sample onto another floor or
+    /// nothing at all and leave the agent standing where it is.
+    /// </summary>
+    public static bool BeforeMove(BrainAgentCop cop, AITarget target, ref NodeState result)
+    {
+        if (!Hosting || !cop.spottedNEET || target == null || target.Obj == null || Targets.SlotOf(target.Obj) == WorldSide.None)
+            return true;
+        var nav = Nav(cop);
+        if (nav == null || !nav.isOnNavMesh || !NavMesh.SamplePosition(target.Obj.transform.position, out var near, NavReach, nav.areaMask))
+            return true;
+        var anim = Anim(cop);
+        if (anim != null)
+        {
+            anim.SetBool("Running", true);
+            anim.SetInteger("Shooting", 0);
+        }
+        nav.SetDestination(near.position);
+        result = NodeState.Success;
+        return false;
     }
 
     /// <summary>The game's kill: count it, forget the target, everyone back to the van.</summary>
