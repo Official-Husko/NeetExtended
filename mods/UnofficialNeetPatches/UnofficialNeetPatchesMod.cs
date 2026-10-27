@@ -44,6 +44,7 @@ public sealed class UnofficialNeetPatchesMod : NeetMod
         ModFeatures.Register(this, new SkeletonPantsFix());
         ModFeatures.Register(this, new DeathDropsFix());
         ModFeatures.Register(this, new CameraPhotosFix());
+        ModFeatures.Register(this, new LoadedPaintFix());
         var promotedCards = new PromotedCardsFix();
         ModFeatures.Register(this, promotedCards);
         ModSaveData.Register<PromotedCardsFix.SaveData>(this, promotedCards.Save, promotedCards.Load);

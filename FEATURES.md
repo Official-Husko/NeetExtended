@@ -72,6 +72,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Skeletons don't ruin the black pants**: a skeleton that had to crap threw an error and left every pair of black pants you bought or found afterwards dirty and sticky, until you restarted the game.
 - **Your stuff stays where you died**: the clothes you wore when you died were gone for good (the game hid them under the house, in every save). Now everything you had, clothes, masks and whatever was in your hands, falls where you died, so you can go back for it.
 - **Camera photos are kept**: every photo after the first 20 seconds of play used to overwrite the one before (changing the older pictures too), and photos came back blank after loading. Each photo now gets its own file and loads again.
+- **Loaded paint shows**: blood, scorch marks and other paint you saved could be missing on some surfaces after loading, and the next splat there wiped it. In co-op, the mess already in the house when you joined didn't show at all. Now it all shows.
 
 ## Performance Fixes (experimental)
 

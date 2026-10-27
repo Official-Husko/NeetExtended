@@ -32,6 +32,10 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Timed spawners stop after loading a save | `SpawnersAfterLoad` |
 | Worn clothes fall out of the world after loading | `WornClothes` |
 | Dying with a mask on gets stuck half way | `MaskDeath` |
+| Skeletons ruin every pair of black pants | `SkeletonPants` |
+| The clothes you die in are lost for good | `DeathDrops` |
+| Camera photos replace each other and come back blank | `CameraPhotos` |
+| Paint loaded from a save doesn't show | `LoadedPaint` |
 
 ## Saving fails with a dead house spider around
 
@@ -325,6 +329,16 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 **Fix:** a transpiler on `PrintPicture`'s state machine takes the number from a counter that starts after the highest `photograph_N.jpg` already there. A prefix on `Picture.loadImage` loads a stored full path from disk when the file exists, and sets `storedImagePath` as soon as a picture starts loading instead of when the file has been read.
 
 **Reproduce:** hold a camera (`PhotoCamera`) and use it twice: with `CameraPhotos` off both photos go to `photograph_-2147483648.jpg` (once the game has run 21 s), with it on to `photograph_1.jpg` and `photograph_2.jpg`. Spawn a `Picture`, set its `storedImagePath` to a photo's full path and call `Start`: blank with the fix off, the photo with it on.
+
+## Paint loaded from a save doesn't show
+
+**What happens:** after loading, some surfaces don't show the blood, scorch marks or other paint they had when the game saved, although the save has the picture. The next splat on such a surface draws nothing and wipes the picture. The surface only recovers once it moves (a door). In single player it's some of them (37 of 88 in one test save); on a co-op client loading the host's house it's nearly every painted surface, so paint that existed when someone joined was invisible to them.
+
+**Cause:** `SaveLoadHandler.Start` runs `LoadAll`, whose `LoadPaintTargets` (`SaveLoadHandler.cs:443-466`) calls `SetupPaint(picture)` on each painted surface. Unity runs the `Start`s of one frame in no set order, and a `PaintTarget` only finds its renderer in its own `Start` (`CheckValid`, `PaintTarget.cs:545-556`, `:558-565`). Set up before that, `CreateTextures` never gives the material its paint and position textures (`:592-601`), and `RenderTextures` renders an empty position texture (`:606-616`) and clears `transform.hasChanged`, so nothing renders it again. The picture is in `splatTex` but never shows, and a splat's blit (which looks up each texel's position) writes over it. On a co-op client, 0 of 1,242 surfaces had started when the paint loaded.
+
+**Fix:** a prefix on `PaintTarget.SetupPaint` runs `CheckValid` first when the surface has no renderer yet. A surface with `SetupOnStart` (9 in the house) would then set itself up again in its `Start`, with empty textures; a prefix on `Start` only runs `CheckValid` for a surface that's already set up.
+
+**Reproduce:** paint something (blood, a fire), save, load. With `LoadedPaint` off, some painted surfaces have no `_SplatTex` on their material and an empty `worldPosTex` (Co-op's `PaintProbes.Unbound` and `Info` show both), and look clean; in co-op, join a house with paint and look at it. With it on, only surfaces whose material has no paint property are listed, and the paint shows.
 
 ## Not bugs
 
