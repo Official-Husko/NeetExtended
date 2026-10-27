@@ -63,7 +63,7 @@ Abbreviated shape:
   - the player's `Brain.currentLocation == Location.Bedroom_Neet`
 - The timer is not reset when the condition is false, so the save fires on the first frame the room condition becomes true.
 
-**Important: `timeToLastLoad` is never reset to 0.** It is only assigned in `LoadAll` (`SaveLoadHandler.cs:151`, `timeToLastLoad = Time.time`). `LoadAll` only sets it when a `neet*` file exists at startup. Once that happens, `timeToLastLoad <= 0f` is false for the rest of the session, so **auto-save is disabled for that session** (as decompiled; not verified in play). A session that starts with no save file keeps auto-save working. Other code uses `timeToLastLoad` as a "just loaded" window or "no load happened" check: `Spawner.cs:274`, `DeliveryGuy.cs:53`, `Toilet_Flush.cs:107`, `RefrigerationZone.cs:54, 76`.
+**Important: `timeToLastLoad` is never reset to 0.** It is only assigned in `LoadAll` (`SaveLoadHandler.cs:151`, `timeToLastLoad = Time.time`). `LoadAll` only sets it when a `neet*` file exists at startup. Once that happens, `timeToLastLoad <= 0f` is false for the rest of the session, so **auto-save is disabled for that session** (as decompiled; not verified in play). Fixed by Unofficial NEET Patches (`AutosaveAfterLoad`, see known-bugs.md); the same stale time stops every timed `Spawner` (`SpawnersAfterLoad`). A session that starts with no save file keeps auto-save working. Other code uses `timeToLastLoad` as a "just loaded" window or "no load happened" check: `Spawner.cs:274`, `DeliveryGuy.cs:53`, `Toilet_Flush.cs:107`, `RefrigerationZone.cs:54, 76`.
 
 **Other `SaveAll` callers**:
 

@@ -55,6 +55,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Picking up the thief's beanie works**: it used to throw an error and leave your hand stuck holding it.
 - **Characters leave hidden items alone**: characters no longer pick up things that belong to something switched off, like the thief's beanie before he shows up.
 - **Autosave works after loading**: once a save was loaded, the game never autosaved again. Now it saves every five minutes while you're in your bedroom.
+- **Spawners keep working after loading**: after loading a save, loose change, dust, sink water, toilet flushes and blood and paint sprays stopped for the rest of the session. They start again two seconds after the load.
 
 ## Performance Fixes (experimental)
 

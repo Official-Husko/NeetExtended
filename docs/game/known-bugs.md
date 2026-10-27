@@ -29,6 +29,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Picking up the thief's beanie throws and leaves a broken hand | `WigPickup` |
 | Characters pick up things that belong to switched-off objects | `HiddenPickups` |
 | No autosave after loading a save | `AutosaveAfterLoad` |
+| Timed spawners stop after loading a save | `SpawnersAfterLoad` |
 
 ## Saving fails with a dead house spider around
 
@@ -254,6 +255,22 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a transpiler turns the read of `timeToLastLoad` in `Update` into a call that gives the real value for two seconds after a load and 0 after that. The five-minute timer (`timeToLastSave`, 300 s) and the bedroom rule are as before.
 
 **Reproduce:** start the game with a save present, set `SaveLoadHandler.timeToLastSave` to 1, go to the bedroom and wait: with `AutosaveAfterLoad` on a new `neetSave_*.json` appears, off it doesn't.
+
+## Timed spawners stop after loading a save
+
+**What happens:** after a save was loaded, anything that spawns on a timer stops for the rest of the session: loose change and dust, sink water, toilet flushes, the skeleton parasite's spawns, held corpses dripping blood and the paint and blood sprays.
+
+**Cause:** `Spawner.CanSpawn` allows a spawn when `timeToLastLoad == 0` or `timeToLastLoad - Time.time > 2f` (`Spawner.cs:274`). `timeToLastLoad` is the time of the load, in the past, so the difference is never positive. Every `Spawner.Update` goes through `CanSpawn` (`:181`; nothing sets `externalCallsOnly`). The spawners are `HouseManager.looseChangeSpawner`/`dustSpawner`, `SinkFaucet.cs:102`, `Toilet_Flush.cs:95`, `SkeletonParasite.cs:182`, `Player_Abilities.cs:1774` and `:1894`, and `Commons.SpawnPaintSpray` (`Commons.cs:244`).
+
+**Fix:** a transpiler swaps the subtraction in `CanSpawn` for `Time.time - timeToLastLoad`: spawning starts once 2 s have passed since the load.
+
+**Reproduce:** with a save loaded, read `Spawner.CanSpawn()` on `HouseManager.looseChangeSpawner` (and a sink's spawner after turning the tap on): false until the fix, true two seconds after the load with `SpawnersAfterLoad` on. In play: water runs from the sink after loading.
+
+The same field is compared in three more places:
+
+- `Toilet_Flush.cs:107` uses `Time.time >= timeToLastLoad + 0.5f`, which is correct.
+- `DeliveryGuy.cs:53` deactivates the delivery guy in `Start` when `timeToLastLoad == 0 || timeToLastLoad > 0.5f`. After a load the second part is always true, so he is switched off even if the save had him on his way. It is probably meant as "load was more than half a second ago" but `Start` runs in the same frame as the load, so it was most likely meant the other way round. Left alone: the effect is a delivery guy that disappears when a save is loaded mid-delivery, and getting it wrong would leave him standing in the hall.
+- `RefrigerationZone.cs:54,76` skips the freezer's `OnEnable`/`OnDisable` work when a load happened and `timeToLastLoad <= 0.2f`, which only holds for a load in the first 0.2 s of the game. Probably meant as "just loaded". The effect would be fridge counts changing while the load switches fuses and food, which nothing here has shown to be wrong. Left alone.
 
 ## Not bugs
 
