@@ -4,6 +4,6 @@
   "version": "0.3.0",
   "author": "pawbeans",
   "description": "Local control socket for testing tools: read state, change values, spawn things, take screenshots.",
-  "dependencies": { "NeetModKit": "0.1.0" },
+  "dependencies": { "NeetModKit": "0.3.0" },
   "hotReload": true
 }
