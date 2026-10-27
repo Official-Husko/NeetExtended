@@ -2,6 +2,8 @@
 
 The Randomizer mod (`mods/Randomizer`) gives every save a seed that shuffles parts of the game: who knocks at night and in what order, what the store charges, what deliveries bring, where things lie in the house on a new game, and how fast needs drain. The same seed always gives the same game, and the seed is kept in the save, so loading never changes anything.
 
+The mod is off by default (`"enabledByDefault": false` in its mod.json): players switch it on on the Mods tab. In co-op, a client that has it installed loads it when the host runs it.
+
 ## The parts
 
 Each part is a switch on the Mods page (all on by default):

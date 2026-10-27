@@ -70,10 +70,10 @@ public static class ModRegistry
 
     public static bool IsEnabled(string id)
     {
-        if (!_settings.Value.DisabledMods.Contains(id))
-            return true;
         var mod = Find(id);
-        return mod != null && AlwaysOnReason(mod) != null;
+        bool wanted = !_settings.Value.DisabledMods.Contains(id)
+            && (mod == null || mod.Manifest.EnabledByDefault || _settings.Value.EnabledMods.Contains(id));
+        return wanted || (mod != null && AlwaysOnReason(mod) != null);
     }
 
     /// <summary>Switches a mod on or off for the next launch. Returns why not, or null when done.</summary>
@@ -85,10 +85,19 @@ public static class ModRegistry
             return $"Can't switch off {mod.Manifest.DisplayName}: {reason}.";
 
         var disabled = _settings.Value.DisabledMods;
+        var switchedOn = _settings.Value.EnabledMods;
         if (enabled)
+        {
             disabled.Remove(id);
-        else if (!disabled.Contains(id))
-            disabled.Add(id);
+            if (mod != null && !mod.Manifest.EnabledByDefault && !switchedOn.Contains(id))
+                switchedOn.Add(id);
+        }
+        else
+        {
+            switchedOn.Remove(id);
+            if (!disabled.Contains(id))
+                disabled.Add(id);
+        }
         _settings.Save();
         return null;
     }

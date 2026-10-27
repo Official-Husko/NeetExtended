@@ -66,6 +66,7 @@ Public constant `Loader.Version` is `"0.2.0"`.
 | `autoPatch` | bool | `true` | Apply Harmony patches for every class in the mod's assemblies. See [Harmony patching](#harmony-patching). |
 | `hotReload` | bool | `false` | Load the DLLs from memory and reload the mod when they change. The mod must clean up in `OnUnload`. See [Hot reload](#hot-reload). |
 | `essential` | bool | `false` | Always on: the mod can't be switched off or unloaded, and neither can the mods it depends on. Reloading still works. For the framework (NeetModKit) and mods that protect something (No Feedback). |
+| `enabledByDefault` | bool | `true` | `false`: the mod is installed but doesn't load until the player switches it on ("Load when the game starts" on the Mods tab, or LOAD NOW for the session). For mods that change the game a lot, like the Randomizer. |
 
 Example:
 
@@ -468,6 +469,7 @@ Don't call `Invoke` from code the main thread waits on. It deadlocks until the t
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
 | `DisabledMods` | string[] | `[]` | Ids of mods switched off. Applied on the next launch. Mods that are always on load anyway. |
+| `EnabledMods` | string[] | `[]` | Ids of mods that are off by default (`enabledByDefault: false`) the player switched on. |
 | `AutoReload` | bool | `true` | Reload hot-reload mods when their DLLs change. |
 | `VerboseLog` | bool | `false` | Write `Debug` lines to `latest.log`. |
 

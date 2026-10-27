@@ -179,6 +179,8 @@ Tells you when a newer version is out. Always on; switch off **Check for updates
 
 ## Randomizer
 
+Off until you switch it on: on the Mods tab, pick Randomizer and tick **Load when the game starts** (or press LOAD NOW to try it right away).
+
 Every game is a little different. Each save gets a seed that decides:
 
 - **Shuffled visitors**: who knocks at night comes in a different order.

@@ -37,5 +37,12 @@ public sealed class ModManifest
     /// </summary>
     [JsonProperty("essential")] public bool Essential;
 
+    /// <summary>
+    /// Off: the mod is installed but doesn't load until the player switches it on (the Mods tab's
+    /// "Load when the game starts", or LOAD NOW for this session). For mods that change the game a
+    /// lot, like the Randomizer.
+    /// </summary>
+    [JsonProperty("enabledByDefault")] public bool EnabledByDefault = true;
+
     public string DisplayName => string.IsNullOrEmpty(Name) ? Id : Name;
 }
