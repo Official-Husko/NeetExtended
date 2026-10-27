@@ -31,6 +31,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | No autosave after loading a save | `AutosaveAfterLoad` |
 | Timed spawners stop after loading a save | `SpawnersAfterLoad` |
 | Worn clothes fall out of the world after loading | `WornClothes` |
+| Dying with a mask on gets stuck half way | `MaskDeath` |
 
 ## Saving fails with a dead house spider around
 
@@ -292,3 +293,14 @@ The same field is compared in three more places:
 - `KnotList must be instantiated using the ScriptableObject.CreateInstance method` in the log after every load: the save loader rebuilds the spam list with `new`. Unity warns, but the list works.
 
 - A locked card's medal is reset to 0 on load: the `Locked` setter (`AnimeCard.cs:147-166`) does that on purpose; unlocked cards keep their medal.
+
+## Dying with a mask on gets stuck half way
+
+**What happens:** a player or character who dies while wearing a mask doesn't finish dying: no death animation, no reaping, no respawn, and an `InvalidOperationException` ("Collection was modified") in the log. They can't die again afterwards.
+
+**Cause:** `Player_Abilities.DieAccessor` sets `dead = true`, then takes the masks off with `foreach (GameObject mask in masks) mask.GetComponent<MaskFace>().RemoveMask(gameObject)` (`Player_Abilities.cs:1720-1724`). `MaskFace.RemoveMask` removes the mask from that same `masks` list, so the loop throws on its next step and the rest of `DieAccessor` never runs. Since `dead` is already true, the next `DieAccessor` returns at once.
+
+**Fix:** a last prefix on `DieAccessor` takes the masks off from a copy of the list first, so the game's loop finds it empty. It runs last and only when the death goes ahead, so a death that something else turns away (god mode, co-op's going down) keeps the masks on.
+
+**Reproduce:** wear a mask, then die (`player.set` health 0 with god mode off): with `MaskDeath` off the death stops with the error above; with it on the body dies and respawns as usual. Found in co-op testing, where a downed player bled out wearing one.
+

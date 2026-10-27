@@ -57,6 +57,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Autosave works after loading**: once a save was loaded, the game never autosaved again. Now it saves every five minutes while you're in your bedroom.
 - **Spawners keep working after loading**: after loading a save, loose change, dust, sink water, toilet flushes and blood and paint sprays stopped for the rest of the session. They start again two seconds after the load.
 - **Worn clothes stay put**: clothes you wore when you saved fell through the world after loading.
+- **Dying with a mask on works**: anyone who died wearing a mask got stuck half dead and couldn't die again.
 
 ## Performance Fixes (experimental)
 
