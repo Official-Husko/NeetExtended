@@ -23,6 +23,7 @@ public sealed class DevBridgeMod : NeetMod
 
         _server = Track(new BridgeServer(config.Value, Commands, Log));
         _server.Start();
+        DevBridge.Commands.SkyCommands.CountStrikes(this);
     }
 
     public override void OnUnload() => Instance = null;

@@ -56,7 +56,7 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 - [x] **Unofficial NEET Patches**: the lightning flash and lamp flicker are per-frame lerps, so they're shorter at high frame rates (`HouseManager.cs:500-514`, `LightSwitch.cs:155-175`).
 - [x] **Performance Fixes**: a moon shadow option (on, off, only outdoors), the `MoonShadows` feature. Results in [docs/research/performance.md](docs/research/performance.md#whats-fixed).
 - [x] **Framework**: a small `Sky` API (moon/sun, `Strike()`, an `OnStrike` event that survives house loads, the storm volume) and a `weather` rule condition plus `{{weather}}` text for content files (the framework and phone guides already use `Weather.Raining` as an example that doesn't exist).
-- [ ] **Dev Bridge**: `sky.get`, `sky.strike`, `sky.set`, `rain.set` (today a strike needs `obj.call ... TriggerSequence ["Execute","Thunder"]`).
+- [x] **Dev Bridge**: `sky.get`, `sky.strike`, `sky.set`, `rain.set` (today a strike needs `obj.call ... TriggerSequence ["Execute","Thunder"]`).
 - [ ] **Cheat Menu**: strike lightning now, rain and thunder on or off, on the World page.
 - [ ] **Unofficial NEET Patches**: check whether `Spawner.concurrentSpawnIds` (only grows, saved every time) and `Locator.sitRestEnablers` (only grows) cause problems over a long game.
 - [ ] **Unofficial NEET Patches**: `PaintTarget.ClearAllPaint(clearMemory: true)` destroys the textures of surfaces that have no saved picture but leaves them marked as set up, so painting on them later draws into destroyed textures. From the code; confirm in the game first.

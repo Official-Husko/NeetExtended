@@ -207,6 +207,10 @@ These work on any loaded type, not only on scene objects. Type names follow the 
 | `fire.start` | `room` | Set a room on fire. Returns `"burning"`. |
 | `fire.stop` | `room` | Put out a room's fire. Returns `"out"`. |
 | `power.set` | `on`: bool, `room?`: omit for the whole house | Force power on or off. Returns `on`. |
+| `sky.get` | none | The sky: `moon` and `sun` (intensity, scene intensity, colour, shadows, rotation), `fog` (density, scene density, multiplier), `ambient`, `skybox`, `thunder` (`loopAlive`, `nextStrikeIn`, `noThunder`, `strikes` counted since the bridge loaded, `lastStrikeAgo`), `rain` (each system's rate, particle cap and live particles), `stormVolume` (the loop's volume now and the multiplier) and `weather` (the framework's state). |
+| `sky.strike` | `story?`: run the story's own thunder sequence, `measure?`: wait and report the flash | Lightning now (`Sky.Strike()`). With `measure` the answer says how long the moon stayed above 1 (`secondsAbove1`, `framesAbove1`), its `peak`, when `OnStrike` came and where it ended up (`moonNow`). With `story` it fires the sequence the story uses, which stops the random loop unless ThunderLoop is on. |
+| `sky.set` | `fog?`, `moon?`, `sun?` (set directly), `fogAmount?`, `rainAmount?`, `stormVolume?` (multipliers), `weather?` (drizzle, rain, storm) and `intensity?`, `thunderMin?` and `thunderMax?` (seconds between random strikes; `thunderMin=default` gives the timer back), `strikeIn?`, `reschedule?`, `reset?` | Change the sky. The multipliers, delay and weather belong to the bridge until `reset`. Returns what `sky.get` returns. |
+| `rain.set` | `amount?`: multiplier, `reset?`, `system?` and `rate?`: lay one system's emission down directly | Scale the four rain systems. Returns the rain systems as in `sky.get`. |
 
 ### Computer, email and cards
 
