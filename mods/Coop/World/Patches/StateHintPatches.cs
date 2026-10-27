@@ -58,6 +58,38 @@ internal static class StateHintPatches
     private static void Lighter(Lighter_BBQ __instance) => StateSync.MarkDirty(__instance);
 
     [HarmonyPostfix]
+    [HarmonyPatch(typeof(Radio), nameof(Radio.Fuse), MethodType.Setter)]
+    private static void RadioBattery(Radio __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Radio), nameof(Radio.InsertCassette))]
+    private static void TapeIn(Radio __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Radio), "EjectCassette")]
+    private static void TapeOut(Radio __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Radio), nameof(Radio.SetUse), typeof(bool))]
+    private static void RadioLid(Radio __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Radio), nameof(Radio.MusicSwitch))]
+    private static void RadioMusic(Radio __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Radio), nameof(Radio.PunchTrigger))]
+    private static void RadioPunched(Radio __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Cardboard_Box), nameof(Cardboard_Box.Use))]
+    private static void BoxUsed(Cardboard_Box __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Cardboard_Box), "BreakTape")]
+    private static void BoxCut(Cardboard_Box __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(SmokeDetector), nameof(SmokeDetector.RemoveBattery))]
     private static void DetectorEmptied(SmokeDetector __instance) => StateSync.MarkDirty(__instance);
 

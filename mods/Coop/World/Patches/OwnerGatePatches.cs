@@ -71,6 +71,13 @@ internal static class OwnerGatePatches
     [HarmonyPatch(typeof(SmokeDetector), "OnCollisionEnter")]
     private static bool DetectorTakesFuse(Collision other) => SimulatesBodyOf(other.collider);
 
+    // Two dust balls merge (one swallows the other) only where both are simulated; a thrown ball takes
+    // over the one it hits first, so they still merge between players.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(DustBall), "OnCollisionEnter")]
+    private static bool DustMerges(DustBall __instance, Collision other) =>
+        Simulates(__instance.gameObject) && Simulates(other.gameObject);
+
     // A gib dropped in the cat's bowl becomes food; a coin dropped in the piggy bank becomes savings.
     [HarmonyPrefix]
     [HarmonyPatch(typeof(CatFoodBowl), "OnTriggerEnter")]

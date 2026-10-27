@@ -16,7 +16,7 @@ internal static class HoldEvents
         if (!WorldSide.Running || SpawnContext.Silent || holder == null)
             return;
         var o = NetObjects.Find(usable.gameObject);
-        if (o == null || o.Brain != null)
+        if (o == null || (o.Brain != null && !BrainHandoff.Holdable(o)))
             return;
         if (holder == WorldSide.LocalPlayer)
             Owners.LocalGrab(o);
@@ -29,7 +29,7 @@ internal static class HoldEvents
         if (!WorldSide.Running || delay || SpawnContext.Silent || previousHolder == null || previousHolder != WorldSide.LocalPlayer)
             return;
         var o = NetObjects.Find(usable.gameObject);
-        if (o != null && o.Brain == null)
+        if (o != null && (o.Brain == null || BrainHandoff.Holdable(o)))
             Owners.LocalRelease(o);
     }
 
@@ -46,8 +46,8 @@ internal static class HoldEvents
         var o = NetObjects.Find(target);
         if (o != null && o.HeldByOther)
             return false;
-        // NPC bodies, rats and cats keep running on the host; handing them to a client comes later.
-        if (WorldSide.IsClient && target.GetComponent<Brain>() != null)
+        // NPCs and corpses stay with the host; rats and the cat can be handed over.
+        if (WorldSide.IsClient && target.GetComponent<Brain>() != null && (o == null || !BrainHandoff.Holdable(o)))
             return false;
         return true;
     }

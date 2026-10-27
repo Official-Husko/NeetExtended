@@ -12,7 +12,7 @@ public static class WorldTestApi
 {
     public static string Grab(int itemId, int hand = 0)
     {
-        var o = NetObjects.Find(new NetRef(NetKind.Item, itemId));
+        var o = Find(itemId);
         var hands = Hands();
         if (o == null || hands == null)
             return o == null ? $"No shared item {itemId}." : "No player.";
@@ -41,16 +41,35 @@ public static class WorldTestApi
         return "Threw " + what + ".";
     }
 
+    /// <summary>Uses a shared item the way a hand on it does (every use of its parts, once).</summary>
+    public static string Use(int itemId)
+    {
+        var o = Find(itemId);
+        if (o == null)
+            return $"No shared item {itemId}.";
+        int used = 0;
+        foreach (var part in o.Go.GetComponents<Usable.IUsable>())
+        {
+            part.Use();
+            used++;
+        }
+        return $"Used {o} ({used} parts).";
+    }
+
     /// <summary>Where a shared thing is here, who simulates it and whether it's a replica.</summary>
     public static string Where(int itemId)
     {
-        var o = NetObjects.Find(new NetRef(NetKind.Item, itemId));
+        var o = Find(itemId);
         if (o == null)
             return $"No shared item {itemId}.";
         var p = o.Tf.position;
         string body = o.Body == null ? "no body" : o.Body.isKinematic ? "kinematic" : "dynamic";
         return $"{o} at ({p.x:0.00}, {p.y:0.00}, {p.z:0.00}), owner {o.Owner}, holder {o.Holder}, {(o.IsReplica ? "replica" : "simulated here")}, {body}";
     }
+
+    // Items first, then animals and NPCs (a rat's id is its brain's).
+    private static NetObject Find(int id) =>
+        NetObjects.Find(new NetRef(NetKind.Item, id)) ?? NetObjects.Find(new NetRef(NetKind.Npc, id));
 
     private static Player_Abilities Hands()
     {

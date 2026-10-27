@@ -101,8 +101,10 @@ internal static class StateSync
         int applied = 0;
         for (int i = 0; i < count; i++)
         {
-            if (ReadOne(reader, out var t, out int length) && Apply(t, Incoming, length))
-                applied++;
+            if (!ReadOne(reader, out var t, out int length) || !Apply(t, Incoming, length))
+                continue;
+            if (++applied <= 3)
+                CoopMod.Log.Info($"World: the host's {t.Type.GetType().Name} for {t.Component.name} ({t.Ref}) differed here.");
         }
         return applied;
     }

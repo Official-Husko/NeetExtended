@@ -38,7 +38,7 @@ internal static class RestWatcher
 
             o.SentPosition = o.Tf.position;
             o.SentRotation = o.Tf.rotation;
-            if (host || o.Brain != null)
+            if (host)
             {
                 o.Moving = false;
                 OwnershipNet.QueueSettled(o, release: false);

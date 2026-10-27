@@ -133,7 +133,7 @@ internal static class OwnershipNet
             var r = NetRef.Read(reader);
             bool holding = reader.GetBool();
             var o = NetObjects.Find(r);
-            if (o != null && o.Rig == null && o.Brain == null)
+            if (o != null && o.Rig == null && (o.Brain == null || BrainHandoff.Holdable(o)))
                 Owners.OnClaim(from.Slot, o, holding);
         }
     }

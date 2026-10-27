@@ -26,6 +26,7 @@ internal static class Owners
         }
         else
         {
+            BrainHandoff.TakenHere(o);
             OwnershipNet.QueueClaim(o, holding: true);
         }
     }
@@ -37,9 +38,12 @@ internal static class Owners
             return;
         o.Holder = WorldSide.None;
         if (WorldSide.IsHost)
+        {
             OwnershipNet.QueueOwner(o);
-        else
-            OwnershipNet.QueueClaim(o, holding: false);
+            return;
+        }
+        BrainHandoff.ReleasedHere(o);
+        OwnershipNet.QueueClaim(o, holding: false);
     }
 
     // This game's player walked into a replica: take it so it can be pushed.
@@ -59,9 +63,12 @@ internal static class Owners
     {
         if (o.Owner == WorldSide.HostSlot && o.Holder == WorldSide.None)
             return;
+        bool fromClient = o.Owner != WorldSide.HostSlot;
         o.Owner = WorldSide.HostSlot;
         o.Holder = WorldSide.None;
         ReplicaBody.MakeOwned(o);
+        if (fromClient)
+            BrainHandoff.Resume(o);
         OwnershipNet.QueueOwner(o);
     }
 
@@ -71,6 +78,7 @@ internal static class Owners
         o.Owner = WorldSide.HostSlot;
         o.Holder = WorldSide.None;
         ReplicaBody.MakeReplica(o);
+        BrainHandoff.HandedBack(o);
     }
 
     /// <summary>Host: a client wants to simulate <paramref name="o"/>.</summary>
@@ -82,9 +90,12 @@ internal static class Owners
             OwnershipNet.SendOwnerTo(slot, o);
             return;
         }
+        bool wasHosts = o.Owner == WorldSide.HostSlot;
         o.Owner = slot;
         o.Holder = holding ? slot : WorldSide.None;
         ReplicaBody.MakeReplica(o);
+        if (wasHosts)
+            BrainHandoff.Pause(o);
         OwnershipNet.QueueOwner(o);
     }
 
@@ -101,6 +112,7 @@ internal static class Owners
         o.Owner = WorldSide.HostSlot;
         o.Holder = WorldSide.None;
         ReplicaBody.MakeOwned(o);
+        BrainHandoff.Resume(o);
         OwnershipNet.QueueOwner(o);
     }
 
@@ -111,17 +123,19 @@ internal static class Owners
         bool ownerChanged = o.Owner != owner;
         o.Owner = owner;
         o.Holder = holder;
-        if (o.Rig != null || o.Brain != null)
+        if (o.Rig != null || (o.Brain != null && !BrainHandoff.Holdable(o)))
             return;
         if (owner == me)
         {
             ReplicaBody.MakeOwned(o);
+            BrainHandoff.TakenHere(o);
             return;
         }
         if (!o.IsReplica)
         {
             DropIfHeldHere(o);
             ReplicaBody.MakeReplica(o);
+            BrainHandoff.HandedBack(o);
         }
         else if (ownerChanged)
         {

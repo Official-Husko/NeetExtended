@@ -21,6 +21,8 @@ internal static class StateTypes
         new LighterState(),
         new FuseBatteryState(),
         new SmokeDetectorState(),
+        new RadioState(),
+        new BoxState(),
     };
 
     static StateTypes()

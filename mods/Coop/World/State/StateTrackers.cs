@@ -38,7 +38,7 @@ internal static class StateTrackers
         {
             if (!type.OnItems)
                 continue;
-            var component = o.Go.GetComponent(type.ComponentType);
+            var component = o.Go.GetComponentInChildren(type.ComponentType, true);
             if (component != null)
                 Track(type, component);
         }
@@ -72,6 +72,12 @@ internal static class StateTrackers
     private static void Track(StateType type, Component component)
     {
         var o = NetObjects.Find(component.gameObject);
+        // Some parts sit on a child of their item.
+        if (o == null && type.OnItems)
+        {
+            var item = component.GetComponentInParent<Usable>();
+            o = item != null ? NetObjects.Find(item.gameObject) : null;
+        }
         NetRef r;
         if (o != null)
             r = o.Ref;

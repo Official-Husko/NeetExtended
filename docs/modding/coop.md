@@ -128,22 +128,23 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### World
 
-Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, taps, stove knobs, flashlights, BBQ lighters, room fires, the cop van, and on the computer the money, stock market, tax bills and the anime card game. The lines below are what isn't, or only partly.
+Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, the radio, taps, stove knobs, flashlights, BBQ lighters, cardboard boxes (opened, taped, what's frozen inside), room fires, the cop van, and on the computer the money, stock market, tax bills and the anime card game. The lines below are what isn't, or only partly.
 
 State of things:
 
-- Other item state (cooked, filled, box opened, burning) is only sent when the item spawns; later changes stay on the machine that made them.
-- Not shared yet: the radio. The stove's knob is shared, but what the gas does afterwards (lighting, exploding) happens on each machine on its own.
-- Boxes: things frozen inside a closed box only stay attached on the machine that closed it. When someone else later moves the box, its contents stay behind on the other machines.
+- Other item state (cooked, filled, burning, a glass's drink) is only sent when the item spawns; later changes stay on the machine that made them.
+- The stove's knob is shared, but what the gas does afterwards (lighting, exploding) happens on each machine on its own.
+- The radio's tape starts from the top on each machine; the play position isn't shared.
 - Fire: the host spreads it and clients get its flames once a second, so a client sees a growing fire in steps. A flame a client puts out goes out on the host too (the nearest one). Candles and other flames a fire lights on a client stay lit only there.
 - Spam email and prank calls only happen on the host; clients don't get them.
 
 Picking things up and pushing them:
 
-- Clients can't pick up anything with a brain: rats, the cat, corpses.
+- Clients can pick up rats and the cat: the host pauses the animal while someone else holds or throws it and wakes it once it lands. A held rat doesn't bite a client, and doesn't wriggle in a client's hands.
+- Clients can't pick up corpses (dead NPCs): their bodies stay with the host.
 - A player takes over what their body, what they hold, or (on a client) what they threw runs into, so it can be pushed. Things only knocked on by other knocked things move on the host first and reach the others a moment later.
 - The client that throws a plate breaks it. Scene windows and other breakables that aren't items only break on the host, so a client throwing something at a window doesn't break it.
-- Item logic that replaces, wears down or uses up the item runs only on the machine that simulates it: damage (burns, cuts, hits), food spoiling, cooking and soaking, breaking, ice melting, glasses tipping and filling, fuse and lighter explosions, fuses snapping into the fuse box or a smoke detector, the cat bowl, the piggy bank and baths soaking things. Not yet: liquid bombs, dust balls merging.
+- Item logic that replaces, wears down or uses up the item runs only on the machine that simulates it: damage (burns, cuts, hits, so liquid bombs and lighters going off too), food spoiling, cooking and soaking, breaking, ice melting, glasses tipping and filling, fuse and lighter explosions, fuses snapping into the fuse box or a smoke detector, dust balls merging (only between two balls simulated on the same machine), the cat bowl, the piggy bank and baths soaking things.
 - The toilet handle doesn't show moving for the others, but what a flush takes away is gone everywhere.
 - Things with a body but no item name (some made at runtime) aren't shared. The log names each kind once ("has no item name").
 

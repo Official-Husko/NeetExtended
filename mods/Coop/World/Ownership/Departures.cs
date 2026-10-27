@@ -17,6 +17,7 @@ internal static class Departures
                 o.Holder = WorldSide.None;
                 ReplicaBody.SettleAtNewest(o);
                 ReplicaBody.MakeOwned(o);
+                BrainHandoff.Resume(o);
                 OwnershipNet.QueueOwner(o);
             }
             else if (o.Holder == slot)
