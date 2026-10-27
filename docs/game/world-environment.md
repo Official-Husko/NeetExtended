@@ -369,11 +369,11 @@ The pantry behind its wall is fully stocked with normal items (cans, cheese, can
 
 | doorId | Door | Key in the demo |
 |---|---|---|
-| `BASEMENT` | `HOUSE/Door_single (23)`, the black door behind boxes in the basement, also `unbreakable` | none |
+| `BASEMENT` | `HOUSE/Door_single (23)`, the black door behind boxes in the basement, also `unbreakable` | `Key_Basement`, dropped by the bad thief (see `demo-content.md`) |
 | `DADYARD` | `HOUSE/Door_single (16)`, dad's yard door in the living room | `Key_DadYard`, in the living room |
 | `Attic` | `HOUSE/Door_single (17)`, on the attic stairs | `Key_Of_Anger`, in the shed |
 
-Behind the `BASEMENT` door is the `Basement_Backroom` location: a hanged corpse (`Player_NPC_Corpse_Hanged`), `Player_Original`, a `DemonCoreCrystal`, `Knife_Sacrifice Skull`, bones and a `Cardboard_Box_Parasite`. Story material the demo never lets the player reach.
+Behind the `BASEMENT` door is the `Basement_Backroom` location: a hanged corpse (`Player_NPC_Corpse_Hanged`), `Player_Original`, a `DemonCoreCrystal`, `Knife_Sacrifice Skull`, bones and a `Cardboard_Box_Parasite`. According to the game's data the demo does let the player in: the bad thief carries `Key_Basement` (see `demo-content.md`); not yet seen in play.
 
 `HouseManager.demoMode` is the only demo flag in code: it blocks black/occult market orders (`Computer.OrderItem`) and keeps wandering NPCs out of the pantry (`HouseManager.cs:484`).
 

@@ -75,9 +75,9 @@ Makes the game smoother. Each fix is its own switch.
 Opens what the demo closes off. Each area is its own switch.
 
 - **Open the pantry** (on): the pantry next to the kitchen, with everything inside usable.
-- **Open the basement backroom** (on): the black door behind the boxes in the basement, which the demo has no key for.
+- **Open the basement backroom** (on): the black door behind the boxes in the basement, without hunting for its key.
 - **Open dad's yard** (on): the yard door in the living room. Switch it off to open it the game's way, with the key lying nearby.
-- **Open the attic** and **Open the roof** (off): areas the demo walls off; parts may be unfinished.
+- **Open the attic** and **Open the roof** (off): areas the demo walls off; parts may be unfinished. The Queen of Dust lives in the attic and pays for dust balls.
 - **Lift demo limits** (off): turns off the demo flag, so the black and occult markets take orders. Things the demo held back may not be finished.
 
 ## Phone Expansion

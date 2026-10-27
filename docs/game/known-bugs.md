@@ -224,6 +224,10 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 
 ## Not bugs
 
+- `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.
+- `Door.Load` ignores the saved `unbreakable` flag (`Door.cs:170`); the scene's value is the one that's wanted anyway.
+- `EncounterSpawner` checks visitor conditions (`SpawnIfVisitedKnots`) against its own copy of the story, which never moves (`EncounterSpawner.cs:156,219`). No visitor in the demo has conditions.
+- Earned achievement medals only spawn when a goal completes, but they're items, so a save keeps them.
 - `KnotList must be instantiated using the ScriptableObject.CreateInstance method` in the log after every load: the save loader rebuilds the spam list with `new`. Unity warns, but the list works.
 
 - A locked card's medal is reset to 0 on load: the `Locked` setter (`AnimeCard.cs:147-166`) does that on purpose; unlocked cards keep their medal.
