@@ -10,7 +10,7 @@ namespace TvStations.Tv;
 /// A station on the TV: a copy of one of the game's channel objects (so it sits on the screen the
 /// same way) with a RawImage showing a VideoPlayer's picture and an AudioSource set up like the
 /// TV's own speaker. It has the game's ScreenModule component, so the TV keeps it in its channel
-/// list like any other channel.
+/// list like any other channel. While the video isn't running it shows a please-stand-by card.
 /// </summary>
 internal sealed class VideoChannel
 {
@@ -61,6 +61,8 @@ internal sealed class VideoChannel
         _player.SetTargetAudioSource(0, _audio);
         _player.prepareCompleted += OnPrepared;
         _player.errorReceived += OnError;
+
+        StandByCard.Add(_object, _player);
     }
 
     public Station Station { get; }
@@ -77,11 +79,18 @@ internal sealed class VideoChannel
     {
         _audio.volume = _tvSpeaker.volume * Station.Volume * volume;
         _object.SetActive(true);
-        // Not there yet (co-op is still fetching the host's video): a black screen until the list
-        // is loaded again with it, rather than an error.
+        // Not there yet (co-op is still fetching the video): the stand-by card until it arrives
+        // (FileArrived), rather than an error.
         if (!System.IO.File.Exists(Station.File))
             return;
         _player.Play();
+    }
+
+    /// <summary>The video's file has just turned up: plays it if the station is on screen.</summary>
+    public void FileArrived()
+    {
+        if (_object != null && _object.activeSelf && !_player.isPlaying && System.IO.File.Exists(Station.File))
+            _player.Play();
     }
 
     public void SetVolume(float volume) => _audio.volume = _tvSpeaker.volume * Station.Volume * volume;

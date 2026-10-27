@@ -160,6 +160,7 @@ Your own videos on the living room TV. Put MP4 or WebM files into a mod's `tv` f
 
 - **Keep the game's channels**: switch off to watch only your own stations. Single channels can be hidden with a `stations.jsonc` in the `tv` folder.
 - **Station volume** in Mod Settings.
+- A station whose video isn't playing yet shows an old "Please stand by" card instead of a black screen.
 - In co-op everyone gets the host's stations.
 
 ## Mixtapes

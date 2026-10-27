@@ -1,6 +1,7 @@
 using NeetLoader;
 using NeetLoader.Config;
 using NeetModKit.Features;
+using NeetModKit.IO;
 using NeetModKit.Menu;
 using NeetModKit.Settings;
 using TvStations.Features;
@@ -34,6 +35,7 @@ public sealed class TvStationsMod : NeetMod
         ModSettings.Register(this, Config, "Custom TV Stations");
 
         StationLoader.Init(this);
+        ModContent.FileArrived += TvChannels.FileArrived;
         ModFeatures.Register(this, new GameChannelsFeature());
         ModMenu.AddPage(this, new TvPage());
     }
@@ -43,7 +45,9 @@ public sealed class TvStationsMod : NeetMod
 
     public override void OnUnload()
     {
+        ModContent.FileArrived -= TvChannels.FileArrived;
         TvChannels.Restore();
+        StandByCard.ReleasePattern();
         Instance = null;
     }
 }

@@ -71,6 +71,16 @@ internal static class TvChannels
         return null;
     }
 
+    /// <summary>A station's video turned up (co-op got it): the station plays if it's on screen.</summary>
+    public static void FileArrived(string path)
+    {
+        foreach (var video in Videos)
+        {
+            if (string.Equals(video.Station.File, path, StringComparison.OrdinalIgnoreCase))
+                video.FileArrived();
+        }
+    }
+
     /// <summary>A game channel's name: "Channel5_Sports" is "Sports".</summary>
     public static string GameName(ScreenModule channel)
     {
