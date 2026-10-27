@@ -1,14 +1,14 @@
 using NeetModKit.Events;
 using UnityEngine;
-using WeatherExpansion.Storm;
 
 namespace WeatherExpansion.Fog;
 
 /// <summary>
-/// Owns the scene's fog colour, fog density and sky tint while a fog look is on, and puts the game's
-/// own values back when the last one goes. Two features ask for it: the haze (colour and density) and
-/// the lightning glow (fog and sky follow the flash). They share this so they never fight over the
-/// same settings. Called once per frame from the mod; nothing here allocates.
+/// Owns the scene's fog colour and sky tint while a fog look is on, and puts the game's own values back
+/// when the last one goes. Two features ask for it: the haze (colour) and the lightning glow (fog and
+/// sky follow the flash). They share this so they never fight over the same settings. The fog's
+/// thickness is not here: <see cref="StormFogFeature"/> sets it through <c>Sky.FogAmount</c>, which the
+/// framework applies to the scene's density. Called once per frame from the mod; nothing here allocates.
 /// </summary>
 internal static class FogLook
 {
@@ -22,7 +22,6 @@ internal static class FogLook
     private static bool _glow;
     private static bool _captured;
     private static Color _fogColor;
-    private static float _fogDensity;
     private static Light _moon;
     private static Material _sky;
     private static bool _skyHasTint;
@@ -65,30 +64,18 @@ internal static class FogLook
         float flash = _glow ? FlashLevel.Of(_moon) * config.LightningGlow : 0f;
         flash = Mathf.Clamp01(flash);
 
-        Color color = _fogColor;
-        float density = _fogDensity;
-        if (_haze)
-        {
-            color = HazeColor * config.FogBrightness;
-            density = _fogDensity * config.FogThickness * StormInputs.FogDensity;
-            density *= Drift(Time.time);
-        }
+        Color color = _haze ? HazeColor * config.FogBrightness : _fogColor;
         RenderSettings.fogColor = Color.Lerp(color, FlashFog, flash);
-        RenderSettings.fogDensity = density;
 
         if (_skyHasTint && _glow)
             _sky.SetColor("_Tint", Color.Lerp(_skyTint, FlashSky, flash));
     }
-
-    // The fog thins and thickens slowly, a different rhythm every minute or so.
-    private static float Drift(float time) => 1f + 0.16f * Mathf.Sin(time * 0.13f) * Mathf.Sin(time * 0.071f + 1.3f);
 
     private static bool Capture()
     {
         if (!RenderSettings.fog)
             return false;
         _fogColor = RenderSettings.fogColor;
-        _fogDensity = RenderSettings.fogDensity;
         _moon = RenderSettings.sun;
         _sky = RenderSettings.skybox;
         _skyHasTint = _sky != null && _sky.HasProperty("_Tint");
@@ -103,7 +90,6 @@ internal static class FogLook
         if (_captured && GameEvents.IsHouseReady)
         {
             RenderSettings.fogColor = _fogColor;
-            RenderSettings.fogDensity = _fogDensity;
         }
         RestoreSky();
         _captured = false;

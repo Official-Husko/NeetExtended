@@ -4,6 +4,6 @@
   "version": "0.1.0",
   "author": "pawbeans",
   "description": "Experimental. Makes the storm outside look different: fog that moves and takes the lightning's light, and rain running down the windows. Every look can be switched off on its own.",
-  "dependencies": { "NeetModKit": "0.3.0" },
+  "dependencies": { "NeetModKit": "0.4.0" },
   "hotReload": true
 }

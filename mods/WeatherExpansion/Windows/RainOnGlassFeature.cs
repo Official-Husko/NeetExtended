@@ -46,7 +46,8 @@ internal sealed class RainOnGlassFeature : ModFeature
             return;
         if (AnyVisible())
         {
-            _field.Wetness = Mathf.Clamp01(WeatherExpansionMod.Config.Value.WindowRain * StormInputs.Wetness);
+            _field.Wetness = Mathf.Clamp01(WeatherExpansionMod.Config.Value.WindowRain * WeatherFollow.Wetness);
+            _field.Speed = WeatherFollow.Speed;
             _field.Advance(Time.deltaTime);
         }
         if (Time.unscaledTime >= _nextCheck)

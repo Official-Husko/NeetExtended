@@ -2,7 +2,9 @@ using NeetLoader;
 using NeetLoader.Config;
 using NeetModKit.Features;
 using NeetModKit.Settings;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using WeatherExpansion.Storm;
 using WeatherExpansion.Fog;
 using WeatherExpansion.Windows;
 
@@ -32,7 +34,11 @@ public sealed class WeatherExpansionMod : NeetMod
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
-    public override void OnUpdate() => FogLook.Tick(Config.Value);
+    public override void OnUpdate()
+    {
+        WeatherFollow.Tick(Time.deltaTime);
+        FogLook.Tick(Config.Value);
+    }
 
     public override void OnUnload()
     {

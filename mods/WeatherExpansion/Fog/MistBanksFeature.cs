@@ -27,6 +27,7 @@ internal sealed class MistBanksFeature : ModFeature
     private Material _material;
     private Texture2D _texture;
     private Light _moon;
+    private float _banksAmount;
 
     public override string Id => FeatureId;
     public override string Name => "Mist in the yards";
@@ -54,16 +55,22 @@ internal sealed class MistBanksFeature : ModFeature
             return;
         float flash = FlashLevel.Of(_moon);
         var colour = Color.Lerp(NightMist, FlashMist, flash);
-        colour.a = BaseAlpha * Mathf.Min(Amount(), 1.5f);
+        float amount = Amount();
+        colour.a = BaseAlpha * Mathf.Min(amount, 1.5f);
         _material.SetColor("_TintColor", colour);
+        if (Mathf.Abs(amount - _banksAmount) > 0.01f)
+            SetBanks(amount);
     }
 
-    private static float Amount() => WeatherExpansionMod.Config.Value.Mist * StormInputs.Wetness;
+    private static float Amount() => WeatherExpansionMod.Config.Value.Mist * WeatherFollow.Fog;
 
-    private void OnSettingsChanged(WeatherExpansionConfig config)
+    private void OnSettingsChanged(WeatherExpansionConfig config) => SetBanks(Amount());
+
+    private void SetBanks(float amount)
     {
+        _banksAmount = amount;
         foreach (var bank in _banks)
-            bank.SetAmount(Amount());
+            bank.SetAmount(amount);
     }
 
     private void OnSceneUnloaded(Scene scene) => Clear();
@@ -89,6 +96,7 @@ internal sealed class MistBanksFeature : ModFeature
             // Puffs are 4 to 7 m wide, so their middle sits about 2.5 m up to keep them off the ground.
             var bank = new MistSystem("WeatherExpansion_Mist", new Vector3(at.x, 2.5f, at.z), _material);
             bank.SetAmount(Amount());
+            _banksAmount = Amount();
             _banks.Add(bank);
         }
     }

@@ -6,7 +6,7 @@ It only uses what the game already ships: no custom shader and no extra download
 
 ## What's local in co-op
 
-All of it. Every game draws its own looks from its own scene: nothing is sent over the network and no setting is `[Shared]`. The looks that follow lightning read the moon light's intensity (the game's own flash) in the local game, so they light up whenever that game's moon does; whether a client's moon flashes along with the host's is up to the co-op world sync, not this mod. The storm's state (drizzle, normal, heavy) is not part of this mod; when the framework's Sky API has one, it plugs into `Storm/StormInputs.cs` and every look follows it.
+All of it. Every game draws its own looks from its own scene: nothing is sent over the network and no setting is `[Shared]`. The looks that follow lightning read the moon light's intensity (the game's own flash) in the local game, so they light up whenever that game's moon does; whether a client's moon flashes along with the host's is up to the co-op world sync, not this mod. The weather state (`Sky.Weather`: drizzle, rain, storm) is the framework's; this mod only reads it, so the looks follow whatever mod drives it (see [Following the weather](#following-the-weather)).
 
 ## Looks and settings
 
@@ -23,7 +23,7 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 
 `Fog/FogLook.cs` owns the scene's `RenderSettings.fogColor`, `fogDensity` and the sky material's `_Tint` while either fog look is on. Two features want those values, so one class applies them, once per frame from `WeatherExpansionMod.OnUpdate` (0.4 microseconds, no allocation). The game's own values are captured when the house is ready and put back when the last fog look goes off, when the mod unloads and when the house scene unloads (the sky material is a shared asset and would otherwise keep the flash tint into the main menu).
 
-- **Stormy fog**: colour `(0.035, 0.05, 0.085)` times the brightness setting, density = the game's density (0.06, ExponentialSquared) times the thickness setting times `StormInputs.FogDensity` times a drift of about plus or minus 16% (two slow sine waves, a minute or so).
+- **Stormy fog**: colour `(0.035, 0.05, 0.085)` times the brightness setting, density: the feature gives the framework one factor, `Sky.FogAmount.Set(feature, thickness setting x weather x drift)`, and the kit applies it to the scene's density (0.06, ExponentialSquared) and puts it back when the feature goes off or the mod unloads. The drift is about plus or minus 16% (two slow sine waves, a minute or so). `FogLook` itself only owns the colour and the sky tint, so nothing fights over the density.
 - **Lightning glow**: `Fog/FlashLevel.cs` turns the moon light's intensity into a 0 to 1 flash (`HouseManager.Thunder` pushes the moon from 0.2 to 14-22 and back; 14 counts as full). The fog colour is lerped to `(0.40, 0.47, 0.66)` and the sky `_Tint` from the game's 0.038 grey to `(0.50, 0.58, 0.78)` by that amount times the setting. Following the light itself needs no event, so it survives house loads, story strikes (`Thunder(instant: true)`) and hot reloads.
 - The sky is `Skybox_CubeTest`, a `Skybox/Cubemap` of a moonlit golf course (`moonlit_golf_4k`) darkened to 0.038, which is why the sky is black. Brought up, it shows hills, trees and a few lights on the horizon, which is what lights up behind the yard in a flash.
 
@@ -35,18 +35,26 @@ Switches are on the Mods page, values in Mod Settings under "Weather Expansion" 
 
 A window is two invisible paintable panes (`Wall_Window_*_Pane_1` and `_Pane_2`, both with `BreakOnImpact`) in a wall, with a blue `WindowHighlight` quad between them; the panes are what the game's paint and breaking use. The mod puts one quad 1 cm inside the inner pane of every window (`Windows/WindowFinder.cs`, `WindowPane.cs`; which side is inside comes from the room trigger boxes in `InteriorRooms.cs`, because the pane names don't say for every window). The quad is drawn with `Windows/GlassMaterial.cs`: a copy of the game's own refracting glass, `Glass/DiffuseBumped` (the ferris wheel's windows; it reads a normal map and bends what is behind it by `_IOR`). The normal map is what makes the drops.
 
-`Windows/DropField.cs` simulates the water on the CPU into one 256 by 144 normal map that every window shares:
+`Windows/DropSimulation.cs` simulates the water on the CPU and `Windows/DropField.cs` draws it into one 256 by 144 normal map that every window shares:
 
 - about 100 small drops sit still, grow while it's wet and dry up slowly; one that gets big enough starts to run
 - up to 12 running drops slide down in stop and go, wobbling a little, leaving a thin wet trail, getting smaller; one that runs out of water stays behind as a bead
 - each tick (15 a second) puts the previous tick's pixels back to flat, redraws the trails from their slope and stamps each drop's rounded dome. Only touched pixels are written, into a managed array uploaded with `SetPixelData`, so nothing allocates and a tick costs about 0.5 ms
 - the field only advances while one of the quads is on screen (`Renderer.isVisible`), so it costs nothing in the rest of the house
 
-Wetness (the setting times `StormInputs.Wetness`) sets how fast new drops land and grow. Window haze is the glass shader's `_Opacity` with a blue-grey tint: a thin film that makes the drops show in the dark. Once a second the quads check their panes and hide when either is broken or gone; the window parent owns them, so a window that is destroyed takes its quad along.
+Wetness (the setting times the weather's wetness, see below) sets how fast new drops land and grow; the weather's speed sets how fast running drops slide. Window haze is the glass shader's `_Opacity` with a blue-grey tint: a thin film that makes the drops show in the dark. Once a second the quads check their panes and hide when either is broken or gone; the window parent owns them, so a window that is destroyed takes its quad along.
 
-## The storm seam
+## Following the weather
 
-`Storm/StormInputs.cs` holds two multipliers that are 1 until something sets them: `FogDensity` (the fog look) and `Wetness` (window rain and mist). The framework's Sky API plugs in here: set them from the storm state (drizzle low, heavy high) and every look follows. Nothing in the mod reads a storm state any other way.
+`Storm/WeatherFollow.cs` reads `Sky.Weather` once per frame (`Kind` and `Intensity`) and turns it into three numbers that the looks multiply in, each moving toward its new value over a few seconds (time constant 3 s) when the weather changes, so a storm rolls in instead of switching on:
+
+| Weather | Fog thickness and mist | Window wetness | Running-drop speed |
+| --- | --- | --- | --- |
+| Drizzle | 0.7 | 0.45 | 0.7 |
+| Rain (the default) | 1 | 1 | 1 |
+| Storm | 1.35 | 1.6 | 1.5 |
+
+Intensity 1 is the kind's usual strength; wetness is also multiplied by it, and fog and speed by `0.8 + 0.2 x intensity`. Nothing else in the mod reads the weather. The mod doesn't set the weather, rain amount, storm volume or thunder timer; whatever drives `Sky.Weather` does.
 
 ## Files
 
@@ -54,30 +62,32 @@ Wetness (the setting times `StormInputs.Wetness`) sets how fast new drops land a
 | --- | --- |
 | `WeatherExpansionMod.cs` | Registers the features and the settings, runs `FogLook.Tick` every frame. |
 | `WeatherExpansionConfig.cs` | The settings. |
-| `Storm/StormInputs.cs` | The multipliers the Sky API will drive. |
+| `Storm/WeatherFollow.cs` | Turns `Sky.Weather` into smoothed multipliers for fog, mist, wetness and drop speed. |
 | `Fog/FogLook.cs`, `FlashLevel.cs` | Applying fog and sky tint, and following the lightning. |
 | `Fog/StormFogFeature.cs`, `LightningGlowFeature.cs` | The two fog looks. |
 | `Fog/MistBanksFeature.cs`, `MistSystem.cs`, `SoftTexture.cs` | The mist banks, their particle systems and the puff picture. |
 | `Windows/RainOnGlassFeature.cs` | Builds the quads when the house is ready, drives the field, tidies up. |
 | `Windows/WindowFinder.cs`, `WindowPane.cs`, `InteriorRooms.cs` | Finding the panes, their size and which way is into the house. |
-| `Windows/GlassMaterial.cs`, `QuadMesh.cs`, `DropField.cs` | The material, the quad and the water simulation. |
+| `Windows/GlassMaterial.cs`, `QuadMesh.cs` | The material and the quad. |
+| `Windows/DropSimulation.cs`, `DropField.cs` | The water as numbers (drops, trails), and drawing it as the normal map. |
 
 ## Testing
 
-The settings and switches work live, so most checks are `neet call settings.set` and `neet call features.set`. The storm seam can be set from the bridge:
+The settings and switches work live, so most checks are `neet call settings.set` and `neet call features.set`. The weather comes from the bridge's `sky.set`:
 
 ```sh
-neet call type.set type=WeatherExpansion.Storm.StormInputs member=FogDensity value=0.5   # drizzle fog
-neet call type.set type=WeatherExpansion.Storm.StormInputs member=Wetness value=1.5      # soaked
-neet call obj.set target='Directional light Moon' component=Light member=intensity value=14   # hold a flash
-neet call obj.set target='Directional light Moon' component=Light member=intensity value=0.2  # and end it
+neet call sky.set weather=storm          # also drizzle, rain; intensity=1.5 for heavier
+neet call sky.get                        # fog density, the factor and the weather
+neet call sky.set moon=14                # hold a flash
+neet call sky.set moon=0.2               # and end it
+neet call sky.set reset=true             # back to the default rain
 ```
 
-A real strike is `neet call obj.call target='House_Manager---------------' component=SequenceManager method=TriggerSequence 'args=["Execute","Thunder"]'`; the first strike from a sequence ends the game's own random thunder for the session, see Weather & sky in `docs/game/world-environment.md`. Dark scenes need a brightened copy of a screenshot to judge; the game really is that dark.
+A real strike is `neet call sky.strike`. Dark scenes need a brightened copy of a screenshot to judge; the game really is that dark.
 
 ## Known limitations
 
-- Nothing here is saved with the game, and none of it follows the storm: fog, mist and glass look the same all night. Drizzle, heavy rain and a clear spell come with the Sky API.
+- Nothing here is saved with the game. The looks follow `Sky.Weather` but only the three kinds (drizzle, rain, storm); there is no clear spell, and nothing in this mod changes the weather.
 - There is no height fog and no fog that sits in the sky: Unity's fog is one global colour and density, and a fog volume needs a shader the game doesn't ship. Mist banks stand in for it, over the two yards only.
 - Mist puffs are flat billboards without soft edges, so one that drifts into a wall or the ground shows a hard line there.
 - Window rain is drawn on the inside of the glass and only seen from inside; from the yard the windows look as they did. Some windows face a wall close outside, and that wall is what shows through their drops.
