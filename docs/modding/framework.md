@@ -118,6 +118,43 @@ PumpkinSmash pays its round score with `Money.Add(cash)`, so that income is taxe
 - `bool IsOnFire(Location)`, `void StartFire(Location)` (throws if the room is not in the scene), `void StopFire(Location)`
 - `void SetPower(Location room, bool on)` and `void SetHousePower(bool on)`: forces power, ignoring fuses
 
+### Sky
+
+`Sky` (in `NeetModKit.Game`) is the handle on the house's weather: the lights, lightning, the thunder timer, the rain, fog and storm sound, and a weather state. The house is one fixed rainy night with thunder; it has no weather system of its own (see "Weather & sky" in `docs/game/world-environment.md`). Null-safe outside the house.
+
+```csharp
+// A storm: lots of rain, thick fog, loud wind, a strike every 8 to 15 seconds.
+Sky.RainAmount.Set(this, 3f);
+Sky.FogAmount.Set(this, 2f);
+Sky.StormVolume.Set(this, 1.5f);
+Sky.SetThunderDelay(this, (min, max) => UnityEngine.Random.Range(8f, 15f));
+Sky.Reschedule();                              // use it for the wait that's running now
+Sky.SetWeather(this, WeatherKind.Storm, 1f);   // tell everyone else
+Sky.OnStrike.Subscribe(this, () => Log.Info("Lightning"));
+```
+
+| API | |
+| --- | --- |
+| `Sky.Moon`, `Sky.Sun` | The `Light`s: the moon (blue, 0.2, the only light on) and the orange sun the house keeps switched off. Null when the scene has none. |
+| `Sky.MoonBaseIntensity`, `Sky.SceneFogDensity` | The scene's own values (0.2, 0.06), remembered for each house load. |
+| `Sky.Strike()` | Lightning now: the game's flash, lamp flicker and clap (the instant `HouseManager.Thunder`). The random loop is left alone. False without a house, and on a co-op client (only the host's strikes are real there). |
+| `Sky.OnStrike` | `GameEvent`, raised when a strike peaks, whoever started it (the loop, `Strike()`, the story, a co-op host's strike played on a client). Follows the house through loads and framework reloads. |
+| `Sky.NextStrikeIn` | Seconds until the loop's next random strike; -1 when it isn't waiting (mid-strike, stopped, or a co-op client). |
+| `Sky.ThunderLoopAlive` | The random loop is waiting or mid-strike. It ends for the session after the story's strike unless Unofficial NEET Patches' ThunderLoop fix is on. |
+| `Sky.SetThunderDelay(owner, (min, max) => seconds)` | Takes over the wait between random strikes (the game's own range is 30 to 180 s; at least 1 s is used). `null` gives the timer back; the last mod to set one wins, and it goes away with its mod. Applies from the loop's next wait. |
+| `Sky.StrikeIn(seconds)`, `Sky.Reschedule()` | Move the wait that's running now (to a fixed time, or to a new answer from the provider). False when the loop isn't waiting. |
+| `Sky.RainAmount`, `Sky.FogAmount`, `Sky.StormVolume` | `SkyMultiplier`s. `Set(owner, factor)` (0 to 20), `Clear(owner)`, `Value` (the product of every mod's factor). Rain scales the emission of the four `Particle_Rain_*` systems (3 is a downpour, 0 is dry; it also stops rain putting out flames) and raises their particle cap, fog scales the scene's density, the storm volume scales the loop's volume after the game sets it on every room change (Unity keeps the result at 1 or less). A factor goes away with its mod; with none left the scene's own value is back. |
+| `Sky.RainSystems` | The four rain particle systems, to read (counts, positions). Change them through `RainAmount`. |
+| `Sky.Weather`, `Sky.WeatherChanged`, `Sky.WeatherOwner`, `Sky.SetWeather(owner, state)` | The weather state, below. |
+
+`WeatherState` is a small value: `Kind` (`WeatherKind.Drizzle`, `Rain`, `Storm`), `Intensity` (1 is the kind's usual strength), `StartedAt`, an optional forecast (`NextKind`, `NextAt`), and helpers `Name` (the word players read), `NextName`, `Age`, `SecondsUntilNext`. Times are play seconds (`ModFlags.PlaySeconds`). With no mod driving it the weather is a steady `Rain`. `SetWeather` is for the mod that drives the weather (the Weather mod on the host; Co-op on a client that follows the host): the last mod to set it owns it, it goes back to the default when that mod unloads, and `WeatherChanged` is raised with each new state. It only keeps the state: reading mods apply their own effects (the multipliers above, a phone line, a mood).
+
+Gotchas:
+
+- The multipliers, the delay provider and the weather all belong to the mod that set them and go away when it unloads, so a mod that hot reloads sets them again in `OnLoad`. House loads keep them: they're applied again to each new house.
+- The thunder timer is read from the loop's own code. If a game update changes it, the kit logs a warning once, `NextStrikeIn` stays -1 and `SetThunderDelay` does nothing.
+- Without the ThunderLoop fix, the story's strike (Ghostboy, Night 1) ends the random loop. `Sky.Strike()` never does that.
+
 ### Doors
 
 The house's doors (`HouseManager.doors`). Locked doors are matched by `doorId`: `BASEMENT` (the black door), `DADYARD`, `Attic`.
@@ -825,6 +862,8 @@ The framework's patches live in `src/NeetModKit/Patches/`. Each one is an applie
 | `Dialogue.Awake` (post) | `DialoguePatches` | Raises `InkStory.Dialogue.Created`, so mod scripts and functions are in the story before a save loads into it |
 | `EmailHandler.Start` (post) | `DialoguePatches` | Raises `InkStory.Email.Created` once the email story is built |
 | `Computer.OrderItem` (post) | `OrderPatch` | Raises `ItemOrdered` for orders that went through |
+| `HouseManager.Start` (post), `Brain.OnTriggerEnter` (post) | `SkyPatches` | Finds the scene's sky; applies the storm volume right after the game sets it for a room |
+| `HouseManager.Thunder` (transpiler, the loop's `MoveNext`) | `ThunderWaitPatch` | The wait between strikes comes from `Sky.SetThunderDelay` and can be looked at and moved |
 | `EmailApp.LoadEmail` (pre, last) | `EmailGuardPatch` | An email whose knot is gone (its mod was removed) shows a note instead of throwing |
 
 ### Reasons for the less obvious ones

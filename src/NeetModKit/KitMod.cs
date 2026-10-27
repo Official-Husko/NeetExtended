@@ -29,6 +29,7 @@ public sealed class KitMod : NeetMod
         Saves.ModSaveData.Init(Log);
         Saves.SaveSource.RestoreAfterReload();
         Game.PlayerControl.RestoreAfterReload();
+        Game.Sky.Init(this);
         Items.ItemRegistry.Init(Log);
         Conversations.InkStory.Init(Log);
         Conversations.InkFunctions.Init(this);
