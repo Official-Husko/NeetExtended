@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>UpdateChecker</RootNamespace>
+    <Description>Tells you when a newer NeetExtended is out, in the corner of the screen and, if you want, by email and phone.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
+    <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
+  </ItemGroup>
+
+  <!-- The update email and call, read by Email Expansion and Phone Expansion like any mod's folders. -->
+  <ItemGroup>
+    <None Include="email/**/*" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="phone/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

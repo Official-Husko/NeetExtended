@@ -243,6 +243,7 @@ public static Canvas Create(ITracker owner, string name, int sortingOrder = 1000
 Creates a `ScreenSpaceOverlay` canvas with a `CanvasScaler` (copied from the pause menu's, or a fixed 1148.7 x 436.8 reference if the menu is not loaded) and a `GraphicRaycaster`. The object survives scene changes and is destroyed with `owner`. Higher `sortingOrder` draws on top. Use it for any overlay that is not a `UiWindow`.
 
 - `interactive: false` leaves out the raycaster, so nothing on the canvas takes clicks (the version tag uses this).
+- The version tag in the bottom left corner has a small API of its own: `VersionTag.AddNote(owner, text)` adds a note after the pack's version and returns an `IDisposable` that takes it back (see [framework.md](framework.md#pack-name-and-version)).
 - `referenceResolution` scales the canvas on its own (scale with screen size, matching width and height equally) instead of like the game's menus.
 
 ## `UiCloning`

@@ -30,6 +30,7 @@ Mods, a mod loader and modding tools for [NEET Demo](https://store.steampowered.
 | **Custom TV Stations** | Your own videos (MP4 or WebM) on the living room TV. |
 | **Randomizer** | A seed per save shuffles who knocks at night, store prices, deliveries, the house on a new game and how fast you get hungry. |
 | **Mixtapes** | Your own music (OGG, MP3 or WAV) on cassettes for the radio, and as the radio's station when there's no tape in. |
+| **Update Checker** | Checks once at start and then every hour whether a newer version is out, and says so in the corner. If you let it, the game also nags you about it by email and phone. |
 | **Open House** | Opens the pantry, the basement backroom, dad's yard, and if you want the attic and the roof. |
 | **Card Expansion** | Twelve Halloween cards, summons, an auto-clicker and a better crystal exchange for the computer's card game. |
 | **Pumpkin Smash** | A whack-a-pumpkin game on the in-game computer. |

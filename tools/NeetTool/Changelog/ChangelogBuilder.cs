@@ -31,6 +31,7 @@ public static class ChangelogBuilder
         ["mixtapes"] = "Mixtapes",
         ["randomizer"] = "Randomizer",
         ["perf"] = "Performance Fixes",
+        ["updates"] = "Update Checker",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
         ["ui"] = "Interface",

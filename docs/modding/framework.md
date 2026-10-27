@@ -55,7 +55,15 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 
 `About/GameCompat` compares the running game with the build this version was tested with: the framework ships `compat/game.json` as `game-compat.json`, and its `gameCode.mvid` is compared with the module version id of the loaded `Assembly-CSharp`. `GameCompat.Status` is `Tested`, `Untested` or `Unknown` (no record), and the log says which (see [tools.md](tools.md#compat)).
 
-The version tag (`Ui/VersionTag.cs`) shows `PackInfo.Label` (plus "game build not tested" when `GameCompat.Status` is `Untested`) in the bottom left corner of every scene: a canvas at sorting order 900 (under the mod menu's windows), without a raycaster, so it never takes clicks. The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
+The version tag (`Ui/VersionTag.cs`) shows `PackInfo.Label` plus any notes in the bottom left corner of every scene: a canvas at sorting order 900 (under the mod menu's windows), without a raycaster, so it never takes clicks. Mods add notes with `VersionTag.AddNote(owner, text)`; the label reads `NeetExtended v0.2.0 (1a2b3c4)  ·  note one  ·  note two`. The result is an `IDisposable`: dispose it to take the note back. It also goes when `owner` unloads, and the label updates either way. The framework adds "game build not tested" itself when `GameCompat.Status` is `Untested`; Update Checker adds "update available (v0.3.0)". Keep notes short (a few words), since they share one line.
+
+```csharp
+IDisposable note = VersionTag.AddNote(this, "update available (v0.3.0)");
+// ...later
+note.Dispose();
+```
+
+The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
 
 ## Game
 

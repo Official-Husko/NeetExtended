@@ -26,6 +26,7 @@ Press **F1**, or pick **MODS** in the pause menu (where the feedback form used t
 | **Email** | Every new email, with a button to send it now (Email Expansion). |
 | **TV** | Your TV stations (Custom TV Stations). |
 | **Mixtapes** | Your tapes, with a button to get one (Mixtapes). |
+| **Updates** | The version you have, the newest one found, the release page, and a button to check now (Update Checker). |
 | **Randomizer** | This save's seed, the visitors in the order they'll come and how fast your needs drain, with a button to roll again (Randomizer). |
 
 ## Unofficial NEET Patches
@@ -154,6 +155,17 @@ Your own music on cassettes for the radio. Put OGG, MP3 or WAV files into a mod'
 
 - **Mixtape radio**: with no tape in, the radio plays your songs one after another, shuffled, like a station. It still needs a fuse and the music button.
 - **Tape price** in Settings. Names, prices, colours and the room a tape is left in go in a `tapes.jsonc` in the `mixtapes` folder.
+
+## Update Checker
+
+Tells you when a newer version is out.
+
+- **The check**: when the game starts and then every hour, the mod asks GitHub (`github.com/Official-Husko/NeetExtended`) for the newest release. It sends nothing about you or your game. If you're offline or GitHub doesn't answer, nothing happens and nothing is shown.
+- **In the corner**: while a newer version is out, the version label in the bottom left says `update available (v0.3.0)`.
+- **In the game**: while a newer version is out, the game sends you one email and rings your phone up to twice per save, about once an hour of play. They're rude about it, like everything else in the game. In co-op only the host gets them.
+- **Updates tab** in the mod menu: the version you have, the newest one found, the release page, CHECK NOW and COPY LINK. The mod never updates anything by itself; you get the new release the same way you got this one.
+- **Check for updates** in Settings (on by default). Off: the mod never goes online.
+- **Tell me in the game** in Settings (on by default). Off: only the note in the corner.
 
 ## Randomizer
 

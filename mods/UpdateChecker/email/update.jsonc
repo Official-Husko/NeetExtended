@@ -1,0 +1,81 @@
+// The update email. Update Checker sends it (once per save, through the "email" action) while a
+// newer version is out and the player allows it. Every copy picks one of six voices: three that
+// nag, three that try to sell the new version. {{updateVersion}} is the newest version found.
+{
+  "id": "update",
+  "subject": "ur mods r OLD AS FUCK",
+  "send": { "trigger": "manual" },
+  "body": [
+    // Opened after the player already updated.
+    { "if": { "updateAvailable": false }, "then": [
+      "wait",
+      "u updated???",
+      "huh",
+      "ok good. ignore all this.",
+      "ur still a dipshit tho",
+      { "end": true }
+    ] },
+
+    { "random": [
+      // Nagging
+      [
+        "<size=150%>HEY DIPSHIT<size=100%>",
+        "Version v{{updateVersion}} is out.",
+        "U r still running the old one. Like a fucking caveman.",
+        "Update ur shit u lazy sack of balls."
+      ],
+      [
+        "v{{updateVersion}} is out.",
+        "U didnt notice cuz u dont go outside.",
+        "<color=red>Not even for ur own updates.</color>",
+        "Go fix it. Slut."
+      ],
+      [
+        "Is a mod ever old?",
+        "No. Wait. Yes. Yours is.",
+        "v{{updateVersion}} came out and u just sat there with ur dick in ur hand.",
+        "<size=150%>UPDATE.<size=100%>"
+      ],
+      // Sales pitches
+      [
+        "Hello my friend!!",
+        "Do I have a deal for u today.",
+        "Version v{{updateVersion}}. One owner. Low miles. Only driven to church by a little old grandma.",
+        "<size=150%>RUNS LIKE A DREAM<size=100%>",
+        "Ur old version? Has problems. Bad ones. I wont say what. Just trust me.",
+        "Come on down and we make u a deal. It is free. But act like it is not."
+      ],
+      [
+        "<color=red>DOCTORS HATE HIM</color>",
+        "Are u tired? Is ur game old? Does ur mod pack feel limp?",
+        "Introducing v{{updateVersion}}!!",
+        "Works in 3 to 5 minutes. Side effects may include fun, a better game and a hard wiener.",
+        "Not approved by any doctor. Not approved by anybody.",
+        "Order now and get nothing extra."
+      ],
+      [
+        "Dear valued customer,",
+        "Ur mods are very old yes. Version v{{updateVersion}} is now avalable.",
+        "Only today, special price, just for u: $0.00 !!!!",
+        "Hurry before suplies run out",
+        "<size=150%>THANK U</size>"
+      ]
+    ] },
+
+    { "choices": [
+      { "text": "How do I update?", "say": [
+        "Go to where u got these mods. Same fucking place, dipshit.",
+        "Or open the mod menu. It has the address on the Updates page.",
+        "Copy it. Paste it. Do the thing."
+      ] },
+      { "text": "Fuck off.", "say": [
+        "No u.",
+        "Update tho."
+      ] },
+      { "text": "Later.", "say": [
+        "Later is a lie u tell urself.",
+        "Right before the hospital."
+      ] }
+    ] }
+  ]
+}

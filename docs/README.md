@@ -15,6 +15,7 @@
 | [TV stations](modding/tv-stations.md) | The Custom TV Stations mod: video files, stations.jsonc, the remote |
 | [Randomizer](modding/randomizer.md) | The Randomizer mod: seeds, each randomized part, and how it hooks the game |
 | [Mixtapes](modding/mixtapes.md) | The Mixtapes mod: song files as cassettes, tapes.jsonc, the radio station |
+| [Update Checker](modding/update-checker.md) | The Update Checker mod: the GitHub check, the corner note, the update email and call, settings |
 | [Co-op](modding/coop.md) | The Co-op mod: hosting and joining, the transport, joining from memory, remote players, hot reload mid-session, testing with two games |
 | [Save format](modding/save-format.md) | The `.nsav` format and the Open Saves mod |
 | [Dev bridge](modding/dev-bridge.md) | Controlling the running game from tools and scripts |

@@ -1,0 +1,90 @@
+// The update call. Update Checker rings it (up to twice per save, through the "ring" action) while a
+// newer version is out and the player allows it. No number: it only rings in. Every call picks one of
+// six voices: three that nag, three that try to sell the new version. {{updateVersion}} is the newest
+// version found.
+{
+  "id": "update",
+  "name": "The Update Guy",
+  "callerId": "UPDATE",
+  "incoming": { "trigger": "manual" },
+  "say": [
+    // Picked up after the player already updated.
+    { "if": { "updateAvailable": false }, "then": [
+      "Wait.",
+      "...",
+      "U updated?",
+      "Huh.",
+      "Never mind then. Wrong number. Dipshit.",
+      { "end": true }
+    ] },
+
+    { "random": [
+      // Nagging
+      [
+        "Hey.",
+        "HEY.",
+        "<size=150%>Is this the lazy dipshit running the old mods?<size=100%>",
+        "Version v{{updateVersion}} is out.",
+        "U still got the old one. Sad.",
+        "Cool. Cool cool cool.",
+        "Fix it."
+      ],
+      [
+        "Listen here u little shit.",
+        "New version. v{{updateVersion}}.",
+        "I wont ask twice.",
+        "<size=60%>I will ask like twelve more times<size=100%>",
+        "Update."
+      ],
+      [
+        "<color=red>THIS IS AN AUTOMATED MESSEGE.</color>",
+        "UR MODS ARE OLD.",
+        "NOT OLD AND WISE. OLD LIKE MILK.",
+        "<size=150%>UPDATE TO v{{updateVersion}} OR THE MILK WINS<size=100%>",
+        "<size=60%>beep boop<size=100%>"
+      ],
+      // Sales pitches
+      [
+        "Hey buddy!! Sir!! Hello!!",
+        "Im calling bout the new version. v{{updateVersion}}. She is a beauty.",
+        "Leather seats. Heated. Dont ask me how.",
+        "<size=150%>TODAY ONLY<size=100%>",
+        "Today only and also every day.",
+        "Ur old one? Its a lemon. Smells like ur room."
+      ],
+      [
+        "Hello friend. Are u suffering?",
+        "Is ur game old? Is ur dick sad?",
+        "Introducing v{{updateVersion}}!",
+        "One dose. Take it with water. Or dont. Im not ur dad.",
+        "<size=60%>please buy it my kids are hungry<size=100%>"
+      ],
+      [
+        "Sir sir sir. I am calling from the Version Department.",
+        "Ur version is very very old. I see it on my screen.",
+        "Is virus. Big virus. Very bad.",
+        "I fix. Only v{{updateVersion}}. Is free. Is a gift.",
+        "<size=150%>U ARE WELCOME<size=100%>"
+      ]
+    ] },
+
+    { "choices": [
+      { "text": "How do I update?", "say": [
+        { "random": [ "Jesus.", "Ugh.", "Fuck me." ] },
+        "Go to where u got these mods.",
+        "Same place. Look in the mod menu, it has the address.",
+        "Copy. Paste. Dumbass."
+      ] },
+      { "text": "Not interested.", "say": [
+        "Not interested in a free upgrade?",
+        "U r the kind of guy who says no to free pizza.",
+        "<size=60%>click"
+      ] },
+      { "text": "Fuck off man.", "say": [
+        "Wow.",
+        "Rude.",
+        "Update tho."
+      ] }
+    ] }
+  ]
+}
