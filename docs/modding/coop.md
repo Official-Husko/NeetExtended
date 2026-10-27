@@ -46,9 +46,10 @@ Returning players: every 10 seconds a client sends its body as the game would sa
 
 ### Players
 
-- Each game sends its player's pose 30 times a second: position, yaw, camera pitch and the body animator's bool parameters as a bitmask.
+- Each game sends its player's pose 30 times a second: position, the body's full rotation (so a slipped or downed body lies on everyone's screen), camera pitch and the body animator's bool parameters as a bitmask.
 - Remote players are `PlayerPuppet`s: a copy of the player prefab's model (`Neet`: animator, skinned mesh, bones, hands) under a kinematic capsule. None of the game's player scripts are on it, so it reads no input, has no stats and is never saved. Poses play back 100 ms in the past from an 8-pose buffer.
 - `AppearanceSync` sends each player's look when it changes (clothes by item name, the outfit's UV set, the fat, body type and muscle blend shapes). Bodies get their own mesh copy, because the game swaps clothing UVs on the shared mesh.
+- **Going down** (`Downed`): in co-op a player whose health runs out goes down instead of dying (a prefix on `DieAccessor` for this game's own player). They fall like a slip and can't get up, health stays at 1, they take no damage, and their eyes stay open, so they see the house rather than the death screen; a line on screen counts down 15 seconds. Anyone who uses food while looking at them (a prefix on `Food.Use`, a sphere cast from the camera) feeds it to them instead: the food is used up and they stand up with 30 health. Otherwise, after 15 seconds the game's own death and respawn happen. Each game tells the others when its player goes down or gets up; the name over a downed body says so, and `Downed.IsDown(slot)` lets enemies leave them alone.
 
 ### Steam transport
 
@@ -109,6 +110,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### Players
 
+- Going down only happens in co-op, to a game's own player, and only when the death runs through `DieAccessor`: being gibbed, skeletonized or killed by a story event is still instant death. Reviving takes food; nothing else (medicine, a slap) works yet. There's no carrying a downed player.
 - Remote players have the default face, and their hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
 - Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Spiders still ignore remote players (they want an enabled Brain), and NPCs only talk to the host. Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.

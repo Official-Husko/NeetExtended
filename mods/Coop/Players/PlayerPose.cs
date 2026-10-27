@@ -12,7 +12,9 @@ internal struct PlayerPose
     /// <summary>The sender's Time.time when it was taken.</summary>
     public float Time;
     public Vector3 Position;
-    public float Yaw;
+
+    /// <summary>The whole body's rotation: upright it's just the facing, but a slipped or downed body lies.</summary>
+    public Quaternion Rotation;
     public float Pitch;
     public ushort Bools;
     public float AnimSpeed;
@@ -24,7 +26,10 @@ internal struct PlayerPose
         writer.Put(Position.x);
         writer.Put(Position.y);
         writer.Put(Position.z);
-        writer.Put(Yaw);
+        writer.Put(Rotation.x);
+        writer.Put(Rotation.y);
+        writer.Put(Rotation.z);
+        writer.Put(Rotation.w);
         writer.Put(Pitch);
         writer.Put(Bools);
         writer.Put((byte)Mathf.Clamp(Mathf.RoundToInt(AnimSpeed * 50f), 0, 255));
@@ -37,7 +42,7 @@ internal struct PlayerPose
         {
             Time = reader.GetFloat(),
             Position = new Vector3(reader.GetFloat(), reader.GetFloat(), reader.GetFloat()),
-            Yaw = reader.GetFloat(),
+            Rotation = new Quaternion(reader.GetFloat(), reader.GetFloat(), reader.GetFloat(), reader.GetFloat()),
             Pitch = reader.GetFloat(),
             Bools = reader.GetUShort(),
             AnimSpeed = reader.GetByte() / 50f,
@@ -48,7 +53,7 @@ internal struct PlayerPose
     {
         Time = Mathf.Lerp(a.Time, b.Time, t),
         Position = Vector3.Lerp(a.Position, b.Position, t),
-        Yaw = Mathf.LerpAngle(a.Yaw, b.Yaw, t),
+        Rotation = Quaternion.Slerp(a.Rotation, b.Rotation, t),
         Pitch = Mathf.LerpAngle(a.Pitch, b.Pitch, t),
         Bools = t < 0.5f ? a.Bools : b.Bools,
         AnimSpeed = t < 0.5f ? a.AnimSpeed : b.AnimSpeed,

@@ -27,7 +27,7 @@ internal static class PoseSender
         {
             Time = Time.time,
             Position = _player.transform.position,
-            Yaw = _player.transform.eulerAngles.y,
+            Rotation = _player.transform.rotation,
             Pitch = _camera != null ? _camera.localEulerAngles.x : 0f,
             Bools = _animator != null ? _bools.Read(_animator) : (ushort)0,
             AnimSpeed = _animator != null ? _animator.speed : 1f,

@@ -27,6 +27,8 @@ internal sealed class PlayerPuppet : MonoBehaviour
 
     public byte Slot { get; private set; }
 
+    internal Nameplate Plate { get; set; }
+
     public void Init(byte slot, Animator animator, Transform head, SkinnedMeshRenderer skin, SkinnedMeshRenderer[] hands)
     {
         Slot = slot;
@@ -39,6 +41,8 @@ internal sealed class PlayerPuppet : MonoBehaviour
     }
 
     public void Dress(in Appearance look) => PuppetDresser.Apply(_skin, _hands, look);
+
+    public void SetDowned(bool down) => Plate?.SetDowned(down);
 
     public void Push(in PlayerPose pose)
     {
@@ -80,7 +84,7 @@ internal sealed class PlayerPuppet : MonoBehaviour
 
     private void Place(in PlayerPose pose, bool snap)
     {
-        var rotation = Quaternion.Euler(0f, pose.Yaw, 0f);
+        var rotation = pose.Rotation;
         if (snap || (transform.position - pose.Position).sqrMagnitude > SnapDistance * SnapDistance)
         {
             transform.SetPositionAndRotation(pose.Position, rotation);

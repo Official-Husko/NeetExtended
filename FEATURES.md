@@ -174,6 +174,7 @@ Play the house together, over the internet or your own network. The host's house
 - **Over Steam** (the Co-op over Steam mod): host with **OPEN OVER STEAM** and friends join with the Steam ID the Co-op tab shows you. No port forwarding. Needs Steam running and a one-time download of Valve's `steam_api.dll`: the installer offers it, or run `neet steam`. No invites or lobbies yet.
 - **Shared**: things you pick up, throw, eat, break or order; money; doors and locks, lights, fuses, the TV, taps, the stove, flashlights and lighters; visitors and the other characters, who live on the host's game.
 - **Your own body comes back**: the host's save keeps your needs, clothes and where you stood, so next time you join you pick up where you left off.
+- **Down, not dead**: when your health runs out you go down instead of dying. For 15 seconds anyone can get you back up by using food on you (look at you, use it); otherwise you die and respawn as usual.
 - **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and only the host talks to visitors. Going back to the main menu leaves; when the host leaves, the game ends for everyone.
 - Everyone needs the same mods. Mods that only change your own game (Cheat Menu, Performance Fixes, Open Saves and the like) can differ.
 - Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4).

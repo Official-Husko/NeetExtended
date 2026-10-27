@@ -23,6 +23,8 @@ public static class MessageIds
     public const ushort Pose = 40;
     public const ushort Appearance = 41;
     public const ushort Body = 42;
+    public const ushort Downed = 43;
+    public const ushort Revive = 44;
 
     // World: 100-199, see World/.
     public const ushort WorldSpawn = 100;

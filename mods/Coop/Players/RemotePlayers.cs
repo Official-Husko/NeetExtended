@@ -55,6 +55,7 @@ internal static class RemotePlayers
             Puppets[slot] = puppet;
             if (AppearanceSync.TryGet(slot, out var look))
                 puppet.Dress(look);
+            puppet.SetDowned(Downed.IsDown(slot));
             CoopMod.Log.Info($"{player} appeared in the house.");
         }
         puppet.Push(pose);

@@ -57,7 +57,7 @@ internal static class PuppetBuilder
                 hands.Add(renderer);
         }
         puppet.Init(slot, copy.GetComponent<Animator>(), FindDeep(copy.transform, "headbone"), skin, hands.ToArray());
-        Nameplate.Attach(root.transform, name, capsule.center.y + capsule.height * 0.5f + 0.15f);
+        puppet.Plate = Nameplate.Attach(root.transform, name, capsule.center.y + capsule.height * 0.5f + 0.15f);
         return puppet;
     }
 
