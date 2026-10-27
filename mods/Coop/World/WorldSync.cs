@@ -1,3 +1,4 @@
+using Coop.Players;
 using Coop.Session;
 using Coop.World.Economy;
 using Coop.World.Flames;
@@ -131,6 +132,8 @@ internal static class WorldSync
             if (o.Owner != WorldSide.LocalSlot)
                 ReplicaBody.MakeReplica(o);
         }
+        // What this player's returning body wears on its face came with the house, on its head already.
+        MaskClaims.ClaimWorn();
     }
 
     private static void OnPlayerReady(CoopPlayer player)

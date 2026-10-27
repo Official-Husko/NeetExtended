@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Coop.Net;
+using Coop.Players;
 using Coop.World.Economy;
 using Coop.World.Objects;
 using Coop.World.Ownership;
@@ -73,6 +74,12 @@ internal static class ManifestReader
             // NPCs: the pose stream places them; only snap the ones that aren't streaming yet.
             if (o.Rig == null || !o.Rig.Driving)
                 ReplicaBody.Place(o, record.Position, record.Rotation);
+            return;
+        }
+        if (MaskClaims.IsWorn(o))
+        {
+            // On this player's head, where the game's own load put it (the host has it parked).
+            MaskClaims.Claim(o);
             return;
         }
         if (record.Owner == WorldSide.LocalSlot)

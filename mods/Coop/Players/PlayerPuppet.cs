@@ -97,6 +97,9 @@ internal sealed class PlayerPuppet : MonoBehaviour
     /// <summary>Takes the masks off before the body goes (they'd go with it).</summary>
     internal void Undress() => _masks.Release();
 
+    /// <summary>What this body was last told it wears on its face (null for nothing).</summary>
+    internal MaskLook[] WornMasks => _dressed ? _appearance.Masks : null;
+
     /// <summary>Dresses the body again if a worn item wasn't here when it was dressed (<see cref="AppearanceSync"/> asks about twice a second).</summary>
     internal void Redress()
     {

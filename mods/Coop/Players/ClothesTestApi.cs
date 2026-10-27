@@ -120,6 +120,26 @@ public static class ClothesTestApi
         return text.ToString();
     }
 
+    /// <summary>The masks this player's game says it wears: item, where it is (world and relative to the camera), owner, replica, kinematic.</summary>
+    public static string Worn()
+    {
+        var abilities = HouseManager._?.player?.GetComponent<Player_Abilities>();
+        if (abilities == null || abilities.masks == null)
+            return "No player.";
+        var text = new StringBuilder();
+        var camera = HouseManager._.mainCamera.transform;
+        foreach (var mask in abilities.masks)
+        {
+            var item = NetObjects.Find(mask);
+            text.Append(mask.name).Append(" ").Append(item != null ? item.Ref.ToString() : "unshared").Append(" at ").Append(mask.transform.position.ToString("F2"))
+                .Append(" in camera ").Append(camera.InverseTransformPoint(mask.transform.position).ToString("F3"));
+            if (item != null)
+                text.Append(" owner ").Append(item.Owner).Append(" replica ").Append(item.IsReplica).Append(" kinematic ").Append(item.Body.isKinematic);
+            text.Append('\n');
+        }
+        return text.Length == 0 ? "No masks." : text.ToString();
+    }
+
     /// <summary>Takes the last mask off (what a click on the clothes remover does).</summary>
     public static string MaskOff()
     {

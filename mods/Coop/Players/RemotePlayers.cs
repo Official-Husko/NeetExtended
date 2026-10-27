@@ -77,17 +77,23 @@ internal static class RemotePlayers
         puppet.Push(pose);
     }
 
+    /// <summary>
+    /// A player left: their body goes, and what they wore on their face is parked (see
+    /// <see cref="MaskParking"/>) instead of hanging where the body was.
+    /// </summary>
     private static void Remove(byte slot)
     {
-        if (Puppets.TryGetValue(slot, out var puppet))
+        Puppets.TryGetValue(slot, out var puppet);
+        var masks = puppet != null ? puppet.WornMasks : null;
+        if (masks == null && AppearanceSync.TryGet(slot, out var look))
+            masks = look.Masks;
+        if (puppet != null)
         {
-            if (puppet != null)
-            {
-                puppet.Undress();
-                Object.Destroy(puppet.gameObject);
-            }
-            Puppets.Remove(slot);
+            puppet.Undress();
+            Object.Destroy(puppet.gameObject);
         }
+        Puppets.Remove(slot);
+        MaskParking.ParkAll(masks);
     }
 
     private static void Clear()
