@@ -205,7 +205,8 @@ public sealed class StepWriter
         if (escaped.Length == 0)
             throw new FormatException($"{where}: a choice needs some text.");
         string test = condition != null ? $" {{RuleIf({Condition(condition, where + ".if")})}}" : "";
-        Line($"{(once ? "*" : _options.ChoiceMark)}{test} {escaped}");
+        string shown = _options.SayChoices ? escaped : "[" + escaped + "]";
+        Line($"{(once ? "*" : _options.ChoiceMark)}{test} {shown}");
         Line("  -> " + Branch(then, rest, where));
         count++;
         return condition != null || once;

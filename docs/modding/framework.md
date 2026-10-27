@@ -309,7 +309,7 @@ Console: `flags` lists them, `setFlag <name> <value>` sets one.
 
 ### Content files to Ink
 
-`StepWriter.Write(knot, steps, addAction, addCondition, options)` turns a list of steps from a file (lines, choices, if, random, do, label, goto, end, ink) into an Ink knot. Pass `RuleSteps.AddAction`/`AddCondition` as the callbacks: they number each condition and action and the knot calls them as `RuleIf(n)` and `RuleDo(n)`. `StepWriterOptions` sets the lines written at the end (the phone ends calls on `# EndPhoneCall`) and extra tagged line types (the phone's `{ "player": ... }`). `RuleSteps.Muted` skips actions, for replaying text that was already shown.
+`StepWriter.Write(knot, steps, addAction, addCondition, options)` turns a list of steps from a file (lines, choices, if, random, do, label, goto, end, ink) into an Ink knot. Pass `RuleSteps.AddAction`/`AddCondition` as the callbacks: they number each condition and action and the knot calls them as `RuleIf(n)` and `RuleDo(n)`. `StepWriterOptions` sets the lines written at the end (the phone ends calls on `# EndPhoneCall`), extra tagged line types (the phone's `{ "player": ... }`) and whether a picked choice is said as the next line (`SayChoices`; emails turn it off and show the reply themselves). `RuleSteps.Muted` skips actions, for replaying text that was already shown.
 
 Ink functions in every story: `Act(action, values)`, `Check(condition, value)`, `Flag(name)`, `SetFlag(name, value)`, `AddFlag(name, amount)`, plus `RuleIf` and `RuleDo` for generated knots.
 

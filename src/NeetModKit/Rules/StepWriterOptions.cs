@@ -16,4 +16,11 @@ public sealed class StepWriterOptions
 
     /// <summary>How a choice is written: "+" (can be picked again when the knot is replayed) by default.</summary>
     public string ChoiceMark = "+";
+
+    /// <summary>
+    /// Whether a picked choice's text becomes the next line of the story, like the game's calls
+    /// where the player says it (default). Off, the text only shows on the choice: emails show the
+    /// reply their own way.
+    /// </summary>
+    public bool SayChoices = true;
 }
