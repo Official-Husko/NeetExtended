@@ -49,7 +49,7 @@ internal static class BodyStream
         {
             int i = (start + k) % count;
             var o = all[i];
-            if (o.IsReplica || o.Rig != null || (!host && o.Owner != me) || !o.Alive)
+            if (o.IsReplica || o.PosedByHost || (!host && o.Owner != me) || !o.Alive)
                 continue;
             if (!Changed(o, out byte flags, out bool scaled))
                 continue;

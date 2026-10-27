@@ -133,7 +133,7 @@ internal static class OwnershipNet
             var r = NetRef.Read(reader);
             bool holding = reader.GetBool();
             var o = NetObjects.Find(r);
-            if (o != null && o.Rig == null && (o.Brain == null || BrainHandoff.Holdable(o)))
+            if (o != null && (o.Brain == null || BrainHandoff.Holdable(o)))
                 Owners.OnClaim(from.Slot, o, holding);
         }
     }
@@ -177,7 +177,7 @@ internal static class OwnershipNet
             var position = new Vector3(reader.GetFloat(), reader.GetFloat(), reader.GetFloat());
             var rotation = new Quaternion(reader.GetFloat(), reader.GetFloat(), reader.GetFloat(), reader.GetFloat());
             var o = NetObjects.Find(r);
-            if (o == null || o.Rig != null)
+            if (o == null || (o.Brain != null && !BrainHandoff.Holdable(o)))
                 continue;
             bool release = (flags & 0x80) != 0;
             if (WorldSide.IsHost)

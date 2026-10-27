@@ -29,7 +29,7 @@ internal static class RestWatcher
         for (int i = all.Count - 1; i >= 0; i--)
         {
             var o = all[i];
-            if (!o.Moving || o.IsReplica || o.Rig != null || !o.Alive)
+            if (!o.Moving || o.IsReplica || o.PosedByHost || !o.Alive)
                 continue;
             if (!host && !o.OwnedHere)
                 continue;

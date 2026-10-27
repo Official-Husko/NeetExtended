@@ -66,5 +66,8 @@ internal sealed class NetObject
 
     public bool OwnedHere => Owner == WorldSide.LocalSlot;
 
+    /// <summary>An NPC rig moved by the host's NPC poses (a corpse a player carries travels as a body).</summary>
+    public bool PosedByHost => Rig != null && Owner == WorldSide.HostSlot;
+
     public override string ToString() => $"{Ref} {(PrefabName.Length > 0 ? PrefabName : Go != null ? Go.name : "gone")}";
 }

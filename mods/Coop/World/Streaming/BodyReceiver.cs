@@ -44,7 +44,7 @@ internal static class BodyReceiver
                 scale = new Vector3(reader.GetFloat(), reader.GetFloat(), reader.GetFloat());
 
             var o = NetObjects.Find(r);
-            if (o == null || !o.IsReplica || o.Owner != owner || o.Rig != null || !o.Alive)
+            if (o == null || !o.IsReplica || o.Owner != owner || o.PosedByHost || !o.Alive)
                 continue;
             ApplyFlags(o, flags, scale);
             if (o.Buffer.Add(time, position, rotation))

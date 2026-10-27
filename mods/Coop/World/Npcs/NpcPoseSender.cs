@@ -31,7 +31,7 @@ internal static class NpcPoseSender
         {
             var o = all[i];
             var rig = o.Rig;
-            if (rig == null || !o.Alive)
+            if (rig == null || !o.PosedByHost || !o.Alive)
                 continue;
             var pose = rig.Read(o.Tf);
             if (rig.HasSent && pose.SameAs(rig.Sent))

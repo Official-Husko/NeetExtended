@@ -11,6 +11,7 @@ namespace Coop.World.Npcs;
 internal sealed class NpcRig
 {
     private static readonly int DancingHash = Animator.StringToHash("Dancing");
+    private static readonly int DeadHash = Animator.StringToHash("isDead");
 
     public Animator Animator;
     public SkinnedMeshRenderer Skin;
@@ -117,5 +118,22 @@ internal sealed class NpcRig
                 Hands[1].enabled = right;
         }
         Shown = pose;
+        DieIfDead();
+    }
+
+    // The host's NPC died: this copy becomes a corpse the game's way (it can be picked up, it bleeds
+    // when carried), without the death's own effects; those happen on the host.
+    private void DieIfDead()
+    {
+        if (Abilities == null || Abilities.dead || !Ready() || !Animator.GetBool(DeadHash))
+            return;
+        try
+        {
+            Abilities.DieAccessor(noEffects: true);
+        }
+        catch (System.Exception e)
+        {
+            CoopMod.Log.Debug($"World: making {Abilities.name} a corpse here failed: {e.Message}");
+        }
     }
 }

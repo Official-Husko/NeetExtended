@@ -4,15 +4,18 @@ using Coop.World.Objects;
 namespace Coop.World.Ownership;
 
 /// <summary>
-/// Rats and the cat are animals you can pick up. Their brain runs on the host, so while someone else
+/// Rats, the cat and dead NPCs can be picked up. Their brain runs on the host, so while someone else
 /// holds or throws one, the host pauses it the way the animal's own pickup does (no walking, no
-/// thinking), and wakes it with the animal's own drop once it's back. On a client the animal goes
-/// back to being a puppet when it's handed back.
+/// thinking), and wakes it with the animal's own drop once it's back (a corpse has nothing to pause).
+/// On a client it goes back to being a puppet when it's handed back.
 /// </summary>
 internal static class BrainHandoff
 {
-    /// <summary>A brain whose body can be held like an item (not an NPC rig or a corpse).</summary>
-    public static bool Holdable(NetObject o) => o.Brain != null && o.Rig == null && (o.Brain is BrainRat || o.Brain is BrainCat);
+    /// <summary>A brain whose body can be held like an item: a rat, the cat, a dead NPC.</summary>
+    public static bool Holdable(NetObject o) =>
+        o.Brain != null && (o.Rig == null
+            ? o.Brain is BrainRat || o.Brain is BrainCat
+            : o.Rig.Abilities != null && o.Rig.Abilities.dead);
 
     /// <summary>Host: another player has it now.</summary>
     public static void Pause(NetObject o)

@@ -38,7 +38,7 @@ internal static class NpcPoseReceiver
             var r = NetRef.Read(reader);
             var pose = NpcPose.Read(reader);
             var o = NetObjects.Find(r);
-            if (o?.Rig == null || !o.Alive)
+            if (o?.Rig == null || !o.PosedByHost || !o.Alive)
                 continue;
             if (o.Rig.Poses.Add(time, pose) && !o.Rig.Driving)
             {
@@ -55,7 +55,7 @@ internal static class NpcPoseReceiver
         {
             var o = Active[i];
             var rig = o.Rig;
-            if (!o.Alive || o.Index < 0)
+            if (!o.Alive || o.Index < 0 || !o.PosedByHost)
             {
                 Drop(i);
                 continue;

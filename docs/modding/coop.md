@@ -141,8 +141,7 @@ State of things:
 
 Picking things up and pushing them:
 
-- Clients can pick up rats and the cat: the host pauses the animal while someone else holds or throws it and wakes it once it lands. A held rat doesn't bite a client, and doesn't wriggle in a client's hands.
-- Clients can't pick up corpses (dead NPCs): their bodies stay with the host.
+- Clients can pick up rats, the cat and dead NPCs: the host pauses the animal while someone else holds or throws it and wakes it once it lands. A held rat doesn't bite a client, and doesn't wriggle in a client's hands.
 - A player takes over what their body, what they hold, or (on a client) what they threw runs into, so it can be pushed. Things only knocked on by other knocked things move on the host first and reach the others a moment later.
 - The client that throws a plate breaks it. Scene windows and other breakables that aren't items only break on the host, so a client throwing something at a window doesn't break it.
 - Item logic that replaces, wears down or uses up the item runs only on the machine that simulates it: damage (burns, cuts, hits, so liquid bombs and lighters going off too), food spoiling, cooking and soaking, breaking, ice melting, glasses tipping and filling, fuse and lighter explosions, fuses snapping into the fuse box or a smoke detector, dust balls merging (only between two balls simulated on the same machine), the cat bowl, the piggy bank and baths soaking things.

@@ -123,7 +123,7 @@ internal static class Owners
         bool ownerChanged = o.Owner != owner;
         o.Owner = owner;
         o.Holder = holder;
-        if (o.Rig != null || (o.Brain != null && !BrainHandoff.Holdable(o)))
+        if (o.Brain != null && !BrainHandoff.Holdable(o))
             return;
         if (owner == me)
         {

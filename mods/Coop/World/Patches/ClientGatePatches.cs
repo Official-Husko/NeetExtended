@@ -99,4 +99,11 @@ internal static class NpcCallbackPatches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MushroomBoy), "OnCollisionEnter")]
     private static bool MushroomRoll() => WorldRole.RunsWorld;
+
+    // Slipping (a wet floor, dying) knocks a body over with physics; an NPC copy here is posed by the
+    // host instead, and its switched-off movement can't run the slip.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player_Movement), nameof(Player_Movement.SlipAccessor), typeof(float), typeof(bool), typeof(bool), typeof(bool))]
+    private static bool NpcSlips(Player_Movement __instance) =>
+        WorldRole.RunsWorld || __instance.gameObject == WorldSide.LocalPlayer;
 }
