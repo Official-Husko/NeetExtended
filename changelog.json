@@ -267,6 +267,10 @@
         {
           "text": "The bottom left corner shows the mod pack's name, version and build. You can hide it in Settings.",
           "area": "Framework"
+        },
+        {
+          "text": "The corner says \"game build not tested\" when your game is a different build than the one the mods were tested with, for example after a game update.",
+          "area": "Framework"
         }
       ],
       "changed": [
