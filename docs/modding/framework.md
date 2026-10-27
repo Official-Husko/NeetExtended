@@ -53,7 +53,9 @@ The rule for mod code: pass `this` (the mod) or the feature as the owner, and do
 
 `NeetModKit.About.PackInfo` holds the pack's name (`PackInfo.Name`, "NeetExtended"; change it there to rename the pack in game) and the build: `Version` ("0.1.0", from `<Version>` in `Directory.Build.props`), `Commit` (the short commit hash, with `-dirty` when built from uncommitted changes, or null) and `Label` ("NeetExtended v0.1.0 (1a2b3c4)"). `Title` is the name with spaces between its words ("Neet Extended"), for the all-caps headers like the mod menu's. `build/Revision.targets` puts the hash into every assembly's informational version ("0.1.0+1a2b3c4") by running `git describe` before the SDK writes the assembly attributes; outside a git checkout the version stays plain.
 
-The version tag (`Ui/VersionTag.cs`) shows `PackInfo.Label` in the bottom left corner of every scene: a canvas at sorting order 900 (under the mod menu's windows), without a raycaster, so it never takes clicks. The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
+`About/GameCompat` compares the running game with the build this version was tested with: the framework ships `compat/game.json` as `game-compat.json`, and its `gameCode.mvid` is compared with the module version id of the loaded `Assembly-CSharp`. `GameCompat.Status` is `Tested`, `Untested` or `Unknown` (no record), and the log says which (see [tools.md](tools.md#compat)).
+
+The version tag (`Ui/VersionTag.cs`) shows `PackInfo.Label` (plus "game build not tested" when `GameCompat.Status` is `Untested`) in the bottom left corner of every scene: a canvas at sorting order 900 (under the mod menu's windows), without a raycaster, so it never takes clicks. The What's New page and the Settings page use `PackInfo.Name` for the pack's own section.
 
 ## Game
 

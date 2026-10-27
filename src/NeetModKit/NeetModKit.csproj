@@ -11,6 +11,8 @@
   <!-- The pack changelog ships with the framework; the What's New page reads it from there. -->
   <ItemGroup>
     <None Include="$(RepoRoot)changelog.json" Link="changelog.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The game build this version was tested with, compared with the running game. -->
+    <None Include="$(RepoRoot)compat/game.json" Link="game-compat.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- Ships as a regular mod folder: <game>/Mods/NeetModKit. -->

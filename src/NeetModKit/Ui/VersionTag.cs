@@ -8,7 +8,8 @@ namespace NeetModKit.Ui;
 
 /// <summary>
 /// The pack's name, version and commit in the bottom left corner of every screen, so players can
-/// see the mods are running and screenshots show which build they came from. Doesn't take clicks.
+/// see the mods are running and screenshots show which build they came from. Says so when the game
+/// isn't the build this version was tested with (<see cref="GameCompat"/>). Doesn't take clicks.
 /// </summary>
 internal static class VersionTag
 {
@@ -27,7 +28,7 @@ internal static class VersionTag
 
         var label = new GameObject("Label", typeof(RectTransform)).AddComponent<Text>();
         label.transform.SetParent(canvas.transform, false);
-        label.text = PackInfo.Label;
+        label.text = GameCompat.Status == GameCompatStatus.Untested ? PackInfo.Label + "  ·  game build not tested" : PackInfo.Label;
         label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         label.fontSize = FontSize;
         label.color = Colour;

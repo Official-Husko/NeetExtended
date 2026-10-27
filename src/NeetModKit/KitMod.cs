@@ -39,6 +39,7 @@ public sealed class KitMod : NeetMod
         ModMenu.AddPage(this, new SettingsPage());
         ModMenu.AddPage(this, new ErrorsPage());
         ModSettings.Register(this, Config, About.PackInfo.Name);
+        About.GameCompat.Check(this);
         Ui.VersionTag.Create(this, Config.Value.ShowVersion);
         Config.Changed += OnConfigChanged;
 

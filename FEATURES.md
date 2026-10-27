@@ -9,6 +9,7 @@ Everything NeetExtended adds to NEET Demo, for players. Each mod can be switched
   - **Incremental garbage collection?** The game cleans up memory in small steps instead of freezing for a moment every so often. Recommended.
 - **Uninstalling**: run `uninstall.sh` or `uninstall.bat`. It puts the original game files back. Your saves and mod settings stay.
 - **Version in the corner**: the bottom left corner shows the pack's name, version and build (for example `NeetExtended v0.1.0 (1a2b3c4)`), so you can see the mods are running and screenshots show which build you have. Hide it in Settings.
+- **Game version check**: every release is tested with a specific build of NEET Demo. If your game is a different build (after a Steam update, say), the corner adds "game build not tested". Most things usually still work; report anything that doesn't.
 
 ## Mod menu
 
