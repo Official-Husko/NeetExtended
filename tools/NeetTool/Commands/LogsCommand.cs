@@ -6,15 +6,16 @@ namespace NeetTool.Commands;
 public sealed class LogsCommand : ICommand
 {
     public string Name => "logs";
-    public string Usage => "logs [--player | --errors] [--lines N]";
+    public string Usage => "logs [--player | --errors] [--lines N] [--instance N]";
     public string Summary => "Print the end of the loader log, Unity's Player.log (--player) or the error report (--errors)";
 
     public Task<int> RunAsync(Args args)
     {
         var game = GameInstall.Locate(args.Get("game"));
-        string? path = args.Has("player") ? Path.Combine(game.PersistentDataDir() ?? "", "Player.log")
-            : args.Has("errors") ? Path.Combine(Path.GetDirectoryName(game.LoaderLog) ?? "", "errors.log")
-            : game.LoaderLog;
+        int instance = args.Instance;
+        string? path = args.Has("player") ? game.PlayerLogFile(instance)
+            : args.Has("errors") ? game.ErrorLogFile(instance)
+            : game.LoaderLogFile(instance);
 
         if (path is null || !File.Exists(path))
         {

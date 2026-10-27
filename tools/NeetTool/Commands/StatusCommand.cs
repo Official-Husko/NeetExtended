@@ -7,7 +7,7 @@ namespace NeetTool.Commands;
 public sealed class StatusCommand : ICommand
 {
     public string Name => "status";
-    public string Usage => "status [--game DIR]";
+    public string Usage => "status [--game DIR] [--instance N]";
     public string Summary => "Show install state, installed mods and whether the game is up";
 
     public async Task<int> RunAsync(Args args)
@@ -33,8 +33,8 @@ public sealed class StatusCommand : ICommand
             Out.Info($"Mods:        {string.Join(", ", mods)}");
         }
 
-        Out.Info($"Running:     {(GameProcess.IsRunning() ? "yes" : "no")}");
-        Out.Info($"Bridge:      {(await new BridgeClient(port: args.GetInt("port", BridgeClient.DefaultPort)).IsUpAsync() ? "up" : "down")}");
+        Out.Info($"Running:     {(GameProcess.IsRunning(args.InstanceFilter) ? "yes" : "no")}");
+        Out.Info($"Bridge:      {(await new BridgeClient(port: args.BridgePort).IsUpAsync() ? "up" : "down")}");
         return 0;
     }
 }

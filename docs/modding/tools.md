@@ -18,6 +18,7 @@ The binary is `tools/NeetTool/bin/Release/net10.0/neet`. The examples below use 
 | ------ | ------- |
 | `--game DIR` | Game folder, the one containing `NEET.exe`. |
 | `--port N` | Bridge port used by `call`, `status`, `launch --wait`, `stop` and `mcp`. Default `27850`. |
+| `--instance N` | Which copy of the game the command is about, for [running two games at once](#a-second-game-instance). Default `1`. Sets the bridge port to `27850 + N - 1` (unless `--port` is given) and picks that copy's log files. Works with `call`, `status`, `launch`, `stop`, `logs` and `mcp`. |
 | `NEET_GAME_DIR` | Environment variable with the game folder. |
 
 The game folder is looked up in this order: `--game`, then `NEET_GAME_DIR`, then `NEET Demo` in every Steam library folder listed in `libraryfolders.vdf`. If none of them contains `NEET.exe`, the command fails with `Couldn't find NEET Demo. Pass --game <folder> or set NEET_GAME_DIR.`
@@ -94,7 +95,7 @@ Bridge:      down
 ## launch
 
 ```sh
-neet launch [--fullscreen] [--direct] [--wait SECONDS]
+neet launch [--fullscreen] [--direct] [--instance N] [--wait SECONDS]
 ```
 
 By default the game starts windowed at 1600x900 with `-screen-fullscreen 0 -screen-width 1600 -screen-height 900`. `--fullscreen` leaves those arguments out.
@@ -104,17 +105,37 @@ By default the game starts windowed at 1600x900 with `-screen-fullscreen 0 -scre
 
 If the game is already running, the command prints a warning and exits with 0.
 
+### A second game instance
+
+`neet launch --instance 2` starts another copy of the game next to the first, for testing things that need two players (like co-op over `127.0.0.1`). It differs from a normal launch in these ways:
+
+- It always runs through Proton (as `--direct`), because Steam can't start a second copy or pass environment variables. The Proton prefix is shared with the first copy.
+- The process gets `NEET_INSTANCE=2`. The loader reads that (`NeetLoader.Runtime.Instance`), adds `-2` to its log file names (`latest-2.log`, `previous-2.log`, `errors-2.log`, `errors-previous-2.log`), and the DevBridge listens on `27850 + 1`, so `27851`.
+- Unity gets `-logFile` pointing at `NeetLoader/logs/player-2.log`, so the two players don't write the same `Player.log`.
+- The "already running" check is whether that instance's bridge port answers, since a game process can't be told apart before its loader is up. `--wait` waits on that port.
+
+The two copies share the save folder, so only one of them should save.
+
+```sh
+neet launch --instance 2 --wait 90
+neet call ping --instance 2
+neet logs --instance 2
+neet stop --instance 2
+```
+
 `--wait SECONDS` polls the bridge once per second. It prints `Bridge is up.` and exits 0 when the bridge answers. If the time runs out, it exits 1 and names the loader log to check.
 
 ## stop
 
 ```sh
-neet stop [--force]
+neet stop [--force] [--instance N]
 ```
 
 Sends `game.quit` through the bridge with a 3 second timeout, waits up to 10 seconds for the process to exit, and kills whatever is still running. `--force` skips the bridge request and kills right away.
 
 Under Wine the tool finds the game by scanning `/proc` for a command line that starts with `Z:\` and contains `\NEET.exe`. On Windows it looks for a process named `NEET`.
+
+Plain `stop` closes every copy of the game. With `--instance N` the quit request goes to that instance's bridge port and only processes of that instance are waited for and killed. The instance of a process is its `NEET_INSTANCE` environment variable (read from `/proc/<pid>/environ`); processes without one are instance 1. On Windows the processes can't be told apart, so the filter doesn't apply there.
 
 ## logs
 
@@ -122,9 +143,10 @@ Under Wine the tool finds the game by scanning `/proc` for a command line that s
 neet logs [--lines N]
 neet logs --player [--lines N]
 neet logs --errors
+neet logs --instance 2
 ```
 
-Prints the last 60 lines (default) of the loader log, `NeetLoader/logs/latest.log` in the game folder. With `--player` it prints Unity's `Player.log` from the save folder. With `--errors` it prints the whole error report, `NeetLoader/logs/errors.log` (see the loader guide), or says there is none. The file is opened with shared access, so it can be read while the game runs.
+Prints the last 60 lines (default) of the loader log, `NeetLoader/logs/latest.log` in the game folder. With `--player` it prints Unity's `Player.log` from the save folder. With `--errors` it prints the whole error report, `NeetLoader/logs/errors.log` (see the loader guide), or says there is none. With `--instance N` (2 and up) it reads that copy's files instead: `latest-N.log`, `errors-N.log` and `player-N.log` in the same folder. The file is opened with shared access, so it can be read while the game runs.
 
 ## call
 
@@ -298,7 +320,7 @@ If anything fails before the push, the release commit and tag are taken back. Th
 ## mcp
 
 ```sh
-neet mcp [--game DIR] [--port N]
+neet mcp [--game DIR] [--port N] [--instance N]
 ```
 
 Runs a Model Context Protocol server on stdin and stdout. The protocol is newline-delimited JSON-RPC 2.0, protocol version `2025-06-18`. The server answers `initialize`, `ping`, `tools/list` and `tools/call`. Notifications get no reply. An unknown method gets a `-32601` error. A tool failure is returned as a result with `isError: true`, not as a protocol error. Requests are handled concurrently, so a slow tool such as `game_launch` does not block `ping`. Everything except protocol messages goes to stderr.

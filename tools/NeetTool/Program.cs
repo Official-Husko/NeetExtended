@@ -13,7 +13,7 @@ if (args.Length == 0 || args[0] is "-h" or "--help" or "help")
     Console.WriteLine("neet - NEET Demo modding tool\n");
     foreach (var c in commands)
         Console.WriteLine($"  {c.Usage,-50} {c.Summary}");
-    Console.WriteLine("\nCommon options: --game DIR (game folder), --port N (bridge port, default 27850)");
+    Console.WriteLine("\nCommon options: --game DIR (game folder), --port N (bridge port, default 27850),\n  --instance N (which game copy; its bridge port is 27850 + N - 1 unless --port is given)");
     return 0;
 }
 

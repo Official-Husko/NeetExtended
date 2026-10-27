@@ -11,9 +11,20 @@ public sealed class GameInstall
     public string ManagedDir => Path.Combine(DataDir, "Managed");
     public string ModsDir => Path.Combine(Dir, "Mods");
     public string LoaderDataDir => Path.Combine(Dir, "NeetLoader");
-    public string LoaderLog => Path.Combine(LoaderDataDir, "logs", "latest.log");
+    public string LogsDir => Path.Combine(LoaderDataDir, "logs");
     public string Exe => Path.Combine(Dir, ExeName);
 
+    /// <summary>"" for the first instance, "-2" for the second: what the loader adds to its file names.</summary>
+    public static string Suffix(int instance) => instance <= 1 ? "" : "-" + instance;
+
+    public string LoaderLogFile(int instance = 1) => Path.Combine(LogsDir, "latest" + Suffix(instance) + ".log");
+
+    public string ErrorLogFile(int instance = 1) => Path.Combine(LogsDir, "errors" + Suffix(instance) + ".log");
+
+    /// <summary>Unity's log. Extra instances write theirs next to the loader logs (see <c>launch --instance</c>).</summary>
+    public string PlayerLogFile(int instance = 1) => instance <= 1
+        ? Path.Combine(PersistentDataDir() ?? "", "Player.log")
+        : Path.Combine(LogsDir, $"player{Suffix(instance)}.log");
     private GameInstall(string dir)
     {
         Dir = Path.GetFullPath(dir);

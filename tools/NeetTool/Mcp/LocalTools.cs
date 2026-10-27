@@ -7,7 +7,7 @@ namespace NeetTool.Mcp;
 /// <summary>Tools that act on this machine (process control, files) instead of inside the game.</summary>
 public static class LocalTools
 {
-    public static IEnumerable<McpTool> All(BridgeClient bridge, Func<GameInstall> game)
+    public static IEnumerable<McpTool> All(BridgeClient bridge, Func<GameInstall> game, int? instance = null)
     {
         yield return new McpTool("game_status",
             "Is the game running, is the bridge reachable, is the loader installed.",
@@ -34,18 +34,8 @@ public static class LocalTools
             async (args, ct) =>
             {
                 var g = game();
-                if (!GameProcess.IsRunning())
-                {
-                    if (args["direct"]?.GetValue<bool>() == true)
-                    {
-                        string tool = Steam.CompatToolName() ?? throw new InvalidOperationException("No Proton build set in Steam.");
-                        GameProcess.LaunchViaProton(g, Steam.ProtonScript(tool) ?? throw new InvalidOperationException($"{tool} not found"), GameProcess.WindowedArgs);
-                    }
-                    else
-                    {
-                        GameProcess.LaunchViaSteam(GameProcess.WindowedArgs);
-                    }
-                }
+                if (!GameProcess.IsRunning(instance ?? 1))
+                    GameProcess.Launch(g, instance ?? 1, args["direct"]?.GetValue<bool>() == true, GameProcess.WindowedArgs);
 
                 int wait = args["waitSeconds"]?.GetValue<int>() ?? 90;
                 var deadline = DateTime.UtcNow.AddSeconds(wait);
@@ -66,9 +56,9 @@ public static class LocalTools
                 try { await bridge.CallAsync("game.quit", timeout: TimeSpan.FromSeconds(3), ct: ct); }
                 catch (Exception e) when (e is BridgeException or OperationCanceledException or IOException) { }
 
-                for (int i = 0; i < 20 && GameProcess.IsRunning(); i++)
+                for (int i = 0; i < 20 && GameProcess.IsRunning(instance); i++)
                     await Task.Delay(500, ct);
-                int killed = GameProcess.IsRunning() ? GameProcess.Kill() : 0;
+                int killed = GameProcess.IsRunning(instance) ? GameProcess.Kill(instance) : 0;
                 return ToolResult.Text(killed > 0 ? $"Killed {killed} process(es)." : "Game closed.");
             });
 
@@ -81,8 +71,8 @@ public static class LocalTools
             {
                 var g = game();
                 string path = args["player"]?.GetValue<bool>() == true
-                    ? Path.Combine(g.PersistentDataDir() ?? "", "Player.log")
-                    : g.LoaderLog;
+                    ? g.PlayerLogFile(instance ?? 1)
+                    : g.LoaderLogFile(instance ?? 1);
                 if (!File.Exists(path))
                     return Task.FromResult(ToolResult.Error($"No log at {path}"));
 

@@ -7,39 +7,29 @@ namespace NeetTool.Commands;
 public sealed class LaunchCommand : ICommand
 {
     public string Name => "launch";
-    public string Usage => "launch [--fullscreen] [--direct] [--wait SECONDS]";
-    public string Summary => "Start the game (windowed by default); --direct skips the Steam client";
+    public string Usage => "launch [--fullscreen] [--direct] [--instance N] [--wait SECONDS]";
+    public string Summary => "Start the game (windowed by default); --direct skips the Steam client, --instance 2 starts a second copy";
 
     public async Task<int> RunAsync(Args args)
     {
         var game = GameInstall.Locate(args.Get("game"));
-        if (GameProcess.IsRunning())
+        int instance = args.Instance;
+        var bridge = new BridgeClient(port: args.BridgePort);
+
+        // Instances can't be told apart before the loader is up, so an extra one is checked by its bridge port as well.
+        if (GameProcess.IsRunning(instance) || (instance > 1 && await bridge.IsUpAsync()))
         {
-            Out.Warn("The game is already running.");
+            Out.Warn(instance > 1 ? $"Instance {instance} is already running." : "The game is already running.");
             return 0;
         }
 
         var gameArgs = args.Has("fullscreen") ? Array.Empty<string>() : GameProcess.WindowedArgs;
-        if (args.Has("direct"))
-        {
-            string tool = Steam.CompatToolName()
-                ?? throw new InvalidOperationException("No Proton build is set for the game in Steam.");
-            string proton = Steam.ProtonScript(tool)
-                ?? throw new InvalidOperationException($"Couldn't find {tool} on disk.");
-            GameProcess.LaunchViaProton(game, proton, gameArgs);
-            Out.Info($"Started through {tool}");
-        }
-        else
-        {
-            GameProcess.LaunchViaSteam(gameArgs);
-            Out.Info("Asked Steam to start the game");
-        }
+        Out.Info(GameProcess.Launch(game, instance, args.Has("direct"), gameArgs));
 
         int wait = args.GetInt("wait", 0);
         if (wait <= 0)
             return 0;
 
-        var bridge = new BridgeClient(port: args.GetInt("port", BridgeClient.DefaultPort));
         var deadline = DateTime.UtcNow.AddSeconds(wait);
         while (DateTime.UtcNow < deadline)
         {
@@ -50,7 +40,7 @@ public sealed class LaunchCommand : ICommand
             }
             await Task.Delay(1000);
         }
-        Out.Error($"Bridge didn't come up within {wait}s. Check {game.LoaderLog}");
+        Out.Error($"Bridge didn't come up within {wait}s. Check {game.LoaderLogFile(instance)}");
         return 1;
     }
 }

@@ -1,3 +1,5 @@
+using NeetTool.Bridge;
+
 namespace NeetTool.Cli;
 
 /// <summary>Minimal argument parser: positional values plus --name value / --flag options.</summary>
@@ -37,6 +39,25 @@ public sealed class Args
     public string Get(string name, string fallback) => Get(name) ?? fallback;
 
     public int GetInt(string name, int fallback) => int.TryParse(Get(name), out int v) ? v : fallback;
+
+    /// <summary>Which game instance the command is about: --instance N, 1 when not given.</summary>
+    public int Instance
+    {
+        get
+        {
+            if (!Has("instance"))
+                return 1;
+            if (!int.TryParse(Get("instance"), out int n) || n < 1)
+                throw new ArgumentException("--instance needs a number from 1 up.");
+            return n;
+        }
+    }
+
+    /// <summary>The instance when --instance was given, otherwise null (meaning every instance for commands that stop things).</summary>
+    public int? InstanceFilter => Has("instance") ? Instance : null;
+
+    /// <summary>The dev bridge port: --port, or 27850 plus one per extra instance.</summary>
+    public int BridgePort => Has("port") ? GetInt("port", BridgeClient.DefaultPort) : BridgeClient.PortFor(Instance);
 
     public string? At(int index) => index < Positional.Count ? Positional[index] : null;
 }

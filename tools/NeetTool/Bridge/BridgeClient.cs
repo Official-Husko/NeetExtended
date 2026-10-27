@@ -12,6 +12,9 @@ public sealed class BridgeClient
 {
     public const int DefaultPort = 27850;
 
+    /// <summary>Each extra game instance listens one port higher (instance 2 on 27851).</summary>
+    public static int PortFor(int instance) => DefaultPort + instance - 1;
+
     private readonly string _host;
     private readonly int _port;
     private int _nextId;

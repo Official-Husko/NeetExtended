@@ -9,15 +9,15 @@ namespace NeetTool.Commands;
 public sealed class McpCommand : ICommand
 {
     public string Name => "mcp";
-    public string Usage => "mcp [--port N]";
+    public string Usage => "mcp [--port N] [--instance N]";
     public string Summary => "Run as an MCP server on stdio (for editors and assistants)";
 
     public async Task<int> RunAsync(Args args)
     {
-        var bridge = new BridgeClient(port: args.GetInt("port", BridgeClient.DefaultPort));
+        var bridge = new BridgeClient(port: args.BridgePort);
         string? gameDir = args.Get("game");
 
-        var tools = LocalTools.All(bridge, () => GameInstall.Locate(gameDir))
+        var tools = LocalTools.All(bridge, () => GameInstall.Locate(gameDir), args.InstanceFilter)
             .Concat(BridgeTools.All(bridge));
 
         // stdout belongs to the protocol; anything else must go to stderr.

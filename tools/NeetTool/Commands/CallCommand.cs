@@ -15,7 +15,7 @@ public sealed class CallCommand : ICommand
         string method = args.At(0) ?? throw new ArgumentException("Usage: " + Usage);
         var parameters = ParseParams(args.Positional.Skip(1).ToList());
 
-        var client = new BridgeClient(port: args.GetInt("port", BridgeClient.DefaultPort));
+        var client = new BridgeClient(port: args.BridgePort);
         var result = await client.CallAsync(method, parameters, TimeSpan.FromSeconds(args.GetInt("timeout", 30)));
         Console.WriteLine(BridgeClient.Pretty(result));
         return 0;
