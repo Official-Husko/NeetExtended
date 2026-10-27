@@ -23,11 +23,11 @@ internal sealed class DropSimulation
 {
     public const int Width = 256;
     public const int Height = 144;
-    public const int MaxStatic = 150;
+    public const int MaxStatic = 420;
     public const int MaxSliding = 12;
     public const int MaxTrailCells = 12000;
 
-    private const float RunRadius = 3.4f;        // a still drop this big starts to run
+    private const float RunRadius = 2.6f;        // a still drop this big starts to run
     private const float TrailLife = 0.55f;       // fraction of a trail left after one second
 
     public readonly Drop[] Still = new Drop[MaxStatic];
@@ -61,7 +61,7 @@ internal sealed class DropSimulation
         {
             if (Still[i].Alive)
                 continue;
-            float r = 1.3f + Rand() * Rand() * 3.2f;
+            float r = 0.8f + Rand() * Rand() * 2.0f; // mostly tiny, a few bigger
             Still[i] = new Drop { X = Rand() * (Width - 1), Y = Rand() * (Height - 1), Radius = r, Alive = true };
             return;
         }
@@ -70,7 +70,7 @@ internal sealed class DropSimulation
     public void Step(float dt)
     {
         // New small drops land at a rate that follows the wetness.
-        _spawnCarry += dt * (4f + 60f * Wetness);
+        _spawnCarry += dt * (8f + 120f * Wetness);
         while (_spawnCarry >= 1f)
         {
             _spawnCarry -= 1f;
@@ -123,11 +123,11 @@ internal sealed class DropSimulation
             d.Alive = false;
             return;
         }
-        if (d.Radius < 1.4f)
+        if (d.Radius < 1.1f)
         {
             // Out of water: it stays where it stopped as a small drop.
             d.Alive = false;
-            PlaceStill(d.X, d.Y, 1.5f);
+            PlaceStill(d.X, d.Y, 1.1f);
             return;
         }
         if (Rand() < dt * 1.6f) // stops and goes

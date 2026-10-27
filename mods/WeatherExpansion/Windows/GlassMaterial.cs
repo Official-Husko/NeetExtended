@@ -17,10 +17,10 @@ internal static class GlassMaterial
             return null;
         var material = new Material(source) { name = "WeatherExpansion glass", hideFlags = HideFlags.HideAndDontSave };
         material.SetTexture("_Normal", normalMap);
-        material.SetFloat("_NormalScale", 1.3f);
-        material.SetColor("_Tint", new Color(0.5f, 0.6f, 0.75f, 1f));
-        material.SetFloat("_Smoothness", 0.7f);
-        material.SetFloat("_IOR", 1.25f);
+        material.SetFloat("_NormalScale", 1f);
+        material.SetColor("_Tint", new Color(0.7f, 0.78f, 0.9f, 1f));
+        material.SetFloat("_Smoothness", 0.5f);
+        material.SetFloat("_IOR", 1.12f);
         material.SetFloat("_ChromaticAberration", 0.02f);
         SetHaze(material, 0f);
         return material;

@@ -16,8 +16,9 @@ internal sealed class DropField
     private const int Height = DropSimulation.Height;
     private const float TickRate = 15f;
     private const int MaxTouched = 40000;
-    private const float TrailSlope = 1.8f;  // how steep a wet streak looks to the shader
-    private const float DropTilt = 3.6f;    // slope at the edge of a drop (a drop is a cap of a sphere: it tilts the same at any size)
+    private const float TrailSlope = 0.8f;  // how steep a wet streak looks to the shader
+    private const float ShapeScale = 0.85f; // the game's drop is longer than a round one of the same radius
+    private const float DropTilt = 1.0f;    // slope at the edge of a drop (a drop is a cap of a sphere: it tilts the same at any size)
 
     // A normal map as the game's shader reads it: Unity's DXT5nm layout (x in alpha, y in green),
     // packed as RGBA bytes of a little-endian uint.
@@ -28,6 +29,7 @@ internal sealed class DropField
     private readonly uint[] _pixels = new uint[Width * Height];
     private readonly int[] _touched = new int[MaxTouched];
     private int _touchedCount;
+    private readonly DropShape _shape;
     private float _carry;
 
     public Texture2D Texture => _texture;
@@ -47,6 +49,7 @@ internal sealed class DropField
             filterMode = FilterMode.Bilinear,
             hideFlags = HideFlags.HideAndDontSave,
         };
+        _shape = DropShape.Create(DropTilt);
         for (int i = 0; i < _pixels.Length; i++)
             _pixels[i] = Flat;
         Render();
@@ -70,11 +73,7 @@ internal sealed class DropField
         Render();
     }
 
-    private static uint Pack(float nx, float ny)
-    {
-        float k = 127.5f / (float)Math.Sqrt(nx * nx + ny * ny + 1f);
-        return 255u | ((uint)(127.5f - ny * k) << 8) | (255u << 16) | ((uint)(127.5f - nx * k) << 24);
-    }
+    private static uint Pack(float nx, float ny) => DropShape.Pack(nx, ny);
 
     private void Render()
     {
@@ -105,23 +104,54 @@ internal sealed class DropField
     }
 
     // The normal of a rounded drop, worked out for just the pixels it covers.
+    // Drops are the game's own drop shape when it's there, plain soft round lenses when it isn't.
     private void Stamp(float cx, float cy, float r)
     {
+        if (_shape != null)
+        {
+            StampShape(cx, cy, r * ShapeScale);
+            return;
+        }
         int x0 = Mathf.Max(1, (int)(cx - r - 1)), x1 = Mathf.Min(Width - 2, (int)(cx + r + 1));
         int y0 = Mathf.Max(1, (int)(cy - r - 1)), y1 = Mathf.Min(Height - 2, (int)(cy + r + 1));
         float r2 = r * r;
-        float slope = DropTilt / r;
+        float tilt = DropTilt * 2.6f / r; // peak tilt of DropTilt about halfway to the rim, none at the rim: a soft lens, not a disc
         for (int y = y0; y <= y1; y++)
         {
             for (int x = x0; x <= x1; x++)
             {
                 float dx = x - cx, dy = y - cy;
-                if (dx * dx + dy * dy >= r2)
+                float d2 = dx * dx + dy * dy;
+                if (d2 >= r2)
+                    continue;
+                if (_touchedCount >= MaxTouched)
+                    return;
+                float slope = tilt * (1f - d2 / r2);
+                int i = y * Width + x;
+                _pixels[i] = Pack(dx * slope, dy * slope);
+                _touched[_touchedCount++] = i;
+            }
+        }
+    }
+
+    // A drop in the game's shape: the table gives the normal at each pixel inside it.
+    private void StampShape(float cx, float cy, float r)
+    {
+        float half = r * DropShape.Span * 0.5f;
+        int x0 = Mathf.Max(1, (int)(cx - half)), x1 = Mathf.Min(Width - 2, (int)(cx + half));
+        int y0 = Mathf.Max(1, (int)(cy - half)), y1 = Mathf.Min(Height - 2, (int)(cy + half));
+        float inv = 1f / r;
+        for (int y = y0; y <= y1; y++)
+        {
+            for (int x = x0; x <= x1; x++)
+            {
+                uint pixel = _shape.At((x - cx) * inv, (y - cy) * inv);
+                if (pixel == 0u)
                     continue;
                 if (_touchedCount >= MaxTouched)
                     return;
                 int i = y * Width + x;
-                _pixels[i] = Pack(dx * slope, dy * slope);
+                _pixels[i] = pixel;
                 _touched[_touchedCount++] = i;
             }
         }

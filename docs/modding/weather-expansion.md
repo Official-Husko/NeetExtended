@@ -37,9 +37,10 @@ A window is two invisible paintable panes (`Wall_Window_*_Pane_1` and `_Pane_2`,
 
 `Windows/DropSimulation.cs` simulates the water on the CPU and `Windows/DropField.cs` draws it into one 256 by 144 normal map that every window shares:
 
-- about 100 small drops sit still, grow while it's wet and dry up slowly; one that gets big enough starts to run
+- up to 420 small drops sit still (most only a pixel or two across, a few bigger), grow while it's wet and dry up slowly; one that gets big enough starts to run
 - up to 12 running drops slide down in stop and go, wobbling a little, leaving a thin wet trail, getting smaller; one that runs out of water stays behind as a bead
-- each tick (15 a second) puts the previous tick's pixels back to flat, redraws the trails from their slope and stamps each drop's rounded dome. Only touched pixels are written, into a managed array uploaded with `SetPixelData`, so nothing allocates and a tick costs about 0.5 ms
+- each tick (15 a second) puts the previous tick's pixels back to flat, redraws the trails from their slope and stamps every drop. Only touched pixels are written, into a managed array uploaded with `SetPixelData`, so nothing allocates and a tick costs about 1 ms
+- every drop is stamped in the game's own drop shape (`Windows/DropShape.cs`): the game keeps a teardrop picture, `WaterDropParticle`, for its drip effect (`DripEffect`, material `Drop`). The mod reads its alpha once through a render texture (the game's copy isn't script-readable), blurs the silhouette into a rounded height, turns that into a table of normals and rotates it so the point trails upward. Without that texture the field draws plain soft round drops
 - the field only advances while one of the quads is on screen (`Renderer.isVisible`), so it costs nothing in the rest of the house
 
 Wetness (the setting times the weather's wetness, see below) sets how fast new drops land and grow; the weather's speed sets how fast running drops slide. Window haze is the glass shader's `_Opacity` with a blue-grey tint: a thin film that makes the drops show in the dark. Once a second the quads check their panes and hide when either is broken or gone; the window parent owns them, so a window that is destroyed takes its quad along.
@@ -70,6 +71,7 @@ Intensity 1 is the kind's usual strength; wetness is also multiplied by it, and 
 | `Windows/WindowFinder.cs`, `WindowPane.cs`, `InteriorRooms.cs` | Finding the panes, their size and which way is into the house. |
 | `Windows/GlassMaterial.cs`, `QuadMesh.cs` | The material and the quad. |
 | `Windows/DropSimulation.cs`, `DropField.cs` | The water as numbers (drops, trails), and drawing it as the normal map. |
+| `Windows/DropShape.cs` | The game's own drop picture turned into a table of normals. |
 
 ## Testing
 
@@ -91,7 +93,7 @@ A real strike is `neet call sky.strike`. Dark scenes need a brightened copy of a
 - There is no height fog and no fog that sits in the sky: Unity's fog is one global colour and density, and a fog volume needs a shader the game doesn't ship. Mist banks stand in for it, over the two yards only.
 - Mist puffs are flat billboards without soft edges, so one that drifts into a wall or the ground shows a hard line there.
 - Window rain is drawn on the inside of the glass and only seen from inside; from the yard the windows look as they did. Some windows face a wall close outside, and that wall is what shows through their drops.
-- The drops are a 256 by 144 picture, so close up they are chunky, and all windows share one picture, so two windows in view show the same pattern.
+- The drops are a 256 by 144 picture, so very close up their edges are chunky, and all windows share one picture, so two windows in view show the same pattern. Every drop has the game's teardrop shape pointing up, also the ones sitting still, and at rest in a dark room they only show as faint glints on the glass; the refraction needs something lit behind them (a flash, a lamp outside).
 - The glass needs the game's `Glass/DiffuseBumped` material; if a game update renames it, the look logs a warning and stays off.
 - Each pane in view adds a draw and a screen grab (the shader bends the picture behind it); in the house that is one or two panes at a time.
 - A custom shader (drops and trails drawn on the graphics card, height fog, wet surfaces) would need an asset bundle built in the Unity editor, which needs the editor installed and an account to activate it. None of that is in the repo.
