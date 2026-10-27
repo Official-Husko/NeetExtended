@@ -14,6 +14,7 @@ internal static class StateTrackers
     private static readonly List<StateTracker> List = new List<StateTracker>(256);
     private static readonly Dictionary<(long, byte), StateTracker> ByKey = new Dictionary<(long, byte), StateTracker>(256);
     private static readonly Dictionary<int, StateTracker> ByComponent = new Dictionary<int, StateTracker>(256);
+    private static readonly Dictionary<NetObject, List<StateTracker>> ByObject = new Dictionary<NetObject, List<StateTracker>>(256);
 
     public static IReadOnlyList<StateTracker> All => List;
 
@@ -31,8 +32,12 @@ internal static class StateTrackers
         }
     }
 
-    /// <summary>A shared item appeared: track its shared components.</summary>
-    public static void AddFor(NetObject o)
+    /// <summary>
+    /// A shared item appeared: track its shared components. <paramref name="fresh"/> is for an item made
+    /// in this game: what it holds beyond its saved parts isn't known to the others, so the first look
+    /// sends whatever isn't the resting (all zero) state.
+    /// </summary>
+    public static void AddFor(NetObject o, bool fresh = false)
     {
         foreach (var type in StateTypes.All)
         {
@@ -40,22 +45,25 @@ internal static class StateTrackers
                 continue;
             var component = o.Go.GetComponentInChildren(type.ComponentType, true);
             if (component != null)
-                Track(type, component);
+                Track(type, component, fresh);
         }
     }
 
     public static void RemoveFor(NetObject o)
     {
-        for (int i = List.Count - 1; i >= 0; i--)
+        if (!ByObject.TryGetValue(o, out var mine))
+            return;
+        foreach (var t in mine)
         {
-            var t = List[i];
-            if (t.Object != o)
-                continue;
             ByKey.Remove(t.Key);
             ByComponent.Remove(t.ComponentId);
-            List.RemoveAt(i);
+            List.Remove(t);
         }
+        ByObject.Remove(o);
     }
+
+    /// <summary>The trackers on one thing (null if it has none).</summary>
+    public static List<StateTracker> Of(NetObject o) => ByObject.TryGetValue(o, out var mine) ? mine : null;
 
     public static StateTracker Find(NetRef r, byte type) => ByKey.TryGetValue((r.Key, type), out var t) ? t : null;
 
@@ -67,10 +75,13 @@ internal static class StateTrackers
         List.Clear();
         ByKey.Clear();
         ByComponent.Clear();
+        ByObject.Clear();
     }
 
-    private static void Track(StateType type, Component component)
+    private static void Track(StateType type, Component component, bool fresh = false)
     {
+        if (!type.Accepts(component))
+            return;
         var o = NetObjects.Find(component.gameObject);
         // Some parts sit on a child of their item.
         if (o == null && type.OnItems)
@@ -94,6 +105,15 @@ internal static class StateTrackers
         List.Add(t);
         ByKey[t.Key] = t;
         ByComponent[t.ComponentId] = t;
-        StateSync.Capture(t);
+        if (o != null)
+        {
+            if (!ByObject.TryGetValue(o, out var mine))
+                ByObject[o] = mine = new List<StateTracker>(4);
+            mine.Add(t);
+        }
+        if (fresh)
+            StateSync.MarkFresh(t);
+        else
+            StateSync.Capture(t);
     }
 }

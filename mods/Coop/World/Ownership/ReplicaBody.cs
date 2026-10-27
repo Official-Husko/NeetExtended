@@ -1,4 +1,5 @@
 using Coop.World.Objects;
+using Coop.World.State;
 using Coop.World.Streaming;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ internal static class ReplicaBody
     {
         if (o.IsReplica)
             return;
+        StateSync.Flush(o);
         if (o.Body != null)
         {
             o.GameKinematic = o.Body.isKinematic;

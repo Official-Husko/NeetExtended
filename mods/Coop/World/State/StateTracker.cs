@@ -15,12 +15,25 @@ internal sealed class StateTracker
 
     public byte[] Last = System.Array.Empty<byte>();
     public bool Dirty;
+
+    /// <summary>Made for an item that just appeared here: nothing is known about the others yet (see <see cref="StateSync.MarkFresh"/>).</summary>
+    public bool Fresh;
     internal int ComponentId;
 
     public (long, byte) Key => (Ref.Key, Type.Index);
 
     /// <summary>The game that should notice changes the game makes on its own.</summary>
     public bool WatchedHere => Object != null ? !Object.IsReplica : WorldSide.IsHost;
+
+    public bool AllZero(byte[] data, int length)
+    {
+        for (int i = 0; i < length; i++)
+        {
+            if (data[i] != 0)
+                return false;
+        }
+        return true;
+    }
 
     public bool Same(byte[] data, int length)
     {

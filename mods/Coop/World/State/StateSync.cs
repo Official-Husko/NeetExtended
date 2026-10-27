@@ -54,6 +54,31 @@ internal static class StateSync
         Marked.Add(t);
     }
 
+    /// <summary>
+    /// A tracker for an item made here: nothing is known about the others, so it's looked at once at
+    /// the end of the frame and sent unless it's all zero (every type writes its resting state as zeros,
+    /// and a copy that was just made starts there).
+    /// </summary>
+    public static void MarkFresh(StateTracker t)
+    {
+        t.Fresh = true;
+        t.Dirty = true;
+        Marked.Add(t);
+    }
+
+    /// <summary>
+    /// An item is about to stop being simulated here: whatever changed since the last look goes out
+    /// now, so its new owner carries on from the same state.
+    /// </summary>
+    public static void Flush(NetObject o)
+    {
+        var mine = StateTrackers.Of(o);
+        if (mine == null || !WorldSide.Running)
+            return;
+        for (int i = 0; i < mine.Count; i++)
+            Check(mine[i]);
+    }
+
     /// <summary>Takes the component's current bytes as known (no change to send).</summary>
     public static void Capture(StateTracker t)
     {
@@ -80,7 +105,7 @@ internal static class StateSync
             for (int k = 0; k < n; k++)
             {
                 var t = all[_cursor++ % count];
-                if (t.WatchedHere)
+                if (t.WatchedHere && t.Type.Swept)
                     Check(t);
             }
         }
@@ -117,8 +142,21 @@ internal static class StateSync
     private static void Check(StateTracker t)
     {
         t.Dirty = false;
-        if (!Write(t) || t.Same(Scratch.Data, Scratch.Length))
+        if (!Write(t))
             return;
+        if (t.Fresh)
+        {
+            t.Fresh = false;
+            if (t.AllZero(Scratch.Data, Scratch.Length))
+            {
+                t.Remember(Scratch.Data, 0, Scratch.Length);
+                return;
+            }
+        }
+        else if (t.Same(Scratch.Data, Scratch.Length))
+        {
+            return;
+        }
         t.Remember(Scratch.Data, 0, Scratch.Length);
         if (!Changed.Contains(t))
             Changed.Add(t);

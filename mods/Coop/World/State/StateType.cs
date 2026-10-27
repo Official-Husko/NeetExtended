@@ -20,6 +20,16 @@ internal abstract class StateType
     /// <summary>The component lives on items, so it's only tracked while its item is shared.</summary>
     public virtual bool OnItems => false;
 
+    /// <summary>
+    /// False when the game that owns the component doesn't need to look for changes on its own: the
+    /// hint patches mark it the moment it changes (damage on every item is the case: sweeping hundreds
+    /// of items for something that rarely changes would cost more than it brings).
+    /// </summary>
+    public virtual bool Swept => true;
+
+    /// <summary>Some components of the type aren't wanted (a damage state on an NPC or a door).</summary>
+    public virtual bool Accepts(Component component) => true;
+
     public abstract void Write(Component component, NetDataWriter writer);
 
     public abstract void Apply(Component component, NetDataReader reader);

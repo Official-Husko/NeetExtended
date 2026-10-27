@@ -17,16 +17,16 @@ internal sealed class RadioState : StateType<Radio>
 
     protected override void Write(Radio radio, NetDataWriter w)
     {
-        RefOf(radio.Fuse != null ? radio.Fuse.gameObject : null).Write(w);
-        RefOf(radio.cassette != null ? radio.cassette.gameObject : null).Write(w);
+        ItemRefs.Of(radio.Fuse != null ? radio.Fuse.gameObject : null).Write(w);
+        ItemRefs.Of(radio.cassette != null ? radio.cassette.gameObject : null).Write(w);
         w.Put(radio.opened);
         w.Put(On(radio));
     }
 
     protected override void Apply(Radio radio, NetDataReader r)
     {
-        var fuse = Find<Fuse>(NetRef.Read(r), out bool fuseKnown);
-        var cassette = Find<Cassette>(NetRef.Read(r), out bool cassetteKnown);
+        var fuse = ItemRefs.Find<Fuse>(NetRef.Read(r), out bool fuseKnown);
+        var cassette = ItemRefs.Find<Cassette>(NetRef.Read(r), out bool cassetteKnown);
         bool opened = r.GetBool();
         bool on = r.GetBool();
 
@@ -49,24 +49,5 @@ internal sealed class RadioState : StateType<Radio>
         radio.musicAudio.clip = cassette != null ? cassette.musicClip : null;
         if (cassette != null && radio.Powered && On(radio))
             radio.musicAudio.Play();
-    }
-
-    private static NetRef RefOf(UnityEngine.GameObject go)
-    {
-        var o = go != null ? NetObjects.Find(go) : null;
-        return o != null ? o.Ref : default;
-    }
-
-    // Known: the ref is "nothing", or a shared thing that's here (not one that hasn't arrived yet).
-    private static T Find<T>(NetRef r, out bool known) where T : UnityEngine.Component
-    {
-        if (!r.IsValid)
-        {
-            known = true;
-            return null;
-        }
-        var o = NetObjects.Find(r);
-        known = o != null;
-        return o != null ? o.Go.GetComponent<T>() : null;
     }
 }

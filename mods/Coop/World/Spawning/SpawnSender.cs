@@ -145,7 +145,7 @@ internal static class SpawnSender
             return false;
         }
         LoadedIds.Add(o);
-        StateTrackers.AddFor(o);
+        StateTrackers.AddFor(o, fresh: true);
         return true;
     }
 
