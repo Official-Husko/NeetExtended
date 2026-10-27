@@ -174,6 +174,8 @@ Raising iterates a snapshot, so a handler can unsubscribe, or its mod can unload
 | `BeforeLoad` | none | Before `SaveLoadHandler.LoadAll` runs. The save is not yet applied. |
 | `AfterLoad` | none | After `LoadAll` returns. |
 | `SceneLoaded` | `string` scene name | After every scene load. `IsHouseReady` is set false before it is raised. |
+| `WokeUp` | none | Right after `HouseReady` when the player comes back from sleeping (the house loads after the DreamZone scene). The framework counts days with it (`ModFlags.Day`). |
+| `ItemOrdered` | `StoreOrder` | After the player orders something from a computer store and the order went through. `Item` is the prefab name, `Store` is `Normal`, `BlackMarket` or `OccultMarket`. |
 
 Also:
 
@@ -270,6 +272,36 @@ A function whose mod unloads keeps answering with `0` (and doing nothing), so a 
 ### Save safety
 
 Ink saves where each conversation ("flow") stopped. A save that points into a mod script can't be loaded once the script is gone: the game stops with "Failed to find content at path". Even a finished conversation keeps its last position. So right before the game saves, after the mods' `BeforeSave` handlers, the framework drops every conversation that stopped inside a mod script and closes the dialogue box if one is open in a mod script. Dropped conversations start from the top next time, as finished ones do anyway. Mods that need to end their conversations in a particular way (the phone hangs up properly, for example) do that in `BeforeSave`.
+
+## Rules
+
+Namespace `NeetModKit.Rules`. Content files (phone calls, emails) share one set of conditions, actions and flags, so an email can set a flag a phone call checks, and a mod that adds an action adds it everywhere. The phone guide (`phone.md`) lists the built-in ones.
+
+### Conditions and actions
+
+```csharp
+RuleConditions.Register(this, "raining", value => { bool want = value.Value<bool>(); return _ => Weather.Raining == want; }, "true while it rains");
+RuleActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount", 10)), "amount", "Throws confetti.");
+```
+
+- `RuleConditions.Register(owner, name, compile, help)`: `compile` turns the value from the file into a test once, when the file loads, so mistakes show up right away (throw `FormatException`). The test gets the `IRuleSubject` it runs for.
+- `RuleActions.Register(owner, name, run, mainValue, help)`: `run` gets `ActionArgs` (`Str`, `Num`, `Int`, `Bool`, `Has`, `Require`, `Values`, `Subject`, `Repeat(action)` for `"count"`). `mainValue` is what a bare value fills in Ink (`Act("deliver", "Pizza")`). `RuleActions.Later(owner, seconds, action)` runs something after a delay.
+- `Condition.Parse(json)`, `Condition.Of(func)`, `Test(subject)`: a whole condition object, with `any`, `all` and `not`.
+- `ActionList.Parse(json)`, `Run(subject)`: a list of `{ "do": ... }` objects, checked when parsed.
+- `Comparison.Parse("< 25")`, `NamedComparisons.Parse({ "name": ">= 2" })`: the number tests conditions use.
+- `IRuleSubject` (`Id`, `Times`) is what's running: a phone call, an email. `RuleContext.Active` is the one playing right now, for actions called from hand-written Ink.
+
+### Flags
+
+`ModFlags`: named numbers in the save, shared by every mod. `Get(name)`, `Set(name, value)` (0 removes it), `Add(name, amount)`, `All`. Also `PlaySeconds` (seconds the house was loaded in this save, across sessions) and `Day` (1 at the start, one more each time the player sleeps and wakes up; the game's own `nightId` never moves).
+
+Console: `flags` lists them, `setFlag <name> <value>` sets one.
+
+### Content files to Ink
+
+`StepWriter.Write(knot, steps, addAction, addCondition, options)` turns a list of steps from a file (lines, choices, if, random, do, label, goto, end, ink) into an Ink knot. Pass `RuleSteps.AddAction`/`AddCondition` as the callbacks: they number each condition and action and the knot calls them as `RuleIf(n)` and `RuleDo(n)`. `StepWriterOptions` sets the lines written at the end (the phone ends calls on `# EndPhoneCall`) and extra tagged line types (the phone's `{ "player": ... }`). `RuleSteps.Muted` skips actions, for replaying text that was already shown.
+
+Ink functions in every story: `Act(action, values)`, `Check(condition, value)`, `Flag(name)`, `SetFlag(name, value)`, `AddFlag(name, amount)`, plus `RuleIf` and `RuleDo` for generated knots.
 
 ## Saves
 
@@ -692,6 +724,7 @@ The framework's patches live in `src/NeetModKit/Patches/`. Each one is an applie
 | `Computer_Browser_Addresser.AddressWrapper` (pre) | `BrowserPatches` | Lets the framework choose the page for a URL (see the desktop guide) |
 | `Dialogue.Awake` (post) | `DialoguePatches` | Raises `InkStory.Dialogue.Created`, so mod scripts and functions are in the story before a save loads into it |
 | `EmailHandler.Start` (post) | `DialoguePatches` | Raises `InkStory.Email.Created` once the email story is built |
+| `Computer.OrderItem` (post) | `OrderPatch` | Raises `ItemOrdered` for orders that went through |
 
 ### Reasons for the less obvious ones
 

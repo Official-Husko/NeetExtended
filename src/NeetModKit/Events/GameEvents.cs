@@ -31,6 +31,15 @@ public static class GameEvents
     /// <summary>Raised with the new scene's name after any scene load.</summary>
     public static readonly GameEvent<string> SceneLoaded = new GameEvent<string>(nameof(SceneLoaded));
 
+    /// <summary>
+    /// The house is ready after the player slept (the dream scene came before it). Raised right
+    /// after <see cref="HouseReady"/>; a new day in <see cref="Rules.ModFlags.Day"/> has begun.
+    /// </summary>
+    public static readonly GameEvent WokeUp = new GameEvent(nameof(WokeUp));
+
+    /// <summary>The player ordered something from a computer store (Computer.OrderItem went through).</summary>
+    public static readonly GameEvent<StoreOrder> ItemOrdered = new GameEvent<StoreOrder>(nameof(ItemOrdered));
+
     /// <summary>True between <see cref="HouseReady"/> and the next scene change.</summary>
     public static bool IsHouseReady { get; private set; }
 
@@ -58,8 +67,14 @@ public static class GameEvents
     private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         IsHouseReady = false;
+        // Sleeping in the house loads the dream; the next house load is the next morning.
+        if (scene.name == DreamScene)
+            _slept = true;
         SceneLoaded.Raise(scene.name, _log);
     }
+
+    private const string DreamScene = "DreamZone";
+    private static bool _slept;
 
     internal static void RaiseHouseReady()
     {
@@ -69,7 +84,14 @@ public static class GameEvents
         PlayerControl.ApplyFlags(); // Re-apply god mode, frozen needs and speed to the new player object.
         _log.Info("House ready");
         HouseReady.Raise(_log);
+        if (_slept)
+        {
+            _slept = false;
+            WokeUp.Raise(_log);
+        }
     }
+
+    internal static void RaiseOrder(StoreOrder order) => ItemOrdered.Raise(order, _log);
 
     internal static void Raise(GameEvent e) => e.Raise(_log);
 

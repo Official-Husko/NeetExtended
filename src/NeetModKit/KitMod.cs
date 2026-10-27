@@ -30,6 +30,7 @@ public sealed class KitMod : NeetMod
         Conversations.InkStory.Init(Log);
         Conversations.InkFunctions.Init(this);
         Conversations.InkScripts.Init(this);
+        Rules.RuleSystem.Init(this);
         GameEvents.ItemsRegistering.Subscribe(this, Items.ItemRegistry.RegisterAll);
         ModMenu.Init(this);
 
