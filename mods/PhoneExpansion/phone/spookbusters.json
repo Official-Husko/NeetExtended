@@ -7,44 +7,45 @@
   "callerId": "SPOOKBUST",
   "when": { "dialed": ">= 1" },
   "say": [
-    "Spookbusters! We're back in business. What's haunting you?",
+    "<size=150%>SPOOKBUSTERS!<size=100%> We're back in business, you lazy fuck. What's haunting your ass?",
     { "choices": [
       {
         "text": "There's a black door in the basement I can't open.",
         "say": [
-          "The black door. Yeah. We know that house.",
-          "We can open it from here. Don't ask how. Thirty bucks.",
+          "The black door. Yeah. We know that house. It smells like a wet dog's dream in there.",
+          "We can open it from here. Don't ask how. Thirty bucks, cash, no fucking cards.",
           { "choices": [
             {
-              "text": "Do it.",
+              "text": "Do it, here's your thirty.",
               "if": { "money": 30 },
               "say": [
                 { "do": "money", "amount": -30 },
                 { "do": "unlock", "door": "BASEMENT" },
-                "Done. If something comes out of there, that's a separate call."
+                "Done. If something crawls out of there, that's a separate call.",
+                "Don't call us about it. We're not insured for that shit."
               ]
             },
-            { "text": "Thirty bucks? No way.", "say": [ "Then enjoy your door." ] }
+            { "text": "Thirty bucks? No way.", "say": [ "Then enjoy your door, you cheap shit." ] }
           ] }
         ]
       },
       {
         "text": "My house is on fire!",
         "say": [
-          "That's not really a ghost thing.",
-          "...Fine, we'll make an exception. Hang on.",
+          "That's not really a ghost thing, buddy.",
+          "...Fine, we'll make an exception. <size=60%>Hang on.<size=100%>",
           { "do": "fireout" },
-          "Fire's out. You're welcome. Buy an extinguisher."
+          "Fire's out. You're welcome. Buy an extinguisher, you dumb pyromaniac."
         ]
       },
       {
         "text": "The lights keep going out.",
         "say": [
-          "Check your fuse box. Basement.",
-          "If the fuses are lying on the floor, that's not a ghost either. That's just your house."
+          "Check your fuse box. Basement. There's probably a spider in there the size of your hand.",
+          "If the fuses are lying on the floor, that's not a ghost either. That's just your house being a shithole."
         ]
       },
-      { "text": "Who you gonna call?", "say": [ "Not us, apparently. You already did.", "*click*" ] }
+      { "text": "Who you gonna call?", "say": [ "Not us apparently. You already did, you dumb bastard.", "*click*" ] }
     ] }
   ]
 }

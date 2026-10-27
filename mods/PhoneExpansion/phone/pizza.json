@@ -10,16 +10,17 @@
       "when": { "not": { "flag": "pizza_list" } },
       "say": [
         { "random": [
-          "Pumpkin Pizza, you scream, we deliver. What can I get you?",
-          "Pumpkin Pizza. Busy night, make it quick.",
-          "Pumpkin Pizza, home of the extra cheesy jack-o-lantern. What'll it be?"
+          "Pumpkin Pizza, you scream, we deliver your fucking dinner. What do you want?",
+          "Pumpkin Pizza. Busy night, make it quick, my cousin just got bit by a goat.",
+          "Pumpkin Pizza, home of the extra cheesy jack-o-lantern. What'll it be, big boy?"
         ] },
         { "choices": [
           {
             "text": "One large pizza, please.",
             "if": { "money": 15 },
             "say": [
-              "Fifteen bucks. Driver leaves it at your front door, he doesn't do stairs.",
+              "Fifteen bucks. Driver leaves it at your front door. He doesn't do stairs.",
+              "He has a bad back and a worse attitude. Don't ask about the cheese.",
               { "do": "money", "amount": -15 },
               { "do": "deliver", "item": "Pizza", "after": 40 },
               { "do": "ring", "call": "pizza-driver", "after": 45 },
@@ -30,35 +31,35 @@
             "text": "Do you deliver candy?",
             "once": true,
             "say": [
-              "It's a pizza place, buddy.",
+              "It's a pizza place, dipshit.",
               "...",
-              "Fine. One bag, on the house. Don't tell my manager.",
+              "Fine. One bag, on the house. Don't tell my manager, he's already crying about the dough.",
               { "do": "deliver", "item": "Candy_Bag_S", "after": 30 }
             ]
           },
           {
             "text": "Is your pizza made of real pumpkins?",
-            "say": [ "Our pizza is made of what the customer deserves." ]
+            "say": [ "Our pizza is made of whatever the customer deserves, and you deserve a fucking mushroom." ]
           },
           {
             "text": "Can I get it for free?",
             "say": [
               "...",
               "You know what we do to people who prank call a pizza place on Halloween?",
-              "We put them on the list.",
+              "We put them on the list. The list is a drawer. The drawer is full of ugly pumpkins and worse people.",
               { "do": "flag", "name": "pizza_list" }
             ]
           },
-          { "text": "Never mind.", "say": [ "Then why'd you call?" ] }
+          { "text": "Never mind.", "say": [ "Then why the fuck did you call?" ] }
         ] }
       ],
       "otherwise": [
         "Pumpkin Pizza.",
-        "...Oh. It's you. You're on the list.",
+        "...Oh. It's you. You're on the <color=red>list</color>, buddy.",
         { "choices": [
           {
             "text": "I'm sorry about before.",
-            "say": [ "Hm.", "Apology accepted. Call back when you're hungry.", { "do": "flag", "name": "pizza_list", "set": 0 } ]
+            "say": [ "Hm.", "Apology accepted. Call back when you're hungry. And wash your fucking hands.", { "do": "flag", "name": "pizza_list", "set": 0 } ]
           },
           { "text": "Whatever.", "say": [ "*click*" ] }
         ] }
@@ -70,9 +71,10 @@
       "callerId": "PIZZA",
       "incoming": { "trigger": "manual" },
       "say": [
-        "Yo, it's the driver. Pizza's at your front door.",
-        "I knocked. Nobody came. Your house gives me the creeps, man.",
-        "Enjoy."
+        "Yo, it's the driver. Pizza's at your front door, dude. It's getting cold and so am I.",
+        "I knocked like nine times bro. Nobody came. Your porch smells like a hamster cage that died.",
+        "Pizza's on the mat. Don't call us again you weird ass house goblin.",
+        "Enjoy, you fucking hermit."
       ]
     }
   ]

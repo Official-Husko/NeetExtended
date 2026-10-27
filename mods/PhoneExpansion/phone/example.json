@@ -16,7 +16,7 @@
 
       // What's said, top to bottom. Plain text is the caller talking; the game's rich text works.
       "say": [
-        "This is the phone company test line. If you can hear this, your phone works.",
+        "Phone company test line. If u can hear this ur phone works. Congratulation.",
 
         // A line said by the player instead.
         { "player": "Uh, hello?" },
@@ -24,8 +24,8 @@
         // Branches on a condition. "then" and "else" take a line or a list of steps.
         {
           "if": { "called": "test-line-callback" },
-          "then": "Oh, it's you again. We called you back, remember? Works great.",
-          "else": "Would you like to test something?"
+          "then": "Oh its u again. We called u back remember? Ur phone is fine. Stop calling.",
+          "else": "U want to test something or u just lonely?"
         },
 
         // A place to jump back to with "goto".
@@ -37,7 +37,7 @@
             {
               "text": "Test the ringer.",
               "say": [
-                "Hang up and we'll call you back in ten seconds.",
+                "Hang up. We call u back in ten second. Dont go nowhere, not that u ever do.",
                 // Actions make things happen. This one rings the call below.
                 { "do": "ring", "call": "test-line-callback", "after": 10 },
                 // Ends the call right here.
@@ -47,7 +47,7 @@
             {
               "text": "Test the lights.",
               "say": [
-                "Lights off for five seconds. Don't panic.",
+                "Lights off for five second. <size=60%>dont shit urself",
                 { "do": "power", "on": false, "for": 5 }
               ]
             },
@@ -56,7 +56,7 @@
               // Gone once it's been picked.
               "once": true,
               "say": [
-                "Something a call remembers, even after saving. This one now remembers that you asked.",
+                "Is a thing the phone remember even after u save. Now it remember u asked a dumb question.",
                 { "do": "flag", "name": "asked_about_flags" },
                 { "goto": "menu" }
               ]
@@ -65,14 +65,14 @@
               "text": "Got any candy?",
               // Only offered while this holds.
               "if": { "flag": "asked_about_flags" },
-              "say": [ "For asking good questions. Check next to the phone.", { "do": "give", "item": "Candy_Bar" } ]
+              "say": [ "For asking dumb question. Look next to the phone, fatass.", { "do": "give", "item": "Candy_Bar" } ]
             },
             { "text": "Bye." }
           ]
         },
 
         // One of these, picked at random each time.
-        { "random": [ "Thank you for testing with us.", "Your phone is in excellent condition. Unlike your house." ] }
+        { "random": [ "Thank u for testing with us. Goodbye.", "Ur phone is in excellent condition. Ur house smell like a foot." ] }
       ]
     },
     {
@@ -81,7 +81,7 @@
       "callerId": "TEST",
       // No number: this call only rings in. "manual" means only when something rings it.
       "incoming": { "trigger": "manual" },
-      "say": [ "Ring ring. This is your callback. Your ringer works.", "Have a spooky night." ]
+      "say": [ "<size=150%>RING RING MOTHERFUCKER", "<size=100%>Is ur callback. Ringer work. Have a spooky night." ]
     }
   ]
 }

@@ -1,25 +1,26 @@
 // A call written in Ink by hand, for when JSON isn't enough. scream-line.json gives it a number.
-// The game's lists, variables and functions are all available, plus the phone's own:
-//   PhoneAct(action, values)    PhoneCheck(condition, value)
-//   PhoneFlag(name)             SetPhoneFlag(name, value)    AddPhoneFlag(name, amount)
+// The game's lists, variables and functions are all available, plus the shared ones:
+//   Act(action, values)    Check(condition, value)
+//   Flag(name)             SetFlag(name, value)    AddFlag(name, amount)
 // End a call on the EndPhoneCall tag, like the game's calls do.
 
 === PhoneExpansion_ScreamLine ===
-{~Welcome to the Scream Line!|You've reached the Scream Line.|Scream Line. Please hold your breath.}
-{PhoneFlag("scream_line_calls") == 0: First time calling? Lucky you.}
-~ AddPhoneFlag("scream_line_calls", 1)
+{~<size=150%>SCREAM LINE!!!<size=100%> Wat do u want|u have reach the Scream Line. Pls hold ur breath|Scream Line. <size=60%>oh god its him again}
+{Flag("scream_line_calls") == 0: First time calling? Lucky u. Most people die before the beep.}
+~ AddFlag("scream_line_calls", 1)
 Today's message:
-{~Fun fact: the average house makes forty noises a night. Yours makes forty-one.|Fun fact: if you hear knocking, it's usually the door. Usually.|Fun fact: pumpkins are a fruit. So is whatever's in your basement.|Today's scream of the day: AAAAAAAAAAAAAAH. Thank you.}
-* [Scream back]
-    AAAAAAAAAAAAAAH!
-    ...
-    { PhoneCheck("holding", "Pumpkin"):
-        Is that a pumpkin in your hand? Respect. Here's two.
-        ~ PhoneAct("give", "item=Candy_Bar; count=2")
+{~Fun fact: the average house make forty noise a night. Yours make forty-one and one of them is u farting.|Fun fact: if u hear knocking its usually the door. Usually.|Fun fact: pumpkin is a fruit. So is whatever is growing in ur basement.|Scream of the day: <size=150%>AAAAAAAAAAAAAAAAAH<size=100%>. Thank u.}
+* [AAAAAAAAAAAAH]
+    <size=150%>AAAAAAAAAAAAAAAAAAAAAAAH!!!
+    <size=100%>...
+    { Check("holding", "Pumpkin"):
+        Is that a pumpkin in ur hand? Respect. Here is two.
+        ~ Act("give", "item=Candy_Bar; count=2")
     - else:
-        That was a good one. Here's a little something.
-        ~ PhoneAct("give", "Candy_Bar")
+        Shit that was a good one. My ears are bleeding. Here.
+        ~ Act("give", "Candy_Bar")
     }
 * [Hang up]
+    <size=60%>pussy
 - # EndPhoneCall
 -> DONE
