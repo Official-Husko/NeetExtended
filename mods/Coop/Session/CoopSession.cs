@@ -85,7 +85,9 @@ public static class CoopSession
         Reset();
         Local = Add(new CoopPlayer { Slot = CoopPlayer.HostSlot, Name = name, Id = id, IsLocal = true, InWorld = true });
         State = SessionState.Hosting;
-        CoopMod.Log.Info($"Hosting on UDP port {port} as {name}.");
+        CoopMod.Log.Info(TransportId == Transports.DirectId
+            ? $"Hosting on UDP port {port} as {name}."
+            : $"Hosting over {Transports.Find(TransportId)?.Name} as {name}.");
         Started?.Invoke();
         WorldReady?.Invoke();
     }
