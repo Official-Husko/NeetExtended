@@ -74,6 +74,25 @@ public static class PlayerControl
         ApplyFlags();
     }
 
+    private const string ReloadKey = "NeetModKit.PlayerControl";
+
+    /// <summary>
+    /// Before a framework unload: the switches live in this copy's statics, but the player object keeps
+    /// what they set (invincible, paused needs), so the next copy has to know them.
+    /// </summary>
+    internal static void KeepForReload() =>
+        NeetLoader.Runtime.ReloadState.Put(ReloadKey, new[] { GodMode ? 1f : 0f, NeedsFrozen ? 1f : 0f, SpeedMultiplier });
+
+    internal static void RestoreAfterReload()
+    {
+        if (!NeetLoader.Runtime.ReloadState.Take(ReloadKey, out float[] kept) || kept.Length < 3)
+            return;
+        GodMode = kept[0] != 0f;
+        NeedsFrozen = kept[1] != 0f;
+        SpeedMultiplier = kept[2];
+        ApplyFlags();
+    }
+
     /// <summary>Applies the switches to the current player object (it's replaced on respawn and house load).</summary>
     internal static void ApplyFlags()
     {

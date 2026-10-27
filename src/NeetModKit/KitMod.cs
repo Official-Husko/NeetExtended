@@ -28,6 +28,7 @@ public sealed class KitMod : NeetMod
         GameEvents.SceneLoaded.Subscribe(this, _ => Game.SharedState.Clear());
         Saves.ModSaveData.Init(Log);
         Saves.SaveSource.RestoreAfterReload();
+        Game.PlayerControl.RestoreAfterReload();
         Items.ItemRegistry.Init(Log);
         Conversations.InkStory.Init(Log);
         Conversations.InkFunctions.Init(this);
@@ -63,6 +64,7 @@ public sealed class KitMod : NeetMod
     {
         Config.Changed -= OnConfigChanged;
         Saves.SaveSource.KeepForReload();
+        Game.PlayerControl.KeepForReload();
         ModMenu.Shutdown();
         Items.StoreListings.KeepForReload();
         Items.PrefabStash.Release();
