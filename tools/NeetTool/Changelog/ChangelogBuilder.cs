@@ -27,6 +27,7 @@ public static class ChangelogBuilder
         ["patches"] = "Unofficial NEET Patches",
         ["tv"] = "Custom TV Stations",
         ["mixtapes"] = "Mixtapes",
+        ["randomizer"] = "Randomizer",
         ["perf"] = "Performance Fixes",
         ["saves"] = "Saves",
         ["apps"] = "Computer apps",
