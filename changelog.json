@@ -3,7 +3,7 @@
     {
       "version": "0.1.0",
       "date": "2026-10-27",
-      "released": false,
+      "released": true,
       "added": [
         {
           "text": "The mod loader keeps a log in NeetLoader/logs/latest.log, and the previous session's log as previous.log.",
