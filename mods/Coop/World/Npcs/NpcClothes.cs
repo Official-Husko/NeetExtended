@@ -32,7 +32,7 @@ internal static class NpcClothes
         if (now < _next)
             return;
         _next = now + Interval;
-        foreach (var o in NetObjects.All)
+        foreach (var o in NetObjects.Rigs)
         {
             var rig = o.Rig;
             if (rig == null || !o.Alive || rig.Abilities == null || rig.Abilities.clothings == null)
@@ -50,11 +50,8 @@ internal static class NpcClothes
     /// <summary>Everyone gets every rig's clothes again (a player joined or resynced).</summary>
     public static void SendAllAgain()
     {
-        foreach (var o in NetObjects.All)
-        {
-            if (o.Rig != null)
-                o.Rig.DressSent = false;
-        }
+        foreach (var o in NetObjects.Rigs)
+            o.Rig.DressSent = false;
     }
 
     private static int Signature(GameObject[] clothings, out bool allShared)

@@ -19,6 +19,7 @@ internal static class Owners
         o.Owner = me;
         o.Holder = me;
         ReplicaBody.MakeOwned(o);
+        NetObjects.MarkMoving(o, Time.time);
         if (WorldSide.IsHost)
         {
             if (changed)

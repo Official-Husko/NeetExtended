@@ -62,10 +62,10 @@ internal static class ContactClaims
     {
         byte me = WorldSide.LocalSlot;
         bool host = WorldSide.IsHost;
-        var all = NetObjects.All;
-        for (int i = 0; i < all.Count; i++)
+        var moving = NetObjects.Moving;
+        for (int i = 0; i < moving.Count; i++)
         {
-            var o = all[i];
+            var o = moving[i];
             if (o.IsReplica || o.Owner != me || o.Body == null || o.Body.isKinematic || !o.Alive)
                 continue;
             bool held = o.Holder == me;

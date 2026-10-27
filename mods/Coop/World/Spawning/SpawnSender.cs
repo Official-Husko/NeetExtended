@@ -40,10 +40,10 @@ internal static class SpawnSender
             return;
         }
         o.Owner = WorldSide.LocalSlot;
-        o.Moving = true;
-        o.LastChange = Time.time;
-        if (Register(o))
-            Spawned.Add(o);
+        if (!Register(o))
+            return;
+        NetObjects.MarkMoving(o, Time.time);
+        Spawned.Add(o);
     }
 
     /// <summary>From Brain.Start, which runs inside the subclass's Start: handled next frame, once it's done.</summary>

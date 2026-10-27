@@ -26,10 +26,10 @@ internal static class NpcPoseSender
         _next = now + Interval;
 
         NetDataWriter w = null;
-        var all = NetObjects.All;
-        for (int i = 0; i < all.Count; i++)
+        var rigs = NetObjects.Rigs;
+        for (int i = 0; i < rigs.Count; i++)
         {
-            var o = all[i];
+            var o = rigs[i];
             var rig = o.Rig;
             if (rig == null || !o.PosedByHost || !o.Alive)
                 continue;
@@ -58,10 +58,7 @@ internal static class NpcPoseSender
     /// <summary>Makes every rig go out again on the next tick (a player joined or resynced).</summary>
     public static void SendAllAgain()
     {
-        foreach (var o in NetObjects.All)
-        {
-            if (o.Rig != null)
-                o.Rig.HasSent = false;
-        }
+        foreach (var o in NetObjects.Rigs)
+            o.Rig.HasSent = false;
     }
 }

@@ -24,6 +24,7 @@ internal static class StateSync
     private static readonly NetDataReader Slice = new NetDataReader();
     private static readonly byte[] Incoming = new byte[256];
     private static readonly List<StateTracker> Changed = new List<StateTracker>();
+    private static readonly List<StateTracker> Marked = new List<StateTracker>();
     private static readonly HashSet<Type> Failing = new HashSet<Type>();
     private static int _cursor;
     private static float _carry;
@@ -36,6 +37,7 @@ internal static class StateSync
     public static void Clear()
     {
         Changed.Clear();
+        Marked.Clear();
         _cursor = 0;
         _carry = 0f;
     }
@@ -46,8 +48,10 @@ internal static class StateSync
         if (!WorldSide.Running || Applying)
             return;
         var t = StateTrackers.Find(component);
-        if (t != null)
-            t.Dirty = true;
+        if (t == null || t.Dirty)
+            return;
+        t.Dirty = true;
+        Marked.Add(t);
     }
 
     /// <summary>Takes the component's current bytes as known (no change to send).</summary>
@@ -59,13 +63,14 @@ internal static class StateSync
 
     public static void LateTick()
     {
+        for (int i = 0; i < Marked.Count; i++)
+        {
+            if (Marked[i].Dirty)
+                Check(Marked[i]);
+        }
+        Marked.Clear();
         var all = StateTrackers.All;
         int count = all.Count;
-        for (int i = 0; i < count; i++)
-        {
-            if (all[i].Dirty)
-                Check(all[i]);
-        }
         if (count > 0)
         {
             // Spread the sweep over SweepSeconds, whatever the frame rate.

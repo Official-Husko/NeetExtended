@@ -25,11 +25,16 @@ internal static class RestWatcher
         _next = now + Interval;
 
         bool host = WorldSide.IsHost;
-        var all = NetObjects.All;
-        for (int i = all.Count - 1; i >= 0; i--)
+        var moving = NetObjects.Moving;
+        for (int i = moving.Count - 1; i >= 0; i--)
         {
-            var o = all[i];
-            if (!o.Moving || o.IsReplica || o.PosedByHost || !o.Alive)
+            var o = moving[i];
+            if (!o.Moving || o.Index < 0 || o.IsReplica || !o.Alive)
+            {
+                NetObjects.DropMoving(i);
+                continue;
+            }
+            if (o.PosedByHost)
                 continue;
             if (!host && !o.OwnedHere)
                 continue;
@@ -41,12 +46,14 @@ internal static class RestWatcher
             if (host)
             {
                 o.Moving = false;
+                NetObjects.DropMoving(i);
                 OwnershipNet.QueueSettled(o, release: false);
                 continue;
             }
             if (now - o.LastTouched < TouchGrace || RidesOnSomething(o))
                 continue;
             o.Moving = false;
+            NetObjects.DropMoving(i);
             OwnershipNet.QueueSettled(o, release: true);
             Owners.LocalRest(o);
         }

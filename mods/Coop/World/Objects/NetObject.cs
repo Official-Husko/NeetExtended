@@ -53,6 +53,7 @@ internal sealed class NetObject
     public bool Driving;
 
     internal int Index = -1;
+    internal bool InMoving;
     internal int GoId;
     internal int BodyId;
 

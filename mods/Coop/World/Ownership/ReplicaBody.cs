@@ -44,8 +44,7 @@ internal static class ReplicaBody
         o.SentPosition = o.Tf.position;
         o.SentRotation = o.Tf.rotation;
         o.SentFlags = BodyFlags.Of(o);
-        o.LastChange = Time.time;
-        o.Moving = true;
+        NetObjects.MarkMoving(o, Time.time);
     }
 
     /// <summary>Jumps a replica to where its stream ended (used when it changes owner) and stops playback.</summary>

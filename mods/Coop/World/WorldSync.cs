@@ -150,21 +150,25 @@ internal static class WorldSync
     {
         if (!WorldSide.Running)
             return;
+        long started = WorldTiming.Begin();
         SpawnSender.ProcessStartedBrains();
         NpcPuppets.ProcessLater();
         EconomySync.Update();
+        WorldTiming.End(WorldTiming.Update, started);
     }
 
     private static void FixedUpdate()
     {
         if (!WorldSide.Running)
             return;
+        long started = WorldTiming.Begin();
         ContactClaims.FixedTick();
         BodyStream.FixedTick();
         ReplicaDriver.FixedTick();
         RestWatcher.FixedTick();
         if (!_hosting)
             NpcPoseReceiver.FixedTick();
+        WorldTiming.End(WorldTiming.Fixed, started);
     }
 
     // Late: the frame's spawns are set up by now. Spawns go first so claims and destroys never beat them.
@@ -172,6 +176,7 @@ internal static class WorldSync
     {
         if (!WorldSide.Running)
             return;
+        long started = WorldTiming.Begin();
         if (_hosting)
         {
             NpcPoseSender.LateTick();
@@ -188,6 +193,7 @@ internal static class WorldSync
         OwnershipNet.Flush();
         StateSync.LateTick();
         SpawnSender.FlushDestroys();
+        WorldTiming.End(WorldTiming.Late, started);
     }
 
     private static void Unloading()

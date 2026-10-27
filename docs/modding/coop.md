@@ -167,6 +167,13 @@ Other:
 - A few scene objects with no id of their own are matched by their place in the scene. A mod that changes the scene differently on two machines would break that match.
 - Some worn clothes in older saves aren't kinematic and keep falling below the house forever (a game quirk, fixed for new saves by Unofficial NEET Patches). World stops sending things once they're 1 km below the house.
 
+Cost (two games on one PC, a house with about 550 shared things and 13 NPCs; `WorldApi.Timing`, `perf.frames`):
+
+- World's own work per physics step: about 0.1 ms on the host and 0.07 to 0.09 ms on a client, idle or with 30 items falling; the worst step was 1.2 ms, on the frame 30 items spawned at once. Per rendered frame it's under 0.02 ms.
+- Allocations stay at about 2 KB per frame for the whole game on both sides (the game alone measured about 11 KB per frame in earlier single-player runs), with no garbage collections from World in normal play.
+- The per-tick work only walks what moved lately (plus a quarter of the house per tick to notice things the physics woke up), NPC rigs and marked states; whole-house walks are left for joins, resyncs and reloads. A body knocked into motion by something World doesn't see can start streaming up to 0.2 s late.
+- Network traffic hasn't been measured yet.
+
 ## Testing with two games on one machine
 
 ```sh

@@ -100,6 +100,9 @@ public static class WorldApi
         return text.ToString();
     }
 
+    /// <summary>World's own frame cost since the last call (then starts counting again).</summary>
+    public static string Timing() => WorldTiming.Report();
+
     /// <summary>Client: anything that should be switched off but runs.</summary>
     public static string Leaks() => WorldSide.IsClient ? ClientSwitches.Leaks() : "Not a client.";
 
