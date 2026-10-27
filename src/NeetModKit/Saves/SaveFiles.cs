@@ -6,7 +6,7 @@ using UnityEngine;
 namespace NeetModKit.Saves;
 
 /// <summary>Finds and reads the save file the game is about to load, using the game's own rule.</summary>
-internal static class SaveFiles
+public static class SaveFiles
 {
     /// <summary>SaveLoadHandler.LoadAll picks the most recently written file starting with "neet".</summary>
     public static FileInfo Newest()

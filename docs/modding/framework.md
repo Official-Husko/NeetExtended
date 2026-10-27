@@ -326,6 +326,10 @@ The reader gets a `ContentFile`: `Display` (for messages), `ModId`, `Scope` (reg
 
 Conditions are compiled when a file loads, so every pack loads again when a mod registers or removes a condition or action: an email that checks a phone call's `called` keeps working when the phone mod reloads.
 
+## Store pages
+
+`NeetModKit.Items.StorePages.RefreshPriceLabels()` rewrites the price line of every store button from its item's current `Usable.price`. The game builds the buttons into the scene with the price in their label and maps button i to item i of the store's `pickupBank`; the order confirmation and the charge read the live price anyway, so a mod that changes prices only needs this for the labels. `WithPrice(label, price)` replaces the price in one label.
+
 ## Media folders
 
 `NeetModKit.IO.MediaFolder.Read(folder, extensions, listFile, listKey, problems, out list)` reads a `ModContent` folder of media files (Custom TV Stations' videos, Mixtapes' songs): every file of the given types, sub folders included, as `MediaFile`s (`Path`, `Source`, `Name`, and `Entry`, the file's object from the optional list file). Files the list names come first in its order, the rest follow by file name; list problems (bad JSON, a missing file) go into `problems`. `list` is the whole list file, for anything else in it (the TV's `hide`).
@@ -389,7 +393,7 @@ OpenSaves registers its `.nsav` format this way. It registers the reader for the
 
 ### SaveFiles
 
-Internal. Finds the newest `neet*` file in `Application.persistentDataPath` by write time, which matches the game's rule.
+`SaveFiles.Newest()` is the newest `neet*` file in `Application.persistentDataPath` by write time, the one the game loads (null when there's none, a new game); `ReadNewest()` reads it as JSON in any save format. Checked in a `BeforeLoad` handler, `Newest() == null` tells a new game from a loaded one.
 
 ## Save safety
 
