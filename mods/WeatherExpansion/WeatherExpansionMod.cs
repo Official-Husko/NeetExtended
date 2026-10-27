@@ -4,6 +4,7 @@ using NeetModKit.Features;
 using NeetModKit.Settings;
 using UnityEngine.SceneManagement;
 using WeatherExpansion.Fog;
+using WeatherExpansion.Windows;
 
 namespace WeatherExpansion;
 
@@ -27,6 +28,7 @@ public sealed class WeatherExpansionMod : NeetMod
         ModFeatures.Register(this, new StormFogFeature());
         ModFeatures.Register(this, new LightningGlowFeature());
         ModFeatures.Register(this, new MistBanksFeature());
+        ModFeatures.Register(this, new RainOnGlassFeature());
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 

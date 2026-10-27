@@ -25,4 +25,14 @@ public sealed class WeatherExpansionConfig
     [Range(0f, 2f)]
     [Description("How much mist drifts over the front and back yard while \"Mist in the yards\" is on.")]
     public float Mist = 1f;
+
+    [Label("Rain on the windows")]
+    [Range(0f, 1f)]
+    [Description("How many drops sit on the windows and how often one starts to run, while \"Rain on the windows\" is on.")]
+    public float WindowRain = 0.5f;
+
+    [Label("Window haze")]
+    [Range(0f, 0.4f)]
+    [Description("How fogged up the glass is, so the drops show at night too. 0 is clear glass.")]
+    public float WindowHaze = 0.15f;
 }
