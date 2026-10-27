@@ -26,7 +26,8 @@ Mods and work still to do. Each idea names the game code it builds on (paths in 
 - [ ] **Night Visitors**: new characters for the front door. Nights of visitors already exist (`EncounterSpawner.Encounter`: character, positions, delay, doormat text, `SpawnIfVisitedKnots`). New visitors get their own Ink conversations through the framework's `InkScripts`, and react to offerings in the candy bucket (`Candy_Bucket`, the `OfferingStates` list: sweet, cooked meat, drug and so on) with rewards or consequences.
 - [ ] **Mixtapes**: your own MP3/OGG files as cassettes for the radio (`Cassette.musicClip`, `Radio`), sold in the store or found in the house. Same setup as Custom TV Stations: files in any mod's folder, through `ModContent`.
 - [ ] **Your Own Pictures**: your images on picture frames, posters and shirts. The game already loads PNG/JPG files from `StreamingAssets/CustomDesigns` (`CustomImageLoader`).
-- [ ] **Email Expansion**: new emails from JSON or Ink, like phone calls, that can pay money, deliver items or set flags. Emails run on their own Ink story (`EmailHandler`), so `InkScripts` needs to support stories other than the dialogue one.
+- [x] **Email Expansion**: new emails from JSON or Ink, like phone calls, that can pay money, deliver items or set flags. Emails run on their own Ink story (`EmailHandler`), so `InkScripts` needs to support stories other than the dialogue one.
+- [ ] **Email Expansion**: send the game's unused emails (`HateYou` after trading soul for a clone, `LoveYou`, `TaxReminder` when taxes are due). `TaxReminder` uses plain line breaks, so the game's reader shows only its first line; read it with the mod's reader.
 - [ ] **Trick-or-Treat Night**: kids ring the doorbell; give candy or get the house egged and TP'd (paint splats). The pieces are in the code (`BrainTrickOrTreater`, `Candy_Bucket`, candy and pumpkin mask items). First check where the demo uses them.
 
 ## Gameplay and rules

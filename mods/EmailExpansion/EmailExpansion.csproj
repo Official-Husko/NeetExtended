@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>EmailExpansion</RootNamespace>
+    <Description>New emails for the computer's inbox, loaded from JSON or Ink files, with replies.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NeetLoader/NeetLoader.csproj" />
+    <ProjectReference Include="../../src/NeetModKit/NeetModKit.csproj" />
+  </ItemGroup>
+
+  <!-- Email packs ship in the mod folder so they can be edited in place. -->
+  <ItemGroup>
+    <None Include="email/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

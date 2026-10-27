@@ -23,6 +23,7 @@ Press **F1**, or pick **MODS** in the pause menu (where the feedback form used t
 | **Settings** | Every mod's settings in one place. |
 | **Errors** | Anything that went wrong this session, newest first: red for errors, amber for problems a mod caught and handled. **COPY REPORT** copies it for a bug report; it's also saved as `NeetLoader/logs/errors.log`. |
 | **Phone** | Every new phone call, with a button to make it ring now (Phone Expansion). |
+| **Email** | Every new email, with a button to send it now (Email Expansion). |
 | **TV** | Your TV stations (Custom TV Stations). |
 
 ## Unofficial NEET Patches
@@ -102,6 +103,16 @@ About 50 calls ring in by themselves, in place of the game's own prank calls: te
 - **Caller ID**: the phone's screen shows who's calling; the game's prank calls show UNKNOWN.
 
 Modders can add calls as JSON or Ink files in any mod's `phone` folder.
+
+## Email Expansion
+
+New emails in the computer's inbox (Rail Mail), and you can answer them: replies are buttons under the email, and what you pick changes what happens next. It comes with Rail Mail's welcome email (free money, maybe) and mom sending snack money.
+
+Emails can pay you, charge you, send stuff to the front door, cut the power, send someone over or make the phone ring. Some only come after another email, a reply, a phone call, a store order, or the morning after you slept.
+
+- **New emails arrive**: new emails show up every few minutes while you play, after store orders, when you get home and when you wake up. How often is in Settings (**Fewest/Most minutes between emails**, 4 to 10 by default).
+
+Modders can add emails as JSON or Ink files in any mod's `email` folder.
 
 ## Custom TV Stations
 

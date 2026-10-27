@@ -10,6 +10,7 @@
 | [UI and the mod menu](modding/ui-and-menu.md) | The UI toolkit, themes, menu pages, settings pages |
 | [Computer apps](modding/computer-apps.md) | The in-game computer's apps, URLs, adding new apps and games |
 | [Phone calls](modding/phone.md) | The Phone Expansion mod: call files, conditions, actions, Ink calls, the C# API |
+| [Emails](modding/email.md) | The Email Expansion mod: email files, replies, triggers, Ink emails, the C# API |
 | [Writing style](modding/writing-style.md) | Writing calls, emails and other game text in NEET's voice |
 | [TV stations](modding/tv-stations.md) | The Custom TV Stations mod: video files, stations.json, the remote |
 | [Save format](modding/save-format.md) | The `.nsav` format and the Open Saves mod |

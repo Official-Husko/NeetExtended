@@ -1,0 +1,8 @@
+// Gives the hand-written Ink email in from-mom.ink a subject and says when it arrives.
+{
+  "id": "from-mom",
+  "subject": "money on ur card",
+  "ink": "EmailExpansion_FromMom",
+  // Mixed in with the other random emails, at most every 45 minutes of play.
+  "send": { "trigger": "random", "once": false, "cooldown": 45 }
+}

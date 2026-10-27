@@ -1,0 +1,70 @@
+// An example email file, and two working emails: "Welcom to Rail Mail!!" arrives soon after
+// you get home, and its follow-up the morning after if you took the money.
+//
+// Every .json and .ink file in a mod's "email" folder is loaded, and loaded again as soon as it's
+// saved. Comments like these are fine. A file holds one email, a list, or { "emails": [...] }.
+// The full reference is in docs/modding/email.md.
+{
+  "emails": [
+    {
+      // Unique within this mod. Other emails, calls and conditions can refer to it as "welcome".
+      "id": "welcome",
+      // What the inbox shows.
+      "subject": "Welcom to Rail Mail!!",
+      // Arrives by itself: soon after you get home, once per save (emails only come once unless
+      // "once": false). Leave "send" out for an email only something else sends.
+      "send": { "trigger": "arrive", "delay": 30 },
+
+      // What it says, top to bottom. Every line is a paragraph; the game's rich text works.
+      "body": [
+        "<size=150%>WELCOM VALUED CUSTOMER<size=100%>",
+        "Thank u for choose Rail Mail, the #1 email of the house.",
+        "As welcome gift we are giving u free money. Is real money.",
+
+        // Choices are replies. Each one shows as a button under the email; the email goes on
+        // with what follows the reply. Actions run once, the first time the email gets there.
+        { "choices": [
+          {
+            "text": "Give me the money.",
+            "say": [
+              "Ok. Here is 20$. Dont spend on stupid things.",
+              { "do": "money", "amount": 20 },
+              // Flags are saved, and shared with phone calls and every other mod.
+              { "do": "flag", "name": "railmail_greedy" }
+            ]
+          },
+          {
+            "text": "This is a scam.",
+            "say": [
+              "How dare u. We are wounded.",
+              "For emotional damage we send u a candy. To ur door.",
+              { "do": "deliver", "item": "Candy_Bar", "after": 20 }
+            ]
+          },
+          { "text": "Unsubscribe.", "say": "<size=60%>lol no" }
+        ] },
+
+        "Rail Mail. We are in ur house."
+      ]
+    },
+    {
+      "id": "welcome-followup",
+      "subject": "RE: ur free money",
+      // The morning after you took the money: "wake" is when you wake up from sleeping.
+      "send": { "trigger": "wake", "when": { "flag": "railmail_greedy" } },
+      "body": [
+        "Hi its Rail Mail again.",
+        "Accounting say the free money was not free. U owe us 20$ plus 400$ late fee.",
+        { "choices": [
+          {
+            "text": "Fine, take it.",
+            // Only offered while this holds.
+            "if": { "money": 20 },
+            "say": [ { "do": "money", "amount": -20 }, "Thank u. The late fee is forgiven because we are good people." ]
+          },
+          { "text": "No.", "say": [ "<size=150%>OK<size=100%>", "We will remember this." ] }
+        ] }
+      ]
+    }
+  ]
+}
