@@ -47,7 +47,7 @@ Handshake: the client connects and sends Hello (protocol, version, player id, na
 1. The host takes a snapshot with `NeetModKit.Saves.SaveCapture.Take()`: the game's own save data (mod data included) and the paint, without saving (about 200 ms and 130 KB on a typical house).
 2. `SnapshotSanitizer` gives the joiner a body of their own: the `Player` entry keeps its place in the save but loses its sub-saves, so the game starts it like a new player (full needs, empty hands, its default clothes), in front of the host. The host's open conversation is closed.
 3. The client holds `SaveLock` (no `SaveAll`, no "reset save"), hands the snapshot to `SaveSource.Use` and loads `NEET_House` through the `Loading` scene. The game's own `LoadAll` reads the snapshot instead of the save folder.
-4. On `HouseReady` the client sends Ready.
+4. On `HouseReady` the client sends Ready. Paint made while they loaded follows right after (see Paint).
 
 Returning players: every 10 seconds a client sends its body as the game would save it (`BrainPlayer.Save()`: position, stats, status effects, hands and clothes). The host keeps the latest one per player id in its own save (`BodyBook`, mod data), and the next join puts it into the joiner's `Player` entry instead of a fresh body (`BodyRestore`), with empty hands, and with the default outfit if a worn item is gone (the game's load stops on a missing item id).
 
@@ -58,6 +58,17 @@ Returning players: every 10 seconds a client sends its body as the game would sa
 - Arms: the player model also carries the first-person arms (`NeetHandL`/`NeetHandR`: a jointed chain of bones from the shoulder to a hand end, skinned to the arm mesh, which the player's own scripts pull with forces). By default a body's copy drops their joints, bodies and colliders and hides them, so it shows the body mesh's own arms. With the experimental setting **Physics hands on other players**, the copy keeps the chains (joined to its own body, without colliders, so they can't push anything in the house) and `PuppetHands` moves each hand end to where that player's hand is; the pose carries both hand ends relative to the body and whether each hand shows.
 - `AppearanceSync` sends each player's look when it changes (clothes by item name, the outfit's UV set, the fat, body type and muscle blend shapes). Bodies get their own mesh copy, because the game swaps clothing UVs on the shared mesh.
 - **Going down** (`Downed`): in co-op a player whose health runs out goes down instead of dying (a prefix on `DieAccessor` for this game's own player). They fall like a slip into the death pose (the animator's `isDead`) and can't get up, health stays at 1, they take no damage, and their eyes stay open, so they see the house rather than the death screen; a line on screen counts down 15 seconds. Anyone who uses food while looking at them (a prefix on `Food.Use`, a sphere cast from the camera) feeds it to them instead: the food is used up and they stand up with 30 health. Otherwise, after 15 seconds the game's own death and respawn happen. Each game tells the others when its player goes down or gets up; the name over a downed body says so, and `Downed.IsDown(slot)` lets enemies leave them alone.
+
+### Paint
+
+Blood, poop, piss, dirt, water, scorch marks, footprints and cleaner all go through `PaintTarget.PaintSplat`, and that's where `World/Painting` shares them: as splats, not pictures.
+
+- The game that draws a splat sends it: the surface's save id (`PaintTarget.saveId`, set in the scene, the same id the join snapshot's pictures use), the brush's channel, texture (by name) and atlas cell, and the splat's box relative to the surface (so a splat on a door lands on the door wherever it is), packed into 20 bytes (`PaintCodec`). Splats go out in batches every 0.1 s on the reliable State channel (paint stays, so a lost splat would never be fixed); clients send to the host, which passes them on.
+- The others queue the same splat on the same surface (`PaintApplier`), skipping `PaintObject`, so their copy has the sender's exact rotation, size and atlas cell, no drip effect of its own (the sender's drips paint and are sent like any splat), and nothing is sent back. A surface takes at most 100 waiting splats; what a busy surface can't take yet waits (`SurfaceQueues`).
+- Who paints is who simulates the cause: the player's own body (bleeding, peeing, footprints), the host's NPCs and fires, whoever simulates a thrown or held item. Exceptions: a client's copy of a room fire doesn't scorch (the host's scorch arrives), and the taps (sinks, the bath) run their own water in every game, so their splats aren't sent (`PaintSources`).
+- A room fire scorches under every burning sphere on every physics step. Those splats are merged before sending: two per spot and second (`PaintRepeats`). Painting a channel raises it to the splat's value rather than adding up, so repeats add little. Splats that can't reach their surface (a footprint's sphere cast goes on through the floors below) aren't sent.
+- The host sends when a surface's water dries (clients have the game's drying off), and keeps the paint made while someone joins (up to 1 MB) for when they're in (`PaintCatchUp`).
+- `Coop.World.Painting.PaintTestApi` (counters, `Trace` of who paints, `Drop` the game's blood or water blobs, `Splat`, `Dry`, `View`) and `PaintProbes` (`Coverage`, `Info`, `Unbound`) are the test hooks.
 
 ### Steam transport
 
@@ -121,9 +132,8 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
   - if a piece they wore isn't in the house any more, they get the default outfit;
   - bodies are kept per install (a player id in the Co-op config), so the same person on another PC gets a new body;
   - a body is only kept if the host saves after the player was there.
-- Joining costs the host a hitch of about 200 ms per joiner (the snapshot), plus the time to send about 130 KB.
+- Joining costs the host a hitch of about 200 ms per joiner (the snapshot), plus the time to send about 130 KB. Both grow with the paint in the house (one picture per painted surface): with 467 painted surfaces it was 1.7 s and 2.5 MB.
 - If the host is in a conversation when someone joins, the joiner's copy of the story may start inside it (only the dialogue box is closed). Untested.
-- Paint is sent at join only; paint made afterwards isn't shared. (world, M3)
 - Things that come from local files (custom photos, custom cassettes from the cassette site, the player's face) show blank or default for the others.
 
 ### Players
@@ -166,7 +176,7 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 
 ### World
 
-Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, the radio, taps, stove knobs, flashlights, BBQ lighters, cardboard boxes (opened, taped, what's frozen inside), room fires, the cop van, and on the computer the money, store orders, apps, stock market, tax bills, the anime card game and the inbox. The lines below are what isn't, or only partly.
+Shared today: items and NPCs appearing and going away, where every item, door and NPC is (and whether it's shown), who holds what, door locks, light switches, the fuse box (breakers, which fuse sits in which slot, how charged each fuse is), smoke detector batteries, the TV, the radio, taps, stove knobs, flashlights, BBQ lighters, cardboard boxes (opened, taped, what's frozen inside), room fires, paint (blood, dirt, water, scorch, footprints, cleaning, and water drying), the cop van, and on the computer the money, store orders, apps, stock market, tax bills, the anime card game and the inbox. The lines below are what isn't, or only partly.
 
 State of things:
 
@@ -210,6 +220,14 @@ Money and the computer:
 - A custom photo or tape from the custom shops is unpacked by whoever opens its box, wherever it was ordered; the item keeps the file's path, and each game loads the picture or song from that path on its own machine.
 - Card game experience and crystals come from the host twice a second, so the bars move in small steps on clients.
 
+Paint:
+
+- A room fire's scorch is merged before it's sent (two splats per spot and second), so a client's scorch covers a few percent less than the host's (2 to 9% measured), and a growing fire sends about 8 KB/s to each client.
+- Taps (sinks, the bath) run their own water in every game, so each game paints its own wet spots under them; they differ a little.
+- Paint made during a hot reload of Co-op (the batch not yet sent, about 0.1 s) is lost, and so is paint made while someone joins past the first 1 MB.
+- Splats travel rounded (to a millimetre and about a sixth of a degree), so the games agree to within about 1% of the painted area per surface; a splat's edge can be a texel off.
+- Paint already in the house when someone joins only shows for them with Unofficial NEET Patches and its `LoadedPaint` fix on while their game loads the house: without it the game sets those surfaces up before they're ready and draws nothing on them (see [known-bugs.md](../game/known-bugs.md)).
+
 Other:
 
 - The sun and moon turn a fixed step per frame, so they'd drift apart between games at different frame rates: clients ease toward the host's twice a second. Thunder strikes when the host's does (`World/Ambience/SkySync`). A client's first strike of a session can still be its own, since its thunder was scheduled before co-op started.
@@ -222,6 +240,7 @@ Cost (two games on one PC, a house with about 550 shared things and 13 NPCs; `Wo
 - World's own work per physics step: about 0.1 ms on the host and 0.07 to 0.09 ms on a client, idle or with 30 items falling; the worst step was 1.2 ms, on the frame 30 items spawned at once. Per rendered frame it's under 0.02 ms.
 - Allocations stay at about 2 KB per frame for the whole game on both sides (the game alone measured about 11 KB per frame in earlier single-player runs), with no garbage collections from World in normal play.
 - The per-tick work only walks what moved lately (plus a quarter of the house per tick to notice things the physics woke up), NPC rigs and marked states; whole-house walks are left for joins, resyncs and reloads. A body knocked into motion by something World doesn't see can start streaming up to 0.2 s late.
+- Paint: about 20 bytes a splat. Eight blobs of blood landing make about 150 to 300 splats (4 to 7 KB); someone walking with bloody feet about 10 a second; a room fire, merged, about 8 KB/s after half a minute. Sending costs a matrix inverse and a few lookups per splat; a client's copy allocates the game's own `Paint` object per splat.
 - Network traffic, whole mod (`CoopApi.Traffic`): idle, about 6 KB/s from the host to each client and 1 KB/s back (player and NPC poses, stock ticks, the card game). With 30 bricks dropped from 10 m, about 9 KB/s from the host over the 4.5 s they fell and settled.
 
 ## Testing with two games on one machine

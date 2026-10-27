@@ -203,13 +203,14 @@ Play the house together, over the internet or your own network. The host's house
 - **Your own body comes back**: the host's save keeps your needs, clothes and where you stood, so next time you join you pick up where you left off.
 - **Down, not dead**: when your health runs out you go down instead of dying. For 15 seconds anyone can get you back up by using food on you (look at you, use it); otherwise you die and respawn as usual. You can carry a downed player: look at them with an empty hand and press that hand's button to sling them over your shoulder, press it again to put them down.
 - **Enemies pick the nearest player**: the cops, the hostile visitor, house spiders and the skeleton parasite go after whoever is closest and still standing, and leave downed players alone.
+- **Paint is shared**: blood, poop, piss, water, scorch marks, footprints and cleaning show up for everyone, whoever made the mess.
 - **Talking and the phones**: everyone can talk to the characters and use both phones. The host's game runs the conversation, so whatever it gives, costs or sets off happens once, and what it checks or does to you (your needs, what you're holding, knocking you out) is about whoever is talking. Only the one talking sees the lines, and a character talks to one player at a time: anyone else gets a busy line.
 - **The hitman line**: in co-op, call 448-626. Pay $69, pick a player (or yourself), and about a minute later the van comes: its agents go straight for that player and leave once they're down. One job at a time, then the line waits a while before the next (setting **Hitman line cooldown**, 10 minutes by default).
 - **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and the mod and cheat menus don't pause the game. Going back to the main menu leaves; when the host leaves, the game ends for everyone.
 - Everyone needs the host's mods installed, in the same versions. Switched on or not doesn't matter: a joining game loads what the host runs (and sets aside what the host doesn't) until it leaves. Mods that only change your own game (Cheat Menu, Performance Fixes, Open Saves and the like) can differ.
 - **The host decides the mods**: the host's mods, their switches and the settings that change the house (prices, chances, timings) count for everyone. Your mod menu shows them locked while you're in someone's game, and you get your own setup back when you leave.
 - Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown** (the host's counts), and **Physics hands on other players** (experimental: other players get the floppy first-person arms you see on yourself, reaching for what they hold, instead of their body's plain arms).
-- Not everything is shared yet (fire, paint made after you join, and more): see [Known limitations](docs/modding/coop.md#known-limitations).
+- Not everything is shared yet: see [Known limitations](docs/modding/coop.md#known-limitations).
 
 ## Card Expansion
 

@@ -7,6 +7,7 @@ using Coop.World.Manifest;
 using Coop.World.Npcs;
 using Coop.World.Objects;
 using Coop.World.Ownership;
+using Coop.World.Painting;
 using Coop.World.Patches;
 using Coop.World.Simulation;
 using Coop.World.Spawning;
@@ -44,6 +45,7 @@ internal static class WorldSync
         Forwarder.Init();
         HealthReport.Init();
         TalkSync.Init();
+        PaintSync.Init();
         RemoteRules.Init(mod);
 
         CoopSession.Started += () => WorldPatches.Apply(CoopSession.IsClient);
@@ -86,6 +88,7 @@ internal static class WorldSync
         _hosting = CoopSession.IsHost;
         SceneScan.Rebuild();
         StateTrackers.Rebuild();
+        PaintSync.Start();
         int carried = resumed ? OwnershipParking.Restore() : 0;
         if (!resumed)
             OwnershipParking.Forget();
@@ -151,6 +154,7 @@ internal static class WorldSync
         CopVanSync.Clear();
         Ambience.SkySync.Clear();
         Ambience.ToiletSync.Clear();
+        PaintSync.Clear();
         RemoteNeeds.Clear();
         HealthReport.Clear();
         SpawnSender.Clear();
@@ -219,6 +223,7 @@ internal static class WorldSync
         EconomySync.AfterSpawns();
         OwnershipNet.Flush();
         StateSync.LateTick();
+        PaintSync.LateTick();
         SpawnSender.FlushDestroys();
         WorldTiming.End(WorldTiming.Late, started);
     }

@@ -64,6 +64,8 @@ public static class MessageIds
     public const ushort WorldPhones = 131;
     public const ushort WorldSoulTrade = 132;
     public const ushort WorldStoryFunction = 133;
+    public const ushort WorldPaint = 134;
+    public const ushort WorldPaintDry = 135;
     public const ushort WorldSky = 136;
     public const ushort WorldToilet = 137;
 }
