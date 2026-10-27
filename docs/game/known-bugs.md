@@ -294,6 +294,16 @@ The same field is compared in three more places:
 
 **Reproduce:** wear a mask, then die (`player.set` health 0 with god mode off): with `MaskDeath` off the death stops with the error above; with it on the body dies and respawns as usual. Found in co-op testing, where a downed player bled out wearing one.
 
+## Skeletons ruin every pair of black pants
+
+**What happens:** when a skeleton has to crap (its bladder runs out after eating), the log shows an `IndexOutOfRangeException` from `Player_Abilities.Shit`, and from then on every pair of black pants that spawns (store orders, item spawns) is dirty: the shitty material, sticky to the hand, and painting what it touches. It lasts until the game restarts.
+
+**Cause:** `Shit` dirties whatever is in `clothings[1]` and copies its material into the body's second material slot (`Player_Abilities.cs:1564-1569`). Skeletons have `noClothUVs` set: their body (`SkeletonNEETNPC`) has a single material, and their `clothings` hold the outfit prefabs themselves (Shoes_Gray, Pants_Black, Shirt_Red), not worn copies. So `Wearable.MakeDirty` runs on the Pants_Black prefab, and `materials[1]` then throws. Every other clothes path (`PutOnClothes`, `RemoveClothing`, `Player_Abilities.Start`, the pee in `FluidGun`) checks `noClothUVs`; `Shit` doesn't.
+
+**Fix:** a prefix hides `clothings[1]` for the call when the body has `noClothUVs`, and a finalizer puts it back. The game then takes its own no-pants path and drops a turd behind the skeleton.
+
+**Reproduce:** `obj.call` `PlayerEat` with `[260]` on a `SkeletonCorpseDad`'s `Player_Abilities`. With `SkeletonPants` off: the error above, the Pants_Black prefab's `Wearable.dirty` is true, and `items.spawn Pants_Black` comes out dirty. With it on: a turd, no error, clean pants. Found in co-op testing.
+
 ## Not bugs
 
 - `SequenceManager`'s "Toggle" sets an object to the state it's already in (`SequenceManager.cs:137`), and "SpawnBrainAt" reads the rotation from the position (`:169`). Toggle is never used, and the one SpawnBrainAt in the story wants -720 degrees (no turn), so neither shows in the demo.

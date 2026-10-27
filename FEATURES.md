@@ -58,6 +58,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Spawners keep working after loading**: after loading a save, loose change, dust, sink water, toilet flushes and blood and paint sprays stopped for the rest of the session. They start again two seconds after the load.
 - **Worn clothes stay put**: clothes you wore when you saved fell through the world after loading.
 - **Dying with a mask on works**: anyone who died wearing a mask got stuck half dead and couldn't die again.
+- **Skeletons don't ruin the black pants**: a skeleton that had to crap threw an error and left every pair of black pants you bought or found afterwards dirty and sticky, until you restarted the game.
 
 ## Performance Fixes (experimental)
 
