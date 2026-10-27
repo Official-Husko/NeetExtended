@@ -36,6 +36,8 @@ internal static class StateSync
 
     public static void Clear()
     {
+        Types.ItemMarks.Clear();
+        Types.SinkState.Clear();
         Changed.Clear();
         Marked.Clear();
         _cursor = 0;

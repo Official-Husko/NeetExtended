@@ -1,5 +1,6 @@
 using Coop.World.Objects;
 using Coop.World.State;
+using Coop.World.State.Types;
 using HarmonyLib;
 using UnityEngine;
 
@@ -44,6 +45,42 @@ internal static class ItemStatePatches
     [HarmonyPatch(typeof(VacuumCleaner), "OnTriggerEnter")]
     private static bool VacuumSucks(VacuumCleaner __instance) => OwnerGatePatches.Simulates(__instance.gameObject);
 
+    // Butter and the like smear onto food where the butter is simulated; the food's values and tint
+    // follow as state. The food is noted first, the game then does it.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(FoodValueContactIncreaser), "OnCollisionEnter")]
+    private static bool Smears(FoodValueContactIncreaser __instance, Collision other)
+    {
+        if (!OwnerGatePatches.Simulates(__instance.gameObject))
+            return false;
+        var food = other.collider.GetComponent<Food>();
+        if (food != null && other.collider.GetComponent<FoodValueContactIncreaser>() == null)
+            ItemMarks.NoteTopping(food, __instance.lerpColor);
+        return true;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FoodValueContactIncreaser), "OnCollisionEnter")]
+    private static void Smeared(Collision other)
+    {
+        var food = other.collider != null ? other.collider.GetComponent<Food>() : null;
+        if (food != null)
+            StateSync.MarkDirty(food);
+    }
+
+    // The dust ball's own Start rolls a level at random.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(DustBall), "Start")]
+    private static void DustStarted(DustBall __instance) => DustBallState.Restore(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(DustBall), nameof(DustBall.Level), MethodType.Setter)]
+    private static void DustGrew(DustBall __instance) => StateSync.MarkDirty(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Usable), "OnDestroy")]
+    private static void ItemGone(Usable __instance) => ItemMarks.Forget(__instance);
+
     // Hints: the state changed just now.
 
     [HarmonyPostfix]
@@ -56,7 +93,11 @@ internal static class ItemStatePatches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Usable), nameof(Usable.Burn))]
-    private static void Burnt(Usable __instance) => StateSync.MarkDirty(__instance);
+    private static void Burnt(Usable __instance)
+    {
+        ItemMarks.NoteBurnt(__instance);
+        StateSync.MarkDirty(__instance);
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LiquidContainer), nameof(LiquidContainer.Fill))]
@@ -69,6 +110,16 @@ internal static class ItemStatePatches
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LiquidContainer), nameof(LiquidContainer.Drink))]
     private static void Sipped(LiquidContainer __instance) => StateSync.MarkDirty(__instance);
+
+    // A glass dipped in a bath or sink lowers its water: the tap's state carries the new level.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WaterVolume), "OnTriggerEnter")]
+    private static void Dipped(WaterVolume __instance)
+    {
+        var tap = SinkState.TapOf(__instance);
+        if (tap != null)
+            StateSync.MarkDirty(tap);
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Soaker), nameof(Soaker.Soak))]

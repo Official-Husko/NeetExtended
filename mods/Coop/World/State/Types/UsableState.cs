@@ -11,10 +11,14 @@ namespace Coop.World.State.Types;
 /// extinguishers go off, containers spill) in that game; the others skip those, what they leave
 /// behind arrives as spawns and destroys. Watched through hints, not sweeps.
 ///
-/// Layout: damage in 32nds (byte), broken (bool). All zero is undamaged.
+/// Layout: damage in 32nds (byte), flags (bit 0 broken, bit 1 burnt look; an item cut while burnt
+/// hands the look to its pieces without breaking them). All zero is undamaged.
 /// </summary>
 internal sealed class UsableState : StateType<Usable>
 {
+    private const byte Broken = 1;
+    private const byte Burnt = 2;
+
     public override bool OnItems => true;
 
     public override bool Swept => false;
@@ -26,17 +30,24 @@ internal sealed class UsableState : StateType<Usable>
     protected override void Write(Usable item, NetDataWriter w)
     {
         w.Put((byte)Mathf.Clamp(Mathf.RoundToInt(item.damage * 32f), 0, 255));
-        w.Put(item.broken);
+        byte flags = 0;
+        if (item.broken)
+            flags |= Broken;
+        if (ItemMarks.IsBurnt(item))
+            flags |= Burnt;
+        w.Put(flags);
     }
 
     protected override void Apply(Usable item, NetDataReader r)
     {
         float damage = r.GetByte() / 32f;
-        bool broken = r.GetBool();
+        byte flags = r.GetByte();
         if (!item.broken)
             item.damage = damage;
-        if (broken && !item.broken)
+        if ((flags & Burnt) != 0 && !ItemMarks.IsBurnt(item))
             BurnQuietly(item);
+        if ((flags & Broken) != 0)
+            item.broken = true;
     }
 
     // The game's own burn look (burnt material, burnt flag), minus its reactions.
@@ -55,6 +66,5 @@ internal sealed class UsableState : StateType<Usable>
             item.OnBreak = onBreak;
             item.destroyOnBurn = destroys;
         }
-        item.broken = true;
     }
 }

@@ -1,4 +1,5 @@
 using LiteNetLib.Utils;
+using UnityEngine;
 
 namespace Coop.World.State.Types;
 
@@ -30,15 +31,38 @@ internal sealed class LightSwitchState : StateType<LightSwitch>
     }
 }
 
-/// <summary>A sink or bath tap. Toggle turns the stream, sound and the tap itself.</summary>
+/// <summary>
+/// A sink or bath tap: running or not, and how high the water stands. Every game fills and drains
+/// the water itself from the tap, but a glass dipped in only lowers it where the glass is simulated,
+/// so the level is sent too (in 32nds, which is a change about every second while it fills).
+/// Toggle turns the stream, sound and the tap itself.
+///
+/// Layout: pouring (bool), level (byte; the water goes from -0.5 to 1.1, sent from 0 to 51).
+/// </summary>
 internal sealed class SinkState : StateType<SinkFaucet>
 {
-    protected override void Write(SinkFaucet sink, NetDataWriter w) => w.Put(sink.pouring);
+    // A tap's water sits elsewhere in the scene than the tap (the bath's lever is not in the bath).
+    private static readonly System.Collections.Generic.Dictionary<int, SinkFaucet> Taps = new System.Collections.Generic.Dictionary<int, SinkFaucet>();
+
+    public static void Clear() => Taps.Clear();
+
+    /// <summary>The tap that fills this water, once its state has been read (every tap is when sync starts).</summary>
+    public static SinkFaucet TapOf(WaterVolume water) => Taps.TryGetValue(water.GetInstanceID(), out var tap) ? tap : null;
+
+    protected override void Write(SinkFaucet sink, NetDataWriter w)
+    {
+        Taps[sink.waterVolume.GetInstanceID()] = sink;
+        w.Put(sink.pouring);
+        w.Put((byte)Mathf.Clamp(Mathf.RoundToInt((sink.waterVolume.Volume + 0.5f) * 32f), 0, 51));
+    }
 
     protected override void Apply(SinkFaucet sink, NetDataReader r)
     {
         if (sink.pouring != r.GetBool())
             sink.Toggle();
+        float level = r.GetByte() / 32f - 0.5f;
+        if (Mathf.Abs(sink.waterVolume.Volume - level) > 1.5f / 32f)
+            sink.waterVolume.Volume = level;
     }
 }
 

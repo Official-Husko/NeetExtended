@@ -37,6 +37,7 @@ internal static class StateTypes
         new MagazineState(),
         new GunState(),
         new WearableState(),
+        new DustBallState(),
     };
 
     static StateTypes()

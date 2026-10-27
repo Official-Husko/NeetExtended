@@ -11,8 +11,11 @@ namespace Coop.World.State.Types;
 /// reached either end. Foods that turn into another object when cooked or spoiled (a steak, a
 /// sandwich) don't get that last step here: the other object arrives as a spawn.
 ///
-/// Layout: cooking (ushort, half seconds), flags (bit 0 cooked, bit 1 spoiled), spoil step (byte).
-/// All zero is a fresh food.
+/// It also carries what butter and the like did to it: its two food values and how often (and with
+/// what colour) it was smeared, which tints it.
+///
+/// Layout: cooking (ushort, half seconds), flags (bit 0 cooked, bit 1 spoiled), spoil step (byte),
+/// raw and cooked food value (floats), smears (byte) and their colour (3 bytes).
 /// </summary>
 internal sealed class FoodState : StateType<Food>
 {
@@ -35,6 +38,13 @@ internal sealed class FoodState : StateType<Food>
             flags |= Spoiled;
         w.Put(flags);
         w.Put((byte)Mathf.Clamp(Mathf.FloorToInt(food.spoiledMeter / SpoilStep), 0, SpoilSteps));
+        w.Put(food.foodValueRaw);
+        w.Put(food.foodValueCooked);
+        w.Put(ItemMarks.ToppingCount(food));
+        var colour = ItemMarks.ToppingColour(food);
+        w.Put(colour.r);
+        w.Put(colour.g);
+        w.Put(colour.b);
     }
 
     protected override void Apply(Food food, NetDataReader r)
@@ -45,6 +55,27 @@ internal sealed class FoodState : StateType<Food>
 
         ApplyCooking(food, meter, (flags & Cooked) != 0);
         ApplySpoiling(food, spoil, (flags & Spoiled) != 0);
+        food.foodValueRaw = r.GetFloat();
+        food.foodValueCooked = r.GetFloat();
+        ApplySmears(food, r.GetByte(), new Color32(r.GetByte(), r.GetByte(), r.GetByte(), 255));
+    }
+
+    // Each smear tints the food a bit more towards the colour (the game's own 40 % step).
+    private static void ApplySmears(Food food, byte count, Color32 colour)
+    {
+        byte have = ItemMarks.ToppingCount(food);
+        if (count <= have)
+            return;
+        var renderer = food.GetComponentInChildren<Renderer>();
+        for (int n = have; n < count && renderer != null; n++)
+        {
+            foreach (var material in renderer.materials)
+            {
+                if (material.HasProperty("_Color"))
+                    material.SetColor("_Color", Color.Lerp(material.GetColor("_Color"), colour, 0.4f));
+            }
+        }
+        ItemMarks.SetTopping(food, count, colour);
     }
 
     private static void ApplyCooking(Food food, float meter, bool cooked)

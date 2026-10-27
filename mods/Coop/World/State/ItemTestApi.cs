@@ -168,6 +168,43 @@ public static class ItemTestApi
         return gun.mag != null ? "loaded" : "empty";
     }
 
+    /// <summary>Every prefab with a food that turns into another object (cooked, spoiled, soaked).</summary>
+    public static string Swaps()
+    {
+        var text = new StringBuilder();
+        foreach (var pair in PickupBank.pickupsDict)
+        {
+            var food = pair.Value.obj != null ? pair.Value.obj.GetComponent<Food>() : null;
+            if (food == null || (food.swapOnCookedObj == null && food.swapOnSpoil == null && food.swapOnWaterObj == null))
+                continue;
+            text.Append(pair.Key).Append(" cook ").Append(food.timeToCook)
+                .Append(" -> ").Append(food.swapOnCookedObj != null ? food.swapOnCookedObj.name : "-")
+                .Append(", spoil -> ").Append(food.swapOnSpoil != null ? food.swapOnSpoil.name : "-")
+                .Append(", wet -> ").Append(food.swapOnWaterObj != null ? food.swapOnWaterObj.name : "-").Append('\n');
+        }
+        return text.ToString();
+    }
+
+    /// <summary>Cuts an item that can be cut (bread, meat), like a knife does.</summary>
+    public static string Cut(int id)
+    {
+        var item = Part<Sectionable>(id);
+        if (item == null)
+            return "Nothing to cut.";
+        item.Cut();
+        return "cut";
+    }
+
+    public static string Level(int id, int level = 0)
+    {
+        var ball = Part<DustBall>(id);
+        if (ball == null)
+            return "No dust ball.";
+        if (level > 0)
+            ball.Level = level;
+        return $"level {ball.Level}";
+    }
+
     public static string Cash(int id, int amount)
     {
         var bank = Part<Piggybank>(id);

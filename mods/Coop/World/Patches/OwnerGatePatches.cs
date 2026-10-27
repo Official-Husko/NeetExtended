@@ -86,12 +86,22 @@ internal static class OwnerGatePatches
     [HarmonyPatch(typeof(SmokeDetector), "OnCollisionEnter")]
     private static bool DetectorTakesFuse(Collision other) => SimulatesBodyOf(other.collider);
 
-    // Two dust balls merge (one swallows the other) only where both are simulated; a thrown ball takes
-    // over the one it hits first, so they still merge between players.
+    // Two dust balls merge (one swallows the other) once: where both are simulated, or, when another
+    // game simulates the other ball, in the game whose ball has the lower id (both games see the
+    // touch; the other one's ball sits out). The bigger ball's level and the swallowed ball's
+    // destroy reach everyone.
     [HarmonyPrefix]
     [HarmonyPatch(typeof(DustBall), "OnCollisionEnter")]
-    private static bool DustMerges(DustBall __instance, Collision other) =>
-        Simulates(__instance.gameObject) && Simulates(other.gameObject);
+    private static bool DustMerges(DustBall __instance, Collision other)
+    {
+        if (!Simulates(__instance.gameObject))
+            return false;
+        if (Simulates(other.gameObject))
+            return true;
+        var mine = NetObjects.Find(__instance.gameObject);
+        var theirs = NetObjects.Find(other.gameObject);
+        return mine != null && theirs != null && mine.Ref.Key < theirs.Ref.Key;
+    }
 
     // A gib dropped in the cat's bowl becomes food; a coin dropped in the piggy bank becomes savings.
     [HarmonyPrefix]
