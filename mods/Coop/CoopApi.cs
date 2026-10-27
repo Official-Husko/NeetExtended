@@ -77,6 +77,78 @@ public static class CoopApi
         return rate + $"total {sent / 1024} KB out ({stats.PacketsSent} packets), {received / 1024} KB in ({stats.PacketsReceived} packets).";
     }
 
+    /// <summary>Logs this game's hand and use presses with what they'd hit (tests).</summary>
+    public static string ProbeInput(bool on)
+    {
+        Testing.InputProbe.Set(on);
+        return on ? "Logging presses as [probe] lines." : "Stopped.";
+    }
+
+    /// <summary>Everything along this game's camera ray within 6 m, nearest first (tests).</summary>
+    public static string RayAll()
+    {
+        var camera = HouseManager._ != null ? HouseManager._.mainCamera : null;
+        if (camera == null)
+            return "No player camera.";
+        var eye = camera.transform;
+        var hits = UnityEngine.Physics.RaycastAll(eye.position, eye.forward, 6f, ~0, UnityEngine.QueryTriggerInteraction.Collide);
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+        var text = new StringBuilder($"camera {camera.name} at {eye.position} looking {eye.forward}:");
+        foreach (var hit in hits)
+            text.Append($"\n  {hit.distance:0.00} m {hit.collider.name} ({UnityEngine.LayerMask.LayerToName(hit.collider.gameObject.layer)}{(hit.collider.isTrigger ? ", trigger" : "")})");
+        return text.ToString();
+    }
+
+    /// <summary>Patched methods whose name contains <paramref name="filter"/>, with who patched them (tests).</summary>
+    public static string Patched(string filter)
+    {
+        var text = new StringBuilder();
+        foreach (var method in HarmonyLib.Harmony.GetAllPatchedMethods())
+        {
+            string name = method.DeclaringType?.Name + "." + method.Name;
+            if (name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0)
+                continue;
+            var info = HarmonyLib.Harmony.GetPatchInfo(method);
+            text.Append(name).Append(':');
+            foreach (var p in info.Prefixes) text.Append(" pre ").Append(p.owner).Append('/').Append(p.PatchMethod.DeclaringType?.Name);
+            foreach (var p in info.Postfixes) text.Append(" post ").Append(p.owner).Append('/').Append(p.PatchMethod.DeclaringType?.Name);
+            foreach (var p in info.Transpilers) text.Append(" trans ").Append(p.owner).Append('/').Append(p.PatchMethod.DeclaringType?.Name);
+            text.Append('\n');
+        }
+        return text.Length > 0 ? text.ToString() : "None.";
+    }
+
+    /// <summary>An object's layer and its body's flags, by path or #id (tests).</summary>
+    public static string LayerOf(string target)
+    {
+        var go = NeetModKit.Scenes.SceneQuery.Resolve(target);
+        var body = go.GetComponent<UnityEngine.Rigidbody>();
+        return $"{go.name}: layer {go.layer} ({UnityEngine.LayerMask.LayerToName(go.layer)})" +
+            (body != null ? $", kinematic {body.isKinematic}, detects collisions {body.detectCollisions}" : "");
+    }
+
+    /// <summary>What this game's player is looking at (the first thing the camera ray hits within 4 m), for tests.</summary>
+    public static string LookAt()
+    {
+        var camera = HouseManager._ != null ? HouseManager._.mainCamera : null;
+        if (camera == null)
+            return "No player camera.";
+        var eye = camera.transform;
+        // The mask the game's own pickup uses, so this sees what a click would.
+        int mask = HouseManager._.player.TryGetComponent(out Player_Abilities abilities) ? abilities.usablesMask.value : ~0;
+        if (!UnityEngine.Physics.Raycast(eye.position, eye.forward, out var hit, 4f, mask, UnityEngine.QueryTriggerInteraction.Ignore))
+        {
+            // What a click can't reach, and why: the layer of whatever is there.
+            if (!UnityEngine.Physics.Raycast(eye.position, eye.forward, out var any, 4f, ~0, UnityEngine.QueryTriggerInteraction.Ignore))
+                return "Nothing within 4 m.";
+            return $"Nothing a click reaches; the ray meets {any.collider.name} on layer {UnityEngine.LayerMask.LayerToName(any.collider.gameObject.layer)} at {any.distance:0.00} m.";
+        }
+        var go = hit.collider.gameObject;
+        var usable = go.GetComponentInParent<Usable>();
+        return $"{go.name} (layer {UnityEngine.LayerMask.LayerToName(go.layer)}) at {hit.distance:0.00} m" +
+            (usable != null ? $", usable {usable.name}{(usable.lever ? " lever" : "")}{(usable.button ? " button" : "")}, held by {(usable.player != null ? usable.player.name : "nobody")}" : ", not usable");
+    }
+
     /// <summary>"1.2.3.4", "1.2.3.4:8889", "host.name:9000".</summary>
     internal static void ParseAddress(string address, int defaultPort, out string host, out int port)
     {

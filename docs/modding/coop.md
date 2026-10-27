@@ -117,6 +117,10 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 - Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Spiders still ignore remote players (they want an enabled Brain), and NPCs only talk to the host. Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.
 
+### Watch list
+
+- After a long session with dozens of hot reloads, doors stopped reacting to clicks in both games, and restarting both fixed it. The likely cause: the game refuses to pick up anything whose `Usable.player` is still set, and a drag that ends without the game's own release (a reload mid-drag, a forced hand-back) leaves it set. If it comes back, `obj.inspect` the door's `Usable` (`player`) on the stuck game; `CoopApi.LookAt`, `RayAll`, `LayerOf` and `Patched` help too.
+
 ### Scenes and story
 
 - Nobody dreams in co-op: resting with your eyes shut restores energy but never loads the dream.
