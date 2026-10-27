@@ -9,8 +9,9 @@ The Co-op mod (`mods/Coop`) lets several games share one house over the network.
 - **Leave:** **LEAVE**, or go back to the main menu. A client goes back to the main menu when the game ends. When the host leaves, the game ends for everyone.
 - While in co-op you can rest with your eyes shut, but nobody dreams, and the story's scene changes wait (they'd take one player, or the whole house, away from the others).
 - The mod menu and the cheat menu don't pause the game in co-op: the house keeps going for everyone while you're in a menu.
+- **The hitman line:** in co-op, call 448-626 on either phone. For $69 the hitman takes a job on any player in the game, yourself included: about a minute later the cop van comes, its agents go straight for that player wherever they are, and they leave once the target is down or dead. One job at a time, and after an order the line won't take another for a while (setting **Hitman line cooldown**, 10 minutes of play by default; the host's setting counts). Outside co-op the line is busy.
 
-Settings (Mods page, Co-op): **Your name** (shown over your head), **Port**, **Max players** (2 to 4).
+Settings (Mods page, Co-op): **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown**, **Physics hands on other players** (experimental).
 
 ### Over Steam
 
@@ -62,6 +63,16 @@ Returning players: every 10 seconds a client sends its body as the game would sa
 - The Steam API starts lazily, the first time Steam is used (retried every 5 seconds after a failure). Callbacks are pumped from `Poll()`.
 - `Steamworks.NET.dll` (MIT, Windows-x86 build of release 2024.8.0, Steamworks SDK 1.60) is committed in `mods/CoopSteam/lib/` with its licence: the NuGet package has no x86 build, and it must match the `steam_api.dll` that `neet steam` fetches from the same release. SDK 1.60 is on purpose: SDK 1.64's `steam_api.dll` asks for interface versions (Apps 009, RemotePlay 004) that GE-Proton 10's Steam bridge doesn't have, and Steamworks.NET won't start without every interface. If start-up fails anyway, the message names the missing interfaces (`Native/InterfaceCheck.cs`). Update both together (`lib/`, and the URL, size and hashes in `tools/NeetTool/Game/SteamApiSource.cs`). `steam_api.dll` is never committed or packaged; `build/package.sh` stops if one ends up in `dist/`. Licence reasoning: [coop-steam.md](../research/coop-steam.md#licensing).
 - `CoopSteam.SteamProbe.Run()` returns one line (init result, SteamID, persona name, app id, overlay, relay status), for checking the Steam side through the dev bridge without a session.
+
+### Co-op content
+
+Calls and emails can be written for co-op; the hitman line is `mods/Coop/phone/hitman.jsonc`. Conversations run in the host's game, and the framework's rules about the player (`stat`, `holding`, `room`, `knockout`) are about whoever is talking or answering (`World/RemoteRules`: the client sends its stats and held items with every request, `Players/PlayerFacts`). Co-op adds (`Content/`):
+
+- conditions: `"coop": true` (or `false`) while playing co-op; `"otherPlayer": 1`, that slot is in the house and isn't the one on the line (0 is the host); `"hitman": "busy"`, `"free"` or `"caller"` (he's on a job, he isn't, he's after the one on the line); `"hitmanWait": "> 0"`, minutes until the line takes another job;
+- the action `{ "do": "hitman", "target": 1, "price": 69 }`: sends the hitman for that slot (`"me"` for the one on the line) and takes the price only if he takes the job;
+- text values: `{{player:1}}` or `{{player:me}}` (a name), `{{hitmanWait}}`, `{{hitmanTarget}}`;
+- for hand-written Ink: `CoopCaller()` (the slot on the line), `CoopHere(slot)`, `CoopName(slot)`, `CoopHitmanBusy()`, `CoopHitmanWait()`, `CoopHireHitman(slot)`;
+- for code: `Coop.World.Contracts.SendHitman(slot, delaySeconds)`, `HitmanBusy`, `HitmanTarget`.
 
 ### Hot reload
 
@@ -117,6 +128,11 @@ Everything co-op doesn't do yet, or does differently from single player. Each li
 - Remote players have the default face, and their hands stay in the animation's pose: no arm reach, no held-item grip, no kick animation, no hand raising. Looking up and down only tilts the head a little.
 - Remote bodies are on the Player layer and can be seen and hurt: hits and explosion pushes are passed on to the player's own game (see World). Spiders still ignore remote players (they want an enabled Brain), and NPCs only talk to the host. Teleports done to a remote body (kill planes, the teleporter) aren't passed on.
 - Clothes show by item name, so a dyed or custom piece shows as the plain item.
+
+### Co-op content
+
+- The hitman line is listed on Phone Expansion's Phone tab outside co-op too; dialing it there gets a busy line.
+- Its cooldown counts play time in the host's save, so another host's house has its own.
 
 ### Watch list
 

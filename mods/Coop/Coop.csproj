@@ -17,4 +17,9 @@
     <PackageReference Include="LiteNetLib" Version="1.3.1" GeneratePathProperty="true" />
     <None Include="$(PkgLiteNetLib)/lib/net471/LiteNetLib.dll" Link="LiteNetLib.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
+
+  <!-- Co-op's phone calls, read by Phone Expansion like any mod's phone folder. -->
+  <ItemGroup>
+    <None Include="phone/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

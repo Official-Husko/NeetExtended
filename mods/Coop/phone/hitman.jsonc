@@ -1,0 +1,74 @@
+// The hitman line: 448-626 ("HITMAN"), co-op only. Pay 69$, pick a player (or yourself),
+// and the cop van comes for them about a minute later. One job at a time, then a cooldown
+// (the host's "Hitman line cooldown" setting).
+//
+// Co-op's rules used here (docs/modding/coop.md, "Co-op content"):
+//   conditions  "coop": true, "hitman": "busy" | "free" | "caller", "hitmanWait": "> 0",
+//               "otherPlayer": <slot>   (in the house, and not the one on the line)
+//   action      { "do": "hitman", "target": <slot> or "me", "price": 69 }  (paid only if he takes the job)
+//   text        {{player:<slot>}}, {{hitmanWait}}, {{hitmanTarget}}
+{
+  "id": "hitman",
+  "number": "448-626",
+  "name": "The Hitman",
+  "callerId": "HITMAN",
+  "when": { "coop": true },
+  "say": [
+    { "random": [
+      "Yeah.",
+      "Talk.",
+      "<size=60%>who the fuck gave this number out again<size=100%>",
+      "Hitman. I mean. Pizza. Wat u want."
+    ] },
+    { "if": { "hitman": "busy" }, "then": [
+      "My guy is on a job right now dipshit. One body at a time.",
+      "Call back when somebody is dead.",
+      { "end": true }
+    ] },
+    { "if": { "hitmanWait": "> 0" }, "then": [
+      "Too soon. Too hot. There is cops sniffing my van.",
+      "Call back in {{hitmanWait}} minutes.",
+      "U call before that and I whack u for free. Bitch.",
+      { "end": true }
+    ] },
+    "U want somebody gone.",
+    "Sixty nine dollar. Nice.",
+    { "if": { "money": "< 69" }, "then": [
+      "...",
+      "U dont have sixty nine dollar?",
+      "<size=150%>BROKE ASS SLUT.<size=100%>",
+      "Sell ur toenails or something. Call back.",
+      { "end": true }
+    ] },
+    "No refunds. No receipts. No questions.",
+    "Who.",
+    { "choices": [
+      { "text": "{{player:0}}.", "if": { "otherPlayer": 0 }, "say": { "do": "hitman", "target": 0, "price": 69 } },
+      { "text": "{{player:1}}.", "if": { "otherPlayer": 1 }, "say": { "do": "hitman", "target": 1, "price": 69 } },
+      { "text": "{{player:2}}.", "if": { "otherPlayer": 2 }, "say": { "do": "hitman", "target": 2, "price": 69 } },
+      { "text": "{{player:3}}.", "if": { "otherPlayer": 3 }, "say": { "do": "hitman", "target": 3, "price": 69 } },
+      { "text": "Me.", "say": [
+        "...",
+        "On urself?",
+        "Thats the dumbest shit I heard all week and I heard a guy order a hit on his own dick.",
+        "Money is money tho.",
+        { "do": "hitman", "target": "me", "price": 69 }
+      ] },
+      { "text": "Nvm. Wrong number.", "say": [
+        "Nobody calls this number by accident, pussy.",
+        "<size=60%>*click*",
+        { "end": true }
+      ] }
+    ] },
+    { "if": { "hitman": "busy" }, "then": [
+      { "if": { "hitman": "caller" },
+        "then": "Ok. Stay home. Leave the door open. Actually dont, he likes kicking doors.",
+        "else": "{{hitmanTarget}}? That fat fuck? Easy. Dead meat." },
+      "Black van. Real quiet. U wont see him coming.",
+      "Well u will. Its a van."
+    ], "else": [
+      "Hold up. The van wont start. Some shit came up.",
+      "Call back later son of a bitch."
+    ] }
+  ]
+}

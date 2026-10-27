@@ -178,9 +178,10 @@ Play the house together, over the internet or your own network. The host's house
 - **Down, not dead**: when your health runs out you go down instead of dying. For 15 seconds anyone can get you back up by using food on you (look at you, use it); otherwise you die and respawn as usual.
 - **Enemies pick the nearest player**: the cops, the hostile visitor, house spiders and the skeleton parasite go after whoever is closest and still standing, and leave downed players alone.
 - **Talking and the phones**: everyone can talk to the characters and use both phones. The host's game runs the conversation, so whatever it gives, costs or sets off happens once, and what it checks or does to you (your needs, what you're holding, knocking you out) is about whoever is talking. Only the one talking sees the lines, and a character talks to one player at a time: anyone else gets a busy line.
+- **The hitman line**: in co-op, call 448-626. Pay $69, pick a player (or yourself), and about a minute later the van comes: its agents go straight for that player and leave once they're down. One job at a time, then the line waits a while before the next (setting **Hitman line cooldown**, 10 minutes by default).
 - **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and the mod and cheat menus don't pause the game. Going back to the main menu leaves; when the host leaves, the game ends for everyone.
 - Everyone needs the same mods. Mods that only change your own game (Cheat Menu, Performance Fixes, Open Saves and the like) can differ.
-- Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4), and **Physics hands on other players** (experimental: other players get the floppy first-person arms you see on yourself, reaching for what they hold, instead of their body's plain arms).
+- Settings: **Your name** (shown over your head), **Port**, **Max players** (2 to 4), **Hitman line cooldown** (the host's counts), and **Physics hands on other players** (experimental: other players get the floppy first-person arms you see on yourself, reaching for what they hold, instead of their body's plain arms).
 - Not everything is shared yet (fire, paint made after you join, and more): see [Known limitations](docs/modding/coop.md#known-limitations).
 
 ## Card Expansion

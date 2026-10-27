@@ -69,6 +69,7 @@ public sealed class CoopMod : NeetMod
         Downed.Init();
         World.WorldSync.Init(this);
         World.Ownership.HoldRepair.Init();
+        Content.CoopStory.Register(this);
         SharedHouse.Init(this);
         ModMenu.AddPage(this, new CoopPage());
     }
