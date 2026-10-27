@@ -36,6 +36,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | The clothes you die in are lost for good | `DeathDrops` |
 | Camera photos replace each other and come back blank | `CameraPhotos` |
 | Paint loaded from a save doesn't show | `LoadedPaint` |
+| A TV that was on comes back dark after loading | `TvAfterLoad` |
 
 ## Saving fails with a dead house spider around
 
@@ -339,6 +340,16 @@ Clothes that were parked when the game saved but that nobody puts on again fall 
 **Fix:** a prefix on `PaintTarget.SetupPaint` runs `CheckValid` first when the surface has no renderer yet. A surface with `SetupOnStart` (9 in the house) would then set itself up again in its `Start`, with empty textures; a prefix on `Start` only runs `CheckValid` for a surface that's already set up.
 
 **Reproduce:** paint something (blood, a fire), save, load. With `LoadedPaint` off, some painted surfaces have no `_SplatTex` on their material and an empty `worldPosTex` (Co-op's `PaintProbes.Unbound` and `Info` show both), and look clean; in co-op, join a house with paint and look at it. With it on, only surfaces whose material has no paint property are listed, and the paint shows.
+
+## A TV that was on comes back dark after loading
+
+**What happens:** save with the TV on, then load: the TV is on and its channel's sound plays, but the screen is dark and the screen light is off until the remote is used. A co-op client loading the host's house gets the same.
+
+**Cause:** `TV.Load` switches the TV on and shows the saved channel (`TV.cs:81-98`). `SaveLoadHandler.Start` loads the save before the TV's own `Start` runs, and `TV.Start` turns the screen light off and every channel object off (`:119-124`), so the shown channel is hidden again while `isOn` and `displayedScreenModule` still say it's on.
+
+**Fix:** a postfix on `TV.Start` shows the saved channel again (`Control(displayedScreenModule, noAudio: true)`) when the TV is on. A TV that's off isn't touched.
+
+**Reproduce:** turn the TV on, save (sleep), load. With `TvAfterLoad` off the screen is dark with the channel's sound playing; with it on the channel shows.
 
 ## Not bugs
 
