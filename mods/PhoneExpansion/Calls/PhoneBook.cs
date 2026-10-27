@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NeetLoader.Runtime;
+using NeetModKit.Rules;
 
 namespace PhoneExpansion.Calls;
 
@@ -53,36 +54,7 @@ public static class PhoneBook
     /// Finds a call by id. Short ids ("pizza") are looked up in <paramref name="nearMod"/> first,
     /// then anywhere if only one call has that name.
     /// </summary>
-    public static PhoneCall Find(string id, string nearMod = null)
-    {
-        if (string.IsNullOrEmpty(id))
-            return null;
-        foreach (var call in Calls)
-        {
-            if (string.Equals(call.Id, id, StringComparison.OrdinalIgnoreCase))
-                return call;
-        }
-        if (id.IndexOf('/') >= 0)
-            return null;
-
-        if (nearMod != null)
-        {
-            var local = Find(nearMod + "/" + id);
-            if (local != null)
-                return local;
-        }
-
-        PhoneCall only = null;
-        foreach (var call in Calls)
-        {
-            if (!call.Id.EndsWith("/" + id, StringComparison.OrdinalIgnoreCase))
-                continue;
-            if (only != null)
-                return null;
-            only = call;
-        }
-        return only;
-    }
+    public static PhoneCall Find(string id, string nearMod = null) => RuleIds.Find(Calls, call => call.Id, id, nearMod);
 
     /// <summary>Calls answering <paramref name="digits"/>, in the order they were added.</summary>
     public static IEnumerable<PhoneCall> WithNumber(string digits)

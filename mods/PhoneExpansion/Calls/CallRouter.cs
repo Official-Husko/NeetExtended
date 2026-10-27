@@ -106,12 +106,5 @@ internal static class CallRouter
             PhoneLine.HangUp(phone);
     }
 
-    private static bool KnotExists(string knot)
-    {
-        var story = GameStory.Current;
-        if (story == null || string.IsNullOrEmpty(knot))
-            return false;
-        int dot = knot.IndexOf('.');
-        return story.mainContentContainer.namedContent.ContainsKey(dot < 0 ? knot : knot.Substring(0, dot));
-    }
+    private static bool KnotExists(string knot) => InkStory.Dialogue.HasKnot(knot);
 }

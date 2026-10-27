@@ -230,6 +230,7 @@ One of the game's Ink stories: `InkStory.Dialogue` or `InkStory.Email` (`InkStor
 - `GameEvent<Story> Created`: raised when the game builds a new story (every house load builds both), before it runs and before a save is loaded into it.
 - `WhenCreated(owner, Action<Story>)`: subscribes and runs right away for the current story.
 - `GameFunctions`: the game's own external functions for that story (the email story has none).
+- `HasKnot(path)`: whether the live story has the knot a path starts in. Knots from a mod that's gone fail it.
 
 `GameStory` is the same for the dialogue story (`GameStory.Current`, `GameStory.Created`, `GameStory.WhenCreated`).
 
@@ -290,6 +291,7 @@ RuleActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount",
 - `ActionList.Parse(json)`, `Run(subject)`: a list of `{ "do": ... }` objects, checked when parsed.
 - `Comparison.Parse("< 25")`, `NamedComparisons.Parse({ "name": ">= 2" })`: the number tests conditions use.
 - `IRuleSubject` (`Id`, `Times`) is what's running: a phone call, an email. `RuleContext.Active` is the one playing right now, for actions called from hand-written Ink.
+- `RuleIds.Find(items, idOf, id, nearMod)`: finds a call, an email, ... by id, where a short id ("pizza") means one from `nearMod` first.
 
 ### Triggers and schedules
 

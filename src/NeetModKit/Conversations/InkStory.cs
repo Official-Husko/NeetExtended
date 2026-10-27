@@ -62,6 +62,19 @@ public sealed class InkStory
         catch (Exception e) { _log.Error($"A {Name} story handler threw", e); }
     }
 
+    /// <summary>
+    /// Whether the live story has the knot <paramref name="path"/> starts in ("Knot" or
+    /// "Knot.stitch"). False without a story. Knots from mods that are gone fail this.
+    /// </summary>
+    public bool HasKnot(string path)
+    {
+        var story = Current;
+        if (story == null || string.IsNullOrEmpty(path))
+            return false;
+        int dot = path.IndexOf('.');
+        return story.mainContentContainer.namedContent.ContainsKey(dot < 0 ? path : path.Substring(0, dot));
+    }
+
     public override string ToString() => Name + " story";
 
     internal static void Init(ModLogger log) => _log = log;
