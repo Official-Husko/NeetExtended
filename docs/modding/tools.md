@@ -59,6 +59,19 @@ Unity's licence lets a game ship the player, not a mod, so `--64bit` downloads i
 
 The download is checked against that size and a pinned SHA-256. The `.pkg` is a xar archive (read by `Archives/XarArchive.cs`); its `TargetSupport.pkg.tmp/Payload` is a gzipped cpio archive in the portable ASCII format (`Archives/CpioReader.cs`). Only `Variations/win64_player_nondevelopment_mono/` is unpacked, and of that only `WindowsPlayer.exe` (installed as `NEET.exe`), `UnityPlayer.dll`, `UnityCrashHandler64.exe` and `MonoBleedingEdge/`. Those stay in the tool's cache (`~/.cache/neet/` or `$XDG_CACHE_HOME/neet/` on Linux, `%LOCALAPPDATA%\neet\cache\` on Windows), and the package is deleted. Measurements of the 64-bit player are in [docs/research/performance.md](../research/performance.md#64-bit).
 
+## steam
+
+```sh
+neet steam [--game DIR] [--remove]
+```
+
+Fetches `steam_api.dll` for the Co-op over Steam mod (`mods/CoopSteam`) and puts it in `<game>/Mods/CoopSteam/`. The DLL is Valve's (Steamworks SDK), so the pack and the repository don't contain it. The tool downloads the Steamworks.NET 2024.8.0 release zip (Steamworks SDK 1.60, picked because the Steam bridge of older Proton builds lacks interface versions that SDK 1.64 needs) from GitHub, checks the zip (size and SHA-256), takes `Windows-x86/steam_api.dll` out of it and checks that file's SHA-256 too. The same release is the source of the `Steamworks.NET.dll` the mod carries, so the two always match. The DLL stays in the tool's cache (`~/.cache/neet/steamworks-2024.8.0/`, `%LOCALAPPDATA%\neet\cache\` on Windows) and is copied from there, so running it again is free.
+
+- The CoopSteam mod has to be installed first (run the installer); the command stops with a message otherwise.
+- It refuses to replace an existing DLL while the game is open, because the game has it loaded.
+- `--remove` deletes `steam_api.dll` again. Co-op over Steam then says "Steam support isn't installed" and nothing else changes.
+
+
 ## uninstall
 
 ```sh
