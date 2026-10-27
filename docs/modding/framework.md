@@ -291,6 +291,14 @@ RuleActions.Register(this, "confetti", args => Confetti.Burst(args.Num("amount",
 - `Comparison.Parse("< 25")`, `NamedComparisons.Parse({ "name": ">= 2" })`: the number tests conditions use.
 - `IRuleSubject` (`Id`, `Times`) is what's running: a phone call, an email. `RuleContext.Active` is the one playing right now, for actions called from hand-written Ink.
 
+### Triggers and schedules
+
+For content that happens by itself (a call ringing in, an email arriving):
+
+- `TriggerRules`: `Trigger` (`random`, `order`, `arrive`, `wake`, `manual`), `Weight`, `When`, `Once`, `CooldownMinutes`, `DelaySeconds`, `Store`. `TriggerRules.Parse(json, allowedTriggers, defaults)` reads `true` or `{ "trigger": ..., "weight": ..., ... }` from a file; `IsOn(json)` says whether the field turns it on; `Describe("Rings")` makes a line for menus.
+- `Triggers.CanFire(subject, rules, trigger, store, secondsSinceLast)` and `Triggers.Pick(items, rules, canFire, buffer)`: what may fire now, and a weighted pick among them.
+- `ScheduleList`: ids waiting for some play time, kept in your save data. `Add(id, seconds)`, `Remove`, `Contains`, and `TakeDue(handle, retrySeconds)` once in a while.
+
 ### Flags
 
 `ModFlags`: named numbers in the save, shared by every mod. `Get(name)`, `Set(name, value)` (0 removes it), `Add(name, amount)`, `All`. Also `PlaySeconds` (seconds the house was loaded in this save, across sessions) and `Day` (1 at the start, one more each time the player sleeps and wakes up; the game's own `nightId` never moves).
@@ -302,6 +310,17 @@ Console: `flags` lists them, `setFlag <name> <value>` sets one.
 `StepWriter.Write(knot, steps, addAction, addCondition, options)` turns a list of steps from a file (lines, choices, if, random, do, label, goto, end, ink) into an Ink knot. Pass `RuleSteps.AddAction`/`AddCondition` as the callbacks: they number each condition and action and the knot calls them as `RuleIf(n)` and `RuleDo(n)`. `StepWriterOptions` sets the lines written at the end (the phone ends calls on `# EndPhoneCall`) and extra tagged line types (the phone's `{ "player": ... }`). `RuleSteps.Muted` skips actions, for replaying text that was already shown.
 
 Ink functions in every story: `Act(action, values)`, `Check(condition, value)`, `Flag(name)`, `SetFlag(name, value)`, `AddFlag(name, amount)`, plus `RuleIf` and `RuleDo` for generated knots.
+
+## Content packs
+
+`NeetModKit.IO.ContentPack` loads a content folder from every loaded mod, the way the phone loads `phone/` and the email mod `email/`: `.ink` files go into an Ink story, `.json` files go to your reader, and it all loads again when a file changes or a mod comes or goes.
+
+```csharp
+_pack = ContentPack.Watch(this, "phone", InkStory.Dialogue, CallParser.LoadFile, () => _pack.LogSummary("calls"));
+public override void OnAllLoaded() => _pack.Reload();
+```
+
+The reader gets a `ContentFile`: `Display` (for messages), `ModId`, `Scope` (register what the file adds there; it's removed before the next load), `Read()`, `Items("calls")` (one object, a list, or `{ "calls": [...] }`), `Problem(message)` and `AddInk(source)` for generated Ink. `Problems()` lists every problem with its file, Ink compile errors included.
 
 ## Saves
 

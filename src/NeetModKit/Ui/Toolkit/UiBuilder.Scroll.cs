@@ -7,15 +7,19 @@ public sealed partial class UiBuilder
 {
     /// <summary>
     /// A vertically scrolling area that takes the remaining height. Returns a builder for its
-    /// content. Uses the scrollbar from the game's dropdowns, coloured by the theme's
-    /// <see cref="UiTheme.ScrollbarStyle"/>.
+    /// content. Uses the theme's scrollbar (the game's dropdown one, coloured by the theme's
+    /// <see cref="UiTheme.ScrollbarStyle"/>), or a copy of <paramref name="scrollbar"/> when given,
+    /// for example one of the game's own next to where the area goes.
     /// </summary>
-    public UiBuilder Scroll(out ScrollRect scrollRect, float flexibleHeight = 1f, float spacing = 6f)
+    public UiBuilder Scroll(out ScrollRect scrollRect, float flexibleHeight = 1f, float spacing = 6f, GameObject scrollbar = null)
     {
         var area = NewChild("Scroll");
         Size(area, flexibleWidth: 1f, flexibleHeight: flexibleHeight);
 
-        var viewport = Stretch(new UiBuilder(area, Theme).NewChild("Viewport"), right: Theme.Metrics.ScrollbarWidth + 4f);
+        float barWidth = scrollbar != null && ((RectTransform)scrollbar.transform).rect.width > 0f
+            ? ((RectTransform)scrollbar.transform).rect.width
+            : Theme.Metrics.ScrollbarWidth;
+        var viewport = Stretch(new UiBuilder(area, Theme).NewChild("Viewport"), right: scrollbar != null ? barWidth * 1.4f : barWidth + 4f);
         viewport.gameObject.AddComponent<RectMask2D>();
         // An invisible graphic so the mouse wheel works anywhere over the area, not only over text.
         viewport.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.001f);
@@ -34,18 +38,20 @@ public sealed partial class UiBuilder
         scrollRect.movementType = ScrollRect.MovementType.Clamped;
         scrollRect.scrollSensitivity = 25f;
 
-        var bar = Object.Instantiate(Theme.Get(UiTemplate.Scrollbar), area, false);
+        var bar = Object.Instantiate(scrollbar != null ? scrollbar : Theme.Get(UiTemplate.Scrollbar), area, false);
         bar.name = "Scrollbar";
         var barRect = (RectTransform)bar.transform;
         barRect.anchorMin = new Vector2(1f, 0f);
         barRect.anchorMax = new Vector2(1f, 1f);
         barRect.pivot = new Vector2(1f, 0.5f);
-        barRect.offsetMin = new Vector2(-Theme.Metrics.ScrollbarWidth, 0f);
+        barRect.offsetMin = new Vector2(-barWidth, 0f);
         barRect.offsetMax = Vector2.zero;
-        var scrollbar = bar.GetComponent<Scrollbar>();
-        scrollbar.direction = Scrollbar.Direction.BottomToTop;
-        Theme.ScrollbarStyle?.Apply(scrollbar);
-        scrollRect.verticalScrollbar = scrollbar;
+        bar.GetComponent<Scrollbar>().direction = Scrollbar.Direction.BottomToTop;
+        if (scrollbar == null)
+            Theme.ScrollbarStyle?.Apply(bar.GetComponent<Scrollbar>());
+        else
+            bar.GetComponent<Scrollbar>().onValueChanged = new Scrollbar.ScrollEvent(); // drop the original's listeners
+        scrollRect.verticalScrollbar = bar.GetComponent<Scrollbar>();
         scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
 
         return Vertical(content, spacing, theme: Theme);
