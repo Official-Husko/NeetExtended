@@ -65,10 +65,21 @@ public static class ChangelogBuilder
         return new JsonObject { ["releases"] = releases };
     }
 
+    // A mod's lines stay together, the mods in the order their first line comes up; otherwise a release
+    // with many lines for one mod has the other mods' lines scattered between them.
     private static JsonArray Lines(List<CommitEntry> commits, ChangeKind kind)
     {
+        var items = Collect(commits, kind);
+        return new JsonArray(items
+            .GroupBy(item => item["area"]?.GetValue<string>() ?? "")
+            .SelectMany(area => area)
+            .ToArray<JsonNode?>());
+    }
+
+    private static List<JsonObject> Collect(List<CommitEntry> commits, ChangeKind kind)
+    {
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        var array = new JsonArray();
+        var array = new List<JsonObject>();
         foreach (var commit in commits)
         {
             foreach (var line in commit.Lines)
