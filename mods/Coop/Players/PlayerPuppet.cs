@@ -11,6 +11,8 @@ namespace Coop.Players;
 /// </summary>
 internal sealed class PlayerPuppet : MonoBehaviour
 {
+    private static readonly int KickTrigger = Animator.StringToHash("Kick");
+
     // Further than this from where it should be (a teleport, a respawn) it jumps instead of sliding.
     private const float SnapDistance = 3f;
 
@@ -18,7 +20,12 @@ internal sealed class PlayerPuppet : MonoBehaviour
     private Rigidbody _body;
     private Animator _animator;
     private AnimatorBools _bools;
-    private Transform _head;
+    private PuppetLook _look;
+    private PuppetArms _arms;
+    private PuppetHeld _held;
+    private bool _downed;
+    private byte _kicksSeen;
+    private bool _kicksKnown;
     private SkinnedMeshRenderer _skin;
     private SkinnedMeshRenderer[] _hands;
 
@@ -45,20 +52,26 @@ internal sealed class PlayerPuppet : MonoBehaviour
             collider.enabled = carrier == null;
     }
 
-    public void Init(byte slot, Animator animator, Transform head, SkinnedMeshRenderer skin, SkinnedMeshRenderer[] hands)
+    public void Init(byte slot, Animator animator, SkinnedMeshRenderer skin, SkinnedMeshRenderer[] hands)
     {
         Slot = slot;
         _body = GetComponent<Rigidbody>();
         _animator = animator;
         _bools = animator != null ? new AnimatorBools(animator) : null;
-        _head = head;
+        _look = animator != null ? PuppetLook.Create(animator.transform) : null;
+        _arms = animator != null ? PuppetArms.Create(animator.transform) : null;
+        _held = new PuppetHeld(slot);
         _skin = skin;
         _hands = hands;
     }
 
     public void Dress(in Appearance look) => PuppetDresser.Apply(_skin, _hands, look);
 
-    public void SetDowned(bool down) => Plate?.SetDowned(down);
+    public void SetDowned(bool down)
+    {
+        _downed = down;
+        Plate?.SetDowned(down);
+    }
 
     public void Push(in PlayerPose pose)
     {
@@ -92,10 +105,24 @@ internal sealed class PlayerPuppet : MonoBehaviour
         {
             _bools.Apply(_animator, pose.Bools);
             _animator.speed = pose.AnimSpeed > 0f ? pose.AnimSpeed : 1f;
+            PlayKick(pose.Kicks);
         }
-        // Looking up and down tilts the head after the animator has posed it.
-        if (_head != null)
-            _head.localRotation *= Quaternion.Euler(Mathf.Clamp(Mathf.DeltaAngle(0f, pose.Pitch), -60f, 60f) * 0.5f, 0f, 0f);
+        // The animator has posed the body; the head and the arms follow where the player looks and reaches.
+        // A body that is down or carried keeps the pose it was given.
+        bool upright = Shoulder == null && !_downed && Vector3.Dot(transform.up, Vector3.up) > 0.7f;
+        if (upright)
+            _look?.Apply(transform, pose.Pitch);
+        if (Hands == null)
+            _arms?.Apply(transform, pose, _held, upright, Time.deltaTime);
+    }
+
+    // The first pose only sets the count; a kick played before this body existed isn't replayed.
+    private void PlayKick(byte kicks)
+    {
+        if (_kicksKnown && KickSignal.IsNew(_kicksSeen, kicks))
+            _animator.SetTrigger(KickTrigger);
+        _kicksSeen = kicks;
+        _kicksKnown = true;
     }
 
     private void OnDestroy()

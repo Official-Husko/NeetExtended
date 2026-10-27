@@ -18,6 +18,7 @@ internal sealed class PuppetHands
 
     private readonly Rigidbody _left, _right;
     private readonly Renderer _leftMesh, _rightMesh;
+    private SkinnedMeshRenderer _body;
 
     private PuppetHands(Rigidbody left, Rigidbody right, Renderer leftMesh, Renderer rightMesh)
     {
@@ -47,17 +48,32 @@ internal sealed class PuppetHands
         return new PuppetHands(left, right, Mesh(model.transform, LeftArm), Mesh(model.transform, RightArm));
     }
 
+    /// <summary>The body mesh, whose own arm shrinks away (blend shapes 0 and 1, as in the game) while the physics arm shows.</summary>
+    public void UseBody(SkinnedMeshRenderer body) => _body = body;
+
     /// <summary>Moves the hand ends to where the pose has them, relative to the body.</summary>
     public void Follow(Transform root, in PlayerPose pose)
     {
-        _left.MovePosition(root.TransformPoint(pose.LeftHand));
-        _left.MoveRotation(root.rotation * pose.LeftHandTurn);
-        _right.MovePosition(root.TransformPoint(pose.RightHand));
-        _right.MoveRotation(root.rotation * pose.RightHandTurn);
+        // The pose only carries the hands that are up; a hand that isn't stays where it was, out of sight.
+        if (pose.IsShown(PlayerPose.LeftShown))
+        {
+            _left.MovePosition(root.TransformPoint(pose.LeftHand));
+            _left.MoveRotation(root.rotation * pose.LeftHandTurn);
+        }
+        if (pose.IsShown(PlayerPose.RightShown))
+        {
+            _right.MovePosition(root.TransformPoint(pose.RightHand));
+            _right.MoveRotation(root.rotation * pose.RightHandTurn);
+        }
         if (_leftMesh != null)
-            _leftMesh.enabled = (pose.HandsShown & 1) != 0;
+            _leftMesh.enabled = pose.IsShown(PlayerPose.LeftShown);
         if (_rightMesh != null)
-            _rightMesh.enabled = (pose.HandsShown & 2) != 0;
+            _rightMesh.enabled = pose.IsShown(PlayerPose.RightShown);
+        if (_body != null && _body.sharedMesh != null && _body.sharedMesh.blendShapeCount >= 2)
+        {
+            _body.SetBlendShapeWeight(0, pose.IsShown(PlayerPose.LeftShown) ? 100f : 0f);
+            _body.SetBlendShapeWeight(1, pose.IsShown(PlayerPose.RightShown) ? 100f : 0f);
+        }
     }
 
     private static Rigidbody End(Transform model, string arm)

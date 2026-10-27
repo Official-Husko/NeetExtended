@@ -60,8 +60,9 @@ internal static class PuppetBuilder
             if (renderer != skin)
                 handMeshes.Add(renderer);
         }
-        puppet.Init(slot, copy.GetComponent<Animator>(), FindDeep(copy.transform, "headbone"), skin, handMeshes.ToArray());
+        puppet.Init(slot, copy.GetComponent<Animator>(), skin, handMeshes.ToArray());
         puppet.Hands = hands;
+        hands?.UseBody(skin);
         puppet.Plate = Nameplate.Attach(root.transform, name, capsule.center.y + capsule.height * 0.5f + 0.15f);
         return puppet;
     }
@@ -103,7 +104,7 @@ internal static class PuppetBuilder
         }
     }
 
-    private static Transform FindDeep(Transform parent, string name)
+    internal static Transform FindDeep(Transform parent, string name)
     {
         foreach (Transform child in parent)
         {
