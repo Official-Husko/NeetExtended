@@ -16,6 +16,7 @@ public static class ChangelogBuilder
         ["mcp"] = "Command-line tool",
         ["cards"] = "Card game",
         ["coop"] = "Co-op",
+        ["coopsteam"] = "Co-op over Steam",
         ["items"] = "Items",
         ["cardexp"] = "Card Expansion",
         ["opensaves"] = "Open Saves",

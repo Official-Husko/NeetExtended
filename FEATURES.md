@@ -170,6 +170,7 @@ Play the house together, over the internet or your own network. The host's house
 
 - **Host**: load a game, open the mod menu (F1), **Co-op** tab, **OPEN MY HOUSE**. Friends connect to your address on UDP port 8889 (setting **Port**). The port has to be open in your router and firewall; a VPN like Tailscale or ZeroTier works too.
 - **Join**: **Co-op** tab, type the host's address, **JOIN**. You don't need a save, and your own saves aren't touched while you're in someone else's house.
+- **Over Steam** (the Co-op over Steam mod): host with **OPEN OVER STEAM** and friends join with the Steam ID the Co-op tab shows you. No port forwarding. Needs Steam running and a one-time download of Valve's `steam_api.dll`: the installer offers it, or run `neet steam`. No invites or lobbies yet.
 - **Shared**: things you pick up, throw, eat, break or order; money; doors and locks, lights, fuses, the TV, taps, the stove, flashlights and lighters; visitors and the other characters, who live on the host's game.
 - **Your own body comes back**: the host's save keeps your needs, clothes and where you stood, so next time you join you pick up where you left off.
 - **In co-op** nobody dreams (resting with your eyes shut still restores energy), the story's scene changes wait, and only the host talks to visitors. Going back to the main menu leaves; when the host leaves, the game ends for everyone.

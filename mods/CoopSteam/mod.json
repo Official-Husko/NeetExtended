@@ -1,0 +1,10 @@
+{
+  "id": "CoopSteam",
+  "name": "Co-op over Steam",
+  "version": "0.1.0",
+  "author": "pawbeans",
+  "description": "Co-op through Steam: friends join with a Steam ID, no port forwarding, traffic goes through Steam's relay network. Needs steam_api.dll from 'neet steam'.",
+  "assemblies": [ "CoopSteam.dll" ],
+  "dependencies": { "NeetModKit": "0.3.0", "Coop": "0.1.0" },
+  "hotReload": true
+}
