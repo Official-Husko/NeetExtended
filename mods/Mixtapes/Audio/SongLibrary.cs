@@ -23,6 +23,9 @@ internal static class SongLibrary
         /// <summary>The file isn't there yet (co-op is still getting it); it loads when it arrives.</summary>
         public bool Missing;
 
+        /// <summary>The song's name in its folder, for the clip (a file from co-op's cache is named by its hash).</summary>
+        public string Name;
+
         public readonly List<Action<AudioClip>> Waiting = new List<Action<AudioClip>>();
     }
 
@@ -40,12 +43,15 @@ internal static class SongLibrary
     /// <summary>
     /// Calls <paramref name="done"/> with the song's clip once it's loaded (right away if it is), or
     /// null if it can't be. A file that isn't there yet (co-op is still getting it) loads when it
-    /// arrives (<see cref="FileArrived"/>).
+    /// arrives (<see cref="FileArrived"/>). <paramref name="name"/> names the clip; every game names a
+    /// song the same way, so co-op can tell the radios which song is playing.
     /// </summary>
-    public static void Get(string file, Action<AudioClip> done)
+    public static void Get(string file, Action<AudioClip> done, string name = null)
     {
         if (!Songs.TryGetValue(file, out var song))
             Songs[file] = song = new Song();
+        if (name != null)
+            song.Name = name;
         if (song.Clip != null || song.Error != null)
         {
             done(song.Clip);
@@ -126,7 +132,7 @@ internal static class SongLibrary
                 if (song.Clip == null || song.Clip.length <= 0f)
                     song.Error = "isn't a song Unity can play";
                 else
-                    song.Clip.name = Path.GetFileNameWithoutExtension(file);
+                    song.Clip.name = song.Name ?? Path.GetFileNameWithoutExtension(file);
             }
         }
 

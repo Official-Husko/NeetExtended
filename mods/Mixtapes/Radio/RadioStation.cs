@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using HarmonyLib;
+using NeetModKit.Game;
 using Mixtapes.Audio;
 using Mixtapes.Tapes;
 using UnityEngine;
@@ -31,10 +32,13 @@ internal static class RadioStation
         }
     }
 
-    /// <summary>Every frame for every radio (from Radio.Update).</summary>
+    /// <summary>
+    /// Every frame for every radio (from Radio.Update). Not in someone else's co-op house: there the
+    /// host's station picks the songs and co-op tells this game's radios what to play.
+    /// </summary>
     public static void Tick(global::Radio radio)
     {
-        if (!Enabled || Playlist.Count == 0 || radio.cassette != null || radio.musicAudio == null)
+        if (!Enabled || Playlist.Count == 0 || radio.cassette != null || radio.musicAudio == null || !WorldRole.RunsWorld)
             return;
         var speaker = radio.musicAudio;
         if (speaker.isPlaying || !On(radio) || !radio.Powered)

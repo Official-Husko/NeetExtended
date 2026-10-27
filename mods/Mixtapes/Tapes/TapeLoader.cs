@@ -65,7 +65,7 @@ internal static class TapeLoader
                 Loaded.Add(tape);
                 files.Add(tape.File);
                 TapeItems.Register(_scope, tape);
-                SongLibrary.Get(tape.File, _ => { }); // Load it now, before a save needs it.
+                SongLibrary.Get(tape.File, _ => { }, song.Name); // Load it now, before a save needs it.
             }
         }
         SongLibrary.Keep(files);
