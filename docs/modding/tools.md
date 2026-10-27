@@ -264,6 +264,17 @@ When the game updates: test the mods on the new build, fix what broke, then `nee
 - The release script refuses to release unless the installed game is the recorded build.
 - The `Game compatibility` workflow (`.github/workflows/game-compat.yml`) compares it with Steam's latest public build every day and on every change to the file, and writes the README badge (green: tested, orange: Steam has a build that isn't) as a shields.io endpoint file to the `badges` branch.
 
+## versions
+
+```sh
+neet versions            # every mod's version against the last release tag
+neet versions --check    # exit code 1 if something needs fixing
+```
+
+The pack has a version (`<Version>`, set when releasing), and so does every mod: the `version` in its `mod.json`, and `Loader.Version` for the loader. A mod whose files changed since the last `vX.Y.Z` tag (uncommitted changes included) needs a version other than the one it had in that release: patch for fixes, minor for new features, and before 1.0 also minor for breaking changes. One bump per release is enough; later changes before the next release don't need another.
+
+It also checks that every dependency minimum in a `mod.json` exists: a mod asking for `NeetModKit` 0.3.0 while the framework is at 0.2.0 would fail to load. When a mod starts using something new from another mod, raise that minimum to the version that has it.
+
 ## release
 
 `build/release.sh` publishes a release on GitHub (needs `gh`, logged in with access to the repository):
@@ -274,7 +285,7 @@ build/release.sh 0.2.0 --dry-run      # check everything and show the notes, cha
 build/release.sh 0.2.0                # or major, minor, patch (from the last tag); asks before publishing
 ```
 
-It checks that the tree is clean, that `main` isn't behind GitHub, that `gh` is logged in, that the version is new, and that the installed game is the tested build (`neet compat --check`). Then it:
+It checks that the tree is clean, that `main` isn't behind GitHub, that `gh` is logged in, that the version is new, that the installed game is the tested build (`neet compat --check`), and that every mod changed since the last release has a new version (`neet versions --check`). Then it:
 
 1. sets `<Version>` in `Directory.Build.props`, writes `changelog.json` with the version released (`--release`) and records the game build in `compat/game.json` with the new version;
 2. commits that as `chore(release): X.Y.Z`;

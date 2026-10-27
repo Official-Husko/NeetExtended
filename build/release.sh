@@ -4,8 +4,9 @@
 #   build/release.sh --suggest                      what changed since the last release, and a suggested version
 #   build/release.sh <X.Y.Z|major|minor|patch> [--dry-run] [--yes]
 #
-# Checks that the tree is clean and in sync with GitHub, that gh is logged in and that the installed
-# game is the build the mods were tested with. Then it sets the version, writes changelog.json with
+# Checks that the tree is clean and in sync with GitHub, that gh is logged in, that the installed
+# game is the build the mods were tested with, and that every mod changed since the last release has
+# a new version. Then it sets the version, writes changelog.json with
 # that version released, commits, builds the package from that commit, tags it, pushes, and creates
 # the GitHub release with the zip and notes from the changelog. If something fails before the push,
 # the release commit and tag are taken back. --dry-run shows the notes and stops before changing
@@ -50,6 +51,7 @@ git merge-base --is-ancestor origin/main HEAD || die "main is behind or has dive
 gh auth status > /dev/null 2>&1 || die "gh isn't logged in (gh auth login)"
 github=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 neet compat --check --offline > /dev/null || die "the installed game isn't the tested build: test it, then run neet compat --record"
+neet versions --check > /dev/null || die "mods changed since the last release still have their old version: see neet versions"
 
 # The version.
 last=$(git tag --list 'v*' --sort=-v:refname | head -n 1)
