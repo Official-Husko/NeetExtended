@@ -129,7 +129,7 @@ Lines and choices can show values that change, written `{{name}}` or `{{name:arg
 | --- | --- |
 | `{{money}}` | The cash on the computer, in whole dollars. |
 | `{{flag:name}}` | A flag's number. |
-| `{{weather}}` | The weather as a word: drizzle, rain or storm. `{{weather:next}}` is the forecast's word (the current one when nobody forecasts). |
+| `{{weather}}` | The weather as a word: drizzle, rain or storm. `{{weather:next}}` is the forecast's word (the current one when nobody forecasts). `{{weather:in}}` is how long until the forecast change ("20 seconds", "a minute", "3 minutes"; "a while" without a forecast). |
 
 Other mods add their own, like co-op's `{{player:1}}` (a player's name). A name that doesn't exist is reported when the file loads. In hand-written Ink the same values are `{RuleText("money", "")}` and `{RuleText("flag", "name")}`.
 
@@ -151,6 +151,7 @@ A condition is an object; every key in it must hold. Used by `when`, `if`, choic
 | `holding` | The player holds this item in either hand: `"Pumpkin"`, or a list of names. |
 | `room` | The player is in this room: `"Kitchen"`, or a list. Room names are the game's: Kitchen, Livingroom, Basement, Bedroom_Neet, ... |
 | `weather` | The weather is this kind: `"storm"`, or a list like `["drizzle", "rain"]`. Kinds: drizzle, rain, storm. The house is always `rain` unless a mod such as Weather drives it. |
+| `forecast` | The weather has a forecast: `true` or `false`. Or the forecast says this kind follows: `"storm"` or a list (false without a forecast). |
 | `flag` | A flag is set: `"name"`, or compares: `{ "name": ">= 2" }`. |
 | `called` | Another call was played: `"pizza"` or `{ "pizza": ">= 2" }`. |
 | `times` | How many times this call was played before compares. `"= 0"` means "the first time". |

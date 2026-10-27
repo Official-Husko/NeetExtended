@@ -149,7 +149,7 @@ Sky.OnStrike.Subscribe(this, () => Log.Info("Lightning"));
 
 `WeatherState` is a small value: `Kind` (`WeatherKind.Drizzle`, `Rain`, `Storm`), `Intensity` (1 is the kind's usual strength), `StartedAt`, an optional forecast (`NextKind`, `NextAt`), and helpers `Name` (the word players read), `NextName`, `Age`, `SecondsUntilNext`. Times are play seconds (`ModFlags.PlaySeconds`). With no mod driving it the weather is a steady `Rain`. `SetWeather` is for the mod that drives the weather (the Weather mod on the host; Co-op on a client that follows the host): the last mod to set it owns it, it goes back to the default when that mod unloads, and `WeatherChanged` is raised with each new state. It only keeps the state: reading mods apply their own effects (the multipliers above, a phone line, a mood).
 
-Rules can read it: the `weather` condition (`"weather": "storm"`, `"weather": ["drizzle", "rain"]`) and the text values `{{weather}}` and `{{weather:next}}`.
+Rules can read it: the `weather` condition (`"weather": "storm"`, `"weather": ["drizzle", "rain"]`), the `forecast` condition (`"forecast": false` for no forecast, `"forecast": "storm"` for one that says storm) and the text values `{{weather}}`, `{{weather:next}}` and `{{weather:in}}` (time until the change, in words).
 
 Gotchas:
 
