@@ -18,6 +18,7 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 | Frame rate and vsync settings don't stick | `FrameRateSettings` |
 | The inbox is empty after loading a save | `LostInbox` |
 | Spam emails come again after every load | `RepeatingSpam` |
+| The spam timer starts over after loading | `SpamTimer` |
 
 ## Saving fails with a dead house spider around
 
@@ -135,6 +136,16 @@ New bugs go here first, then into the patches mod as a new feature. When a fix c
 **Fix:** a postfix on `EmailHandler.Save` puts `randomEmailsInstance` into the save data instead.
 
 **Reproduce:** with `RepeatingSpam` off, let a spam email arrive, save, load, and check the random list with `email.lists`: every entry is `accessible` again.
+
+## The spam timer starts over after loading
+
+**What happens:** spam emails come every 200 to 550 seconds, but after loading a save the next one always arrives 15 seconds in.
+
+**Cause:** `EmailHandler.Save` passes the time left to `SaveDataEmailHandler`, whose constructor never stores it (`EmailHandler.cs:23-29`), so the save always says 0. `Load` starts `SendSpam()` from the beginning, which waits 15 seconds and sends.
+
+**Fix:** a postfix on `Save` stores the time left; a postfix on `Load` restarts `SendSpam` with that wait (minus the 15 seconds `SendSpam` adds before sending).
+
+**Reproduce:** with `SpamTimer` off, note `timeToNextRandom` on the `EmailHandler` (`obj.get` on `House_Manager---------------`) and `Time.time`, save, load and compare.
 
 ## Not bugs
 
