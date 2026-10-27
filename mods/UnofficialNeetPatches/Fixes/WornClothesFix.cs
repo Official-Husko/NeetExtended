@@ -10,6 +10,6 @@ internal sealed class WornClothesFix : ModFeature
     public override string Id => FeatureId;
     public override string Name => "Worn clothes stay put";
     public override string Description =>
-        "Clothes you wore when you saved fell through the world forever after loading (one reached 20,000 km down). " +
-        "They stay parked, like the ones you put on yourself.";
+        "Clothes you wore when you saved fell through the world forever after loading (one reached 20,000 km down), and so did " +
+        "the clothes of characters who died or left. They stay parked, like the ones you put on yourself.";
 }

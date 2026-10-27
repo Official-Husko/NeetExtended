@@ -57,7 +57,7 @@ Fixes for bugs in the game itself. Each fix is its own switch, so you can turn o
 - **Characters leave hidden items alone**: characters no longer pick up things that belong to something switched off, like the thief's beanie before he shows up.
 - **Autosave works after loading**: once a save was loaded, the game never autosaved again. Now it saves every five minutes while you're in your bedroom.
 - **Spawners keep working after loading**: after loading a save, loose change, dust, sink water, toilet flushes and blood and paint sprays stopped for the rest of the session. They start again two seconds after the load.
-- **Worn clothes stay put**: clothes you wore when you saved fell through the world after loading.
+- **Worn clothes stay put**: clothes you wore when you saved fell through the world after loading, and so did the clothes of characters who died or left.
 - **Dying with a mask on works**: anyone who died wearing a mask got stuck half dead and couldn't die again.
 - **Skeletons don't ruin the black pants**: a skeleton that had to crap threw an error and left every pair of black pants you bought or found afterwards dirty and sticky, until you restarted the game.
 - **Your stuff stays where you died**: the clothes you wore when you died were gone for good (the game hid them under the house, in every save). Now everything you had, clothes, masks and whatever was in your hands, falls where you died, so you can go back for it.

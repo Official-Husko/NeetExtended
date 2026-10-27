@@ -282,6 +282,8 @@ The same field is compared in three more places:
 
 **Fix:** a postfix on `Player_Abilities.PutOnClothes` makes a worn piece kinematic and, if it was not, moves it back to the parking spot.
 
+Clothes that were parked when the game saved but that nobody puts on again fall the same way: the clothes of characters who died or left (their bodies are gone, the parked clothes stay in the save forever) and, in co-op, other players' clothes the host keeps for their return. A postfix on `SaveLoadHandler.LoadAll` parks every `Wearable` still below y -400 after the load: kinematic, hidden, back at -500. Seen in a co-op session as nine falling pieces (the thief's striped shirt among them) at y -1.9e8 on the host.
+
 **Reproduce:** wear shoes, pants and shirt, save, load: read `Player_Abilities.clothings[i].transform.position.y` and `Rigidbody.isKinematic` a few seconds later. Without `WornClothes` y keeps dropping; with it the pieces stay at -500.
 
 ## Dying with a mask on gets stuck half way
