@@ -208,7 +208,7 @@ These work on any loaded type, not only on scene objects. Type names follow the 
 | `fire.stop` | `room` | Put out a room's fire. Returns `"out"`. |
 | `power.set` | `on`: bool, `room?`: omit for the whole house | Force power on or off. Returns `on`. |
 
-### Computer and cards
+### Computer, email and cards
 
 | Method | Parameters | Description and result |
 | ------ | ---------- | ---------------------- |
@@ -216,6 +216,15 @@ These work on any loaded type, not only on scene objects. Type names follow the 
 | `computer.wake` | none | Hide the computer's screensaver. Returns `"awake"`. |
 | `cards.get` | `all?`: bool, default true | Anime card game state: `crystals`, `maxUnlocked`, `extraCards` and `cards`. Each card has `id`, `name`, `object`, `locked`, `level`, `medal`, `income`, `price`, `exp` and `expToLevel`. `all: false` leaves out locked cards. |
 | `cards.crystals` | `value` | Set the crystal count. Returns the new count. |
+| `email.lists` | none | The game's email lists: `scheduled`, `random` and `conditional` knots with their titles, plus what's `delivered` and `pending` in the inbox. |
+| `email.send` | `knot`, `title` | Send an email by its Ink knot (from the game's email story or a mod's), with the subject shown in the inbox. |
+
+### Assets
+
+| Method | Parameters | Description and result |
+| ------ | ---------- | ---------------------- |
+| `assets.texts` | none | Every loaded `TextAsset` with its name and length. The game's Ink stories are `Master`, `Master_Email` and `Thoughts`. |
+| `assets.text` | `name`, `path` | Write a `TextAsset` to a file. The game sees Windows paths: `Z:` is the Linux root under Proton (`Z:/tmp/Master.json`). Returns `path` and `chars`. |
 
 ### Performance
 
