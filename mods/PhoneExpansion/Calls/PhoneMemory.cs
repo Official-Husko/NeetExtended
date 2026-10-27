@@ -16,14 +16,17 @@ public static class PhoneMemory
     {
         public Dictionary<string, CallRecord> Calls = new Dictionary<string, CallRecord>();
         public Dictionary<string, int> Dialed = new Dictionary<string, int>();
-        public List<ScheduledRing> Scheduled = new List<ScheduledRing>();
+        public ScheduleList Rings = new ScheduleList();
 
-        // Saves from before flags were shared keep them here; they're handed to ModFlags on load.
+        // Saves from 0.1.0 keep flags, the play clock and scheduled rings here; they're moved
+        // over when such a save loads.
         public Dictionary<string, int> Flags;
         public float PlaySeconds;
+        public List<ScheduledRing> Scheduled;
 
         public bool ShouldSerializeFlags() => false;
         public bool ShouldSerializePlaySeconds() => false;
+        public bool ShouldSerializeScheduled() => false;
     }
 
     internal sealed class CallRecord
@@ -76,6 +79,12 @@ public static class PhoneMemory
             ModFlags.Adopt(_state.Flags, _state.PlaySeconds);
             _state.Flags = null;
             _state.PlaySeconds = 0f;
+        }
+        if (_state.Scheduled != null)
+        {
+            foreach (var ring in _state.Scheduled)
+                _state.Rings.Entries.Add(new ScheduleList.Entry { Id = ring.CallId, DueAt = ring.DueAt });
+            _state.Scheduled = null;
         }
     }
 }

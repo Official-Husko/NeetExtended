@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using NeetLoader.Runtime;
-using NeetModKit.Conversations;
+using NeetModKit.IO;
 using Newtonsoft.Json.Linq;
 using NeetModKit.Rules;
 using PhoneExpansion.Calls;
@@ -16,8 +15,6 @@ namespace PhoneExpansion.Packs;
 /// </summary>
 internal static class CallParser
 {
-    private static readonly JsonLoadSettings Settings = new JsonLoadSettings { CommentHandling = CommentHandling.Ignore };
-
     // Calls end on the game's EndPhoneCall tag, like its own calls, and { "player": "..." } is a
     // line the player says.
     private static readonly StepWriterOptions Writing = new StepWriterOptions
@@ -26,64 +23,31 @@ internal static class CallParser
         TaggedLines = { ["player"] = "SpeakerAudio:Player" },
     };
 
-    public static void LoadFile(string path, string displayName, string modId, ITracker scope, List<string> problems, List<InkScript> scripts)
+    public static void LoadFile(ContentFile file)
     {
-        JToken root;
-        try
-        {
-            root = JToken.Parse(File.ReadAllText(path), Settings);
-        }
-        catch (Exception e)
-        {
-            problems.Add($"{displayName}: {e.Message}");
-            return;
-        }
-
         var calls = new List<PhoneCall>();
         var ink = new StringBuilder();
-        var objects = CallObjects(root);
+        var objects = file.Items("calls");
         for (int i = 0; i < objects.Count; i++)
         {
-            var json = objects[i];
-            string where = json["id"] != null ? $"call \"{json["id"]}\"" : objects.Count > 1 ? $"call {i + 1}" : "call";
             try
             {
-                calls.Add(Parse(json, modId, displayName, scope, ink));
+                calls.Add(Parse(objects[i], file.ModId, file.Display, file.Scope, ink));
             }
             catch (Exception e) when (e is FormatException || e is InvalidCastException || e is ArgumentException)
             {
-                problems.Add($"{displayName}, {where}: {e.Message}");
+                file.Problem($"{ContentFile.Where("call", objects[i], i, objects.Count)}: {e.Message}");
             }
         }
-        if (objects.Count == 0)
-            problems.Add($"{displayName}: no calls in this file.");
 
         if (ink.Length > 0)
-            scripts.Add(InkScripts.Add(scope, displayName, ink.ToString()));
+            file.AddInk(ink.ToString());
 
         foreach (var call in calls)
         {
-            try { PhoneBook.Add(scope, call); }
-            catch (ArgumentException e) { problems.Add($"{displayName}: {e.Message}"); }
+            try { PhoneBook.Add(file.Scope, call); }
+            catch (ArgumentException e) { file.Problem(e.Message); }
         }
-    }
-
-    private static List<JObject> CallObjects(JToken root)
-    {
-        var list = new List<JObject>();
-        var items = root is JObject single && single["calls"] is JArray wrapped ? wrapped : root as JArray;
-        if (items == null)
-        {
-            if (root is JObject one)
-                list.Add(one);
-            return list;
-        }
-        foreach (var item in items)
-        {
-            if (item is JObject obj)
-                list.Add(obj);
-        }
-        return list;
     }
 
     private static PhoneCall Parse(JObject json, string modId, string source, ITracker scope, StringBuilder ink)
@@ -131,30 +95,11 @@ internal static class CallParser
             call.OtherwiseKnot = knot + "_otherwise";
         }
 
-        var incoming = json["incoming"];
-        if (incoming != null && incoming.Type != JTokenType.Null && !(incoming.Type == JTokenType.Boolean && !incoming.Value<bool>()))
-            call.Incoming = ParseIncoming(incoming);
+        if (TriggerRules.IsOn(json["incoming"]))
+            call.Incoming = ParseIncoming(json["incoming"]);
         return call;
     }
 
-    private static IncomingRules ParseIncoming(JToken json)
-    {
-        var rules = new IncomingRules();
-        if (!(json is JObject obj))
-            return rules; // "incoming": true
-
-        rules.Trigger = (obj.Value<string>("trigger") ?? IncomingRules.Random).ToLowerInvariant();
-        if (rules.Trigger != IncomingRules.Random && rules.Trigger != IncomingRules.Order &&
-            rules.Trigger != IncomingRules.Arrive && rules.Trigger != IncomingRules.Manual)
-            throw new FormatException($"incoming trigger '{rules.Trigger}' isn't one of random, order, arrive, manual.");
-
-        rules.Weight = obj.Value<float?>("weight") ?? rules.Weight;
-        rules.Once = obj.Value<bool?>("once") ?? false;
-        rules.CooldownMinutes = obj.Value<float?>("cooldown") ?? 0f;
-        rules.DelaySeconds = obj.Value<float?>("delay") ?? rules.DelaySeconds;
-        rules.Store = obj.Value<string>("store");
-        if (obj["when"] != null)
-            rules.When = Condition.Parse(obj["when"]);
-        return rules;
-    }
+    private static IncomingRules ParseIncoming(JToken json) =>
+        TriggerRules.Parse(json, IncomingRules.Triggers, IncomingRules.Defaults);
 }

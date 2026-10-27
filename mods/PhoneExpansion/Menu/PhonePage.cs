@@ -67,25 +67,10 @@ internal sealed class PhonePage : MenuPage
             parts.Add(call.ReplacesGameNumber ? $"Answers the game's {call.DisplayNumber}" + (call.When != null ? " when its conditions hold" : "")
                                               : "Dial " + call.DisplayNumber + (call.When != null ? " (only picks up sometimes)" : ""));
         if (call.Incoming != null)
-            parts.Add(RingsWhen(call.Incoming));
+            parts.Add(call.Incoming.Describe("Rings"));
         int times = PhoneMemory.TimesPlayed(call.Id);
         parts.Add(times == 0 ? "not heard yet" : times == 1 ? "heard once" : $"heard {times} times");
         return string.Join(". ", parts) + ".";
-    }
-
-    private static string RingsWhen(IncomingRules rules)
-    {
-        string when;
-        switch (rules.Trigger)
-        {
-            case IncomingRules.Order: when = "Rings after " + (rules.Store != null ? rules.Store + " orders" : "store orders"); break;
-            case IncomingRules.Arrive: when = "Rings soon after you get home"; break;
-            case IncomingRules.Manual: when = "Rings when another call sets it up"; break;
-            default: when = "Rings in at random"; break;
-        }
-        if (rules.Once)
-            when += ", once";
-        return when;
     }
 
     private static string Ring(PhoneCall call)

@@ -55,71 +55,47 @@ internal static class IncomingCalls
         Schedule(call, Math.Max(delaySeconds, 1f));
     }
 
-    public static void Cancel(PhoneCall call) =>
-        PhoneMemory.Current.Scheduled.RemoveAll(s => string.Equals(s.CallId, call.Id, StringComparison.OrdinalIgnoreCase));
+    public static void Cancel(PhoneCall call) => PhoneMemory.Current.Rings.Remove(call.Id);
 
-    public static void OnOrder(string store)
-    {
-        if (!Enabled)
-            return;
-        var call = Pick(IncomingRules.Order, store);
-        if (call != null)
-            Ring(call, call.Incoming.DelaySeconds);
-    }
+    public static void OnOrder(string store) => RingFor(IncomingRules.Order, store);
 
     public static void OnHouseReady()
     {
         _ringing = null;
-        if (!Enabled)
-            return;
-        var call = Pick(IncomingRules.Arrive, null);
-        if (call != null)
-            Ring(call, call.Incoming.DelaySeconds);
+        RingFor(IncomingRules.Arrive, null);
     }
+
+    public static void OnWake() => RingFor(IncomingRules.Wake, null);
 
     /// <summary>Rings scheduled calls that are due. Checks once a second.</summary>
     public static void Tick()
     {
-        var scheduled = PhoneMemory.Current.Scheduled;
-        if (scheduled.Count == 0 || Time.time < _nextCheck)
+        var rings = PhoneMemory.Current.Rings;
+        if (rings.Count == 0 || Time.time < _nextCheck)
             return;
         _nextCheck = Time.time + 1f;
-        if (!GameEvents.IsHouseReady)
-            return;
-
-        float now = ModFlags.PlaySeconds;
-        for (int i = 0; i < scheduled.Count; i++)
-        {
-            if (scheduled[i].DueAt > now)
-                continue;
-            var call = PhoneBook.Find(scheduled[i].CallId);
-            if (call == null)
-            {
-                scheduled.RemoveAt(i--); // Its file or mod is gone.
-                continue;
-            }
-            if (TryRingNow(call))
-            {
-                scheduled.RemoveAt(i);
-                return; // One at a time; the line is busy now anyway.
-            }
-            scheduled[i].DueAt = now + RetrySeconds;
-        }
+        if (GameEvents.IsHouseReady)
+            rings.TakeDue(RingDue, RetrySeconds);
     }
 
     /// <summary>Could <paramref name="call"/> ring for this trigger right now?</summary>
-    public static bool CanRing(PhoneCall call, string trigger, string store = null)
+    public static bool CanRing(PhoneCall call, string trigger, string store = null) =>
+        call.Incoming != null &&
+        Triggers.CanFire(call, call.Incoming, trigger, store, PhoneMemory.SecondsSincePlayed(call.Id));
+
+    private static bool RingDue(string id)
     {
-        var rules = call.Incoming;
-        if (rules == null || rules.Trigger != trigger)
-            return false;
-        if (store != null && rules.Store != null && !string.Equals(rules.Store, store, StringComparison.OrdinalIgnoreCase))
-            return false;
-        if (rules.Once && PhoneMemory.TimesPlayed(call.Id) > 0)
-            return false;
-        if (rules.CooldownMinutes > 0f && PhoneMemory.SecondsSincePlayed(call.Id) < rules.CooldownMinutes * 60f)
-            return false;
-        return rules.When == null || rules.When.Test(call);
+        var call = PhoneBook.Find(id);
+        return call == null || TryRingNow(call); // A call whose file or mod is gone is dropped.
+    }
+
+    private static void RingFor(string trigger, string store)
+    {
+        if (!Enabled)
+            return;
+        var call = Pick(trigger, store);
+        if (call != null)
+            Ring(call, call.Incoming.DelaySeconds);
     }
 
     private static PhoneCall PickRandom()
@@ -130,27 +106,8 @@ internal static class IncomingCalls
         return Pick(IncomingRules.Random, null);
     }
 
-    private static PhoneCall Pick(string trigger, string store)
-    {
-        Candidates.Clear();
-        float total = 0f;
-        foreach (var call in PhoneBook.All)
-        {
-            if (!CanRing(call, trigger, store) || call.Incoming.Weight <= 0f)
-                continue;
-            Candidates.Add(call);
-            total += call.Incoming.Weight;
-        }
-
-        float roll = Random.value * total;
-        foreach (var call in Candidates)
-        {
-            roll -= call.Incoming.Weight;
-            if (roll <= 0f)
-                return call;
-        }
-        return Candidates.Count > 0 ? Candidates[Candidates.Count - 1] : null;
-    }
+    private static PhoneCall Pick(string trigger, string store) =>
+        Triggers.Pick(PhoneBook.All, call => call.Incoming, call => CanRing(call, trigger, store), Candidates);
 
     private static bool TryRingNow(PhoneCall call)
     {
@@ -168,14 +125,5 @@ internal static class IncomingCalls
         }
     }
 
-    private static void Schedule(PhoneCall call, float seconds)
-    {
-        var scheduled = PhoneMemory.Current.Scheduled;
-        foreach (var entry in scheduled)
-        {
-            if (string.Equals(entry.CallId, call.Id, StringComparison.OrdinalIgnoreCase))
-                return; // Already waiting to ring.
-        }
-        scheduled.Add(new PhoneMemory.ScheduledRing { CallId = call.Id, DueAt = ModFlags.PlaySeconds + seconds });
-    }
+    private static void Schedule(PhoneCall call, float seconds) => PhoneMemory.Current.Rings.Add(call.Id, seconds);
 }

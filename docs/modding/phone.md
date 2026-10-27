@@ -175,12 +175,12 @@ Other mods can add actions and conditions (see "From code").
 
 | Field | Default | Meaning |
 | --- | --- | --- |
-| `trigger` | `"random"` | `random`: in place of one of the game's random prank calls. `order`: after the player orders from a computer store. `arrive`: after the house loads. `manual`: only when something rings it (a `ring` action, the Phone tab, code). |
+| `trigger` | `"random"` | `random`: in place of one of the game's random prank calls. `order`: after the player orders from a computer store. `arrive`: after the house loads. `wake`: when the player wakes up after sleeping. `manual`: only when something rings it (a `ring` action, the Phone tab, code). |
 | `weight` | 1 | How likely it's picked among the calls that could ring. |
 | `when` | | Only rings while this holds. |
 | `once` | false | Only ever rings once per save. |
 | `cooldown` | 0 | Minutes of play before it can ring again. |
-| `delay` | 20 | `order` and `arrive`: seconds before it rings. |
+| `delay` | 20 | `order`, `arrive` and `wake`: seconds before it rings. |
 | `store` | | `order`: only after orders from `Normal`, `BlackMarket` or `OccultMarket`. |
 
 The game rings its phones every 5 to 12 minutes. Each time, with the "New call chance" from the settings, one of the `random` calls that can ring takes the slot instead.
@@ -249,7 +249,7 @@ RuleConditions.Register(this, "raining", value => { bool want = value.Value<bool
 | --- | --- |
 | `PhoneBook.Add(owner, call)`, `All`, `Find(id)`, `WithNumber(digits)`, `Changed` | Every modded call. Calls are removed when the owner cleans up. |
 | `PhoneCall` | `Id`, `Number`, `Name`, `CallerId`, `Knot`, `When`, `OtherwiseKnot`, `Incoming`, `Source`. It's an `IRuleSubject`, so conditions like `times` know which call they're checking. |
-| `IncomingRules` | `Trigger`, `Weight`, `When`, `Once`, `CooldownMinutes`, `DelaySeconds`, `Store` |
+| `IncomingRules` | The framework's `TriggerRules`: `Trigger`, `Weight`, `When`, `Once`, `CooldownMinutes`, `DelaySeconds`, `Store`. |
 | `PhoneRing.Ring(id or call, delaySeconds)`, `Cancel(call)`, `Ringing`, `Active` | Ring calls; what's ringing or being talked on now. |
 | `PhoneMemory` | `TimesPlayed(id)`, `SecondsSincePlayed(id)`, `TimesDialed(digits)`. Saved with the game. Flags and play time are `ModFlags` in the framework. |
 
