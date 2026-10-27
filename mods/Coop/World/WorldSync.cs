@@ -39,6 +39,8 @@ internal static class WorldSync
         EconomySync.Init();
         FireSync.Init();
         CopVanSync.Init();
+        Ambience.SkySync.Init();
+        Ambience.ToiletSync.Init();
         Forwarder.Init();
         HealthReport.Init();
         TalkSync.Init();
@@ -147,6 +149,8 @@ internal static class WorldSync
         EconomySync.Clear();
         FireSync.Clear();
         CopVanSync.Clear();
+        Ambience.SkySync.Clear();
+        Ambience.ToiletSync.Clear();
         RemoteNeeds.Clear();
         HealthReport.Clear();
         SpawnSender.Clear();
@@ -208,6 +212,8 @@ internal static class WorldSync
         }
         else
             NpcPoseReceiver.LateTick();
+        Ambience.SkySync.LateTick(_hosting);
+        Ambience.ToiletSync.LateTick();
         HealthReport.Tick();
         SpawnSender.FlushSpawns();
         EconomySync.AfterSpawns();

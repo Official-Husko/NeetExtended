@@ -182,7 +182,7 @@ Picking things up and pushing them:
 - A player takes over what their body, what they hold, or (on a client) what they threw runs into, so it can be pushed. Things only knocked on by other knocked things move on the host first and reach the others a moment later.
 - The client that throws a plate breaks it. Scene windows and other breakables that aren't items only break on the host, so a client throwing something at a window doesn't break it.
 - Item logic that replaces, wears down or uses up the item runs only on the machine that simulates it: damage (burns, cuts, hits, so liquid bombs and lighters going off too), food spoiling, cooking and soaking, breaking, ice melting, glasses tipping and filling, fuse and lighter explosions, fuses snapping into the fuse box or a smoke detector, dust balls merging (only between two balls simulated on the same machine), the cat bowl, the piggy bank and baths soaking things.
-- The toilet handle doesn't show moving for the others, but what a flush takes away is gone everywhere.
+- Toilet handles move for everyone: the game where one is pulled sends its angle 15 times a second while it's held and springs back, and the others show it (kinematic, with their own flush check off, playing the flush sound). What a flush takes away is gone everywhere (`World/Ambience/ToiletSync`).
 - Things with a body but no item name (some made at runtime) aren't shared. The log names each kind once ("has no item name").
 
 NPCs:
@@ -211,7 +211,7 @@ Money and the computer:
 
 Other:
 
-- The sun and moon drift apart between machines (the game turns them a fixed step per frame), and thunder flickers at different times in each game.
+- The sun and moon turn a fixed step per frame, so they'd drift apart between games at different frame rates: clients ease toward the host's twice a second. Thunder strikes when the host's does (`World/Ambience/SkySync`). A client's first strike of a session can still be its own, since its thunder was scheduled before co-op started.
 - During a hot reload of the Co-op mod (about 0.2 s), changes aren't sent. The resync afterwards fixes items, but something a client used up or destroyed during its own reload comes back.
 - A few scene objects with no id of their own are matched by their place in the scene. A mod that changes the scene differently on two machines would break that match.
 - Things that fall below the house (a body without a floor under it) stop being sent once they're 1 km down. Clothes parked by the game used to do that after every load; Unofficial NEET Patches parks them again now (`WornClothes`).
