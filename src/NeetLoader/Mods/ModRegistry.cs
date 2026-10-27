@@ -224,6 +224,8 @@ public static class ModRegistry
         ById[mod.Id] = mod;
         foreach (string dll in ModDiscovery.AssemblyPaths(mod))
             AssemblyResolver.RegisterPath(dll);
+        foreach (string dll in ModDiscovery.LibraryPaths(mod))
+            AssemblyResolver.RegisterPath(dll);
     }
 
     private static void Queue(string id, Action<string> done, Func<ModInfo, string> operation)

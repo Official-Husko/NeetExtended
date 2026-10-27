@@ -53,4 +53,20 @@ internal static class ModDiscovery
             paths.Add(Path.Combine(mod.Directory, relative));
         return paths;
     }
+
+    /// <summary>
+    /// DLLs in the folder root that aren't in an explicit assembly list: libraries the mod uses. They
+    /// load on first use and are never reloaded, so objects made from them outlive a hot reload.
+    /// </summary>
+    public static IEnumerable<string> LibraryPaths(ModInfo mod)
+    {
+        if (mod.Manifest.Assemblies.Count == 0)
+            yield break;
+        var listed = new HashSet<string>(AssemblyPaths(mod), System.StringComparer.OrdinalIgnoreCase);
+        foreach (string path in Directory.GetFiles(mod.Directory, "*.dll", SearchOption.TopDirectoryOnly))
+        {
+            if (!listed.Contains(Path.GetFullPath(path)) && !listed.Contains(path))
+                yield return path;
+        }
+    }
 }
