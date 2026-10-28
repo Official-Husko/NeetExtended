@@ -1,6 +1,20 @@
 {
   "releases": [
     {
+      "version": "0.4.1",
+      "date": "2026-10-28",
+      "released": true,
+      "added": [],
+      "changed": [],
+      "fixed": [
+        {
+          "text": "Closing the What's New screen that opens after an update no longer leaves you unable to move or look.",
+          "area": "Framework"
+        }
+      ],
+      "removed": []
+    },
+    {
       "version": "0.4.0",
       "date": "2026-10-27",
       "released": true,
