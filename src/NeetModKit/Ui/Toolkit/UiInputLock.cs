@@ -48,11 +48,7 @@ public static class UiInputLock
     }
 
     /// <summary>A new scene brings new input actions; switch those off too while locked.</summary>
-    internal static void OnSceneLoaded()
-    {
-        _inputDisabled = false;
-        Apply();
-    }
+    internal static void OnSceneLoaded() => Apply();
 
     internal static void ReleaseAll()
     {
@@ -76,15 +72,18 @@ public static class UiInputLock
                 pause |= hold.Pause;
         }
 
+        // The flag is only cleared once the current scene's input has been switched back on: a lock
+        // taken during a scene load (the What's New screen at startup) must still give it back later.
         var input = GameRefs.House != null ? GameRefs.House.inputAsset : null;
-        if (active && input != null && input.enabled)
+        if (active)
         {
-            input.Disable();
             _inputDisabled = true;
+            if (input != null && input.enabled)
+                input.Disable();
         }
-        else if (!active && _inputDisabled)
+        else if (_inputDisabled && input != null)
         {
-            input?.Enable();
+            input.Enable();
             _inputDisabled = false;
         }
 
